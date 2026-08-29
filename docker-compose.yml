@@ -1,0 +1,44 @@
+# Entorno de desarrollo local.
+# Levanta PostgreSQL (misma versión que Railway) para que todo el equipo
+# trabaje con el mismo entorno sin instalar Postgres en su máquina.
+#
+# Uso:
+#   docker compose up -d        -> levanta la base de datos
+#   npm run dev                 -> corre la app en modo desarrollo
+#
+# Para probar la imagen de producción localmente:
+#   docker compose --profile app up --build
+
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: aeuvg-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: aeuvg
+      POSTGRES_PASSWORD: aeuvg_dev
+      POSTGRES_DB: aeuvg
+    ports:
+      - "5432:5432"
+    volumes:
+      - aeuvg_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aeuvg"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    profiles: ["app"]
+    build: .
+    container_name: aeuvg-app
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://aeuvg:aeuvg_dev@db:5432/aeuvg
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  aeuvg_pgdata:
