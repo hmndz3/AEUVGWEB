@@ -1,0 +1,605 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum EstadoUsuario {
+  ACTIVO    @map("activo")
+  BLOQUEADO @map("bloqueado")
+  PENDIENTE @map("pendiente")
+
+  @@map("estado_usuario")
+}
+
+enum TipoActividad {
+  ACADEMICA    @map("academica")
+  RECREATIVA   @map("recreativa")
+  VOLUNTARIADO @map("voluntariado")
+  OTRO         @map("otro")
+
+  @@map("tipo_actividad")
+}
+
+enum EstadoEvento {
+  BORRADOR   @map("borrador")
+  PUBLICADO  @map("publicado")
+  CANCELADO  @map("cancelado")
+  FINALIZADO @map("finalizado")
+
+  @@map("estado_evento")
+}
+
+enum EstadoHoraBeca {
+  PENDIENTE  @map("pendiente")
+  ACREDITADA @map("acreditada")
+
+  @@map("estado_hora_beca")
+}
+
+enum EstadoOportunidad {
+  BORRADOR   @map("borrador")
+  PUBLICADA  @map("publicada")
+  CERRADA    @map("cerrada")
+  CANCELADA  @map("cancelada")
+  FINALIZADA @map("finalizada")
+
+  @@map("estado_oportunidad")
+}
+
+enum EstadoInscripcion {
+  PENDIENTE @map("pendiente")
+  ACEPTADA  @map("aceptada")
+  RECHAZADA @map("rechazada")
+  CANCELADA @map("cancelada")
+  ASISTIO   @map("asistio")
+
+  @@map("estado_inscripcion")
+}
+
+enum EstadoImportacion {
+  PROCESANDO @map("procesando")
+  COMPLETADA @map("completada")
+  PARCIAL    @map("parcial")
+  FALLIDA    @map("fallida")
+
+  @@map("estado_importacion")
+}
+
+enum EstadoPostulacion {
+  PENDIENTE @map("pendiente")
+  APROBADA  @map("aprobada")
+  RECHAZADA @map("rechazada")
+
+  @@map("estado_postulacion")
+}
+
+enum EstadoTutor {
+  ACTIVO     @map("activo")
+  INACTIVO   @map("inactivo")
+  SUSPENDIDO @map("suspendido")
+
+  @@map("estado_tutor")
+}
+
+enum EstadoTutoria {
+  PROGRAMADA @map("programada")
+  COMPLETADA @map("completada")
+  CANCELADA  @map("cancelada")
+
+  @@map("estado_tutoria")
+}
+
+enum ModalidadTutoria {
+  PRESENCIAL @map("presencial")
+  VIRTUAL    @map("virtual")
+  AMBAS      @map("ambas")
+
+  @@map("modalidad_tutoria")
+}
+
+enum DiaSemana {
+  LUNES     @map("lunes")
+  MARTES    @map("martes")
+  MIERCOLES @map("miercoles")
+  JUEVES    @map("jueves")
+  VIERNES   @map("viernes")
+  SABADO    @map("sabado")
+  DOMINGO   @map("domingo")
+
+  @@map("dia_semana")
+}
+
+model Facultad {
+  idFacultad Int       @id @default(autoincrement()) @map("id_facultad")
+  nombre     String    @unique(map: "facultad_nombre_key") @db.VarChar(120)
+  codigo     String    @unique(map: "facultad_codigo_key") @db.VarChar(20)
+  activo     Boolean   @default(true)
+  carreras   Carrera[]
+
+  @@map("facultad")
+}
+
+model Carrera {
+  idCarrera   Int          @id @default(autoincrement()) @map("id_carrera")
+  idFacultad  Int          @map("id_facultad")
+  nombre      String       @db.VarChar(160)
+  codigo      String       @unique(map: "carrera_codigo_key") @db.VarChar(20)
+  activo      Boolean      @default(true)
+  facultad    Facultad     @relation(fields: [idFacultad], references: [idFacultad], onDelete: Restrict, onUpdate: Cascade)
+  estudiantes Estudiante[]
+
+  @@unique([idFacultad, nombre], map: "carrera_facultad_nombre_key")
+  @@map("carrera")
+}
+
+model Estudiante {
+  idEstudiante       Int                      @id @default(autoincrement()) @map("id_estudiante")
+  idCarrera          Int                      @map("id_carrera")
+  carnet             String                   @unique(map: "estudiante_carnet_key") @db.VarChar(20)
+  nombreCompleto     String                   @map("nombre_completo") @db.VarChar(200)
+  correoUvg          String                   @unique(map: "estudiante_correo_uvg_key") @map("correo_uvg") @db.VarChar(254)
+  telefono           String?                  @db.VarChar(30)
+  activo             Boolean                  @default(true)
+  fechaCreacion      DateTime                 @default(now()) @map("fecha_creacion") @db.Timestamptz(3)
+  fechaActualizacion DateTime                 @updatedAt @map("fecha_actualizacion") @db.Timestamptz(3)
+  carrera            Carrera                  @relation(fields: [idCarrera], references: [idCarrera], onDelete: Restrict, onUpdate: Cascade)
+  usuario            Usuario?
+  inscripciones      InscripcionOportunidad[]
+  registrosHoraBeca  RegistroHoraBeca[]
+  postulacionesTutor PostulacionTutor[]
+  tutor              Tutor?
+  tutoriasRecibidas  Tutoria[]
+
+  @@index([idCarrera], map: "estudiante_id_carrera_idx")
+  @@map("estudiante")
+}
+
+model Usuario {
+  idUsuario              Int                   @id @default(autoincrement()) @map("id_usuario")
+  idEstudiante           Int                   @unique(map: "usuario_id_estudiante_key") @map("id_estudiante")
+  correo                 String                @unique(map: "usuario_correo_key") @db.VarChar(254)
+  contrasenaHash         String                @map("contrasena_hash") @db.VarChar(255)
+  estado                 EstadoUsuario         @default(PENDIENTE)
+  correoVerificado       Boolean               @default(false) @map("correo_verificado")
+  ultimoAcceso           DateTime?             @map("ultimo_acceso") @db.Timestamptz(3)
+  fechaCreacion          DateTime              @default(now()) @map("fecha_creacion") @db.Timestamptz(3)
+  fechaActualizacion     DateTime              @updatedAt @map("fecha_actualizacion") @db.Timestamptz(3)
+  estudiante             Estudiante            @relation(fields: [idEstudiante], references: [idEstudiante], onDelete: Restrict, onUpdate: Cascade)
+  roles                  UsuarioRol[]
+  eventosCreados         Evento[]              @relation("EventoCreadoPor")
+  eventosGuardados       EventoGuardado[]
+  oportunidadesCreadas   OportunidadHoraBeca[] @relation("OportunidadCreadaPor")
+  importacionesHoras     ImportacionHoras[]    @relation("ImportacionRealizadaPor")
+  registrosCreados       RegistroHoraBeca[]    @relation("RegistroCreadoPor")
+  registrosAcreditados   RegistroHoraBeca[]    @relation("RegistroAcreditadoPor")
+  postulacionesRevisadas PostulacionTutor[]    @relation("PostulacionRevisadaPor")
+  intereses              InteresUsuario[]
+  interacciones          InteraccionUsuario[]
+  notificaciones         Notificacion[]
+
+  @@index([estado], map: "usuario_estado_idx")
+  @@map("usuario")
+}
+
+model Rol {
+  idRol       Int          @id @default(autoincrement()) @map("id_rol")
+  nombre      String       @unique(map: "rol_nombre_key") @db.VarChar(50)
+  descripcion String?      @db.VarChar(255)
+  activo      Boolean      @default(true)
+  usuarios    UsuarioRol[]
+
+  @@map("rol")
+}
+
+model UsuarioRol {
+  idUsuarioRol    Int      @id @default(autoincrement()) @map("id_usuario_rol")
+  idUsuario       Int      @map("id_usuario")
+  idRol           Int      @map("id_rol")
+  fechaAsignacion DateTime @default(now()) @map("fecha_asignacion") @db.Timestamptz(3)
+  activo          Boolean  @default(true)
+  usuario         Usuario  @relation(fields: [idUsuario], references: [idUsuario], onDelete: Cascade, onUpdate: Cascade)
+  rol             Rol      @relation(fields: [idRol], references: [idRol], onDelete: Cascade, onUpdate: Cascade)
+
+  @@unique([idUsuario, idRol], map: "usuario_rol_usuario_rol_key")
+  @@index([idRol], map: "usuario_rol_id_rol_idx")
+  @@map("usuario_rol")
+}
+
+model Asociacion {
+  idAsociacion        Int                    @id @default(autoincrement()) @map("id_asociacion")
+  nombre              String                 @unique(map: "asociacion_nombre_key") @db.VarChar(160)
+  descripcion         String?                @db.Text
+  mision              String?                @db.Text
+  vision              String?                @db.Text
+  informacionContacto String?                @map("informacion_contacto") @db.Text
+  correo              String?                @db.VarChar(254)
+  imagenUrl           String?                @map("imagen_url") @db.VarChar(500)
+  activo              Boolean                @default(true)
+  fechaCreacion       DateTime               @default(now()) @map("fecha_creacion") @db.Timestamptz(3)
+  fechaActualizacion  DateTime               @updatedAt @map("fecha_actualizacion") @db.Timestamptz(3)
+  integrantes         IntegranteAsociacion[]
+  redesSociales       RedSocial[]
+  eventosOrganizados  OrganizadorEvento[]
+
+  @@map("asociacion")
+}
+
+model IntegranteAsociacion {
+  idIntegrante       Int        @id @default(autoincrement()) @map("id_integrante")
+  idAsociacion       Int        @map("id_asociacion")
+  nombre             String     @db.VarChar(200)
+  cargo              String     @db.VarChar(120)
+  periodo            String     @db.VarChar(50)
+  fotoUrl            String?    @map("foto_url") @db.VarChar(500)
+  ordenVisualizacion Int        @default(0) @map("orden_visualizacion")
+  activo             Boolean    @default(true)
+  asociacion         Asociacion @relation(fields: [idAsociacion], references: [idAsociacion], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([idAsociacion], map: "integrante_asociacion_id_asociacion_idx")
+  @@map("integrante_asociacion")
+}
+
+model Club {
+  idClub              Int                 @id @default(autoincrement()) @map("id_club")
+  nombre              String              @unique(map: "club_nombre_key") @db.VarChar(160)
+  descripcion         String?             @db.Text
+  actividades         String?             @db.Text
+  informacionContacto String?             @map("informacion_contacto") @db.Text
+  correo              String?             @db.VarChar(254)
+  imagenUrl           String?             @map("imagen_url") @db.VarChar(500)
+  activo              Boolean             @default(true)
+  fechaCreacion       DateTime            @default(now()) @map("fecha_creacion") @db.Timestamptz(3)
+  fechaActualizacion  DateTime            @updatedAt @map("fecha_actualizacion") @db.Timestamptz(3)
+  redesSociales       RedSocial[]
+  eventosOrganizados  OrganizadorEvento[]
+
+  @@map("club")
+}
+
+model RedSocial {
+  idRedSocial  Int         @id @default(autoincrement()) @map("id_red_social")
+  idAsociacion Int?        @map("id_asociacion")
+  idClub       Int?        @map("id_club")
+  plataforma   String      @db.VarChar(50)
+  url          String      @db.VarChar(500)
+  activo       Boolean     @default(true)
+  asociacion   Asociacion? @relation(fields: [idAsociacion], references: [idAsociacion], onDelete: Cascade, onUpdate: Cascade)
+  club         Club?       @relation(fields: [idClub], references: [idClub], onDelete: Cascade, onUpdate: Cascade)
+
+  @@unique([idAsociacion, plataforma, url], map: "red_social_asociacion_plataforma_url_key")
+  @@unique([idClub, plataforma, url], map: "red_social_club_plataforma_url_key")
+  @@map("red_social")
+}
+
+model CategoriaEvento {
+  idCategoriaEvento Int      @id @default(autoincrement()) @map("id_categoria_evento")
+  nombre            String   @unique(map: "categoria_evento_nombre_key") @db.VarChar(100)
+  descripcion       String?  @db.VarChar(255)
+  color             String?  @db.VarChar(20)
+  activo            Boolean  @default(true)
+  eventos           Evento[]
+
+  @@map("categoria_evento")
+}
+
+model Evento {
+  idEvento             Int                 @id @default(autoincrement()) @map("id_evento")
+  idCategoriaEvento    Int                 @map("id_categoria_evento")
+  creadoPor            Int                 @map("creado_por")
+  nombre               String              @db.VarChar(200)
+  descripcion          String              @db.Text
+  fechaInicio          DateTime            @map("fecha_inicio") @db.Timestamptz(3)
+  fechaFin             DateTime            @map("fecha_fin") @db.Timestamptz(3)
+  ubicacion            String              @db.VarChar(255)
+  imagenUrl            String?             @map("imagen_url") @db.VarChar(500)
+  tipoActividad        TipoActividad       @map("tipo_actividad")
+  informacionAdicional String?             @map("informacion_adicional") @db.Text
+  cupo                 Int?
+  estado               EstadoEvento        @default(BORRADOR)
+  destacado            Boolean             @default(false)
+  fechaCreacion        DateTime            @default(now()) @map("fecha_creacion") @db.Timestamptz(3)
+  fechaActualizacion   DateTime            @updatedAt @map("fecha_actualizacion") @db.Timestamptz(3)
+  categoria            CategoriaEvento     @relation(fields: [idCategoriaEvento], references: [idCategoriaEvento], onDelete: Restrict, onUpdate: Cascade)
+  creador              Usuario             @relation("EventoCreadoPor", fields: [creadoPor], references: [idUsuario], onDelete: Restrict, onUpdate: Cascade)
+  organizadores        OrganizadorEvento[]
+  guardados            EventoGuardado[]
+
+  @@index([fechaInicio], map: "evento_fecha_inicio_idx")
+  @@index([estado], map: "evento_estado_idx")
+  @@index([idCategoriaEvento], map: "evento_id_categoria_idx")
+  @@index([estado, fechaInicio], map: "evento_estado_fecha_inicio_idx")
+  @@index([creadoPor], map: "evento_creado_por_idx")
+  @@map("evento")
+}
+
+model OrganizadorEvento {
+  idOrganizadorEvento  Int         @id @default(autoincrement()) @map("id_organizador_evento")
+  idEvento             Int         @map("id_evento")
+  idAsociacion         Int?        @map("id_asociacion")
+  idClub               Int?        @map("id_club")
+  unidadUvg            String?     @map("unidad_uvg") @db.VarChar(160)
+  organizadorPrincipal Boolean     @default(false) @map("organizador_principal")
+  evento               Evento      @relation(fields: [idEvento], references: [idEvento], onDelete: Cascade, onUpdate: Cascade)
+  asociacion           Asociacion? @relation(fields: [idAsociacion], references: [idAsociacion], onDelete: Restrict, onUpdate: Cascade)
+  club                 Club?       @relation(fields: [idClub], references: [idClub], onDelete: Restrict, onUpdate: Cascade)
+
+  @@unique([idEvento, idAsociacion], map: "organizador_evento_asociacion_key")
+  @@unique([idEvento, idClub], map: "organizador_evento_club_key")
+  @@unique([idEvento, unidadUvg], map: "organizador_evento_unidad_key")
+  @@index([idAsociacion], map: "organizador_evento_id_asociacion_idx")
+  @@index([idClub], map: "organizador_evento_id_club_idx")
+  @@map("organizador_evento")
+}
+
+model EventoGuardado {
+  idEventoGuardado Int      @id @default(autoincrement()) @map("id_evento_guardado")
+  idUsuario        Int      @map("id_usuario")
+  idEvento         Int      @map("id_evento")
+  fechaGuardado    DateTime @default(now()) @map("fecha_guardado") @db.Timestamptz(3)
+  usuario          Usuario  @relation(fields: [idUsuario], references: [idUsuario], onDelete: Cascade, onUpdate: Cascade)
+  evento           Evento   @relation(fields: [idEvento], references: [idEvento], onDelete: Cascade, onUpdate: Cascade)
+
+  @@unique([idUsuario, idEvento], map: "evento_guardado_usuario_evento_key")
+  @@index([idEvento], map: "evento_guardado_id_evento_idx")
+  @@map("evento_guardado")
+}
+
+model OportunidadHoraBeca {
+  idOportunidad        Int                      @id @default(autoincrement()) @map("id_oportunidad")
+  creadoPor            Int                      @map("creado_por")
+  nombre               String                   @db.VarChar(200)
+  descripcion          String                   @db.Text
+  fecha                DateTime                 @db.Date
+  horaInicio           DateTime                 @map("hora_inicio") @db.Time(0)
+  horaFin              DateTime                 @map("hora_fin") @db.Time(0)
+  lugar                String                   @db.VarChar(255)
+  cantidadPersonas     Int                      @map("cantidad_personas")
+  estado               EstadoOportunidad        @default(BORRADOR)
+  informacionAdicional String?                  @map("informacion_adicional") @db.Text
+  fechaCreacion        DateTime                 @default(now()) @map("fecha_creacion") @db.Timestamptz(3)
+  fechaActualizacion   DateTime                 @updatedAt @map("fecha_actualizacion") @db.Timestamptz(3)
+  creador              Usuario                  @relation("OportunidadCreadaPor", fields: [creadoPor], references: [idUsuario], onDelete: Restrict, onUpdate: Cascade)
+  inscripciones        InscripcionOportunidad[]
+  registrosHoraBeca    RegistroHoraBeca[]
+
+  @@index([fecha], map: "oportunidad_hora_beca_fecha_idx")
+  @@index([estado], map: "oportunidad_hora_beca_estado_idx")
+  @@index([estado, fecha], map: "oportunidad_hora_beca_estado_fecha_idx")
+  @@index([creadoPor], map: "oportunidad_hora_beca_creado_por_idx")
+  @@map("oportunidad_hora_beca")
+}
+
+model InscripcionOportunidad {
+  idInscripcion    Int                 @id @default(autoincrement()) @map("id_inscripcion")
+  idOportunidad    Int                 @map("id_oportunidad")
+  idEstudiante     Int                 @map("id_estudiante")
+  estado           EstadoInscripcion   @default(PENDIENTE)
+  fechaInscripcion DateTime            @default(now()) @map("fecha_inscripcion") @db.Timestamptz(3)
+  observaciones    String?             @db.Text
+  oportunidad      OportunidadHoraBeca @relation(fields: [idOportunidad], references: [idOportunidad], onDelete: Restrict, onUpdate: Cascade)
+  estudiante       Estudiante          @relation(fields: [idEstudiante], references: [idEstudiante], onDelete: Restrict, onUpdate: Cascade)
+
+  @@unique([idOportunidad, idEstudiante], map: "inscripcion_oportunidad_estudiante_key")
+  @@index([idEstudiante], map: "inscripcion_oportunidad_id_estudiante_idx")
+  @@map("inscripcion_oportunidad")
+}
+
+model ImportacionHoras {
+  idImportacion    Int                @id @default(autoincrement()) @map("id_importacion")
+  realizadaPor     Int                @map("realizada_por")
+  nombreArchivo    String             @map("nombre_archivo") @db.VarChar(255)
+  fechaImportacion DateTime           @default(now()) @map("fecha_importacion") @db.Timestamptz(3)
+  totalFilas       Int                @default(0) @map("total_filas")
+  filasExitosas    Int                @default(0) @map("filas_exitosas")
+  filasFallidas    Int                @default(0) @map("filas_fallidas")
+  estado           EstadoImportacion  @default(PROCESANDO)
+  detalleErrores   Json?              @map("detalle_errores") @db.JsonB
+  usuario          Usuario            @relation("ImportacionRealizadaPor", fields: [realizadaPor], references: [idUsuario], onDelete: Restrict, onUpdate: Cascade)
+  registros        RegistroHoraBeca[]
+
+  @@index([fechaImportacion], map: "importacion_horas_fecha_idx")
+  @@index([estado], map: "importacion_horas_estado_idx")
+  @@index([realizadaPor], map: "importacion_horas_realizada_por_idx")
+  @@map("importacion_horas")
+}
+
+model RegistroHoraBeca {
+  idRegistroHora       Int                  @id @default(autoincrement()) @map("id_registro_hora")
+  idEstudiante         Int                  @map("id_estudiante")
+  idOportunidad        Int?                 @map("id_oportunidad")
+  idImportacion        Int?                 @map("id_importacion")
+  creadoPor            Int                  @map("creado_por")
+  acreditadoPor        Int?                 @map("acreditado_por")
+  fechaActividad       DateTime             @map("fecha_actividad") @db.Date
+  horarioApoyo         String               @map("horario_apoyo") @db.VarChar(120)
+  descripcionActividad String               @map("descripcion_actividad") @db.Text
+  cantidadHoras        Decimal              @map("cantidad_horas") @db.Decimal(6, 2)
+  estado               EstadoHoraBeca       @default(PENDIENTE)
+  fechaAcreditacion    DateTime?            @map("fecha_acreditacion") @db.Timestamptz(3)
+  observaciones        String?              @db.Text
+  fechaCreacion        DateTime             @default(now()) @map("fecha_creacion") @db.Timestamptz(3)
+  fechaActualizacion   DateTime             @updatedAt @map("fecha_actualizacion") @db.Timestamptz(3)
+  estudiante           Estudiante           @relation(fields: [idEstudiante], references: [idEstudiante], onDelete: Restrict, onUpdate: Cascade)
+  oportunidad          OportunidadHoraBeca? @relation(fields: [idOportunidad], references: [idOportunidad], onDelete: Restrict, onUpdate: Cascade)
+  importacion          ImportacionHoras?    @relation(fields: [idImportacion], references: [idImportacion], onDelete: Restrict, onUpdate: Cascade)
+  creador              Usuario              @relation("RegistroCreadoPor", fields: [creadoPor], references: [idUsuario], onDelete: Restrict, onUpdate: Cascade)
+  acreditador          Usuario?             @relation("RegistroAcreditadoPor", fields: [acreditadoPor], references: [idUsuario], onDelete: SetNull, onUpdate: Cascade)
+
+  @@index([idEstudiante], map: "registro_hora_beca_id_estudiante_idx")
+  @@index([estado], map: "registro_hora_beca_estado_idx")
+  @@index([fechaActividad], map: "registro_hora_beca_fecha_actividad_idx")
+  @@index([idEstudiante, estado], map: "registro_hora_beca_estudiante_estado_idx")
+  @@index([idOportunidad], map: "registro_hora_beca_id_oportunidad_idx")
+  @@index([idImportacion], map: "registro_hora_beca_id_importacion_idx")
+  @@index([creadoPor], map: "registro_hora_beca_creado_por_idx")
+  @@index([acreditadoPor], map: "registro_hora_beca_acreditado_por_idx")
+  @@map("registro_hora_beca")
+}
+
+model Curso {
+  idCurso       Int                @id @default(autoincrement()) @map("id_curso")
+  codigo        String             @unique(map: "curso_codigo_key") @db.VarChar(30)
+  nombre        String             @db.VarChar(160)
+  activo        Boolean            @default(true)
+  postulaciones CursoPostulacion[]
+  tutores       TutorCurso[]
+  tutorias      Tutoria[]
+
+  @@map("curso")
+}
+
+model PostulacionTutor {
+  idPostulacion         Int                @id @default(autoincrement()) @map("id_postulacion")
+  idEstudiante          Int                @map("id_estudiante")
+  revisadaPor           Int?               @map("revisada_por")
+  estado                EstadoPostulacion  @default(PENDIENTE)
+  comentarioSolicitante String?            @map("comentario_solicitante") @db.Text
+  comentarioRevision    String?            @map("comentario_revision") @db.Text
+  fechaPostulacion      DateTime           @default(now()) @map("fecha_postulacion") @db.Timestamptz(3)
+  fechaRevision         DateTime?          @map("fecha_revision") @db.Timestamptz(3)
+  estudiante            Estudiante         @relation(fields: [idEstudiante], references: [idEstudiante], onDelete: Restrict, onUpdate: Cascade)
+  revisor               Usuario?           @relation("PostulacionRevisadaPor", fields: [revisadaPor], references: [idUsuario], onDelete: SetNull, onUpdate: Cascade)
+  cursos                CursoPostulacion[]
+
+  @@index([idEstudiante], map: "postulacion_tutor_id_estudiante_idx")
+  @@index([estado], map: "postulacion_tutor_estado_idx")
+  @@index([fechaPostulacion], map: "postulacion_tutor_fecha_idx")
+  @@index([revisadaPor], map: "postulacion_tutor_revisada_por_idx")
+  @@map("postulacion_tutor")
+}
+
+model CursoPostulacion {
+  idCursoPostulacion Int              @id @default(autoincrement()) @map("id_curso_postulacion")
+  idPostulacion      Int              @map("id_postulacion")
+  idCurso            Int              @map("id_curso")
+  notaObtenida       Decimal?         @map("nota_obtenida") @db.Decimal(6, 2)
+  comprobanteUrl     String           @map("comprobante_url") @db.VarChar(500)
+  postulacion        PostulacionTutor @relation(fields: [idPostulacion], references: [idPostulacion], onDelete: Cascade, onUpdate: Cascade)
+  curso              Curso            @relation(fields: [idCurso], references: [idCurso], onDelete: Restrict, onUpdate: Cascade)
+
+  @@unique([idPostulacion, idCurso], map: "curso_postulacion_postulacion_curso_key")
+  @@index([idCurso], map: "curso_postulacion_id_curso_idx")
+  @@map("curso_postulacion")
+}
+
+model Tutor {
+  idTutor             Int                   @id @default(autoincrement()) @map("id_tutor")
+  idEstudiante        Int                   @unique(map: "tutor_id_estudiante_key") @map("id_estudiante")
+  descripcion         String?               @db.Text
+  informacionContacto String?               @map("informacion_contacto") @db.Text
+  estado              EstadoTutor           @default(ACTIVO)
+  fechaAprobacion     DateTime              @map("fecha_aprobacion") @db.Timestamptz(3)
+  estudiante          Estudiante            @relation(fields: [idEstudiante], references: [idEstudiante], onDelete: Restrict, onUpdate: Cascade)
+  cursos              TutorCurso[]
+  disponibilidades    DisponibilidadTutor[]
+  tutorias            Tutoria[]
+
+  @@map("tutor")
+}
+
+model TutorCurso {
+  idTutorCurso Int     @id @default(autoincrement()) @map("id_tutor_curso")
+  idTutor      Int     @map("id_tutor")
+  idCurso      Int     @map("id_curso")
+  activo       Boolean @default(true)
+  tutor        Tutor   @relation(fields: [idTutor], references: [idTutor], onDelete: Cascade, onUpdate: Cascade)
+  curso        Curso   @relation(fields: [idCurso], references: [idCurso], onDelete: Cascade, onUpdate: Cascade)
+
+  @@unique([idTutor, idCurso], map: "tutor_curso_tutor_curso_key")
+  @@index([idCurso], map: "tutor_curso_id_curso_idx")
+  @@map("tutor_curso")
+}
+
+model DisponibilidadTutor {
+  idDisponibilidad Int              @id @default(autoincrement()) @map("id_disponibilidad")
+  idTutor          Int              @map("id_tutor")
+  diaSemana        DiaSemana        @map("dia_semana")
+  horaInicio       DateTime         @map("hora_inicio") @db.Time(0)
+  horaFin          DateTime         @map("hora_fin") @db.Time(0)
+  modalidad        ModalidadTutoria
+  ubicacionEnlace  String?          @map("ubicacion_enlace") @db.VarChar(500)
+  activo           Boolean          @default(true)
+  tutor            Tutor            @relation(fields: [idTutor], references: [idTutor], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([idTutor], map: "disponibilidad_tutor_id_tutor_idx")
+  @@index([diaSemana], map: "disponibilidad_tutor_dia_semana_idx")
+  @@map("disponibilidad_tutor")
+}
+
+model Tutoria {
+  idTutoria          Int              @id @default(autoincrement()) @map("id_tutoria")
+  idTutor            Int              @map("id_tutor")
+  idCurso            Int              @map("id_curso")
+  idEstudiante       Int              @map("id_estudiante")
+  fechaInicio        DateTime         @map("fecha_inicio") @db.Timestamptz(3)
+  fechaFin           DateTime         @map("fecha_fin") @db.Timestamptz(3)
+  modalidad          ModalidadTutoria
+  ubicacionEnlace    String?          @map("ubicacion_enlace") @db.VarChar(500)
+  estado             EstadoTutoria    @default(PROGRAMADA)
+  observaciones      String?          @db.Text
+  fechaCreacion      DateTime         @default(now()) @map("fecha_creacion") @db.Timestamptz(3)
+  fechaActualizacion DateTime         @updatedAt @map("fecha_actualizacion") @db.Timestamptz(3)
+  tutor              Tutor            @relation(fields: [idTutor], references: [idTutor], onDelete: Restrict, onUpdate: Cascade)
+  curso              Curso            @relation(fields: [idCurso], references: [idCurso], onDelete: Restrict, onUpdate: Cascade)
+  estudiante         Estudiante       @relation(fields: [idEstudiante], references: [idEstudiante], onDelete: Restrict, onUpdate: Cascade)
+
+  @@index([idTutor], map: "tutoria_id_tutor_idx")
+  @@index([idEstudiante], map: "tutoria_id_estudiante_idx")
+  @@index([idCurso], map: "tutoria_id_curso_idx")
+  @@index([estado], map: "tutoria_estado_idx")
+  @@index([fechaInicio], map: "tutoria_fecha_inicio_idx")
+  @@map("tutoria")
+}
+
+/// idReferencia es una referencia polimorfica identificada por tipoInteres.
+/// No se declara una llave foranea porque puede apuntar a tablas diferentes.
+model InteresUsuario {
+  idInteresUsuario Int      @id @default(autoincrement()) @map("id_interes_usuario")
+  idUsuario        Int      @map("id_usuario")
+  tipoInteres      String   @map("tipo_interes") @db.VarChar(50)
+  idReferencia     Int      @map("id_referencia")
+  nivelInteres     Int      @default(1) @map("nivel_interes")
+  fechaCreacion    DateTime @default(now()) @map("fecha_creacion") @db.Timestamptz(3)
+  usuario          Usuario  @relation(fields: [idUsuario], references: [idUsuario], onDelete: Cascade, onUpdate: Cascade)
+
+  @@unique([idUsuario, tipoInteres, idReferencia], map: "interes_usuario_tipo_referencia_key")
+  @@map("interes_usuario")
+}
+
+/// idEntidad es una referencia polimorfica identificada por tipoEntidad.
+/// No se declara una llave foranea porque puede apuntar a tablas diferentes.
+model InteraccionUsuario {
+  idInteraccion    Int      @id @default(autoincrement()) @map("id_interaccion")
+  idUsuario        Int      @map("id_usuario")
+  tipoEntidad      String   @map("tipo_entidad") @db.VarChar(50)
+  idEntidad        Int      @map("id_entidad")
+  tipoInteraccion  String   @map("tipo_interaccion") @db.VarChar(50)
+  fechaInteraccion DateTime @default(now()) @map("fecha_interaccion") @db.Timestamptz(3)
+  usuario          Usuario  @relation(fields: [idUsuario], references: [idUsuario], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([idUsuario], map: "interaccion_usuario_id_usuario_idx")
+  @@index([tipoEntidad], map: "interaccion_usuario_tipo_entidad_idx")
+  @@index([fechaInteraccion], map: "interaccion_usuario_fecha_idx")
+  @@map("interaccion_usuario")
+}
+
+model Notificacion {
+  idNotificacion Int       @id @default(autoincrement()) @map("id_notificacion")
+  idUsuario      Int       @map("id_usuario")
+  titulo         String    @db.VarChar(160)
+  mensaje        String    @db.Text
+  tipo           String    @db.VarChar(50)
+  urlDestino     String?   @map("url_destino") @db.VarChar(500)
+  leida          Boolean   @default(false)
+  fechaEnvio     DateTime  @default(now()) @map("fecha_envio") @db.Timestamptz(3)
+  fechaLectura   DateTime? @map("fecha_lectura") @db.Timestamptz(3)
+  usuario        Usuario   @relation(fields: [idUsuario], references: [idUsuario], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([leida], map: "notificacion_leida_idx")
+  @@index([fechaEnvio], map: "notificacion_fecha_envio_idx")
+  @@index([idUsuario, leida, fechaEnvio], map: "notificacion_usuario_leida_fecha_idx")
+  @@map("notificacion")
+}
