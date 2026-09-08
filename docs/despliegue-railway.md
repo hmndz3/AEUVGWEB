@@ -35,19 +35,32 @@ Se configuran en el servicio de la aplicación, pestaña **Variables**. Nunca se
 | `NEXT_PUBLIC_APP_URL` | dominio generado por Railway, con `https://` y sin barra final         |
 | `AUTH_SECRET`         | valor aleatorio propio, generado con `openssl rand -base64 32`         |
 
+`AUTH_SECRET` firmará las sesiones de los usuarios, por lo que debe ser un valor aleatorio generado con el comando indicado y nunca una palabra escogida a mano. `NEXT_PUBLIC_APP_URL` se incrusta durante el build: cambiar su valor exige un nuevo despliegue para que tome efecto.
+
 `RESEND_API_KEY` y `EMAIL_FROM` se agregan cuando se implemente el envío de correos; la aplicación funciona sin ellas. La lista completa vive en [.env.example](../.env.example) y cada variable nueva debe documentarse allí.
 
 ## 4. Migraciones de la base de datos
 
-El contenedor solo ejecuta la aplicación, así que las migraciones se aplican en un paso previo. En el servicio: **Settings → Deploy → Pre-Deploy Command**:
+Las migraciones **no** se aplican desde el despliegue. La imagen de producción es un build autocontenido de Next: contiene lo necesario para servir la aplicación, pero no el CLI de Prisma, que arrastra decenas de dependencias de desarrollo. Configurar un Pre-Deploy Command con `prisma migrate deploy` falla con `sh: prisma: not found`, e incluirlo agregaría cientos de megabytes a la imagen. El campo **Settings → Deploy → Pre-Deploy Command** debe quedar vacío.
 
+En su lugar, las migraciones se aplican de forma explícita desde una máquina de desarrollo, usando el CLI de Railway para inyectar las variables del ambiente:
+
+```bash
+npm i -g @railway/cli
+railway login
+railway link
+railway run npm run db:migrate:deploy
 ```
-npm run db:migrate:deploy
+
+`railway run` ejecuta el comando localmente con `DATABASE_URL` del proyecto, de modo que corre con todas las dependencias disponibles. Se usa `migrate deploy` porque aplica únicamente las migraciones ya versionadas: no genera archivos nuevos ni reinicia datos.
+
+Este paso se repite cada vez que se agrega una migración, después de publicar el cambio en `main`. Que sea explícito es deliberado: un cambio de esquema en producción conviene ejecutarlo de forma consciente y no como efecto secundario de un despliegue.
+
+Los catálogos iniciales (facultades, carreras, categorías y roles) se cargan una sola vez, de la misma forma:
+
+```bash
+railway run npx prisma db seed
 ```
-
-Railway lo ejecuta después del build y antes de reemplazar la versión en línea, de modo que el esquema queda actualizado antes de recibir tráfico. Se usa `prisma migrate deploy` porque aplica únicamente las migraciones ya versionadas: no genera archivos nuevos ni reinicia datos.
-
-Los catálogos iniciales (facultades, carreras, categorías y roles) se cargan una sola vez con `npx prisma db seed` apuntando a la base de Railway. No forman parte del despliegue automático.
 
 ## 5. Verificación
 
@@ -56,7 +69,7 @@ Los catálogos iniciales (facultades, carreras, categorías y roles) se cargan u
 - [ ] Un push a `main` genera un despliegue nuevo en el panel de Railway.
 - [ ] Los respaldos automáticos de PostgreSQL están habilitados (**Database → Backups**).
 
-Si `/api/health` responde con estado `error`, la aplicación no alcanza la base: revisar que `DATABASE_URL` esté definida y que el Pre-Deploy Command haya aplicado las migraciones.
+Si `/api/health` responde con estado `error`, la aplicación no alcanza la base: revisar que `DATABASE_URL` esté definida en el servicio y que apunte al PostgreSQL del proyecto. La verificación consulta la conexión, no el esquema, por lo que responde `ok` aunque las migraciones todavía no se hayan aplicado.
 
 ## 6. Dominio institucional (en trámite)
 
