@@ -84,7 +84,7 @@ docker compose --profile app up --build
 ## Flujo de trabajo con Git
 
 - **`main`** — rama principal. Cada push genera un despliegue automático en Railway (producción).
-- **`develop`** — rama de integración. Aquí se une el trabajo del equipo durante el sprint; se despliega al ambiente de pruebas.
+- **`develop`** — rama de integración. Aquí se une el trabajo del equipo durante el sprint.
 - El trabajo diario se hace en ramas por tarea (`feature/T-01.3-estructura`), que se integran a `develop` mediante pull requests.
 - Al cerrar el sprint, `develop` se integra a `main`.
 
