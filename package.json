@@ -12,6 +12,9 @@
     "postinstall": "prisma generate",
     "db:seed": "prisma db seed",
     "db:migrate:deploy": "prisma migrate deploy",
+    "db:railway:migrate": "node scripts/db/railway.js prisma migrate deploy",
+    "db:railway:seed": "node scripts/db/railway.js prisma db seed",
+    "db:railway:status": "node scripts/db/railway.js prisma migrate status",
     "db:seed:test": "tsx prisma/seed-test.ts",
     "db:verify-catalogs": "tsx prisma/verify-catalogs.ts",
     "db:verify-test-data": "tsx prisma/verify-test-data.ts"

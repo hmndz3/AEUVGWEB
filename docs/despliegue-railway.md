@@ -48,20 +48,22 @@ Las migraciones **no** se aplican desde el despliegue. La imagen de producción 
 
 En su lugar se aplican de forma explícita desde una máquina de desarrollo, que sí cuenta con todas las dependencias. El `DATABASE_URL` del proyecto apunta a `postgres.railway.internal`, un nombre que solo resuelve dentro de la red privada de Railway, por lo que `railway run` no basta: hace falta una ruta pública hacia la base.
 
-Para abrirla, en el servicio **Postgres**: **Settings → Public Networking → TCP Proxy**, puerto `5432`. Railway entrega un host y un puerto públicos, y agrega la variable `DATABASE_PUBLIC_URL`.
+Para abrirla, en el servicio **Postgres**: **Settings → Public Networking → TCP Proxy**, puerto `5432`. Railway entrega un host y un puerto públicos.
+
+Con el CLI de Railway autenticado y el proyecto enlazado:
 
 ```bash
 npm i -g @railway/cli
 railway login
 railway link
-railway variables -s Postgres --kv   # copiar el valor de DATABASE_PUBLIC_URL
 ```
 
-Con esa cadena de conexión se aplican las migraciones y se cargan los catálogos iniciales:
+El script [`scripts/db/railway.js`](../scripts/db/railway.js) obtiene el endpoint del proxy y las credenciales del servicio, arma la cadena de conexión y se la entrega al comando de Prisma por variable de entorno, sin escribirla en disco. Se usa a través de estos scripts:
 
 ```bash
-DATABASE_URL="<DATABASE_PUBLIC_URL>" npx prisma migrate deploy
-DATABASE_URL="<DATABASE_PUBLIC_URL>" npx prisma db seed
+npm run db:railway:status    # revisar qué migraciones están aplicadas
+npm run db:railway:migrate   # aplicar las migraciones pendientes
+npm run db:railway:seed      # cargar los catálogos iniciales
 ```
 
 Se usa `migrate deploy` porque aplica únicamente las migraciones ya versionadas: no genera archivos nuevos ni reinicia datos. El seed de catálogos es idempotente y se ejecuta una sola vez por ambiente.
