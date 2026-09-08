@@ -8,7 +8,7 @@ const { p, bullet, h1, h2, makeTable, spacer, cover, buildDocument } = require("
 const doc = buildDocument([
   ...cover({
     subtitle: "Documento de Desarrollo del Sprint 1",
-    date: "Guatemala, 29 de agosto del 2026",
+    date: "Guatemala, 8 de septiembre del 2026",
   }),
 
   // ---------- 1. Introducción ----------
@@ -96,7 +96,7 @@ const doc = buildDocument([
 
   h2("2.2. Repositorio y flujo de trabajo"),
   p(
-    "El proyecto se versiona en GitHub, en el repositorio hmndz3/AEUVGWEB, con dos ramas permanentes: main, conectada al ambiente de producción, y develop, rama de integración conectada al ambiente de pruebas. El trabajo de cada tarea se realiza en ramas propias que se integran a develop mediante pull requests, lo que permite revisar el código entre ambos integrantes y probar cada cambio en el ambiente de pruebas antes de publicarlo; al cierre del sprint, develop se integra a main para desplegar a producción. El archivo README documenta el stack, los requisitos, las instrucciones para ejecutar el proyecto localmente, los scripts disponibles y este flujo de trabajo, de manera que cualquier integrante pueda montar el entorno desde cero."
+    "El proyecto se versiona en GitHub, en el repositorio hmndz3/AEUVGWEB, con dos ramas permanentes: main, que corresponde a la versión publicada, y develop, donde se integra el trabajo del sprint. El trabajo de cada tarea se realiza en ramas propias que se integran a develop mediante pull requests, lo que permite revisar el código entre ambos integrantes antes de publicarlo; al cierre del sprint, develop se integra a main y la nueva versión queda en línea. El archivo README documenta el stack, los requisitos, las instrucciones para ejecutar el proyecto localmente, los scripts disponibles y este flujo de trabajo, de manera que cualquier integrante pueda montar el entorno desde cero."
   ),
 
   h2("2.3. Entorno de desarrollo y calidad de código"),
@@ -109,17 +109,87 @@ const doc = buildDocument([
 
   h2("2.4. Despliegue y variables de entorno"),
   p(
-    "El despliegue se realiza en Railway construyendo la imagen de producción desde el Dockerfile del repositorio, con despliegue automático: cada actualización de la rama main publica una nueva versión en producción, y cada actualización de develop publica al ambiente de pruebas, cada uno con su propia base de datos. El procedimiento completo de configuración del proyecto en Railway, de sus ambientes y del dominio institucional quedó documentado en el repositorio, en el archivo docs/despliegue-railway.md."
+    "El despliegue se realiza en Railway construyendo la imagen de producción desde el Dockerfile del repositorio, con publicación automática: cada actualización de la rama main genera una nueva versión en línea. La aplicación se encuentra desplegada y accesible en https://aeuvgweb-production.up.railway.app, junto con el servicio de base de datos PostgreSQL del mismo proyecto. El procedimiento completo de configuración quedó documentado en el repositorio, en el archivo docs/despliegue-railway.md, incluyendo el trámite pendiente del dominio institucional."
   ),
   p(
-    "Las variables de entorno se definen por ambiente (desarrollo local, pruebas y producción) y nunca se almacenan en el repositorio: los archivos .env están excluidos del control de versiones y en Railway las variables se configuran desde el panel de cada ambiente. El repositorio incluye el archivo de ejemplo .env.example, que documenta con comentarios cada variable requerida:"
+    "Las variables de entorno se definen por ambiente y nunca se almacenan en el repositorio: los archivos .env están excluidos del control de versiones y en Railway se configuran desde el panel del servicio. El repositorio incluye el archivo de ejemplo .env.example, que documenta con comentarios cada variable requerida:"
   ),
   bullet(
-    "DATABASE_URL: cadena de conexión a PostgreSQL; en Railway se referencia la base de datos del ambiente correspondiente."
+    "DATABASE_URL: cadena de conexión a PostgreSQL, referenciada desde el servicio de Railway."
   ),
-  bullet("NEXT_PUBLIC_APP_URL: URL pública de la aplicación según el ambiente."),
-  bullet("AUTH_SECRET: secreto de firma de sesiones, distinto en cada ambiente."),
+  bullet("NEXT_PUBLIC_APP_URL: dirección pública de la aplicación."),
+  bullet("AUTH_SECRET: secreto aleatorio para la firma de sesiones."),
+  bullet("PORT: puerto en el que la aplicación atiende las peticiones."),
   bullet("RESEND_API_KEY y EMAIL_FROM: credenciales del servicio de correos transaccionales."),
+
+  // ---------- 3. HU-02 ----------
+  h1("3. HU-02 - Diseño e implementación de la base de datos"),
+  p(
+    "Esta historia definió y construyó la base de datos sobre la cual se apoyarán todos los módulos del sistema. A partir del documento de definición del proyecto se identificaron las entidades, sus atributos y las reglas de negocio; con ello se elaboró el modelo entidad-relación, se implementó el esquema en PostgreSQL mediante migraciones versionadas y se cargaron los catálogos necesarios para comenzar a trabajar. Al cierre de la historia, la base de datos se encuentra creada y poblada en el servicio de Railway, y la aplicación desplegada se conecta a ella."
+  ),
+
+  h2("3.1. Modelo de datos"),
+  p(
+    "El modelo comprende 28 entidades organizadas por módulo, acompañadas de 12 enumeraciones que representan los estados y clasificaciones cerradas del sistema:"
+  ),
+  bullet(
+    "Usuarios y estudiantes: facultades, carreras, estudiantes, usuarios, roles y su asignación."
+  ),
+  bullet(
+    "Asociaciones y clubes: asociaciones, integrantes de junta directiva, clubes y redes sociales."
+  ),
+  bullet("Eventos: categorías, eventos, organizadores y eventos guardados por los usuarios."),
+  bullet(
+    "Horas beca: oportunidades, inscripciones, registros de horas e importaciones desde archivos externos."
+  ),
+  bullet("Tutorías: cursos, postulaciones, tutores, disponibilidad horaria y tutorías impartidas."),
+  bullet("Personalización: intereses, interacciones de los usuarios y notificaciones."),
+  p(
+    "Una decisión central del modelo es la separación entre estudiante y usuario. El carnet identifica al estudiante y permite que AEUVG registre horas beca aunque la persona todavía no tenga cuenta en la plataforma; cuando el estudiante se registra con ese mismo carnet, el sistema asocia automáticamente los registros existentes a su perfil. Los estados de las horas se representan mediante una enumeración, de modo que las horas acreditadas se conserven como parte del historial y no vuelvan a contabilizarse como pendientes. El detalle completo del modelo, sus convenciones, restricciones y decisiones pendientes quedó documentado en el archivo docs/modelo-datos.md del repositorio."
+  ),
+
+  h2("3.2. Diagrama entidad-relación"),
+  p(
+    "Se elaboró el diagrama entidad-relación que define las relaciones entre las entidades y su cardinalidad, cubriendo los módulos de usuarios, eventos, asociaciones, clubes, horas beca, tutorías y notificaciones. El diagrama está versionado junto con la documentación del modelo, de manera que se actualiza con el mismo control de cambios que el resto del proyecto y ambos integrantes trabajan siempre sobre la misma versión."
+  ),
+
+  h2("3.3. Implementación del esquema"),
+  p(
+    "El esquema se implementó con Prisma sobre PostgreSQL, mediante una migración inicial versionada en el repositorio. La migración crea las 28 tablas del modelo con sus llaves primarias, 38 llaves foráneas que garantizan la integridad referencial, restricciones de unicidad y de validación, y 72 índices sobre los campos de búsqueda frecuente, como el carnet del estudiante y las fechas de los eventos."
+  ),
+  p(
+    "El uso de migraciones versionadas permite que cualquier cambio futuro del esquema quede registrado en el historial del proyecto y pueda aplicarse de forma controlada, tanto en los entornos locales de desarrollo como en la base de datos publicada."
+  ),
+
+  h2("3.4. Catálogos iniciales"),
+  p(
+    "Se cargaron los catálogos necesarios para que los módulos de los siguientes sprints cuenten con información de referencia desde el inicio: 8 unidades académicas, 48 carreras de pregrado, 8 categorías de eventos y los 3 roles del sistema, correspondientes a estudiante, tutor y administrador. La información académica se tomó del catálogo público de carreras de la Universidad del Valle de Guatemala."
+  ),
+  p(
+    "La carga es idempotente: crea los registros que faltan, actualiza los que difieren de la definición versionada y deja intactos los que ya coinciden, sin eliminar información. Los valores se mantienen en archivos separados dentro del repositorio, de modo que actualizar un catálogo no implica modificar la lógica de carga. Adicionalmente se elaboró un conjunto de información ficticia, independiente de los catálogos, destinado exclusivamente a pruebas en entornos locales."
+  ),
+
+  h2("3.5. Conexión de la aplicación con la base de datos"),
+  p(
+    "La aplicación se conecta a PostgreSQL a través de un cliente único y reutilizado, que se crea la primera vez que se solicita. Para verificar la conexión de forma directa se implementó el punto de acceso /api/health, que consulta la base de datos y responde si la comunicación es correcta. Esta verificación permite confirmar el estado del sistema desde el navegador, sin necesidad de revisar los registros del servidor."
+  ),
+
+  // ---------- 4. Estado ----------
+  h1("4. Estado del sprint"),
+  p(
+    "Al momento de esta actualización, las historias de usuario HU-01 y HU-02 se encuentran completadas. El sistema cuenta con:"
+  ),
+  bullet("El stack tecnológico definido y documentado."),
+  bullet("El repositorio configurado, con las ramas de trabajo y el archivo README."),
+  bullet(
+    "El proyecto inicializado, con su estructura de carpetas y herramientas de calidad de código."
+  ),
+  bullet("La aplicación desplegada en Railway y accesible desde internet."),
+  bullet("La base de datos PostgreSQL creada, con su esquema completo y sus catálogos cargados."),
+  bullet("La conexión entre la aplicación y la base de datos verificada."),
+  p(
+    "El trámite del dominio institucional continúa en gestión ante la universidad. Las historias restantes del sprint corresponden al sistema de diseño y prototipos, la autenticación de usuarios, los roles y permisos, y las páginas informativas de AEUVG."
+  ),
 ]);
 
 const out = path.join(__dirname, "..", "..", "Documentos", "AEUVG - Desarrollo Sprint 1.docx");
