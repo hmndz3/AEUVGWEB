@@ -14,6 +14,7 @@ GitHub (hmndz3/AEUVGWEB)
 - Railway construye la aplicación usando el `Dockerfile` del repositorio (configurado en `railway.json`).
 - Cada push a la rama conectada genera automáticamente un nuevo despliegue.
 - Cada ambiente tiene su propia base de datos y sus propias variables de entorno.
+- El build genera el cliente de Prisma (`npm run build` ejecuta `prisma generate`), por lo que no requiere conexión a la base de datos.
 
 ## 2. Creación del proyecto (una sola vez)
 
@@ -46,7 +47,19 @@ Se configuran en Railway: servicio → pestaña **Variables**, por cada ambiente
 
 La lista completa y actualizada de variables vive en [.env.example](../.env.example); cada variable nueva que el proyecto necesite debe agregarse allí con un comentario.
 
-## 5. Dominio institucional (T-01.6, en trámite)
+## 5. Migraciones de la base de datos
+
+Las migraciones no se aplican solas: el contenedor únicamente ejecuta la aplicación. En cada ambiente se configura, dentro del servicio de la aplicación, **Settings → Deploy → Pre-Deploy Command**:
+
+```
+npm run db:migrate:deploy
+```
+
+Railway ejecuta ese comando después del build y antes de reemplazar la versión en línea, de modo que el esquema queda actualizado antes de recibir tráfico. Se usa `prisma migrate deploy` porque aplica únicamente las migraciones ya versionadas, sin generar archivos nuevos ni reiniciar datos.
+
+Los catálogos iniciales se cargan una sola vez por ambiente, de forma manual, con `npx prisma db seed` apuntando a la base correspondiente. No forman parte del despliegue automático.
+
+## 6. Dominio institucional (T-01.6, en trámite)
 
 Cuando la universidad apruebe el dominio `.uvg.gt`:
 
@@ -55,12 +68,15 @@ Cuando la universidad apruebe el dominio `.uvg.gt`:
 3. Solicitar al área de TI de la UVG la creación de ese registro CNAME apuntando al dominio de Railway.
 4. Actualizar `NEXT_PUBLIC_APP_URL` en producción.
 
-## 6. Verificación del despliegue
+## 7. Verificación del despliegue
 
 Después de cada configuración inicial:
 
 - [ ] Un push a `main` genera un deploy visible en el dashboard de Railway.
 - [ ] La URL pública responde y muestra la aplicación.
+- [ ] `GET /api/health` responde `{"estado":"ok","baseDatos":"conectada"}`, lo que confirma que la aplicación alcanza la base de datos.
 - [ ] Un push a `develop` despliega solo el ambiente de pruebas.
 - [ ] Las variables de entorno no aparecen en el repositorio.
 - [ ] Los respaldos automáticos de PostgreSQL están habilitados (Database → Backups).
+
+Si `/api/health` responde con estado `error`, el problema está en la conexión: revisar que `DATABASE_URL` esté definida en ese ambiente y que el Pre-Deploy Command haya aplicado las migraciones.
