@@ -198,14 +198,20 @@ async function ejecutarSeed(): Promise<void> {
   const prisma = new PrismaClient({ adapter });
 
   try {
-    const resultados = await prisma.$transaction(async (tx) => {
-      const facultades = await cargarFacultades(tx);
-      const carreras = await cargarCarreras(tx);
-      const categorias = await cargarCategorias(tx);
-      const roles = await cargarRoles(tx);
+    const resultados = await prisma.$transaction(
+      async (tx) => {
+        const facultades = await cargarFacultades(tx);
+        const carreras = await cargarCarreras(tx);
+        const categorias = await cargarCategorias(tx);
+        const roles = await cargarRoles(tx);
 
-      return { facultades, carreras, categorias, roles };
-    });
+        return { facultades, carreras, categorias, roles };
+      },
+      // La carga recorre los catálogos registro por registro. Ejecutada contra
+      // una base remota, la latencia de cada consulta supera el timeout de
+      // cinco segundos que Prisma aplica por defecto.
+      { maxWait: 15_000, timeout: 120_000 }
+    );
 
     console.log("Catálogos iniciales cargados correctamente.");
     imprimirResultado("Facultades", resultados.facultades);
