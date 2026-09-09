@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { EstadoSesion } from "@/components/layout/estado-sesion";
+
 const ENLACES = [
   { href: "/", texto: "Inicio" },
   { href: "/eventos", texto: "Eventos" },
@@ -39,20 +41,7 @@ export function Encabezado() {
           ))}
         </nav>
 
-        <div className="flex shrink-0 items-center gap-2">
-          <Link
-            href="/iniciar-sesion"
-            className="text-texto-suave hover:text-texto hidden px-3 py-2 text-sm font-medium sm:inline-flex"
-          >
-            Iniciar sesión
-          </Link>
-          <Link
-            href="/crear-cuenta"
-            className="bg-primario hover:bg-primario-fuerte inline-flex h-9 items-center rounded-full px-4 text-sm font-semibold text-white transition-colors"
-          >
-            Crear cuenta
-          </Link>
-        </div>
+        <EstadoSesion />
       </div>
     </header>
   );
