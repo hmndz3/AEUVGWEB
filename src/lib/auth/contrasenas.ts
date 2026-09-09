@@ -36,17 +36,19 @@ export async function verificarContrasena(contrasena: string, hashAlmacenado: st
 
   if (algoritmo !== "scrypt" || !salCodificada || !derivadaCodificada) return false;
 
-  const esperada = Buffer.from(derivadaCodificada, "base64url");
-  const obtenida = await derivar(
-    contrasena,
-    Buffer.from(salCodificada, "base64url"),
-    esperada.length,
-    {
-      N: Number(n),
-      r: Number(r),
-      p: Number(p),
-    }
-  );
+  if (Number(n) !== parametros.N || Number(r) !== parametros.r || Number(p) !== parametros.p) {
+    return false;
+  }
 
-  return esperada.length === obtenida.length && timingSafeEqual(esperada, obtenida);
+  try {
+    const esperada = Buffer.from(derivadaCodificada, "base64url");
+    const sal = Buffer.from(salCodificada, "base64url");
+
+    if (esperada.length !== longitudDerivada || sal.length !== 16) return false;
+
+    const obtenida = await derivar(contrasena, sal, esperada.length, parametros);
+    return timingSafeEqual(esperada, obtenida);
+  } catch {
+    return false;
+  }
 }

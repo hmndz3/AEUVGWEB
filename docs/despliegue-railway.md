@@ -43,9 +43,10 @@ Se configuran en el servicio de la aplicación, pestaña **Variables**. Nunca se
 | `RESEND_API_KEY`                             | clave de envío creada en Resend, nunca versionada                      |
 | `EMAIL_FROM`                                 | remitente perteneciente a un dominio verificado en Resend              |
 | `AUTH_SECRET`                                | valor aleatorio propio, generado con `openssl rand -base64 32`         |
+| `SESSION_DURATION_HOURS`                     | `8`; duración de la sesión firmada, entre 1 y 168 horas                |
 | `PORT`                                       | `3000`, para que coincida con el puerto del dominio                    |
 
-`AUTH_SECRET` firmará las sesiones de los usuarios, por lo que debe ser un valor aleatorio generado con el comando indicado y nunca una palabra escogida a mano. `NEXT_PUBLIC_APP_URL` se incrusta durante el build: cambiar su valor exige un nuevo despliegue para que tome efecto.
+`AUTH_SECRET` firma las sesiones de los usuarios, por lo que debe ser un valor aleatorio generado con el comando indicado y nunca una palabra escogida a mano. `SESSION_DURATION_HOURS` controla su expiración. `NEXT_PUBLIC_APP_URL` se incrusta durante el build: cambiar su valor exige un nuevo despliegue para que tome efecto.
 
 El registro solo permite `EMAIL_PROVIDER=memory` fuera de producción. Railway debe usar `resend` y
 un dominio de remitente verificado; de lo contrario, la cuenta puede crearse pero el mensaje no se
