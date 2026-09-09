@@ -5,6 +5,7 @@ import Link from "next/link";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 
 import { CampoAcceso } from "@/components/autenticacion/campo-acceso";
+import { IndicadorSeguridadContrasena } from "@/components/autenticacion/indicador-seguridad-contrasena";
 import { Icono } from "@/components/autenticacion/icono";
 import { MarcoAcceso } from "@/components/autenticacion/marco-acceso";
 
@@ -327,17 +328,7 @@ export default function PaginaCrearCuenta() {
               onChange={actualizarCampo}
               error={errores.contrasena?.[0]}
             />
-            <div className="bg-superficie-suave rounded-xl p-3">
-              <div className="flex gap-1.5">
-                <span className="bg-turquesa h-1.5 flex-1 rounded-full" />
-                <span className="bg-turquesa h-1.5 flex-1 rounded-full" />
-                <span className="bg-borde h-1.5 flex-1 rounded-full" />
-              </div>
-              <p className="text-texto-suave mt-2 flex items-center gap-1.5 text-xs">
-                <Icono nombre="escudo" className="text-turquesa size-4" /> Nivel de seguridad:{" "}
-                <strong className="text-turquesa">Media</strong> (agrega un símbolo especial).
-              </p>
-            </div>
+            <IndicadorSeguridadContrasena contrasena={datos.contrasena} />
             <CampoAcceso
               id="confirmar-contrasena"
               name="confirmarContrasena"

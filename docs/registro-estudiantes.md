@@ -32,3 +32,7 @@ Para envíos reales se usa `EMAIL_PROVIDER=resend`. Deben configurarse `RESEND_A
 ## Límite de esta tarea
 
 No se implementaron sesiones ni el endpoint de inicio de sesión. T-04.3 debe validar la contraseña con `verificarContrasena` y aplicar `puedeAutenticarse`; esta última exige simultáneamente estado `ACTIVO` y `correoVerificado=true`.
+
+## Cuenta ficticia de desarrollo
+
+Después de aplicar migraciones y ejecutar `ALLOW_TEST_SEED=true npm run db:seed:test`, la base local incluye la cuenta ficticia `estudiante.prueba@uvg.edu.gt` con contraseña `PruebaSegura1!`. Nunca debe cargarse ese seed ni esas credenciales en Railway o producción.

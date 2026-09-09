@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
+import { CREDENCIALES_PRUEBA, HASH_DESARROLLO } from "../prisma/data/datos-prueba";
+import { verificarContrasena } from "../src/lib/auth/contrasenas";
 import { puedeAutenticarse } from "../src/lib/auth/politica-autenticacion";
 import type {
   CuentaParaReenvio,
@@ -262,4 +264,9 @@ test("el reenvío limita la cantidad de tokens creados por hora", async () => {
   // El máximo configurado incluye el token creado durante el registro.
   assert.equal(contexto.correo.mensajes.length, 5);
   assert.equal(contexto.repositorio.tokens.length, 5);
+});
+
+test("las credenciales ficticias usan el mismo formato scrypt del registro", async () => {
+  assert.equal(await verificarContrasena(CREDENCIALES_PRUEBA.contrasena, HASH_DESARROLLO), true);
+  assert.equal(await verificarContrasena("ClaveIncorrecta1!", HASH_DESARROLLO), false);
 });
