@@ -11,8 +11,24 @@ export type ResultadoGuardia =
   | { tipo: "sin_permiso"; usuario: UsuarioSesion };
 
 /**
- * Resuelve la sesión desde la cookie y comprueba los roles requeridos.
+ * Decide el acceso a partir del usuario resuelto. Se mantiene separado de la
+ * lectura de la cookie para poder probar la política sin montar una petición.
  * Sin roles requeridos basta con tener una sesión válida.
+ */
+export function decidirAcceso(
+  usuario: UsuarioSesion | null,
+  rolesRequeridos: readonly Rol[] = []
+): ResultadoGuardia {
+  if (!usuario) return { tipo: "sin_sesion" };
+  if (rolesRequeridos.length > 0 && !tieneRol(usuario.roles, rolesRequeridos)) {
+    return { tipo: "sin_permiso", usuario };
+  }
+
+  return { tipo: "autorizado", usuario };
+}
+
+/**
+ * Resuelve la sesión desde la cookie y aplica la política de acceso.
  *
  * La autorización se decide siempre aquí, en el servidor: el menú del
  * encabezado y el middleware solo mejoran la experiencia, no protegen.
@@ -25,12 +41,7 @@ export async function verificarAcceso(
     almacen.get(NOMBRE_COOKIE_SESION)?.value
   );
 
-  if (!usuario) return { tipo: "sin_sesion" };
-  if (rolesRequeridos.length > 0 && !tieneRol(usuario.roles, rolesRequeridos)) {
-    return { tipo: "sin_permiso", usuario };
-  }
-
-  return { tipo: "autorizado", usuario };
+  return decidirAcceso(usuario, rolesRequeridos);
 }
 
 /**
