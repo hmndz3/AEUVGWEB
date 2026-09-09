@@ -1,0 +1,1407 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+      rel="stylesheet"
+    />
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @layer base {
+        html,
+        body {
+          margin: 0;
+          padding: 0;
+        }
+        body {
+          overscroll-behavior: none;
+        }
+        main > :first-child {
+          margin-top: 0 !important;
+        }
+        main > :last-child {
+          margin-bottom: 0 !important;
+        }
+      }
+      ::-webkit-scrollbar {
+        display: none;
+      }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-bright": "#fff8f3",
+              "on-secondary": "#ffffff",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-fixed": "#ffdad8",
+              "primary-fixed-dim": "#b98aff",
+              "secondary-fixed-dim": "#3ec1ff",
+              "primary-container": "#6d4aff",
+              "on-secondary-fixed": "#0d3b34",
+              "on-secondary-container": "#00806c",
+              "on-secondary-fixed-variant": "#00806c",
+              "outline-variant": "#ebe2d8",
+              "inverse-on-surface": "#fff8f3",
+              "tertiary-container": "#4d000a",
+              surface: "#fff8f3",
+              "on-primary": "#ffffff",
+              "on-tertiary": "#ffffff",
+              "on-primary-fixed": "#1c162b",
+              tertiary: "#230002",
+              "surface-container-highest": "#ede8ff",
+              "on-tertiary-container": "#ff5e5b",
+              "secondary-container": "#3ec1ff",
+              "on-surface-variant": "#6e6580",
+              background: "#fff8f3",
+              "on-error-container": "#93000a",
+              "inverse-surface": "#1c162b",
+              "on-error": "#ffffff",
+              "on-primary-fixed-variant": "#5a35e8",
+              "tertiary-fixed-dim": "#ffb3b1",
+              "on-background": "#1c162b",
+              "primary-fixed": "#ede8ff",
+              "surface-tint": "#6d4aff",
+              "surface-container-low": "#f7f1ea",
+              "surface-container-high": "#ede8ff",
+              "surface-variant": "#ede8ff",
+              "on-tertiary-fixed": "#410007",
+              "on-tertiary-fixed-variant": "#92001c",
+              "on-primary-container": "#ede8ff",
+              secondary: "#00c9a7",
+              error: "#f5455c",
+              "error-container": "#ffdad6",
+              "surface-container": "#f7f1ea",
+              "on-surface": "#1c162b",
+              primary: "#1c162b",
+              outline: "#d9cec2",
+              "surface-dim": "#f0e6da",
+              "inverse-primary": "#b98aff",
+              "secondary-fixed": "#d6f7f1",
+            },
+            borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+            spacing: {
+              "space-2xs": "0.25rem",
+              "space-sm": "0.75rem",
+              "margin-mobile": "1rem",
+              "container-max": "1280px",
+              "space-2xl": "3rem",
+              "margin-desktop": "2rem",
+              "space-xs": "0.5rem",
+              "space-lg": "1.5rem",
+              "space-3xl": "4rem",
+              "gutter-desktop": "1.5rem",
+              "space-xl": "2rem",
+              "gutter-mobile": "1rem",
+              "space-md": "1rem",
+            },
+            fontFamily: {
+              "headline-md": ["Plus Jakarta Sans"],
+              "headline-sm": ["Plus Jakarta Sans"],
+              "caption-caps": ["Plus Jakarta Sans"],
+              "title-md": ["Plus Jakarta Sans"],
+              "body-md": ["Plus Jakarta Sans"],
+              "headline-lg": ["Plus Jakarta Sans"],
+              "display-hero": ["Plus Jakarta Sans"],
+              "headline-lg-mobile": ["Plus Jakarta Sans"],
+              "body-sm": ["Plus Jakarta Sans"],
+              "label-sm": ["Plus Jakarta Sans"],
+              "display-hero-mobile": ["Plus Jakarta Sans"],
+              "label-md": ["Plus Jakarta Sans"],
+              "body-lg": ["Plus Jakarta Sans"],
+            },
+            fontSize: {
+              "headline-md": [
+                "24px",
+                { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "600" },
+              ],
+              "headline-sm": ["20px", { lineHeight: "28px", fontWeight: "600" }],
+              "caption-caps": [
+                "11px",
+                { lineHeight: "14px", letterSpacing: "0.06em", fontWeight: "700" },
+              ],
+              "title-md": ["18px", { lineHeight: "26px", fontWeight: "600" }],
+              "body-md": ["15px", { lineHeight: "24px", fontWeight: "400" }],
+              "headline-lg": [
+                "32px",
+                { lineHeight: "40px", letterSpacing: "-0.015em", fontWeight: "700" },
+              ],
+              "display-hero": [
+                "40px",
+                { lineHeight: "48px", letterSpacing: "-0.02em", fontWeight: "800" },
+              ],
+              "headline-lg-mobile": [
+                "26px",
+                { lineHeight: "34px", letterSpacing: "-0.01em", fontWeight: "700" },
+              ],
+              "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+              "label-sm": [
+                "12px",
+                { lineHeight: "16px", letterSpacing: "0.01em", fontWeight: "600" },
+              ],
+              "display-hero-mobile": [
+                "30px",
+                { lineHeight: "38px", letterSpacing: "-0.015em", fontWeight: "800" },
+              ],
+              "label-md": [
+                "14px",
+                { lineHeight: "20px", letterSpacing: "0.005em", fontWeight: "600" },
+              ],
+              "body-lg": ["16px", { lineHeight: "26px", fontWeight: "400" }],
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-surface font-body-md text-body-md text-on-surface">
+    <header
+      class="bg-primary-container text-on-primary fixed top-0 z-50 w-full shadow-[0_1px_8px_rgba(0,0,0,0.08)]"
+    >
+      <div
+        class="max-w-container-max px-margin-mobile lg:px-margin-desktop gap-space-md mx-auto flex h-16 items-center justify-between"
+      >
+        <div class="gap-space-sm flex items-center">
+          <img
+            alt="Logo circular de AEUVG compuesto por figuras humanas estilizadas unidas en círculo de colores vivos (rojo, coral, morado, celeste, naranja, verde lima y azul marino) con las siglas AEUVG limpias y modernas.. Brand logo. - Primary color: #6d4aff
+- Font: plusJakartaSans
+- Mode: light
+- Roundness: rounded-md
+"
+            class="h-8 w-auto object-contain"
+            src="logo-aeuvg.png"
+          />
+          <div class="flex flex-col">
+            <span class="font-headline-sm text-headline-sm text-on-primary tracking-tight"
+              >AEUVG</span
+            ><span
+              class="font-caption-caps text-caption-caps text-on-primary-container hidden tracking-wider uppercase sm:inline"
+              >Universidad del Valle</span
+            >
+          </div>
+        </div>
+        <nav
+          class="gap-space-xs p-space-2xs bg-primary/40 hidden items-center rounded-xl lg:flex"
+          data-active-classes="bg-surface-container-high text-on-surface font-label-md text-label-md rounded-lg shadow-sm"
+        >
+          <a
+            class="px-space-sm py-space-xs font-label-md text-label-md text-on-primary-container hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-colors"
+            data-path="inicio"
+            href="#"
+            >Inicio</a
+          ><a
+            class="px-space-sm py-space-xs font-label-md text-label-md text-on-primary-container hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-colors"
+            data-path="eventos"
+            href="#"
+            >Eventos</a
+          ><a
+            class="px-space-sm py-space-xs font-label-md text-label-md text-on-primary-container hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-colors"
+            data-path="asociaciones"
+            href="#"
+            >Asociaciones</a
+          ><a
+            class="px-space-sm py-space-xs font-label-md text-label-md text-on-primary-container hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-colors"
+            data-path="clubes"
+            href="#"
+            >Clubes</a
+          ><a
+            class="px-space-sm py-space-xs font-label-md text-label-md text-on-primary-container hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-colors"
+            data-path="tutorias"
+            href="#"
+            >Tutorías</a
+          ><a
+            aria-current="page"
+            class="px-space-sm py-space-xs bg-surface-container-high text-on-surface font-label-md text-label-md rounded-lg shadow-sm transition-colors"
+            data-path="sobre-aeuvg"
+            href="#"
+            >Sobre AEUVG</a
+          >
+        </nav>
+        <div class="gap-space-sm flex items-center">
+          <div class="gap-space-xs hidden items-center sm:flex">
+            <a
+              class="px-space-sm py-space-xs font-label-md text-label-md text-on-primary hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-colors"
+              data-path="login"
+              href="#"
+              >Iniciar sesión</a
+            ><a
+              class="px-space-md py-space-xs font-label-md text-label-md bg-secondary text-on-secondary hover:bg-surface-container-high hover:text-on-surface rounded-lg shadow-sm transition-colors"
+              data-path="registro"
+              href="#"
+              >Crear cuenta</a
+            >
+          </div>
+          <div class="bg-primary flex h-8 w-8 items-center justify-center rounded-full">
+            <span class="material-symbols-outlined text-on-primary text-[18px]">person</span>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main class="bg-surface w-full pt-16">
+      <div class="flex w-full flex-col">
+        <!-- 1. Encabezado de la página & Quick Stats -->
+        <section class="bg-surface pb-space-2xl relative w-full overflow-hidden">
+          <!-- Ambient glowing accents inspired by logo color disc -->
+          <div
+            class="bg-secondary-container/15 pointer-events-none absolute -top-24 right-10 h-96 w-96 rounded-full blur-3xl"
+          ></div>
+          <div
+            class="bg-tertiary-fixed/30 pointer-events-none absolute top-48 -left-20 h-80 w-80 rounded-full blur-3xl"
+          ></div>
+          <div
+            class="max-w-container-max px-margin-mobile lg:px-margin-desktop pt-space-xl relative z-10 mx-auto"
+          >
+            <!-- Breadcrumb / Badge -->
+            <div class="gap-space-xs mb-space-sm flex items-center">
+              <span
+                class="bg-surface-container-high text-on-secondary-container font-label-sm text-label-sm inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-semibold tracking-wide"
+              >
+                <span class="bg-secondary h-2 w-2 rounded-full"></span>
+                Conoce nuestra organización
+              </span>
+            </div>
+            <!-- Main Headline Grid -->
+            <div class="gap-space-lg mb-space-2xl grid grid-cols-1 items-end lg:grid-cols-12">
+              <div class="lg:col-span-7">
+                <h1
+                  class="font-display-hero text-display-hero text-on-surface font-extrabold tracking-tight"
+                >
+                  Sobre <span class="text-secondary">AEUVG</span>
+                </h1>
+                <p
+                  class="mt-space-md font-body-lg text-body-lg text-on-surface-variant max-w-2xl leading-relaxed font-medium"
+                >
+                  Somos la Asociación General de Estudiantes de la Universidad del Valle de
+                  Guatemala. Articulamos, representamos y potenciamos la vida universitaria de cada
+                  estudiante a través de la participación activa, la innovación y el servicio a
+                  nuestra comunidad.
+                </p>
+              </div>
+              <div class="flex flex-col items-start justify-end lg:col-span-5 lg:items-end">
+                <div
+                  class="gap-space-xs p-space-xs bg-surface-container-low flex items-center rounded-xl shadow-sm"
+                >
+                  <span class="material-symbols-outlined text-secondary text-[24px]">verified</span>
+                  <span class="font-body-sm text-body-sm text-on-surface font-semibold"
+                    >Voz oficial estudiantil UVG • Gestión 2025</span
+                  >
+                </div>
+              </div>
+            </div>
+            <!-- Stats Bar / Bento Band -->
+            <div class="gap-space-md grid grid-cols-2 md:grid-cols-4">
+              <div
+                class="p-space-lg bg-surface-container-lowest rounded-xl shadow-sm transition-all hover:shadow-md"
+              >
+                <div class="mb-space-2xs flex items-center justify-between">
+                  <span
+                    class="font-caption-caps text-caption-caps text-on-surface-variant uppercase"
+                    >Estructura</span
+                  >
+                  <span class="material-symbols-outlined text-secondary text-[20px]"
+                    >account_tree</span
+                  >
+                </div>
+                <p
+                  class="font-headline-lg text-headline-lg text-primary-container font-bold tracking-tight"
+                >
+                  14
+                </p>
+                <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                  Asociaciones de Carrera
+                </p>
+              </div>
+              <div
+                class="p-space-lg bg-surface-container-lowest rounded-xl shadow-sm transition-all hover:shadow-md"
+              >
+                <div class="mb-space-2xs flex items-center justify-between">
+                  <span
+                    class="font-caption-caps text-caption-caps text-on-surface-variant uppercase"
+                    >Comunidad</span
+                  >
+                  <span class="material-symbols-outlined text-secondary text-[20px]">groups</span>
+                </div>
+                <p
+                  class="font-headline-lg text-headline-lg text-primary-container font-bold tracking-tight"
+                >
+                  25+
+                </p>
+                <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                  Clubes activos e iniciativas
+                </p>
+              </div>
+              <div
+                class="p-space-lg bg-surface-container-lowest rounded-xl shadow-sm transition-all hover:shadow-md"
+              >
+                <div class="mb-space-2xs flex items-center justify-between">
+                  <span
+                    class="font-caption-caps text-caption-caps text-on-surface-variant uppercase"
+                    >Representación</span
+                  >
+                  <span class="material-symbols-outlined text-secondary text-[20px]"
+                    >diversity_3</span
+                  >
+                </div>
+                <p
+                  class="font-headline-lg text-headline-lg text-primary-container font-bold tracking-tight"
+                >
+                  +6,000
+                </p>
+                <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                  Estudiantes representados
+                </p>
+              </div>
+              <div
+                class="p-space-lg bg-surface-container-lowest rounded-xl shadow-sm transition-all hover:shadow-md"
+              >
+                <div class="mb-space-2xs flex items-center justify-between">
+                  <span
+                    class="font-caption-caps text-caption-caps text-on-surface-variant uppercase"
+                    >Legado</span
+                  >
+                  <span class="material-symbols-outlined text-secondary text-[20px]"
+                    >history_edu</span
+                  >
+                </div>
+                <p
+                  class="font-headline-lg text-headline-lg text-primary-container font-bold tracking-tight"
+                >
+                  1968
+                </p>
+                <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                  Año de fundación oficial
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- 2. Misión y Visión (Dos bloques simétricos lado a lado) -->
+        <section class="bg-surface-container-low py-space-3xl w-full">
+          <div class="max-w-container-max px-margin-mobile lg:px-margin-desktop mx-auto">
+            <div class="gap-space-xl grid grid-cols-1 lg:grid-cols-2">
+              <!-- Tarjeta Misión -->
+              <div
+                class="p-space-xl lg:p-space-2xl bg-surface-container-lowest relative flex flex-col justify-between overflow-hidden rounded-2xl shadow-sm"
+              >
+                <div class="bg-secondary absolute top-0 left-0 h-full w-2"></div>
+                <div>
+                  <div class="mb-space-lg flex items-center justify-between">
+                    <span
+                      class="bg-surface-container-high text-on-secondary-container font-caption-caps text-caption-caps inline-flex items-center rounded-full px-3 py-1 uppercase"
+                    >
+                      NUESTRO PROPÓSITO
+                    </span>
+                    <div
+                      class="bg-surface-container text-secondary flex h-12 w-12 items-center justify-center rounded-xl"
+                    >
+                      <span class="material-symbols-outlined text-[26px]">explore</span>
+                    </div>
+                  </div>
+                  <h3 class="font-headline-md text-headline-md text-primary-container mb-space-sm">
+                    Misión
+                  </h3>
+                  <p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+                    Representar y salvaguardar activamente los derechos e intereses de cada
+                    estudiante ante las autoridades y comités universitarios de la UVG, promoviendo
+                    de forma permanente actividades académicas, científicas, culturales y deportivas
+                    que enriquezcan su formación integral y estimulen un pensamiento crítico
+                    transformador.
+                  </p>
+                </div>
+                <div
+                  class="pt-space-lg mt-space-lg gap-space-xs text-secondary font-label-md text-label-md flex items-center font-semibold"
+                >
+                  <span class="material-symbols-outlined text-[18px]">verified</span>
+                  <span>Compromiso universitario continuo</span>
+                </div>
+              </div>
+              <!-- Tarjeta Visión -->
+              <div
+                class="p-space-xl lg:p-space-2xl bg-surface-container-lowest relative flex flex-col justify-between overflow-hidden rounded-2xl shadow-sm"
+              >
+                <div class="bg-secondary-container absolute top-0 left-0 h-full w-2"></div>
+                <div>
+                  <div class="mb-space-lg flex items-center justify-between">
+                    <span
+                      class="bg-surface-container-high text-on-secondary-container font-caption-caps text-caption-caps inline-flex items-center rounded-full px-3 py-1 uppercase"
+                    >
+                      HACIA DÓNDE VAMOS
+                    </span>
+                    <div
+                      class="bg-surface-container text-secondary flex h-12 w-12 items-center justify-center rounded-xl"
+                    >
+                      <span class="material-symbols-outlined text-[26px]">auto_awesome</span>
+                    </div>
+                  </div>
+                  <h3 class="font-headline-md text-headline-md text-primary-container mb-space-sm">
+                    Visión
+                  </h3>
+                  <p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+                    Ser una asociación estudiantil referente a nivel regional por su liderazgo
+                    ético, transparencia inquebrantable, alto impacto social y capacidad de generar
+                    espacios incluyentes de co-creación y transformación comunitaria en todos los
+                    campus y programas de la Universidad del Valle de Guatemala.
+                  </p>
+                </div>
+                <div
+                  class="pt-space-lg mt-space-lg gap-space-xs text-secondary font-label-md text-label-md flex items-center font-semibold"
+                >
+                  <span class="material-symbols-outlined text-[18px]">rocket_launch</span>
+                  <span>Visión estratégica hacia el 2030</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- 3. Objetivos de la Asociación -->
+        <section class="bg-surface py-space-3xl w-full">
+          <div class="max-w-container-max px-margin-mobile lg:px-margin-desktop mx-auto">
+            <div class="mb-space-2xl mx-auto flex max-w-2xl flex-col items-center text-center">
+              <span
+                class="bg-surface-container-high text-on-secondary-container font-label-sm text-label-sm mb-space-xs rounded-full px-3 py-1 font-semibold"
+              >
+                Propósitos institucionales
+              </span>
+              <h2 class="font-headline-lg text-headline-lg text-primary-container font-bold">
+                Nuestros Objetivos
+              </h2>
+              <p class="font-body-md text-body-md text-on-surface-variant mt-2">
+                Ejes rectores que definen nuestras prioridades presupuestarias, proyectos y canales
+                de mediación estudiantil.
+              </p>
+            </div>
+            <!-- Elegant Grid of Objectives with identity accents -->
+            <div class="gap-space-md grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+              <!-- Obj 1: Azul Marino -->
+              <div
+                class="p-space-lg bg-surface-container-lowest flex flex-col justify-between rounded-xl shadow-sm transition-all hover:shadow-md"
+              >
+                <div class="gap-space-md flex items-start">
+                  <div
+                    class="bg-primary-container text-on-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-lg shadow-sm"
+                  >
+                    <span class="font-title-md text-title-md font-bold">01</span>
+                  </div>
+                  <div>
+                    <span
+                      class="font-caption-caps text-caption-caps text-secondary font-semibold uppercase"
+                      >Gobernanza</span
+                    >
+                    <p class="font-body-md text-body-md text-on-surface mt-1 font-medium">
+                      Representar y velar activamente por la voz, derechos y necesidades del cuerpo
+                      estudiantil ante el Consejo Directivo y comités académicos de la UVG.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <!-- Obj 2: Celeste -->
+              <div
+                class="p-space-lg bg-surface-container-lowest flex flex-col justify-between rounded-xl shadow-sm transition-all hover:shadow-md"
+              >
+                <div class="gap-space-md flex items-start">
+                  <div
+                    class="bg-secondary text-on-secondary flex h-10 w-10 shrink-0 items-center justify-center rounded-lg shadow-sm"
+                  >
+                    <span class="font-title-md text-title-md font-bold">02</span>
+                  </div>
+                  <div>
+                    <span
+                      class="font-caption-caps text-caption-caps text-secondary font-semibold uppercase"
+                      >Academia &amp; Apoyo</span
+                    >
+                    <p class="font-body-md text-body-md text-on-surface mt-1 font-medium">
+                      Impulsar el desarrollo de proyectos interdisciplinarios, tutorías entre pares
+                      y oportunidades verificadas de servicio mediante horas beca institucionales.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <!-- Obj 3: Naranja -->
+              <div
+                class="p-space-lg bg-surface-container-lowest flex flex-col justify-between rounded-xl shadow-sm transition-all hover:shadow-md"
+              >
+                <div class="gap-space-md flex items-start">
+                  <div
+                    class="bg-surface-container-highest text-on-surface flex h-10 w-10 shrink-0 items-center justify-center rounded-lg shadow-sm"
+                  >
+                    <span class="font-title-md text-title-md font-bold">03</span>
+                  </div>
+                  <div>
+                    <span
+                      class="font-caption-caps text-caption-caps text-secondary font-semibold uppercase"
+                      >Respaldos &amp; Clubes</span
+                    >
+                    <p class="font-body-md text-body-md text-on-surface mt-1 font-medium">
+                      Fortalecer y respaldar con fondos y asesoría logística las iniciativas,
+                      competencias y eventos de las 14 asociaciones de carrera y clubes inscritos.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <!-- Obj 4: Verde Lima / Teal -->
+              <div
+                class="p-space-lg bg-surface-container-lowest flex flex-col justify-between rounded-xl shadow-sm transition-all hover:shadow-md"
+              >
+                <div class="gap-space-md flex items-start">
+                  <div
+                    class="bg-surface-container-high text-on-secondary-container flex h-10 w-10 shrink-0 items-center justify-center rounded-lg shadow-sm"
+                  >
+                    <span class="font-title-md text-title-md font-bold">04</span>
+                  </div>
+                  <div>
+                    <span
+                      class="font-caption-caps text-caption-caps text-secondary font-semibold uppercase"
+                      >Cultura &amp; Deporte</span
+                    >
+                    <p class="font-body-md text-body-md text-on-surface mt-1 font-medium">
+                      Promover actividades culturales, científicas, ecológicas y de bienestar
+                      integral que dinamicen los espacios abiertos y la convivencia universitaria.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <!-- Obj 5: Morado -->
+              <div
+                class="p-space-lg bg-surface-container-lowest flex flex-col justify-between rounded-xl shadow-sm transition-all hover:shadow-md"
+              >
+                <div class="gap-space-md flex items-start">
+                  <div
+                    class="bg-primary-container text-on-primary-container flex h-10 w-10 shrink-0 items-center justify-center rounded-lg shadow-sm"
+                  >
+                    <span class="font-title-md text-title-md font-bold">05</span>
+                  </div>
+                  <div>
+                    <span
+                      class="font-caption-caps text-caption-caps text-secondary font-semibold uppercase"
+                      >Transparencia</span
+                    >
+                    <p class="font-body-md text-body-md text-on-surface mt-1 font-medium">
+                      Fomentar la rendición de cuentas pública de presupuestos, actas abiertas de
+                      asamblea e integración proactiva con los Campus Altiplano y Sur.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <!-- Obj 6: Coral / Red -->
+              <div
+                class="p-space-lg bg-surface-container-lowest flex flex-col justify-between rounded-xl shadow-sm transition-all hover:shadow-md"
+              >
+                <div class="gap-space-md flex items-start">
+                  <div
+                    class="bg-surface-container text-secondary flex h-10 w-10 shrink-0 items-center justify-center rounded-lg shadow-sm"
+                  >
+                    <span class="font-title-md text-title-md font-bold">06</span>
+                  </div>
+                  <div>
+                    <span
+                      class="font-caption-caps text-caption-caps text-secondary font-semibold uppercase"
+                      >Impacto Social</span
+                    >
+                    <p class="font-body-md text-body-md text-on-surface mt-1 font-medium">
+                      Canalizar la excelencia técnica de los estudiantes UVG hacia programas de
+                      desarrollo sostenible y voluntariado con comunidades de Guatemala.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- 4. Junta Directiva 2025 -->
+        <section class="bg-surface-container-low py-space-3xl w-full">
+          <div class="max-w-container-max px-margin-mobile lg:px-margin-desktop mx-auto">
+            <div
+              class="mb-space-2xl gap-space-md flex flex-col justify-between sm:flex-row sm:items-end"
+            >
+              <div>
+                <span
+                  class="bg-surface-container-high text-on-secondary-container font-label-sm text-label-sm mb-space-xs inline-block rounded-full px-3 py-1 font-semibold"
+                >
+                  Liderazgo 2025
+                </span>
+                <h2 class="font-headline-lg text-headline-lg text-primary-container font-bold">
+                  Junta Directiva
+                </h2>
+                <p class="font-body-md text-body-md text-on-surface-variant mt-1">
+                  Estudiantes comprometidos con la gestión, defensa y representación de la comunidad
+                  UVG.
+                </p>
+              </div>
+              <div
+                class="gap-space-xs text-on-surface-variant font-label-md text-label-md bg-surface-container-lowest px-space-md py-space-xs inline-flex items-center rounded-lg shadow-sm"
+              >
+                <span class="material-symbols-outlined text-secondary text-[20px]"
+                  >calendar_month</span
+                >
+                <span>Período: Ene 2025 – Dic 2025</span>
+              </div>
+            </div>
+            <!-- Grid de 6 miembros principales de la Junta Directiva -->
+            <div class="gap-space-lg grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+              <!-- 1. Presidencia -->
+              <div
+                class="bg-surface-container-lowest p-space-lg flex flex-col justify-between rounded-2xl shadow-sm transition-all hover:shadow-md"
+              >
+                <div>
+                  <div class="gap-space-md mb-space-md flex items-center">
+                    <img
+                      class="bg-surface-container h-16 w-16 rounded-full object-cover shadow-sm"
+                      data-alt="Retrato fotográfico profesional universitario de Valeria Morales, joven mujer estudiante con expresión amable y segura, vestimenta formal casual, fondo con luz diurna natural de campus académico moderno con toques azules y arquitectura contemporánea."
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHghpqMXi7G52rJjlxAGJzbLomds6U3Yrrxo4JZ0LjU4EWp_FonKkA0uGfCnTMC-KMpBhpH6PhRWml8L-O1VPEFUo2ns1L2lrr-HjpQP-z1M30Z0L3dRM6suxaKP1Ref0i5_IHq7E8wmO9zJKskdeLYYm3TAMkn6oZf9bQJw-sbYzJ_CqD_Kpj6chqSk-pp7cs7CsgpP2OjOuE010wHP0SdGIBxGX4CBF6Ahw1lbxblpsDoJXjW7PGuQ"
+                    />
+                    <div class="flex min-w-0 flex-col">
+                      <span
+                        class="bg-primary-container text-on-primary font-caption-caps text-caption-caps mb-1 inline-flex w-fit items-center rounded-full px-2.5 py-0.5 tracking-wider uppercase"
+                      >
+                        Presidencia
+                      </span>
+                      <h4 class="font-title-md text-title-md text-on-surface truncate font-bold">
+                        Valeria Morales Rodas
+                      </h4>
+                      <p class="font-body-sm text-body-sm text-on-surface-variant truncate">
+                        Ing. en Ciencia de la Computación
+                      </p>
+                    </div>
+                  </div>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+                    Coordinación general del consejo directivo, representación legal ante rectoría y
+                    supervisión de convenios institucionales.
+                  </p>
+                </div>
+                <div
+                  class="pt-space-md mt-space-md bg-surface-container-low/50 -mx-space-lg -mb-space-lg px-space-lg py-space-sm flex items-center justify-between rounded-b-2xl"
+                >
+                  <a
+                    class="font-label-sm text-label-sm text-secondary hover:text-primary-container inline-flex items-center gap-1.5 font-semibold transition-colors"
+                    href="mailto:morales.valeria@uvg.edu.gt"
+                  >
+                    <span class="material-symbols-outlined text-[16px]">mail</span>
+                    morales.valeria@uvg.edu.gt
+                  </a>
+                  <span class="material-symbols-outlined text-outline-variant text-[18px]"
+                    >verified_user</span
+                  >
+                </div>
+              </div>
+              <!-- 2. Vicepresidencia -->
+              <div
+                class="bg-surface-container-lowest p-space-lg flex flex-col justify-between rounded-2xl shadow-sm transition-all hover:shadow-md"
+              >
+                <div>
+                  <div class="gap-space-md mb-space-md flex items-center">
+                    <img
+                      class="bg-surface-container h-16 w-16 rounded-full object-cover shadow-sm"
+                      data-alt="Retrato fotográfico frontal de Carlos Méndez, estudiante universitario sonriente con anteojos, camisa de vestir celeste, iluminación suave de estudio, estilo profesional limpio neo-institucional."
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAPmZ2q_VhH4Wgj-I00BkJhVcNbY8UsW8M4BJL-wVT1_N6RCF7ASnI_Qd8tKSKlW4nf5GcTn-61MSV51a7e1aK45DNuZgLdUuOYbsEo70ElLzN8YWkZZl_7UtK-yTJH8FglqL-_lVVrCAY3P9azmASwrXTOrdpqVUfi-JGEbM17IrN7KL_7P7GYMI79-ypEnCVZWKnFabltBcLwNoG3Wlief_CHDko3AALDvWBv_XlHIbMPRiKB2NIqA"
+                    />
+                    <div class="flex min-w-0 flex-col">
+                      <span
+                        class="bg-secondary text-on-secondary font-caption-caps text-caption-caps mb-1 inline-flex w-fit items-center rounded-full px-2.5 py-0.5 tracking-wider uppercase"
+                      >
+                        Vicepresidencia
+                      </span>
+                      <h4 class="font-title-md text-title-md text-on-surface truncate font-bold">
+                        Carlos Méndez Estrada
+                      </h4>
+                      <p class="font-body-sm text-body-sm text-on-surface-variant truncate">
+                        Ingeniería Mecatrónica
+                      </p>
+                    </div>
+                  </div>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+                    Articulación entre las 14 asociaciones de carrera, seguimiento de políticas de
+                    bienestar y enlace con Campus Altiplano.
+                  </p>
+                </div>
+                <div
+                  class="pt-space-md mt-space-md bg-surface-container-low/50 -mx-space-lg -mb-space-lg px-space-lg py-space-sm flex items-center justify-between rounded-b-2xl"
+                >
+                  <a
+                    class="font-label-sm text-label-sm text-secondary hover:text-primary-container inline-flex items-center gap-1.5 font-semibold transition-colors"
+                    href="mailto:mendez.carlos@uvg.edu.gt"
+                  >
+                    <span class="material-symbols-outlined text-[16px]">mail</span>
+                    mendez.carlos@uvg.edu.gt
+                  </a>
+                  <span class="material-symbols-outlined text-outline-variant text-[18px]"
+                    >verified_user</span
+                  >
+                </div>
+              </div>
+              <!-- 3. Secretaría General -->
+              <div
+                class="bg-surface-container-lowest p-space-lg flex flex-col justify-between rounded-2xl shadow-sm transition-all hover:shadow-md"
+              >
+                <div>
+                  <div class="gap-space-md mb-space-md flex items-center">
+                    <img
+                      class="bg-surface-container h-16 w-16 rounded-full object-cover shadow-sm"
+                      data-alt="Retrato de Sofía Castillo, joven estudiante universitaria de mirada atenta y profesional, vestimenta sobria en azul y blanco, fondo desenfocado de biblioteca moderna con luz natural."
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTYIjGz6CGjAyfLg0Vp0V8tdPSZgrYrWN_UGJ3avs0brGpjQ1gq99N7LwAYtUc_BvCtKIcjdyyOe0m7IK7ClwoFwQoikfFIgltCe9RwLb492Vdwb8gVqDHrxybo49soGH_mr7QOkIYgNtbV8eBscX2IZgGnq3hohIJ2Y2w3AjcdV1zNh7Cexi9EK98u42IQSWIJAxIUk5ItDBIWeSIQCls5AgOQ-EP2WbSxztX-a21HRBOz7qcGLm2CA"
+                    />
+                    <div class="flex min-w-0 flex-col">
+                      <span
+                        class="bg-surface-container-highest text-on-surface font-caption-caps text-caption-caps mb-1 inline-flex w-fit items-center rounded-full px-2.5 py-0.5 tracking-wider uppercase"
+                      >
+                        Secretaría General
+                      </span>
+                      <h4 class="font-title-md text-title-md text-on-surface truncate font-bold">
+                        Sofía Castillo Pineda
+                      </h4>
+                      <p class="font-body-sm text-body-sm text-on-surface-variant truncate">
+                        Licenciatura en Biología
+                      </p>
+                    </div>
+                  </div>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+                    Custodia y redacción de actas de asamblea, registro documental, gestión de
+                    correspondencia institucional y censos oficiales.
+                  </p>
+                </div>
+                <div
+                  class="pt-space-md mt-space-md bg-surface-container-low/50 -mx-space-lg -mb-space-lg px-space-lg py-space-sm flex items-center justify-between rounded-b-2xl"
+                >
+                  <a
+                    class="font-label-sm text-label-sm text-secondary hover:text-primary-container inline-flex items-center gap-1.5 font-semibold transition-colors"
+                    href="mailto:castillo.sofia@uvg.edu.gt"
+                  >
+                    <span class="material-symbols-outlined text-[16px]">mail</span>
+                    castillo.sofia@uvg.edu.gt
+                  </a>
+                  <span class="material-symbols-outlined text-outline-variant text-[18px]"
+                    >verified_user</span
+                  >
+                </div>
+              </div>
+              <!-- 4. Tesorería -->
+              <div
+                class="bg-surface-container-lowest p-space-lg flex flex-col justify-between rounded-2xl shadow-sm transition-all hover:shadow-md"
+              >
+                <div>
+                  <div class="gap-space-md mb-space-md flex items-center">
+                    <img
+                      class="bg-surface-container h-16 w-16 rounded-full object-cover shadow-sm"
+                      data-alt="Retrato de Diego Alvarado, estudiante de ingeniería con porte profesional y amigable, fondo luminoso con ventanales de arquitectura universitaria moderna."
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2m0RcDx_GLCWHLGEn4WH7dXtvn5RHLxQXBhT1Y2HmfGplq6goXCyNAXHPQy_p_UjocUJQfm24EecXfiH-W76wnZDZJXDoPshHyg50r5wZngV1iIznjFQtOEG12atdByMkAy3YZP1bCv4y2IPUnncFIa4TxZL-vzOUcdN2xg2Du9AMms9aKPzycg7rVYfa88iGL4weWpnVv80dSV8UZ71iHmFXXoNAYv8wZJ5n3yP4fPaLW80blljDzA"
+                    />
+                    <div class="flex min-w-0 flex-col">
+                      <span
+                        class="bg-surface-container-high text-on-secondary-container font-caption-caps text-caption-caps mb-1 inline-flex w-fit items-center rounded-full px-2.5 py-0.5 tracking-wider uppercase"
+                      >
+                        Tesorería
+                      </span>
+                      <h4 class="font-title-md text-title-md text-on-surface truncate font-bold">
+                        Diego Alvarado Quiñónez
+                      </h4>
+                      <p class="font-body-sm text-body-sm text-on-surface-variant truncate">
+                        Ingeniería Industrial
+                      </p>
+                    </div>
+                  </div>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+                    Administración presupuestaria, gestión de fondos para clubes y eventos, y
+                    reportes periódicos de transparencia contable.
+                  </p>
+                </div>
+                <div
+                  class="pt-space-md mt-space-md bg-surface-container-low/50 -mx-space-lg -mb-space-lg px-space-lg py-space-sm flex items-center justify-between rounded-b-2xl"
+                >
+                  <a
+                    class="font-label-sm text-label-sm text-secondary hover:text-primary-container inline-flex items-center gap-1.5 font-semibold transition-colors"
+                    href="mailto:alvarado.diego@uvg.edu.gt"
+                  >
+                    <span class="material-symbols-outlined text-[16px]">mail</span>
+                    alvarado.diego@uvg.edu.gt
+                  </a>
+                  <span class="material-symbols-outlined text-outline-variant text-[18px]"
+                    >verified_user</span
+                  >
+                </div>
+              </div>
+              <!-- 5. Dirección de Asuntos Académicos -->
+              <div
+                class="bg-surface-container-lowest p-space-lg flex flex-col justify-between rounded-2xl shadow-sm transition-all hover:shadow-md"
+              >
+                <div>
+                  <div class="gap-space-md mb-space-md flex items-center">
+                    <img
+                      class="bg-surface-container h-16 w-16 rounded-full object-cover shadow-sm"
+                      data-alt="Retrato de Mariana Fuentes, joven estudiante con cabello oscuro recogido, sonrisa entusiasta, vestimenta profesional contemporánea, atmósfera institucional universitaria."
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRQTPj_4MMK-imVij5tci6MABrRpoDiyZj36uDdZQ-Sr0IhVZPSREOHV2jgFWIKNc4bR7RZEAGlHIzDSxDe6aJMXu4Yt_0yNEX7hsUQQ7WZgGSg5562Y2qoqD3hlJRvTj_CooPOaYZ6YTyrE10pJXnbBwMzQT1flYHnbs8h78xviunidROpyn0fqXMHvr1MDc1uk8hQ3nJYcY8t2iOU7lqdrRhFnu2_Mgwm66PhcD8yoaiGq82ajltdw"
+                    />
+                    <div class="flex min-w-0 flex-col">
+                      <span
+                        class="bg-surface-container-high text-on-surface font-caption-caps text-caption-caps mb-1 inline-flex w-fit items-center rounded-full px-2.5 py-0.5 tracking-wider uppercase"
+                      >
+                        Asuntos Académicos
+                      </span>
+                      <h4 class="font-title-md text-title-md text-on-surface truncate font-bold">
+                        Mariana Fuentes López
+                      </h4>
+                      <p class="font-body-sm text-body-sm text-on-surface-variant truncate">
+                        Licenciatura en Comunicación
+                      </p>
+                    </div>
+                  </div>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+                    Supervisión de la red de tutorías pares, mediación académica ante decanaturas y
+                    desarrollo de talleres de formación.
+                  </p>
+                </div>
+                <div
+                  class="pt-space-md mt-space-md bg-surface-container-low/50 -mx-space-lg -mb-space-lg px-space-lg py-space-sm flex items-center justify-between rounded-b-2xl"
+                >
+                  <a
+                    class="font-label-sm text-label-sm text-secondary hover:text-primary-container inline-flex items-center gap-1.5 font-semibold transition-colors"
+                    href="mailto:fuentes.mariana@uvg.edu.gt"
+                  >
+                    <span class="material-symbols-outlined text-[16px]">mail</span>
+                    fuentes.mariana@uvg.edu.gt
+                  </a>
+                  <span class="material-symbols-outlined text-outline-variant text-[18px]"
+                    >verified_user</span
+                  >
+                </div>
+              </div>
+              <!-- 6. Dirección de Vida Estudiantil y Cultura -->
+              <div
+                class="bg-surface-container-lowest p-space-lg flex flex-col justify-between rounded-2xl shadow-sm transition-all hover:shadow-md"
+              >
+                <div>
+                  <div class="gap-space-md mb-space-md flex items-center">
+                    <img
+                      class="bg-surface-container h-16 w-16 rounded-full object-cover shadow-sm"
+                      data-alt="Retrato de Rodrigo Sagastume, estudiante universitario en ropa casual moderna de color azul oscuro, expresión inspiradora, fondo con iluminación cálida de campus universitario."
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuCk1tX7DZDd47RoAZa1VGWONJ-UnW9cDtU5CDNj66PKlvzuZPbcSmVjkaN9ywwd4rKeZuU9xkC8LJri9zjXqrBRpJjy3ws30GXrQjdKQnqfTboeVhccqcH1cEk8RNoyXs2AXZm2jWwJhE_ZtcjkXfgEE174q1QLoqJkoCinQF0ZzgctyLXhTLa9UVDEg_64JK1jPjBUyjow93aWrYxsMatfhRMbZ4w0nQpgsDOThaI032QGWnF7sskf4g"
+                    />
+                    <div class="flex min-w-0 flex-col">
+                      <span
+                        class="bg-primary-container text-on-primary font-caption-caps text-caption-caps mb-1 inline-flex w-fit items-center rounded-full px-2.5 py-0.5 tracking-wider uppercase"
+                      >
+                        Vida Estudiantil &amp; Cultura
+                      </span>
+                      <h4 class="font-title-md text-title-md text-on-surface truncate font-bold">
+                        Rodrigo Sagastume C.
+                      </h4>
+                      <p class="font-body-sm text-body-sm text-on-surface-variant truncate">
+                        Ingeniería Civil
+                      </p>
+                    </div>
+                  </div>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+                    Gestión de la semana universitaria, festivales culturales, ligas deportivas
+                    internas y fomento de comunidades extracurriculares.
+                  </p>
+                </div>
+                <div
+                  class="pt-space-md mt-space-md bg-surface-container-low/50 -mx-space-lg -mb-space-lg px-space-lg py-space-sm flex items-center justify-between rounded-b-2xl"
+                >
+                  <a
+                    class="font-label-sm text-label-sm text-secondary hover:text-primary-container inline-flex items-center gap-1.5 font-semibold transition-colors"
+                    href="mailto:sagastume.rodrigo@uvg.edu.gt"
+                  >
+                    <span class="material-symbols-outlined text-[16px]">mail</span>
+                    sagastume.rodrigo@uvg.edu.gt
+                  </a>
+                  <span class="material-symbols-outlined text-outline-variant text-[18px]"
+                    >verified_user</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- 5. Integrantes Actuales y Comisiones -->
+        <section class="bg-surface py-space-3xl w-full">
+          <div class="max-w-container-max px-margin-mobile lg:px-margin-desktop mx-auto">
+            <div class="mb-space-2xl mx-auto flex max-w-2xl flex-col items-center text-center">
+              <span
+                class="bg-surface-container-high text-on-secondary-container font-label-sm text-label-sm mb-space-xs rounded-full px-3 py-1 font-semibold"
+              >
+                Equipo de trabajo
+              </span>
+              <h2 class="font-headline-lg text-headline-lg text-primary-container font-bold">
+                Comisiones y Coordinaciones
+              </h2>
+              <p class="font-body-md text-body-md text-on-surface-variant mt-2">
+                Líderes de comisiones operativas que hacen posibles los programas, eventos y la
+                gestión cotidiana en el campus.
+              </p>
+            </div>
+            <!-- Compact 8-card grid -->
+            <div class="gap-space-md grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+              <!-- 1. Logística -->
+              <div
+                class="p-space-md bg-surface-container-lowest gap-space-sm flex items-center rounded-xl shadow-sm transition-transform hover:-translate-y-0.5"
+              >
+                <div
+                  class="bg-surface-container-high text-secondary text-headline-sm flex h-12 w-12 shrink-0 items-center justify-center rounded-full font-bold"
+                >
+                  AP
+                </div>
+                <div class="min-w-0">
+                  <p class="font-label-md text-label-md text-on-surface truncate font-bold">
+                    Alejandro Paz
+                  </p>
+                  <p
+                    class="font-caption-caps text-caption-caps text-secondary truncate font-semibold uppercase"
+                  >
+                    Logística &amp; Eventos
+                  </p>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant truncate">
+                    Ing. Mecánica
+                  </p>
+                </div>
+              </div>
+              <!-- 2. Asuntos Académicos -->
+              <div
+                class="p-space-md bg-surface-container-lowest gap-space-sm flex items-center rounded-xl shadow-sm transition-transform hover:-translate-y-0.5"
+              >
+                <div
+                  class="bg-surface-container text-secondary text-headline-sm flex h-12 w-12 shrink-0 items-center justify-center rounded-full font-bold"
+                >
+                  BG
+                </div>
+                <div class="min-w-0">
+                  <p class="font-label-md text-label-md text-on-surface truncate font-bold">
+                    Beatriz Girón
+                  </p>
+                  <p
+                    class="font-caption-caps text-caption-caps text-secondary truncate font-semibold uppercase"
+                  >
+                    Asuntos Académicos
+                  </p>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant truncate">
+                    Bioquímica
+                  </p>
+                </div>
+              </div>
+              <!-- 3. Tutorías -->
+              <div
+                class="p-space-md bg-surface-container-lowest gap-space-sm flex items-center rounded-xl shadow-sm transition-transform hover:-translate-y-0.5"
+              >
+                <div
+                  class="bg-surface-container-high text-secondary text-headline-sm flex h-12 w-12 shrink-0 items-center justify-center rounded-full font-bold"
+                >
+                  FR
+                </div>
+                <div class="min-w-0">
+                  <p class="font-label-md text-label-md text-on-surface truncate font-bold">
+                    Fernando Reyes
+                  </p>
+                  <p
+                    class="font-caption-caps text-caption-caps text-secondary truncate font-semibold uppercase"
+                  >
+                    Tutorías Pares
+                  </p>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant truncate">
+                    Ciencia de Datos
+                  </p>
+                </div>
+              </div>
+              <!-- 4. Sostenibilidad -->
+              <div
+                class="p-space-md bg-surface-container-lowest gap-space-sm flex items-center rounded-xl shadow-sm transition-transform hover:-translate-y-0.5"
+              >
+                <div
+                  class="bg-surface-container text-secondary text-headline-sm flex h-12 w-12 shrink-0 items-center justify-center rounded-full font-bold"
+                >
+                  IM
+                </div>
+                <div class="min-w-0">
+                  <p class="font-label-md text-label-md text-on-surface truncate font-bold">
+                    Isabella Monroy
+                  </p>
+                  <p
+                    class="font-caption-caps text-caption-caps text-secondary truncate font-semibold uppercase"
+                  >
+                    Sostenibilidad Verde
+                  </p>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant truncate">
+                    Ing. Ambiental
+                  </p>
+                </div>
+              </div>
+              <!-- 5. Medios & Diseño -->
+              <div
+                class="p-space-md bg-surface-container-lowest gap-space-sm flex items-center rounded-xl shadow-sm transition-transform hover:-translate-y-0.5"
+              >
+                <div
+                  class="bg-surface-container-high text-secondary text-headline-sm flex h-12 w-12 shrink-0 items-center justify-center rounded-full font-bold"
+                >
+                  JG
+                </div>
+                <div class="min-w-0">
+                  <p class="font-label-md text-label-md text-on-surface truncate font-bold">
+                    Javier Gómez
+                  </p>
+                  <p
+                    class="font-caption-caps text-caption-caps text-secondary truncate font-semibold uppercase"
+                  >
+                    Diseño &amp; Medios
+                  </p>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant truncate">
+                    Diseño de Producto
+                  </p>
+                </div>
+              </div>
+              <!-- 6. Responsabilidad Social -->
+              <div
+                class="p-space-md bg-surface-container-lowest gap-space-sm flex items-center rounded-xl shadow-sm transition-transform hover:-translate-y-0.5"
+              >
+                <div
+                  class="bg-surface-container text-secondary text-headline-sm flex h-12 w-12 shrink-0 items-center justify-center rounded-full font-bold"
+                >
+                  CL
+                </div>
+                <div class="min-w-0">
+                  <p class="font-label-md text-label-md text-on-surface truncate font-bold">
+                    Camila Lemus
+                  </p>
+                  <p
+                    class="font-caption-caps text-caption-caps text-secondary truncate font-semibold uppercase"
+                  >
+                    Responsabilidad Social
+                  </p>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant truncate">
+                    Psicología
+                  </p>
+                </div>
+              </div>
+              <!-- 7. Deportes -->
+              <div
+                class="p-space-md bg-surface-container-lowest gap-space-sm flex items-center rounded-xl shadow-sm transition-transform hover:-translate-y-0.5"
+              >
+                <div
+                  class="bg-surface-container-high text-secondary text-headline-sm flex h-12 w-12 shrink-0 items-center justify-center rounded-full font-bold"
+                >
+                  MT
+                </div>
+                <div class="min-w-0">
+                  <p class="font-label-md text-label-md text-on-surface truncate font-bold">
+                    Mateo Toledo
+                  </p>
+                  <p
+                    class="font-caption-caps text-caption-caps text-secondary truncate font-semibold uppercase"
+                  >
+                    Deportes &amp; Recreación
+                  </p>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant truncate">
+                    Ing. Civil
+                  </p>
+                </div>
+              </div>
+              <!-- 8. Alianzas Externas -->
+              <div
+                class="p-space-md bg-surface-container-lowest gap-space-sm flex items-center rounded-xl shadow-sm transition-transform hover:-translate-y-0.5"
+              >
+                <div
+                  class="bg-surface-container text-secondary text-headline-sm flex h-12 w-12 shrink-0 items-center justify-center rounded-full font-bold"
+                >
+                  PA
+                </div>
+                <div class="min-w-0">
+                  <p class="font-label-md text-label-md text-on-surface truncate font-bold">
+                    Paula Arévalo
+                  </p>
+                  <p
+                    class="font-caption-caps text-caption-caps text-secondary truncate font-semibold uppercase"
+                  >
+                    Alianzas Externas
+                  </p>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant truncate">
+                    Administración
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- 6. Sección de Contacto & Canales Institucionales -->
+        <section class="bg-surface pb-space-3xl w-full">
+          <div class="max-w-container-max px-margin-mobile lg:px-margin-desktop mx-auto">
+            <div
+              class="bg-primary-container text-on-primary p-space-xl lg:p-space-2xl relative overflow-hidden rounded-3xl shadow-xl"
+            >
+              <!-- Decorative subtle SVG rings in background -->
+              <svg
+                class="pointer-events-none absolute -right-20 -bottom-20 h-96 w-96 opacity-10"
+                fill="currentColor"
+                viewBox="0 0 200 200"
+              >
+                <circle
+                  cx="100"
+                  cy="100"
+                  fill="none"
+                  r="90"
+                  stroke="currentColor"
+                  stroke-width="6"
+                ></circle>
+                <circle
+                  cx="100"
+                  cy="100"
+                  fill="none"
+                  r="65"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <circle
+                  cx="100"
+                  cy="100"
+                  fill="none"
+                  r="40"
+                  stroke="currentColor"
+                  stroke-width="2"
+                ></circle>
+              </svg>
+              <div class="gap-space-xl relative z-10 grid grid-cols-1 items-center lg:grid-cols-12">
+                <div class="gap-space-md flex flex-col lg:col-span-7">
+                  <span
+                    class="bg-primary/60 text-primary-fixed font-caption-caps text-caption-caps inline-flex w-fit items-center gap-2 rounded-full px-3 py-1 uppercase"
+                  >
+                    <span class="bg-secondary-container h-2 w-2 rounded-full"></span>
+                    Atención Abierta al Estudiante
+                  </span>
+                  <h2 class="font-headline-lg text-headline-lg text-on-primary font-bold">
+                    ¿Tienes una propuesta, duda o inquietud?
+                  </h2>
+                  <p class="font-body-lg text-body-lg text-on-primary-container max-w-xl">
+                    Nuestras puertas están siempre abiertas. Acércate a la oficina o escríbenos
+                    directamente. Las asambleas e iniciativas se construyen con tu voz.
+                  </p>
+                  <div class="gap-space-sm pt-space-xs flex flex-wrap">
+                    <a
+                      class="px-space-lg py-space-sm bg-secondary text-on-secondary font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface inline-flex items-center gap-2 rounded-lg font-semibold shadow-md transition-all"
+                      href="mailto:aeuvg@uvg.edu.gt"
+                    >
+                      <span class="material-symbols-outlined text-[18px]">send</span>
+                      Escribir a la Junta Directiva
+                    </a>
+                    <a
+                      class="px-space-lg py-space-sm bg-surface-container-low text-on-surface font-label-md text-label-md hover:bg-surface-container-high inline-flex items-center gap-2 rounded-lg font-semibold transition-colors"
+                      href="#"
+                    >
+                      <span class="material-symbols-outlined text-[18px]">download</span>
+                      Descargar Estatutos AEUVG (PDF)
+                    </a>
+                  </div>
+                </div>
+                <!-- Canales Rápidos -->
+                <div
+                  class="gap-space-md bg-primary/40 p-space-lg flex flex-col rounded-2xl lg:col-span-5"
+                >
+                  <div class="gap-space-sm flex items-start">
+                    <div
+                      class="bg-primary-container text-secondary-container flex h-10 w-10 shrink-0 items-center justify-center rounded-lg shadow-sm"
+                    >
+                      <span class="material-symbols-outlined text-[22px]">mail</span>
+                    </div>
+                    <div>
+                      <p
+                        class="font-label-sm text-label-sm text-primary-fixed font-semibold uppercase"
+                      >
+                        Correo Oficial
+                      </p>
+                      <a
+                        class="font-title-md text-title-md text-on-primary font-semibold hover:underline"
+                        href="mailto:aeuvg@uvg.edu.gt"
+                      >
+                        aeuvg@uvg.edu.gt
+                      </a>
+                    </div>
+                  </div>
+                  <div class="gap-space-sm flex items-start">
+                    <div
+                      class="bg-primary-container text-secondary-container flex h-10 w-10 shrink-0 items-center justify-center rounded-lg shadow-sm"
+                    >
+                      <span class="material-symbols-outlined text-[22px]">apartment</span>
+                    </div>
+                    <div>
+                      <p
+                        class="font-label-sm text-label-sm text-primary-fixed font-semibold uppercase"
+                      >
+                        Oficina Física
+                      </p>
+                      <p class="font-body-md text-body-md text-on-primary">
+                        Edificio I, Oficina 102, Campus Central UVG
+                      </p>
+                      <p
+                        class="font-caption-caps text-caption-caps text-on-primary-container mt-0.5"
+                      >
+                        Lunes a Viernes • 08:00 - 17:00 hrs
+                      </p>
+                    </div>
+                  </div>
+                  <div class="gap-space-sm pt-space-2xs flex items-start">
+                    <div
+                      class="bg-primary-container text-secondary-container flex h-10 w-10 shrink-0 items-center justify-center rounded-lg shadow-sm"
+                    >
+                      <span class="material-symbols-outlined text-[22px]">share</span>
+                    </div>
+                    <div>
+                      <p
+                        class="font-label-sm text-label-sm text-primary-fixed font-semibold uppercase"
+                      >
+                        Redes Sociales
+                      </p>
+                      <div class="gap-space-xs mt-1 flex items-center">
+                        <a
+                          class="bg-surface-container-low text-on-surface font-label-sm text-label-sm hover:bg-surface-container-high rounded px-2.5 py-1 font-semibold transition-colors"
+                          href="#"
+                        >
+                          @aeuvg (IG)
+                        </a>
+                        <a
+                          class="bg-surface-container-low text-on-surface font-label-sm text-label-sm hover:bg-surface-container-high rounded px-2.5 py-1 font-semibold transition-colors"
+                          href="#"
+                        >
+                          Facebook
+                        </a>
+                        <a
+                          class="bg-surface-container-low text-on-surface font-label-sm text-label-sm hover:bg-surface-container-high rounded px-2.5 py-1 font-semibold transition-colors"
+                          href="#"
+                        >
+                          LinkedIn
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+    <footer
+      class="bg-primary-container text-on-primary py-space-2xl w-full shadow-[0_1px_8px_rgba(0,0,0,0.06)]"
+    >
+      <div
+        class="max-w-container-max px-margin-mobile lg:px-margin-desktop gap-space-xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
+      >
+        <div class="gap-space-sm flex flex-col">
+          <div class="gap-space-sm flex items-center">
+            <span class="font-headline-md text-headline-md text-on-primary">AEUVG</span>
+          </div>
+          <p class="font-body-sm text-body-sm text-on-primary-container">
+            Asociación de Estudiantes de la Universidad del Valle de Guatemala. Representación
+            estudiantil, desarrollo integral y comunidad académica unida.
+          </p>
+          <div class="gap-space-sm pt-space-xs flex items-center">
+            <a
+              class="bg-surface-container-low text-on-surface hover:bg-surface-container-high flex h-8 w-8 items-center justify-center rounded-full transition-colors"
+              href="#"
+              ><span class="material-symbols-outlined text-[18px]">public</span></a
+            ><a
+              class="bg-surface-container-low text-on-surface hover:bg-surface-container-high flex h-8 w-8 items-center justify-center rounded-full transition-colors"
+              href="#"
+              ><span class="material-symbols-outlined text-[18px]">share</span></a
+            ><a
+              class="bg-surface-container-low text-on-surface hover:bg-surface-container-high flex h-8 w-8 items-center justify-center rounded-full transition-colors"
+              href="#"
+              ><span class="material-symbols-outlined text-[18px]">forum</span></a
+            >
+          </div>
+        </div>
+        <div class="gap-space-xs flex flex-col">
+          <span class="font-title-md text-title-md text-on-primary mb-space-2xs"
+            >Enlaces Institucionales</span
+          ><a
+            class="font-body-sm text-body-sm text-on-primary-container hover:text-on-primary transition-colors"
+            data-path="inicio"
+            href="#"
+            >Portal Central UVG</a
+          ><a
+            class="font-body-sm text-body-sm text-on-primary-container hover:text-on-primary transition-colors"
+            data-path="sobre-aeuvg"
+            href="#"
+            >Mesa Directiva &amp; Junta</a
+          ><a
+            class="font-body-sm text-body-sm text-on-primary-container hover:text-on-primary transition-colors"
+            data-path="estatutos"
+            href="#"
+            >Estatutos y Reglamentos</a
+          ><a
+            class="font-body-sm text-body-sm text-on-primary-container hover:text-on-primary transition-colors"
+            data-path="transparencia"
+            href="#"
+            >Rendición de Cuentas</a
+          >
+        </div>
+        <div class="gap-space-xs flex flex-col">
+          <span class="font-title-md text-title-md text-on-primary mb-space-2xs"
+            >Vida Estudiantil</span
+          ><a
+            class="font-body-sm text-body-sm text-on-primary-container hover:text-on-primary transition-colors"
+            data-path="asociaciones"
+            href="#"
+            >Directorio de Asociaciones</a
+          ><a
+            class="font-body-sm text-body-sm text-on-primary-container hover:text-on-primary transition-colors"
+            data-path="clubes"
+            href="#"
+            >Clubes Activos</a
+          ><a
+            class="font-body-sm text-body-sm text-on-primary-container hover:text-on-primary transition-colors"
+            data-path="eventos"
+            href="#"
+            >Calendario de Actividades</a
+          ><a
+            class="font-body-sm text-body-sm text-on-primary-container hover:text-on-primary transition-colors"
+            data-path="tutorias"
+            href="#"
+            >Programa de Tutorías Pares</a
+          >
+        </div>
+        <div class="gap-space-xs flex flex-col">
+          <span class="font-title-md text-title-md text-on-primary mb-space-2xs"
+            >Contacto y Soporte</span
+          >
+          <div class="gap-space-2xs text-on-primary-container flex items-start">
+            <span class="material-symbols-outlined text-on-primary text-[18px]">location_on</span
+            ><span class="font-body-sm text-body-sm"
+              >18 Avenida 11-95, Zona 15, Vista Hermosa III, Edificio H, Oficina AEUVG</span
+            >
+          </div>
+          <div class="gap-space-2xs text-on-primary-container flex items-center">
+            <span class="material-symbols-outlined text-on-primary text-[18px]">mail</span
+            ><span class="font-body-sm text-body-sm">aeuvg@uvg.edu.gt</span>
+          </div>
+          <div class="gap-space-2xs text-on-primary-container flex items-center">
+            <span class="material-symbols-outlined text-on-primary text-[18px]">schedule</span
+            ><span class="font-body-sm text-body-sm">Lun - Vie: 08:00 - 17:00</span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="max-w-container-max px-margin-mobile lg:px-margin-desktop mt-space-2xl pt-space-md text-on-primary-container font-body-sm text-body-sm gap-space-sm mx-auto flex flex-col items-center justify-between text-center sm:flex-row"
+      >
+        <span
+          >© 2025 Asociación de Estudiantes de la Universidad del Valle de Guatemala (AEUVG). Todos
+          los derechos reservados.</span
+        >
+        <div class="gap-space-md flex">
+          <a class="hover:text-on-primary transition-colors" data-path="privacidad" href="#"
+            >Políticas de Privacidad</a
+          ><a class="hover:text-on-primary transition-colors" data-path="terminos" href="#"
+            >Términos de Servicio</a
+          >
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,1035 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+      name="viewport"
+    />
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @layer base {
+        html,
+        body {
+          width: 100vw;
+          margin: 0;
+          padding: 0;
+        }
+        body {
+          overscroll-behavior: none;
+        }
+        .pb-safe {
+          padding-bottom: env(safe-area-inset-bottom, 0px);
+        }
+        .pt-safe {
+          padding-top: env(safe-area-inset-top, 0px);
+        }
+        main > :first-child {
+          margin-top: 0 !important;
+        }
+        main > :last-child {
+          margin-bottom: 0 !important;
+        }
+      }
+      ::-webkit-scrollbar {
+        display: none;
+      }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-primary": "#b98aff",
+              "secondary-fixed-dim": "#3ec1ff",
+              "on-error-container": "#93000a",
+              "on-primary-container": "#ede8ff",
+              secondary: "#00c9a7",
+              "inverse-on-surface": "#fff8f3",
+              "tertiary-container": "#4d000a",
+              "surface-container-low": "#f7f1ea",
+              "on-secondary-fixed-variant": "#00806c",
+              "on-background": "#1c162b",
+              tertiary: "#230002",
+              "error-container": "#ffdad6",
+              "on-tertiary": "#ffffff",
+              "on-primary-fixed-variant": "#5a35e8",
+              "primary-fixed": "#ede8ff",
+              "on-secondary-fixed": "#0d3b34",
+              "surface-container": "#f7f1ea",
+              "primary-container": "#6d4aff",
+              "surface-bright": "#fff8f3",
+              "on-error": "#ffffff",
+              "on-primary": "#ffffff",
+              error: "#f5455c",
+              "surface-container-highest": "#ede8ff",
+              "surface-container-high": "#ede8ff",
+              "on-surface": "#1c162b",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-fixed-dim": "#ffb3b1",
+              "on-tertiary-container": "#ff5e5b",
+              "tertiary-fixed": "#ffdad8",
+              "on-surface-variant": "#6e6580",
+              "on-tertiary-fixed": "#410007",
+              "on-secondary": "#ffffff",
+              "surface-variant": "#ede8ff",
+              primary: "#1c162b",
+              "on-secondary-container": "#00806c",
+              background: "#fff8f3",
+              "on-primary-fixed": "#1c162b",
+              "surface-tint": "#6d4aff",
+              "surface-dim": "#f0e6da",
+              "outline-variant": "#ebe2d8",
+              "secondary-container": "#3ec1ff",
+              "inverse-surface": "#1c162b",
+              "secondary-fixed": "#d6f7f1",
+              surface: "#fff8f3",
+              "primary-fixed-dim": "#b98aff",
+              outline: "#d9cec2",
+              "on-tertiary-fixed-variant": "#92001c",
+            },
+            borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+            spacing: {
+              "margin-desktop": "2rem",
+              "space-3xl": "4rem",
+              "space-sm": "0.75rem",
+              "space-xs": "0.5rem",
+              "space-2xl": "3rem",
+              "space-2xs": "0.25rem",
+              "margin-mobile": "1rem",
+              "container-max": "1280px",
+              "space-xl": "2rem",
+              "gutter-desktop": "1.5rem",
+              "gutter-mobile": "1rem",
+              "space-md": "1rem",
+              "space-lg": "1.5rem",
+            },
+            fontFamily: {
+              "headline-md": ["Plus Jakarta Sans"],
+              "headline-sm": ["Plus Jakarta Sans"],
+              "label-md": ["Plus Jakarta Sans"],
+              "title-md": ["Plus Jakarta Sans"],
+              "caption-caps": ["Plus Jakarta Sans"],
+              "display-hero-mobile": ["Plus Jakarta Sans"],
+              "display-hero": ["Plus Jakarta Sans"],
+              "body-sm": ["Plus Jakarta Sans"],
+              "headline-lg-mobile": ["Plus Jakarta Sans"],
+              "body-md": ["Plus Jakarta Sans"],
+              "label-sm": ["Plus Jakarta Sans"],
+              "body-lg": ["Plus Jakarta Sans"],
+              "headline-lg": ["Plus Jakarta Sans"],
+            },
+            fontSize: {
+              "headline-md": [
+                "24px",
+                { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "600" },
+              ],
+              "headline-sm": ["20px", { lineHeight: "28px", fontWeight: "600" }],
+              "label-md": [
+                "14px",
+                { lineHeight: "20px", letterSpacing: "0.005em", fontWeight: "600" },
+              ],
+              "title-md": ["18px", { lineHeight: "26px", fontWeight: "600" }],
+              "caption-caps": [
+                "11px",
+                { lineHeight: "14px", letterSpacing: "0.06em", fontWeight: "700" },
+              ],
+              "display-hero-mobile": [
+                "30px",
+                { lineHeight: "38px", letterSpacing: "-0.015em", fontWeight: "800" },
+              ],
+              "display-hero": [
+                "40px",
+                { lineHeight: "48px", letterSpacing: "-0.02em", fontWeight: "800" },
+              ],
+              "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+              "headline-lg-mobile": [
+                "26px",
+                { lineHeight: "34px", letterSpacing: "-0.01em", fontWeight: "700" },
+              ],
+              "body-md": ["15px", { lineHeight: "24px", fontWeight: "400" }],
+              "label-sm": [
+                "12px",
+                { lineHeight: "16px", letterSpacing: "0.01em", fontWeight: "600" },
+              ],
+              "body-lg": ["16px", { lineHeight: "26px", fontWeight: "400" }],
+              "headline-lg": [
+                "32px",
+                { lineHeight: "40px", letterSpacing: "-0.015em", fontWeight: "700" },
+              ],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        min-height: max(884px, 100dvh);
+      }
+    </style>
+  </head>
+  <body class="bg-surface font-body-md text-body-md text-on-surface flex flex-col antialiased">
+    <header
+      class="pt-safe bg-surface/80 fixed top-0 z-50 w-full shadow-[0_1px_8px_rgba(13,35,58,0.04)] backdrop-blur-xl"
+    >
+      <div class="px-gutter-mobile gap-space-sm flex h-16 items-center justify-between">
+        <div class="gap-space-xs flex items-center">
+          <img
+            alt="Logo circular de AEUVG compuesto por figuras humanas estilizadas unidas en círculo de colores vivos (rojo, coral, morado, celeste, naranja, verde lima y azul marino) con las siglas AEUVG limpias y modernas.. Brand logo. - Primary color: #6d4aff
+- Font: plusJakartaSans
+- Mode: light
+- Roundness: rounded-md
+"
+            class="h-8 w-auto object-contain"
+            src="logo-aeuvg.png"
+          /><span
+            class="font-label-sm text-label-sm text-on-surface-variant hidden tracking-wider uppercase sm:inline-block"
+            >AEUVG</span
+          >
+        </div>
+        <h1 class="font-title-md text-title-md text-on-surface flex-1 truncate text-center">
+          Mi Perfil
+        </h1>
+        <div class="gap-space-2xs flex items-center">
+          <button
+            aria-label="Notificaciones"
+            class="text-on-surface-variant hover:text-on-surface flex h-11 w-11 items-center justify-center rounded-full transition-colors"
+          >
+            <span class="material-symbols-outlined">notifications</span>
+          </button>
+          <div class="bg-primary flex h-8 w-8 items-center justify-center rounded-full">
+            <span class="material-symbols-outlined text-on-primary text-[18px]">person</span>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main class="bg-surface relative flex min-h-screen w-full flex-col pt-16 pb-24">
+      <div class="flex w-full flex-col">
+        <!-- Profile Summary Card -->
+        <div class="px-gutter-mobile pt-space-xs pb-space-sm">
+          <div
+            class="bg-surface-container-lowest p-space-md gap-space-sm relative flex flex-col overflow-hidden rounded-xl shadow-md"
+          >
+            <!-- Ambient Decorative Top Accent -->
+            <div
+              class="bg-secondary-container/15 pointer-events-none absolute -top-12 -right-12 h-32 w-32 rounded-full blur-2xl"
+            ></div>
+            <div class="gap-space-sm relative flex items-start">
+              <div class="relative shrink-0">
+                <img
+                  class="h-20 w-20 rounded-full object-cover shadow-sm ring-0"
+                  data-alt="A portrait of a confident and friendly Guatemalan female university engineering student in her early twenties with warm natural lighting, wearing a stylish dark navy sweater on a vibrant modern university campus background."
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6crqyTZPHzGWJ3hRrvjtDTTgSC9CO-PUr8NfEdMeA4nTbMR6iMcWQ6MKu9eXTb4F391NpQeGC56FwSM8D4q3xcKjsUtweB2HRABnC8JfOttY-yFuYND4K5mqOYgjnCcsP37XTlEks5NUkUjtlbgUHwUcVrhhy7yXPvg9KDbFLKMr53yCoOI6qgDdFfJQPKv55okYMrc6o-qScYIoDyd5S6lI-cGl9X6-v1hPfA_r4Vb5rsOf-E-4oZA"
+                />
+                <div
+                  class="bg-secondary text-on-secondary absolute -right-1 -bottom-1 flex h-6 w-6 items-center justify-center rounded-full shadow-sm"
+                >
+                  <span class="material-symbols-outlined text-[14px]">school</span>
+                </div>
+              </div>
+              <div class="flex min-w-0 flex-1 flex-col justify-center">
+                <div class="gap-space-2xs flex items-center">
+                  <h2 class="font-headline-sm text-headline-sm text-on-surface truncate">
+                    Valeria Sofía Morales
+                  </h2>
+                </div>
+                <span
+                  class="font-label-sm text-label-sm text-on-surface-variant mt-0.5 flex items-center gap-1"
+                >
+                  <span class="text-secondary font-bold">Carné:</span> 21890
+                </span>
+                <div class="gap-space-2xs mt-1.5 flex flex-wrap items-center">
+                  <span
+                    class="bg-primary-fixed text-on-primary-fixed font-caption-caps text-caption-caps inline-block rounded-full px-2 py-0.5"
+                  >
+                    Ing. Ciencia de la Computación
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="pt-space-2xs flex flex-col gap-1">
+              <div class="gap-space-xs text-on-surface-variant flex items-center">
+                <span class="material-symbols-outlined text-secondary text-[18px]">domain</span>
+                <span class="font-body-sm text-body-sm truncate">Facultad de Ingeniería</span>
+              </div>
+              <div class="gap-space-xs text-on-surface-variant flex items-center">
+                <span class="material-symbols-outlined text-secondary text-[18px]">mail</span>
+                <span class="font-body-sm text-body-sm text-secondary truncate"
+                  >valeria.morales@uvg.edu.gt</span
+                >
+              </div>
+            </div>
+            <button
+              class="mt-space-2xs bg-surface-container hover:bg-surface-container-high active:bg-surface-container-highest text-primary font-label-md text-label-md gap-space-xs flex h-10 w-full items-center justify-center rounded-lg shadow-sm transition-colors"
+              id="editProfileBtn"
+            >
+              <span class="material-symbols-outlined text-[18px]">edit</span>
+              <span>Editar perfil</span>
+            </button>
+          </div>
+        </div>
+        <!-- Horizontal Scrollable Tabs -->
+        <div class="bg-surface-container-lowest w-full shadow-sm">
+          <div
+            class="no-scrollbar px-gutter-mobile space-x-space-md flex overflow-x-auto scroll-smooth"
+            id="profileTabList"
+          >
+            <button
+              class="tab-btn font-label-md text-label-md text-secondary border-secondary active-tab flex flex-none items-center gap-1.5 border-b-[2.5px] py-3 whitespace-nowrap"
+              data-target="tab-horas"
+            >
+              <span class="material-symbols-outlined text-[18px]">assignment_turned_in</span>
+              <span>Mis horas beca</span>
+            </button>
+            <button
+              class="tab-btn font-label-md text-label-md text-on-surface-variant hover:text-on-surface flex flex-none items-center gap-1.5 border-b-[2.5px] border-transparent py-3 whitespace-nowrap"
+              data-target="tab-eventos"
+            >
+              <span class="material-symbols-outlined text-[18px]">bookmark</span>
+              <span>Eventos guardados</span>
+              <span
+                class="bg-surface-container-high text-on-surface font-caption-caps text-caption-caps rounded-full px-1.5 py-0.5"
+                >3</span
+              >
+            </button>
+            <button
+              class="tab-btn font-label-md text-label-md text-on-surface-variant hover:text-on-surface flex flex-none items-center gap-1.5 border-b-[2.5px] border-transparent py-3 whitespace-nowrap"
+              data-target="tab-tutorias"
+            >
+              <span class="material-symbols-outlined text-[18px]">forum</span>
+              <span>Tutorías</span>
+              <span
+                class="bg-surface-container-high text-on-surface font-caption-caps text-caption-caps rounded-full px-1.5 py-0.5"
+                >1</span
+              >
+            </button>
+            <button
+              class="tab-btn font-label-md text-label-md text-on-surface-variant hover:text-on-surface flex flex-none items-center gap-1.5 border-b-[2.5px] border-transparent py-3 whitespace-nowrap"
+              data-target="tab-recomendaciones"
+            >
+              <span class="material-symbols-outlined text-[18px]">auto_awesome</span>
+              <span>Recomendaciones</span>
+            </button>
+            <button
+              class="tab-btn font-label-md text-label-md text-on-surface-variant hover:text-on-surface flex flex-none items-center gap-1.5 border-b-[2.5px] border-transparent py-3 whitespace-nowrap"
+              data-target="tab-datos"
+            >
+              <span class="material-symbols-outlined text-[18px]">manage_accounts</span>
+              <span>Datos personales</span>
+            </button>
+          </div>
+        </div>
+        <!-- Main Tab View Slot: Horas Beca -->
+        <div
+          class="tab-content px-gutter-mobile py-space-md gap-space-lg flex w-full flex-col"
+          id="tab-horas"
+        >
+          <!-- Period Tracker Header & Download CTA -->
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="font-caption-caps text-caption-caps text-secondary font-bold uppercase"
+                >Ciclo Actual • 2025</span
+              >
+              <h3 class="font-title-md text-title-md text-on-surface">Balance Semestral</h3>
+            </div>
+            <button
+              class="bg-primary hover:bg-primary-container text-on-primary font-label-sm text-label-sm flex items-center gap-1.5 rounded-lg px-3 py-2 shadow-sm transition-all active:scale-[0.98]"
+              id="downloadPdfBtn"
+            >
+              <span class="material-symbols-outlined text-[16px]">picture_as_pdf</span>
+              <span>Constancia PDF</span>
+            </button>
+          </div>
+          <!-- 3 Big Tactile Metric Cards -->
+          <div class="gap-space-sm flex flex-col">
+            <!-- 1. Horas Realizadas (Progress card) -->
+            <div
+              class="bg-surface-container-lowest p-space-md gap-space-xs relative flex flex-col overflow-hidden rounded-xl shadow-sm"
+            >
+              <div class="flex items-center justify-between">
+                <div class="gap-space-xs flex items-center">
+                  <div
+                    class="bg-surface-container text-primary flex h-10 w-10 items-center justify-center rounded-full"
+                  >
+                    <span class="material-symbols-outlined text-[22px]">timer</span>
+                  </div>
+                  <div>
+                    <p class="font-caption-caps text-caption-caps text-on-surface-variant">
+                      Meta Semestral: 60 hrs
+                    </p>
+                    <h4 class="font-title-md text-title-md text-on-surface">Horas Realizadas</h4>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <span class="font-headline-md text-headline-md text-primary">48</span>
+                  <span class="font-label-sm text-label-sm text-on-surface-variant">/ 60 h</span>
+                </div>
+              </div>
+              <div class="mt-space-xs flex flex-col gap-1.5">
+                <div class="bg-surface-container-high h-2.5 w-full overflow-hidden rounded-full">
+                  <div
+                    class="bg-primary h-full rounded-full transition-all duration-700 ease-out"
+                    style="width: 80%"
+                  ></div>
+                </div>
+                <div class="text-on-surface-variant flex items-center justify-between">
+                  <span class="font-caption-caps text-caption-caps">80% completado</span>
+                  <span class="font-caption-caps text-caption-caps text-secondary font-bold"
+                    >Faltan 12 horas</span
+                  >
+                </div>
+              </div>
+            </div>
+            <!-- 2. Horas Acreditadas & 3. Horas Pendientes (Split Grid) -->
+            <div class="gap-space-sm grid grid-cols-2">
+              <!-- Acreditadas Card -->
+              <div
+                class="bg-surface-container-lowest p-space-md flex flex-col justify-between rounded-xl shadow-sm"
+              >
+                <div class="flex items-center justify-between">
+                  <div
+                    class="bg-surface-container-low text-secondary flex h-9 w-9 items-center justify-center rounded-full"
+                  >
+                    <span
+                      class="material-symbols-outlined text-[20px]"
+                      style="font-variation-settings: &quot;FILL&quot; 1"
+                      >check_circle</span
+                    >
+                  </div>
+                  <span
+                    class="font-caption-caps text-caption-caps bg-secondary-fixed text-on-secondary-fixed rounded-full px-2 py-0.5 font-bold"
+                    >Oficial</span
+                  >
+                </div>
+                <div class="mt-space-sm">
+                  <div class="font-headline-md text-headline-md text-secondary">
+                    38 <span class="font-label-md text-label-md text-on-surface-variant">hrs</span>
+                  </div>
+                  <p class="font-label-sm text-label-sm text-on-surface mt-0.5">Acreditadas</p>
+                  <p class="font-caption-caps text-caption-caps text-on-surface-variant mt-1">
+                    Validado por AEUVG
+                  </p>
+                </div>
+              </div>
+              <!-- Pendientes Card -->
+              <div
+                class="bg-surface-container-lowest p-space-md flex flex-col justify-between rounded-xl shadow-sm"
+              >
+                <div class="flex items-center justify-between">
+                  <div
+                    class="bg-surface-container-low text-on-tertiary-container flex h-9 w-9 items-center justify-center rounded-full"
+                  >
+                    <span class="material-symbols-outlined text-[20px]">pending_actions</span>
+                  </div>
+                  <span
+                    class="font-caption-caps text-caption-caps bg-surface-container-high text-on-surface rounded-full px-2 py-0.5 font-bold"
+                    >Revisión</span
+                  >
+                </div>
+                <div class="mt-space-sm">
+                  <div class="font-headline-md text-headline-md text-on-tertiary-container">
+                    10 <span class="font-label-md text-label-md text-on-surface-variant">hrs</span>
+                  </div>
+                  <p class="font-label-sm text-label-sm text-on-surface mt-0.5">Pendientes</p>
+                  <p class="font-caption-caps text-caption-caps text-on-surface-variant mt-1">
+                    2 actividades en cola
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Interactive Filter & Search Bar for Logs -->
+          <div class="gap-space-xs mt-space-2xs flex flex-col">
+            <div class="flex items-center justify-between">
+              <h4 class="font-title-md text-title-md text-on-surface flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-secondary text-[20px]"
+                  >history_edu</span
+                >
+                Historial de Actividades
+              </h4>
+              <button
+                class="text-secondary font-label-sm text-label-sm flex items-center gap-0.5 hover:underline"
+              >
+                <span class="material-symbols-outlined text-[16px]">filter_list</span>
+                Filtrar
+              </button>
+            </div>
+            <!-- History Activity Cards -->
+            <div class="gap-space-xs mt-1 flex flex-col">
+              <!-- Log 1: Acreditada -->
+              <div
+                class="bg-surface-container-lowest p-space-md gap-space-2xs flex flex-col rounded-xl shadow-sm transition-transform active:scale-[0.99]"
+              >
+                <div class="gap-space-xs flex items-start justify-between">
+                  <div class="flex min-w-0 flex-1 flex-col">
+                    <span class="font-caption-caps text-caption-caps text-secondary font-bold"
+                      >Soporte Técnico • Laboratorios CIT</span
+                    >
+                    <h5 class="font-label-md text-label-md text-on-surface mt-0.5 leading-snug">
+                      Monitoreo de Servidores y Redes en Edificio CIT
+                    </h5>
+                  </div>
+                  <span
+                    class="bg-secondary-fixed text-on-secondary-fixed font-caption-caps text-caption-caps flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1"
+                  >
+                    <span class="material-symbols-outlined text-[12px]">verified</span>
+                    Acreditada
+                  </span>
+                </div>
+                <div class="text-on-surface-variant flex items-center justify-between pt-2">
+                  <div class="font-body-sm text-body-sm flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[16px]">calendar_month</span>
+                    <span>18 Feb 2025</span>
+                  </div>
+                  <div class="gap-space-xs flex items-center">
+                    <span class="font-caption-caps text-caption-caps text-on-surface-variant"
+                      >Acreditado: 20 Feb</span
+                    >
+                    <span
+                      class="font-label-md text-label-md text-primary bg-surface-container rounded-lg px-2 py-0.5"
+                      >+12 hrs</span
+                    >
+                  </div>
+                </div>
+              </div>
+              <!-- Log 2: Acreditada -->
+              <div
+                class="bg-surface-container-lowest p-space-md gap-space-2xs flex flex-col rounded-xl shadow-sm transition-transform active:scale-[0.99]"
+              >
+                <div class="gap-space-xs flex items-start justify-between">
+                  <div class="flex min-w-0 flex-1 flex-col">
+                    <span class="font-caption-caps text-caption-caps text-secondary font-bold"
+                      >Tutorías Pares • AEUVG</span
+                    >
+                    <h5 class="font-label-md text-label-md text-on-surface mt-0.5 leading-snug">
+                      Tutoría de Algoritmos y Estructuras de Datos
+                    </h5>
+                  </div>
+                  <span
+                    class="bg-secondary-fixed text-on-secondary-fixed font-caption-caps text-caption-caps flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1"
+                  >
+                    <span class="material-symbols-outlined text-[12px]">verified</span>
+                    Acreditada
+                  </span>
+                </div>
+                <div class="text-on-surface-variant flex items-center justify-between pt-2">
+                  <div class="font-body-sm text-body-sm flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[16px]">calendar_month</span>
+                    <span>12 Feb 2025</span>
+                  </div>
+                  <div class="gap-space-xs flex items-center">
+                    <span class="font-caption-caps text-caption-caps text-on-surface-variant"
+                      >Acreditado: 14 Feb</span
+                    >
+                    <span
+                      class="font-label-md text-label-md text-primary bg-surface-container rounded-lg px-2 py-0.5"
+                      >+16 hrs</span
+                    >
+                  </div>
+                </div>
+              </div>
+              <!-- Log 3: Acreditada -->
+              <div
+                class="bg-surface-container-lowest p-space-md gap-space-2xs flex flex-col rounded-xl shadow-sm transition-transform active:scale-[0.99]"
+              >
+                <div class="gap-space-xs flex items-start justify-between">
+                  <div class="flex min-w-0 flex-1 flex-col">
+                    <span class="font-caption-caps text-caption-caps text-secondary font-bold"
+                      >Logística Cultural • Plaza Fuentelapiedra</span
+                    >
+                    <h5 class="font-label-md text-label-md text-on-surface mt-0.5 leading-snug">
+                      Staff Bienvenida de Primer Ingreso UVG
+                    </h5>
+                  </div>
+                  <span
+                    class="bg-secondary-fixed text-on-secondary-fixed font-caption-caps text-caption-caps flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1"
+                  >
+                    <span class="material-symbols-outlined text-[12px]">verified</span>
+                    Acreditada
+                  </span>
+                </div>
+                <div class="text-on-surface-variant flex items-center justify-between pt-2">
+                  <div class="font-body-sm text-body-sm flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[16px]">calendar_month</span>
+                    <span>28 Ene 2025</span>
+                  </div>
+                  <div class="gap-space-xs flex items-center">
+                    <span class="font-caption-caps text-caption-caps text-on-surface-variant"
+                      >Acreditado: 31 Ene</span
+                    >
+                    <span
+                      class="font-label-md text-label-md text-primary bg-surface-container rounded-lg px-2 py-0.5"
+                      >+10 hrs</span
+                    >
+                  </div>
+                </div>
+              </div>
+              <!-- Log 4: Pendiente -->
+              <div
+                class="bg-surface-container-lowest p-space-md gap-space-2xs flex flex-col rounded-xl shadow-sm transition-transform active:scale-[0.99]"
+              >
+                <div class="gap-space-xs flex items-start justify-between">
+                  <div class="flex min-w-0 flex-1 flex-col">
+                    <span
+                      class="font-caption-caps text-caption-caps text-on-tertiary-container font-bold"
+                      >Innovación • Decanatura</span
+                    >
+                    <h5 class="font-label-md text-label-md text-on-surface mt-0.5 leading-snug">
+                      Hackathon Interuniversitario: Asistente Técnico
+                    </h5>
+                  </div>
+                  <span
+                    class="bg-surface-container-high text-on-surface font-caption-caps text-caption-caps flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1"
+                  >
+                    <span class="material-symbols-outlined text-[12px]">schedule</span>
+                    Pendiente
+                  </span>
+                </div>
+                <div class="text-on-surface-variant flex items-center justify-between pt-2">
+                  <div class="font-body-sm text-body-sm flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[16px]">calendar_month</span>
+                    <span>22 Feb 2025</span>
+                  </div>
+                  <div class="gap-space-xs flex items-center">
+                    <span class="font-caption-caps text-caption-caps text-on-surface-variant"
+                      >En revisión por tutor</span
+                    >
+                    <span
+                      class="font-label-md text-label-md text-on-tertiary-container bg-surface-container rounded-lg px-2 py-0.5"
+                      >6 hrs</span
+                    >
+                  </div>
+                </div>
+              </div>
+              <!-- Log 5: Pendiente -->
+              <div
+                class="bg-surface-container-lowest p-space-md gap-space-2xs flex flex-col rounded-xl shadow-sm transition-transform active:scale-[0.99]"
+              >
+                <div class="gap-space-xs flex items-start justify-between">
+                  <div class="flex min-w-0 flex-1 flex-col">
+                    <span
+                      class="font-caption-caps text-caption-caps text-on-tertiary-container font-bold"
+                      >Biblioteca Central UVG</span
+                    >
+                    <h5 class="font-label-md text-label-md text-on-surface mt-0.5 leading-snug">
+                      Digitalización de Artículos Científicos
+                    </h5>
+                  </div>
+                  <span
+                    class="bg-surface-container-high text-on-surface font-caption-caps text-caption-caps flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1"
+                  >
+                    <span class="material-symbols-outlined text-[12px]">schedule</span>
+                    Pendiente
+                  </span>
+                </div>
+                <div class="text-on-surface-variant flex items-center justify-between pt-2">
+                  <div class="font-body-sm text-body-sm flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[16px]">calendar_month</span>
+                    <span>24 Feb 2025</span>
+                  </div>
+                  <div class="gap-space-xs flex items-center">
+                    <span class="font-caption-caps text-caption-caps text-on-surface-variant"
+                      >En espera de firma</span
+                    >
+                    <span
+                      class="font-label-md text-label-md text-on-tertiary-container bg-surface-container rounded-lg px-2 py-0.5"
+                      >4 hrs</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Quick Action / Delight Card: New Hour Registration -->
+          <div
+            class="bg-surface-container-high p-space-md gap-space-sm flex items-center justify-between rounded-xl"
+          >
+            <div class="gap-space-xs flex items-center">
+              <div
+                class="bg-surface-container-lowest text-secondary flex h-10 w-10 items-center justify-center rounded-lg shadow-sm"
+              >
+                <span class="material-symbols-outlined text-[22px]">add_task</span>
+              </div>
+              <div>
+                <p class="font-label-md text-label-md text-on-surface">
+                  ¿Realizaste otra actividad?
+                </p>
+                <p class="font-caption-caps text-caption-caps text-on-surface-variant">
+                  Reporta tus horas de servicio becario
+                </p>
+              </div>
+            </div>
+            <button
+              class="bg-secondary text-on-secondary font-label-sm text-label-sm shrink-0 rounded-lg px-3 py-2 shadow-sm transition-all hover:opacity-90 active:scale-95"
+            >
+              Registrar
+            </button>
+          </div>
+        </div>
+        <!-- Secondary Tab: Eventos Guardados (Hidden by default) -->
+        <div
+          class="tab-content px-gutter-mobile py-space-md gap-space-md flex hidden w-full flex-col"
+          id="tab-eventos"
+        >
+          <div class="flex items-center justify-between">
+            <h3 class="font-title-md text-title-md text-on-surface">Mis Eventos Guardados (3)</h3>
+            <span class="font-caption-caps text-caption-caps text-secondary font-bold"
+              >UVG Campus Central</span
+            >
+          </div>
+          <div class="gap-space-xs flex flex-col">
+            <div
+              class="bg-surface-container-lowest p-space-md gap-space-sm flex items-center rounded-xl shadow-sm"
+            >
+              <div
+                class="bg-surface-container text-primary flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-lg"
+              >
+                <span class="font-caption-caps text-caption-caps font-bold">MAR</span>
+                <span class="font-headline-sm text-headline-sm leading-none">05</span>
+              </div>
+              <div class="min-w-0 flex-1">
+                <span
+                  class="bg-secondary-fixed text-on-secondary-fixed font-caption-caps text-caption-caps rounded-full px-2 py-0.5"
+                  >Académico</span
+                >
+                <h4 class="font-label-md text-label-md text-on-surface mt-1 truncate">
+                  Conferencia: Inteligencia Artificial en Centroamérica
+                </h4>
+                <p class="font-caption-caps text-caption-caps text-on-surface-variant">
+                  Auditorio I-100 • 16:00 hrs
+                </p>
+              </div>
+              <button
+                class="bg-surface-container text-secondary flex h-9 w-9 items-center justify-center rounded-full"
+              >
+                <span class="material-symbols-outlined text-[18px]">bookmark_remove</span>
+              </button>
+            </div>
+            <div
+              class="bg-surface-container-lowest p-space-md gap-space-sm flex items-center rounded-xl shadow-sm"
+            >
+              <div
+                class="bg-surface-container text-primary flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-lg"
+              >
+                <span class="font-caption-caps text-caption-caps font-bold">MAR</span>
+                <span class="font-headline-sm text-headline-sm leading-none">12</span>
+              </div>
+              <div class="min-w-0 flex-1">
+                <span
+                  class="bg-surface-container-high text-on-surface font-caption-caps text-caption-caps rounded-full px-2 py-0.5"
+                  >Comunidad</span
+                >
+                <h4 class="font-label-md text-label-md text-on-surface mt-1 truncate">
+                  Feria de Clubes y Asociaciones AEUVG 2025
+                </h4>
+                <p class="font-caption-caps text-caption-caps text-on-surface-variant">
+                  Plaza Dr. Manuel F. Ayau • 10:00 hrs
+                </p>
+              </div>
+              <button
+                class="bg-surface-container text-secondary flex h-9 w-9 items-center justify-center rounded-full"
+              >
+                <span class="material-symbols-outlined text-[18px]">bookmark_remove</span>
+              </button>
+            </div>
+            <div
+              class="bg-surface-container-lowest p-space-md gap-space-sm flex items-center rounded-xl shadow-sm"
+            >
+              <div
+                class="bg-surface-container text-primary flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-lg"
+              >
+                <span class="font-caption-caps text-caption-caps font-bold">MAR</span>
+                <span class="font-headline-sm text-headline-sm leading-none">20</span>
+              </div>
+              <div class="min-w-0 flex-1">
+                <span
+                  class="bg-secondary-fixed text-on-secondary-fixed font-caption-caps text-caption-caps rounded-full px-2 py-0.5"
+                  >Tecnología</span
+                >
+                <h4 class="font-label-md text-label-md text-on-surface mt-1 truncate">
+                  Taller Práctico de Microcontroladores ESP32
+                </h4>
+                <p class="font-caption-caps text-caption-caps text-on-surface-variant">
+                  Makerspace CIT 2do nivel • 14:00 hrs
+                </p>
+              </div>
+              <button
+                class="bg-surface-container text-secondary flex h-9 w-9 items-center justify-center rounded-full"
+              >
+                <span class="material-symbols-outlined text-[18px]">bookmark_remove</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Secondary Tab: Tutorías (Hidden by default) -->
+        <div
+          class="tab-content px-gutter-mobile py-space-md gap-space-md flex hidden w-full flex-col"
+          id="tab-tutorias"
+        >
+          <div class="flex items-center justify-between">
+            <h3 class="font-title-md text-title-md text-on-surface">Mis Tutorías Activas</h3>
+            <span
+              class="bg-secondary-fixed text-on-secondary-fixed font-caption-caps text-caption-caps rounded-full px-2 py-0.5"
+              >Rol: Tutora</span
+            >
+          </div>
+          <div
+            class="bg-surface-container-lowest p-space-md gap-space-sm flex flex-col rounded-xl shadow-sm"
+          >
+            <div class="flex items-start justify-between">
+              <div class="gap-space-xs flex items-center">
+                <img
+                  class="h-12 w-12 rounded-full object-cover"
+                  data-alt="A portrait of a male Guatemalan engineering student with glasses smiling softly in a library setting."
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZ1T3zkGkipVnx6QJ4f61bXoI9sMTX-HKze1OSQXdTW39MMIhhooLviPtcHw-Tc7q8NDq_gpstRE4UTlhQeJ9o8amPZOdu9IyXrC7PjOL39P34ipLfTBI2IKCWtQikhBEP9Ucr9ErmAtJjkIdSHnWx64nhOybZRL-XtbCG0-hJAiAeyA_PSVqguQ8t84wfPv7XBuPp8iXRviLm9TzC3ffX-o4N557pqh2AEB9RGxkXqPTpkvY2k4P_yA"
+                />
+                <div>
+                  <h4 class="font-label-md text-label-md text-on-surface">
+                    Estudiante: Diego Ramos
+                  </h4>
+                  <p class="font-caption-caps text-caption-caps text-on-surface-variant">
+                    Carné: 23145 • Ing. Mecatrónica
+                  </p>
+                </div>
+              </div>
+              <span
+                class="bg-secondary-fixed text-on-secondary-fixed font-caption-caps text-caption-caps rounded-full px-2 py-0.5"
+                >Confirmada</span
+              >
+            </div>
+            <div
+              class="bg-surface-container p-space-xs text-on-surface flex items-center justify-between rounded-lg"
+            >
+              <div class="font-body-sm text-body-sm flex items-center gap-1">
+                <span class="material-symbols-outlined text-secondary text-[16px]">schedule</span>
+                <span>Miércoles 15:00 - 16:30</span>
+              </div>
+              <span class="font-label-sm text-label-sm text-secondary font-bold"
+                >Cubículo 4B - Biblio CIT</span
+              >
+            </div>
+            <div class="gap-space-xs flex">
+              <button
+                class="bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm flex-1 rounded-lg py-2 transition-colors"
+              >
+                Reprogramar
+              </button>
+              <button
+                class="bg-primary text-on-primary font-label-sm text-label-sm flex-1 rounded-lg py-2 shadow-sm transition-colors"
+              >
+                Registrar Asistencia
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Secondary Tab: Recomendaciones (Hidden by default) -->
+        <div
+          class="tab-content px-gutter-mobile py-space-md gap-space-md flex hidden w-full flex-col"
+          id="tab-recomendaciones"
+        >
+          <h3 class="font-title-md text-title-md text-on-surface">Oportunidades Recomendadas</h3>
+          <div
+            class="bg-surface-container-lowest p-space-md gap-space-xs flex flex-col rounded-xl shadow-sm"
+          >
+            <span class="font-caption-caps text-caption-caps text-secondary font-bold"
+              >Recomendado para Computación</span
+            >
+            <h4 class="font-title-md text-title-md text-on-surface">
+              Asistente de Cátedra: Bases de Datos I
+            </h4>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">
+              Apoya a estudiantes de tercer ciclo con laboratorios SQL y PostgreSQL. Acredita 20
+              horas de beca directas.
+            </p>
+            <div class="mt-space-2xs flex justify-end">
+              <button
+                class="bg-primary text-on-primary font-label-sm text-label-sm rounded-lg px-3 py-1.5"
+              >
+                Postularme
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Secondary Tab: Datos Personales (Hidden by default) -->
+        <div
+          class="tab-content px-gutter-mobile py-space-md gap-space-md flex hidden w-full flex-col"
+          id="tab-datos"
+        >
+          <h3 class="font-title-md text-title-md text-on-surface">Información Académica</h3>
+          <div
+            class="bg-surface-container-lowest p-space-md gap-space-sm flex flex-col divide-y-0 rounded-xl shadow-sm"
+          >
+            <div class="flex items-center justify-between py-1">
+              <span class="font-label-sm text-label-sm text-on-surface-variant"
+                >Plan de Estudios</span
+              >
+              <span class="font-label-sm text-label-sm text-on-surface font-semibold"
+                >Pensum 2021</span
+              >
+            </div>
+            <div class="flex items-center justify-between py-1">
+              <span class="font-label-sm text-label-sm text-on-surface-variant">Semestre</span>
+              <span class="font-label-sm text-label-sm text-on-surface font-semibold"
+                >7mo Semestre</span
+              >
+            </div>
+            <div class="flex items-center justify-between py-1">
+              <span class="font-label-sm text-label-sm text-on-surface-variant">Tipo de Beca</span>
+              <span class="font-label-sm text-label-sm text-secondary font-semibold"
+                >Beca a la Excelencia UVG</span
+              >
+            </div>
+            <div class="flex items-center justify-between py-1">
+              <span class="font-label-sm text-label-sm text-on-surface-variant"
+                >Coordinador Beca</span
+              >
+              <span class="font-label-sm text-label-sm text-on-surface"
+                >Inga. Carolina Herrera</span
+              >
+            </div>
+          </div>
+        </div>
+        <!-- Interactive Toast for Micro-delight (Hidden) -->
+        <div
+          class="bg-primary text-on-primary gap-space-xs pointer-events-none fixed right-4 bottom-20 left-4 z-50 flex translate-y-32 transform items-center justify-between rounded-xl p-3 opacity-0 shadow-xl transition-all duration-300"
+          id="toastNotification"
+        >
+          <div class="gap-space-xs flex items-center">
+            <span class="material-symbols-outlined text-secondary-container text-[20px]"
+              >check_circle</span
+            >
+            <span class="font-body-sm text-body-sm" id="toastMessage"
+              >Constancia descargada con éxito</span
+            >
+          </div>
+          <button class="text-on-primary/80 hover:text-on-primary" id="closeToast">
+            <span class="material-symbols-outlined text-[18px]">close</span>
+          </button>
+        </div>
+      </div>
+      <script>
+        // Tab switching micro-interactions
+        const tabButtons = document.querySelectorAll(".tab-btn");
+        const tabContents = document.querySelectorAll(".tab-content");
+        const toast = document.getElementById("toastNotification");
+        const toastMessage = document.getElementById("toastMessage");
+        const downloadPdfBtn = document.getElementById("downloadPdfBtn");
+        const editProfileBtn = document.getElementById("editProfileBtn");
+        const closeToast = document.getElementById("closeToast");
+
+        tabButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            const targetId = button.getAttribute("data-target");
+
+            // Clear active styles on all tabs
+            tabButtons.forEach((btn) => {
+              btn.classList.remove("text-secondary", "border-secondary");
+              btn.classList.add("text-on-surface-variant", "border-transparent");
+            });
+
+            // Hide all contents
+            tabContents.forEach((content) => content.classList.add("hidden"));
+
+            // Set active style on clicked tab
+            button.classList.remove("text-on-surface-variant", "border-transparent");
+            button.classList.add("text-secondary", "border-secondary");
+
+            // Show targeted content
+            const targetContent = document.getElementById(targetId);
+            if (targetContent) {
+              targetContent.classList.remove("hidden");
+            }
+          });
+        });
+
+        // Micro-interaction: Toast helper
+        function triggerToast(text) {
+          if (!toast) return;
+          toastMessage.textContent = text;
+          toast.classList.remove("translate-y-32", "opacity-0", "pointer-events-none");
+          toast.classList.add("translate-y-0", "opacity-100");
+
+          setTimeout(() => {
+            dismissToast();
+          }, 3500);
+        }
+
+        function dismissToast() {
+          if (!toast) return;
+          toast.classList.add("translate-y-32", "opacity-0", "pointer-events-none");
+          toast.classList.remove("translate-y-0", "opacity-100");
+        }
+
+        if (downloadPdfBtn) {
+          downloadPdfBtn.addEventListener("click", () => {
+            triggerToast("Generando constancia digital firmada en PDF...");
+          });
+        }
+
+        if (editProfileBtn) {
+          editProfileBtn.addEventListener("click", () => {
+            triggerToast("Abriendo editor de datos del estudiante...");
+          });
+        }
+
+        if (closeToast) {
+          closeToast.addEventListener("click", dismissToast);
+        }
+      </script>
+    </main>
+    <nav
+      class="pb-safe bg-surface/85 fixed bottom-0 z-50 w-full shadow-[0_-2px_12px_rgba(13,35,58,0.06)] backdrop-blur-xl"
+      data-active-classes="text-secondary font-label-sm"
+    >
+      <div class="px-space-2xs flex h-16 items-center justify-around">
+        <a
+          class="text-on-surface-variant hover:text-on-surface flex h-12 min-w-[56px] flex-col items-center justify-center transition-colors"
+          data-path="inicio"
+          href="#"
+          ><span class="material-symbols-outlined text-[22px]">home</span
+          ><span class="font-caption-caps text-caption-caps mt-0.5">Inicio</span></a
+        ><a
+          class="text-on-surface-variant hover:text-on-surface flex h-12 min-w-[56px] flex-col items-center justify-center transition-colors"
+          data-path="eventos"
+          href="#"
+          ><span class="material-symbols-outlined text-[22px]">calendar_today</span
+          ><span class="font-caption-caps text-caption-caps mt-0.5">Eventos</span></a
+        ><a
+          class="text-on-surface-variant hover:text-on-surface flex h-12 min-w-[56px] flex-col items-center justify-center transition-colors"
+          data-path="asociaciones"
+          href="#"
+          ><span class="material-symbols-outlined text-[22px]">corporate_fare</span
+          ><span class="font-caption-caps text-caption-caps mt-0.5">Asociaciones</span></a
+        ><a
+          class="text-on-surface-variant hover:text-on-surface flex h-12 min-w-[56px] flex-col items-center justify-center transition-colors"
+          data-path="clubes"
+          href="#"
+          ><span class="material-symbols-outlined text-[22px]">diversity_3</span
+          ><span class="font-caption-caps text-caption-caps mt-0.5">Clubes</span></a
+        ><a
+          aria-current="page"
+          class="text-secondary font-label-sm flex h-12 min-w-[56px] flex-col items-center justify-center transition-colors"
+          data-path="mi-perfil"
+          href="#"
+          ><span class="material-symbols-outlined text-[22px]">account_circle</span
+          ><span class="font-caption-caps text-caption-caps mt-0.5">Perfil</span></a
+        >
+      </div>
+    </nav>
+  </body>
+</html>
