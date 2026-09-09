@@ -3,7 +3,17 @@
 const { Packer } = require("docx");
 const fs = require("fs");
 const path = require("path");
-const { p, bullet, h1, h2, makeTable, spacer, cover, buildDocument } = require("./template");
+const {
+  p,
+  bullet,
+  h1,
+  h2,
+  makeTable,
+  spacer,
+  figura,
+  cover,
+  buildDocument,
+} = require("./template");
 
 const doc = buildDocument([
   ...cover({
@@ -177,12 +187,12 @@ const doc = buildDocument([
   // ---------- 4. HU-03 ----------
   h1("4. HU-03 - Sistema de diseño y prototipos de las pantallas principales"),
   p(
-    "Esta historia define la identidad visual de la plataforma y los prototipos de sus pantallas principales, de manera que el desarrollo de las interfaces sea consistente durante todo el proyecto y no deba rediseñarse en cada sprint. Al momento de esta actualización se encuentran definidos el sistema de diseño y los prototipos; la implementación de la biblioteca de componentes y la presentación a AEUVG continúan en curso."
+    "Esta historia define la identidad visual de la plataforma, los prototipos de sus pantallas principales y la biblioteca de componentes con la que se construirán todas las interfaces. Su propósito es que el desarrollo sea consistente durante el resto del proyecto y que no deba rediseñarse en cada sprint."
   ),
 
   h2("4.1. Identidad visual y paleta"),
   p(
-    "La paleta se derivó del logo de AEUVG, que representa figuras humanas de colores distintos formando un círculo, en alusión a la unión de las asociaciones estudiantiles. Dado que ningún color del logo predomina sobre los demás, se optó por tomar el violeta como color de acción, por ser el que mejor se identifica como elemento interactivo, y repartir los tonos restantes como acentos a lo largo de la interfaz."
+    "La paleta se derivó del logo de AEUVG, que representa figuras humanas de colores distintos formando un círculo, en alusión a la unión de las asociaciones estudiantiles. Dado que ningún color del logo predomina sobre los demás, se tomó el violeta como color de acción, por ser el que mejor se identifica como elemento interactivo, y los tonos restantes se repartieron como acentos a lo largo de la interfaz."
   ),
   spacer(),
   makeTable(
@@ -209,7 +219,7 @@ const doc = buildDocument([
   ),
   spacer(),
   p(
-    "Cada una de las ocho categorías de eventos cargadas durante la historia anterior tiene asignado uno de los colores de acento, almacenado en la propia base de datos. La paleta completa quedó documentada en el archivo docs/diseno/sistema-diseno.md e implementada como variables de diseño dentro del proyecto, de modo que las pantallas la consumen desde un único lugar."
+    "Cada una de las ocho categorías de eventos cargadas durante la historia anterior tiene asignado uno de los colores de acento, almacenado en la propia base de datos. La paleta completa quedó documentada en el repositorio e implementada como variables de diseño dentro del proyecto, de modo que todas las pantallas la consumen desde un único lugar."
   ),
 
   h2("4.2. Tipografía y forma"),
@@ -217,26 +227,89 @@ const doc = buildDocument([
     "Se seleccionó la familia tipográfica Plus Jakarta Sans, de trazo geométrico y aspecto amable, con soporte completo de acentos y ñ. Se definió una escala de siete tamaños que abarca desde el titular principal hasta las etiquetas, con variantes propias para la vista móvil."
   ),
   p(
-    "En cuanto a la forma, se establecieron radios amplios para campos y tarjetas, botones y etiquetas de estado con radio completo, y sombras suaves teñidas del color del elemento en lugar de sombras grises. Estas decisiones buscan que la plataforma resulte cercana para el estudiantado y se distinga de la estética de un portal administrativo."
+    "En cuanto a la forma, se establecieron radios amplios para campos y tarjetas, botones y etiquetas de estado con radio completo, y sombras suaves teñidas del color del elemento en lugar de sombras grises neutras. Estas decisiones buscan que la plataforma resulte cercana para el estudiantado y se distinga de la estética de un portal administrativo."
   ),
 
-  h2("4.3. Prototipos de las pantallas principales"),
+  h2("4.3. Biblioteca de componentes"),
+  p(
+    "Se implementó dentro del proyecto la biblioteca de componentes base sobre la que se construirán todas las pantallas: botones en sus cinco variantes con sus estados, campos de formulario con etiqueta, texto de ayuda y estado de error, tarjetas, tablas de datos, etiquetas de estado, mensajes de alerta, encabezado de navegación y pie de página."
+  ),
+  p(
+    "Los componentes consumen directamente las variables de la paleta, por lo que un ajuste de color se refleja en toda la plataforma sin modificar cada pantalla. Se incluyó además una página interna que reúne todos los componentes, la cual sirve como referencia visual para el equipo y permite verificar su comportamiento en distintos tamaños de pantalla."
+  ),
+  ...figura(
+    "docs/diseno/documento/sistema-componentes.png",
+    620,
+    720,
+    "Biblioteca de componentes base implementada en el proyecto."
+  ),
+
+  h2("4.4. Prototipos de las pantallas principales"),
   p(
     "Se elaboraron los prototipos de las pantallas principales de la plataforma, en sus versiones para computadora y para dispositivos móviles. Las pantallas cubiertas son la página principal, la página sobre AEUVG, la creación de cuenta, el inicio de sesión con sus flujos de recuperación y restablecimiento de contraseña, la confirmación de correo, el listado y el detalle de eventos, el perfil del estudiante en sus distintas pestañas, y el panel administrativo con su resumen y la gestión de horas beca."
   ),
   p(
-    "Los prototipos se revisaron contra el modelo de datos implementado en la historia anterior para asegurar que la información mostrada corresponda con la que el sistema efectivamente almacena. Los prototipos se conservan en el repositorio como referencia de estructura y espaciado para la implementación, entendiendo que son una guía y no una especificación cerrada."
+    "Los prototipos se revisaron contra el modelo de datos implementado en la historia anterior, de modo que la información mostrada corresponda con la que el sistema efectivamente almacena. A continuación se presentan las pantallas más representativas."
+  ),
+  ...figura("docs/diseno/documento/landing-escritorio.png", 620, 720, "Página principal."),
+  ...figura(
+    "docs/diseno/documento/eventos-escritorio.png",
+    620,
+    720,
+    "Listado de eventos con sus filtros."
+  ),
+  ...figura(
+    "docs/diseno/documento/sobre-aeuvg-escritorio.png",
+    620,
+    720,
+    "Página informativa sobre AEUVG."
+  ),
+  ...figura("docs/diseno/documento/registro-escritorio.png", 620, 720, "Creación de cuenta."),
+  ...figura(
+    "docs/diseno/documento/perfil-horas-beca-escritorio.png",
+    620,
+    720,
+    "Perfil del estudiante con el resumen de sus horas beca."
+  ),
+  ...figura(
+    "docs/diseno/documento/admin-resumen.png",
+    620,
+    581,
+    "Panel administrativo: resumen general."
+  ),
+  ...figura(
+    "docs/diseno/documento/admin-horas-beca.png",
+    620,
+    581,
+    "Panel administrativo: gestión de horas beca."
   ),
 
-  h2("4.4. Diseño adaptable"),
+  h2("4.5. Diseño adaptable"),
   p(
     "Se adoptaron los puntos de corte estándar del sistema de estilos del proyecto, correspondientes a teléfono, tableta, escritorio y escritorio amplio, con un ancho máximo de contenido de 1280 píxeles. El diseño prioriza la vista móvil, considerando que la mayoría de los estudiantes accede desde el teléfono."
+  ),
+  ...figura(
+    "docs/diseno/documento/landing-movil.png",
+    250,
+    620,
+    "Página principal en su versión para dispositivos móviles."
+  ),
+  ...figura(
+    "docs/diseno/documento/perfil-horas-beca-movil.png",
+    250,
+    620,
+    "Perfil del estudiante en su versión para dispositivos móviles."
+  ),
+
+  h2("4.6. Validación con AEUVG"),
+  p(
+    "Los prototipos y el sistema de diseño fueron presentados a AEUVG para su revisión. La asociación dio su aprobación sin solicitar cambios, por lo que la identidad visual y la estructura de las pantallas quedan confirmadas como base para el desarrollo de los módulos funcionales en los sprints siguientes."
   ),
 
   // ---------- 5. Estado ----------
   h1("5. Estado del sprint"),
   p(
-    "Al momento de esta actualización, las historias de usuario HU-01 y HU-02 se encuentran completadas y la HU-03 se encuentra en curso. El sistema cuenta con:"
+    "Al momento de esta actualización, las historias de usuario HU-01, HU-02 y HU-03 se encuentran completadas. El sistema cuenta con:"
   ),
   bullet("El stack tecnológico definido y documentado."),
   bullet("El repositorio configurado, con las ramas de trabajo y el archivo README."),
@@ -247,9 +320,12 @@ const doc = buildDocument([
   bullet("La base de datos PostgreSQL creada, con su esquema completo y sus catálogos cargados."),
   bullet("La conexión entre la aplicación y la base de datos verificada."),
   bullet("El sistema de diseño definido y aplicado como variables dentro del proyecto."),
-  bullet("Los prototipos de las pantallas principales elaborados para computadora y móvil."),
+  bullet("La biblioteca de componentes base implementada."),
+  bullet(
+    "Los prototipos de las pantallas principales elaborados para computadora y móvil, y aprobados por AEUVG."
+  ),
   p(
-    "El trámite del dominio institucional continúa en gestión ante la universidad. De la HU-03 permanecen en curso la implementación de la biblioteca de componentes dentro del proyecto y la presentación de los prototipos a AEUVG. Las historias restantes del sprint corresponden a la autenticación de usuarios, los roles y permisos, y las páginas informativas de AEUVG."
+    "El trámite del dominio institucional continúa en gestión ante la universidad. Las historias restantes del sprint corresponden a la autenticación de usuarios, los roles y permisos, y las páginas informativas de AEUVG."
   ),
 ]);
 
