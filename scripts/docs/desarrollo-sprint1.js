@@ -174,10 +174,69 @@ const doc = buildDocument([
     "La aplicación se conecta a PostgreSQL a través de un cliente único y reutilizado, que se crea la primera vez que se solicita. Para verificar la conexión de forma directa se implementó el punto de acceso /api/health, que consulta la base de datos y responde si la comunicación es correcta. Esta verificación permite confirmar el estado del sistema desde el navegador, sin necesidad de revisar los registros del servidor."
   ),
 
-  // ---------- 4. Estado ----------
-  h1("4. Estado del sprint"),
+  // ---------- 4. HU-03 ----------
+  h1("4. HU-03 - Sistema de diseño y prototipos de las pantallas principales"),
   p(
-    "Al momento de esta actualización, las historias de usuario HU-01 y HU-02 se encuentran completadas. El sistema cuenta con:"
+    "Esta historia define la identidad visual de la plataforma y los prototipos de sus pantallas principales, de manera que el desarrollo de las interfaces sea consistente durante todo el proyecto y no deba rediseñarse en cada sprint. Al momento de esta actualización se encuentran definidos el sistema de diseño y los prototipos; la implementación de la biblioteca de componentes y la presentación a AEUVG continúan en curso."
+  ),
+
+  h2("4.1. Identidad visual y paleta"),
+  p(
+    "La paleta se derivó del logo de AEUVG, que representa figuras humanas de colores distintos formando un círculo, en alusión a la unión de las asociaciones estudiantiles. Dado que ningún color del logo predomina sobre los demás, se optó por tomar el violeta como color de acción, por ser el que mejor se identifica como elemento interactivo, y repartir los tonos restantes como acentos a lo largo de la interfaz."
+  ),
+  spacer(),
+  makeTable(
+    [2600, 2000, 4760],
+    ["Grupo", "Color", "Uso"],
+    [
+      ["Acción", "Violeta #6D4AFF", "Botones principales, enlaces y navegación."],
+      [
+        "Acentos",
+        "Coral, turquesa, ámbar, magenta, lima, cielo y lavanda",
+        "Diferenciación de las categorías de eventos y realces de sección.",
+      ],
+      [
+        "Neutros",
+        "Fondo crema #FFF8F3 y texto #1C162B",
+        "Fondos y texto. Se eligieron neutros cálidos en lugar de grises para que la interfaz no resulte fría.",
+      ],
+      [
+        "Estados",
+        "Éxito, advertencia, error e informativo",
+        "Las horas beca acreditadas se muestran en turquesa y las pendientes en ámbar.",
+      ],
+    ]
+  ),
+  spacer(),
+  p(
+    "Cada una de las ocho categorías de eventos cargadas durante la historia anterior tiene asignado uno de los colores de acento, almacenado en la propia base de datos. La paleta completa quedó documentada en el archivo docs/diseno/sistema-diseno.md e implementada como variables de diseño dentro del proyecto, de modo que las pantallas la consumen desde un único lugar."
+  ),
+
+  h2("4.2. Tipografía y forma"),
+  p(
+    "Se seleccionó la familia tipográfica Plus Jakarta Sans, de trazo geométrico y aspecto amable, con soporte completo de acentos y ñ. Se definió una escala de siete tamaños que abarca desde el titular principal hasta las etiquetas, con variantes propias para la vista móvil."
+  ),
+  p(
+    "En cuanto a la forma, se establecieron radios amplios para campos y tarjetas, botones y etiquetas de estado con radio completo, y sombras suaves teñidas del color del elemento en lugar de sombras grises. Estas decisiones buscan que la plataforma resulte cercana para el estudiantado y se distinga de la estética de un portal administrativo."
+  ),
+
+  h2("4.3. Prototipos de las pantallas principales"),
+  p(
+    "Se elaboraron los prototipos de las pantallas principales de la plataforma, en sus versiones para computadora y para dispositivos móviles. Las pantallas cubiertas son la página principal, la página sobre AEUVG, la creación de cuenta, el inicio de sesión con sus flujos de recuperación y restablecimiento de contraseña, la confirmación de correo, el listado y el detalle de eventos, el perfil del estudiante en sus distintas pestañas, y el panel administrativo con su resumen y la gestión de horas beca."
+  ),
+  p(
+    "Los prototipos se revisaron contra el modelo de datos implementado en la historia anterior para asegurar que la información mostrada corresponda con la que el sistema efectivamente almacena. Los prototipos se conservan en el repositorio como referencia de estructura y espaciado para la implementación, entendiendo que son una guía y no una especificación cerrada."
+  ),
+
+  h2("4.4. Diseño adaptable"),
+  p(
+    "Se adoptaron los puntos de corte estándar del sistema de estilos del proyecto, correspondientes a teléfono, tableta, escritorio y escritorio amplio, con un ancho máximo de contenido de 1280 píxeles. El diseño prioriza la vista móvil, considerando que la mayoría de los estudiantes accede desde el teléfono."
+  ),
+
+  // ---------- 5. Estado ----------
+  h1("5. Estado del sprint"),
+  p(
+    "Al momento de esta actualización, las historias de usuario HU-01 y HU-02 se encuentran completadas y la HU-03 se encuentra en curso. El sistema cuenta con:"
   ),
   bullet("El stack tecnológico definido y documentado."),
   bullet("El repositorio configurado, con las ramas de trabajo y el archivo README."),
@@ -187,8 +246,10 @@ const doc = buildDocument([
   bullet("La aplicación desplegada en Railway y accesible desde internet."),
   bullet("La base de datos PostgreSQL creada, con su esquema completo y sus catálogos cargados."),
   bullet("La conexión entre la aplicación y la base de datos verificada."),
+  bullet("El sistema de diseño definido y aplicado como variables dentro del proyecto."),
+  bullet("Los prototipos de las pantallas principales elaborados para computadora y móvil."),
   p(
-    "El trámite del dominio institucional continúa en gestión ante la universidad. Las historias restantes del sprint corresponden al sistema de diseño y prototipos, la autenticación de usuarios, los roles y permisos, y las páginas informativas de AEUVG."
+    "El trámite del dominio institucional continúa en gestión ante la universidad. De la HU-03 permanecen en curso la implementación de la biblioteca de componentes dentro del proyecto y la presentación de los prototipos a AEUVG. Las historias restantes del sprint corresponden a la autenticación de usuarios, los roles y permisos, y las páginas informativas de AEUVG."
   ),
 ]);
 

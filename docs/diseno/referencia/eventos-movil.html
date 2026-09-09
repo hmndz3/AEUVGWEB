@@ -1,0 +1,1011 @@
+<!doctype html>
+<html lang="es" style="width: 390px; height: 1831px; overflow: hidden; position: relative">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+      name="viewport"
+    />
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-tint": "#6d4aff",
+              "primary-container": "#6d4aff",
+              "on-surface-variant": "#6e6580",
+              "on-tertiary-fixed-variant": "#92001c",
+              "inverse-primary": "#b98aff",
+              "on-error-container": "#93000a",
+              outline: "#d9cec2",
+              "outline-variant": "#ebe2d8",
+              "on-secondary": "#ffffff",
+              "tertiary-container": "#4d000a",
+              "surface-container-highest": "#ede8ff",
+              error: "#f5455c",
+              "tertiary-fixed": "#ffdad8",
+              "on-surface": "#1c162b",
+              "primary-fixed": "#ede8ff",
+              tertiary: "#230002",
+              "secondary-container": "#3ec1ff",
+              "inverse-surface": "#1c162b",
+              "surface-container-lowest": "#ffffff",
+              "on-tertiary-fixed": "#410007",
+              "on-background": "#1c162b",
+              "on-tertiary": "#ffffff",
+              "error-container": "#ffdad6",
+              "on-primary-fixed-variant": "#5a35e8",
+              surface: "#fff8f3",
+              background: "#fff8f3",
+              "secondary-fixed-dim": "#3ec1ff",
+              "tertiary-fixed-dim": "#ffb3b1",
+              primary: "#1c162b",
+              secondary: "#00c9a7",
+              "on-primary-container": "#ede8ff",
+              "surface-variant": "#ede8ff",
+              "on-tertiary-container": "#ff5e5b",
+              "surface-container-low": "#f7f1ea",
+              "on-primary-fixed": "#1c162b",
+              "surface-bright": "#fff8f3",
+              "on-error": "#ffffff",
+              "surface-container-high": "#ede8ff",
+              "inverse-on-surface": "#fff8f3",
+              "surface-dim": "#f0e6da",
+              "surface-container": "#f7f1ea",
+              "on-secondary-fixed-variant": "#00806c",
+              "on-primary": "#ffffff",
+              "secondary-fixed": "#d6f7f1",
+              "on-secondary-container": "#00806c",
+              "primary-fixed-dim": "#b98aff",
+              "on-secondary-fixed": "#0d3b34",
+            },
+            borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+            spacing: {
+              "space-xs": "0.5rem",
+              "space-md": "1rem",
+              "space-2xl": "3rem",
+              "container-max": "1280px",
+              "space-2xs": "0.25rem",
+              "margin-desktop": "2rem",
+              "space-lg": "1.5rem",
+              "space-3xl": "4rem",
+              "space-xl": "2rem",
+              "gutter-mobile": "1rem",
+              "gutter-desktop": "1.5rem",
+              "margin-mobile": "1rem",
+              "space-sm": "0.75rem",
+            },
+            fontFamily: {
+              "headline-sm": ["Plus Jakarta Sans"],
+              "headline-lg": ["Plus Jakarta Sans"],
+              "caption-caps": ["Plus Jakarta Sans"],
+              "display-hero": ["Plus Jakarta Sans"],
+              "body-md": ["Plus Jakarta Sans"],
+              "title-md": ["Plus Jakarta Sans"],
+              "body-lg": ["Plus Jakarta Sans"],
+              "headline-md": ["Plus Jakarta Sans"],
+              "label-sm": ["Plus Jakarta Sans"],
+              "display-hero-mobile": ["Plus Jakarta Sans"],
+              "body-sm": ["Plus Jakarta Sans"],
+              "headline-lg-mobile": ["Plus Jakarta Sans"],
+              "label-md": ["Plus Jakarta Sans"],
+            },
+            fontSize: {
+              "headline-sm": ["20px", { lineHeight: "28px", fontWeight: "600" }],
+              "headline-lg": [
+                "32px",
+                { lineHeight: "40px", letterSpacing: "-0.015em", fontWeight: "700" },
+              ],
+              "caption-caps": [
+                "11px",
+                { lineHeight: "14px", letterSpacing: "0.06em", fontWeight: "700" },
+              ],
+              "display-hero": [
+                "40px",
+                { lineHeight: "48px", letterSpacing: "-0.02em", fontWeight: "800" },
+              ],
+              "body-md": ["15px", { lineHeight: "24px", fontWeight: "400" }],
+              "title-md": ["18px", { lineHeight: "26px", fontWeight: "600" }],
+              "body-lg": ["16px", { lineHeight: "26px", fontWeight: "400" }],
+              "headline-md": [
+                "24px",
+                { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "600" },
+              ],
+              "label-sm": [
+                "12px",
+                { lineHeight: "16px", letterSpacing: "0.01em", fontWeight: "600" },
+              ],
+              "display-hero-mobile": [
+                "30px",
+                { lineHeight: "38px", letterSpacing: "-0.015em", fontWeight: "800" },
+              ],
+              "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+              "headline-lg-mobile": [
+                "26px",
+                { lineHeight: "34px", letterSpacing: "-0.01em", fontWeight: "700" },
+              ],
+              "label-md": [
+                "14px",
+                { lineHeight: "20px", letterSpacing: "0.005em", fontWeight: "600" },
+              ],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      @layer base {
+        html,
+        body {
+          width: 100vw;
+          margin: 0;
+          padding: 0;
+        }
+        body {
+          overscroll-behavior: none;
+        }
+        .pb-safe {
+          padding-bottom: env(safe-area-inset-bottom, 0px);
+        }
+        .pt-safe {
+          padding-top: env(safe-area-inset-top, 0px);
+        }
+        main > :first-child {
+          margin-top: 0 !important;
+        }
+        main > :last-child {
+          margin-bottom: 0 !important;
+        }
+      }
+      ::-webkit-scrollbar {
+        display: none;
+      }
+    </style>
+    <style>
+      body {
+        min-height: max(884px, 100dvh);
+      }
+    </style>
+  </head>
+  <body class="bg-surface font-body-md text-body-md text-on-surface flex min-h-screen flex-col">
+    <header
+      class="pt-safe bg-surface/85 fixed top-0 z-50 w-full shadow-[0_1px_8px_rgba(13,35,58,0.06)] backdrop-blur-xl"
+    >
+      <div class="px-space-md gap-space-sm flex h-16 items-center justify-between">
+        <div class="gap-space-sm flex min-w-0 flex-1 items-center">
+          <img
+            alt="Logo circular de AEUVG compuesto por figuras humanas estilizadas unidas en círculo de colores vivos (rojo, coral, morado, celeste, naranja, verde lima y azul marino) con las siglas AEUVG limpias y modernas.. Brand logo. - Primary color: #6d4aff
+- Font: plusJakartaSans
+- Mode: light
+- Roundness: rounded-md
+"
+            class="h-8 w-auto flex-shrink-0 object-contain"
+            src="logo-aeuvg.png"
+          />
+          <div class="flex min-w-0 flex-col">
+            <span
+              class="font-caption-caps text-caption-caps text-secondary leading-none tracking-wider uppercase"
+              >AEUVG</span
+            >
+            <h1 class="font-title-md text-title-md text-primary truncate leading-tight">Eventos</h1>
+          </div>
+        </div>
+        <div class="gap-space-2xs flex flex-shrink-0 items-center">
+          <button
+            aria-label="Buscar"
+            class="text-on-surface-variant hover:text-primary flex h-11 w-11 items-center justify-center rounded-full transition-colors"
+            type="button"
+          >
+            <span class="material-symbols-outlined text-[22px]">search</span></button
+          ><button
+            aria-label="Notificaciones"
+            class="text-on-surface-variant hover:text-primary relative flex h-11 w-11 items-center justify-center rounded-full transition-colors"
+            type="button"
+          >
+            <span class="material-symbols-outlined text-[22px]">notifications</span
+            ><span class="bg-error absolute top-2 right-2 h-2 w-2 rounded-full"></span>
+          </button>
+          <div
+            class="bg-primary ml-space-2xs flex h-8 w-8 items-center justify-center rounded-full"
+          >
+            <span class="material-symbols-outlined text-on-primary text-[18px]">person</span>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main class="bg-surface relative flex min-h-screen w-full flex-col pt-16 pb-24">
+      <div class="flex w-full flex-col">
+        <!-- Dynamic Top Campus Micro-Banner & Live Pulse -->
+        <section class="px-space-md pt-space-xs pb-space-sm flex items-center justify-between">
+          <div class="gap-space-xs flex items-center">
+            <span class="relative flex inline-flex h-2.5 w-2.5">
+              <span
+                class="bg-secondary absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"
+              ></span>
+              <span class="bg-secondary relative inline-flex h-2.5 w-2.5 rounded-full"></span>
+            </span>
+            <span class="font-caption-caps text-caption-caps text-secondary uppercase"
+              >Semestre II • Ciclo Activo</span
+            >
+          </div>
+          <div class="bg-surface-container-high flex items-center gap-1.5 rounded-full px-2 py-0.5">
+            <span class="material-symbols-outlined text-secondary text-[14px]">bolt</span>
+            <span class="font-label-sm text-label-sm text-primary">14 Eventos este mes</span>
+          </div>
+        </section>
+        <!-- View Mode Segmented Control & Screen Section Title -->
+        <section class="px-space-md pb-space-sm gap-space-sm flex items-center justify-between">
+          <div>
+            <h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary tracking-tight">
+              Explorar Agenda
+            </h2>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">
+              Conéctate con la vida estudiantil UVG
+            </p>
+          </div>
+          <!-- Segmented Control (Lista / Calendario) -->
+          <div class="bg-surface-container-high flex items-center rounded-xl p-1">
+            <button
+              aria-pressed="true"
+              class="bg-surface-container-lowest text-primary font-label-sm text-label-sm flex items-center gap-1 rounded-lg px-3 py-1.5 shadow-sm transition-all"
+              id="view-list-btn"
+              type="button"
+            >
+              <span class="material-symbols-outlined text-[16px]">view_agenda</span>
+              <span>Lista</span>
+            </button>
+            <button
+              aria-pressed="false"
+              class="text-on-surface-variant font-label-sm text-label-sm hover:text-primary flex items-center gap-1 rounded-lg px-3 py-1.5 transition-all"
+              id="view-cal-btn"
+              type="button"
+            >
+              <span class="material-symbols-outlined text-[16px]">calendar_month</span>
+              <span>Mes</span>
+            </button>
+          </div>
+        </section>
+        <!-- Search & Filter Controls -->
+        <section class="px-space-md pb-space-md gap-space-xs flex flex-col">
+          <div class="relative w-full">
+            <span
+              class="material-symbols-outlined text-on-surface-variant pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-[20px]"
+              >search</span
+            >
+            <input
+              class="bg-surface-container-lowest text-on-surface font-body-md text-body-md placeholder-outline focus:bg-surface-container-low w-full rounded-xl py-2.5 pr-10 pl-10 shadow-sm focus:outline-none"
+              placeholder="Buscar por título, club o auditorio..."
+              type="text"
+              value="Robótica y Cultura"
+            />
+            <button
+              aria-label="Limpiar término"
+              class="text-on-surface-variant hover:text-primary absolute top-1/2 right-3 -translate-y-1/2"
+              type="button"
+            >
+              <span class="material-symbols-outlined text-[18px]">close</span>
+            </button>
+          </div>
+          <!-- Row of Quick Controls & Modal Trigger -->
+          <div class="flex items-center justify-between gap-2 pt-1">
+            <button
+              class="bg-primary-container text-on-primary hover:bg-primary flex items-center gap-1.5 rounded-full px-3.5 py-2 shadow-sm transition-all active:scale-95"
+              id="open-filter-btn"
+              type="button"
+            >
+              <span class="material-symbols-outlined text-secondary-container text-[18px]"
+                >tune</span
+              >
+              <span class="font-label-sm text-label-sm">Filtros</span>
+              <span
+                class="bg-secondary-container text-on-secondary-container py-0.2 font-label-sm text-label-sm rounded-full px-1.5 text-[11px] leading-tight"
+                >3</span
+              >
+            </button>
+            <!-- Quick Sorting Chip -->
+            <div
+              class="bg-surface-container-low text-on-surface-variant flex items-center gap-1.5 rounded-full px-3 py-2"
+            >
+              <span class="material-symbols-outlined text-secondary text-[16px]">sort</span>
+              <span class="font-caption-caps text-caption-caps text-on-surface-variant uppercase"
+                >Orden:</span
+              >
+              <select
+                class="font-label-sm text-label-sm text-primary bg-transparent pr-1 focus:outline-none"
+              >
+                <option>Próximos</option>
+                <option>Más Populares</option>
+                <option>Horas Beca (Mayor)</option>
+              </select>
+            </div>
+          </div>
+          <!-- Active Tags Horizontal Bar -->
+          <div class="no-scrollbar flex items-center gap-1.5 overflow-x-auto py-1">
+            <span
+              class="bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm inline-flex flex-shrink-0 items-center gap-1 rounded-full px-2.5 py-1"
+            >
+              <span>Tecnología</span>
+              <span class="material-symbols-outlined cursor-pointer text-[14px]">cancel</span>
+            </span>
+            <span
+              class="bg-tertiary-fixed text-on-tertiary-fixed-variant font-label-sm text-label-sm inline-flex flex-shrink-0 items-center gap-1 rounded-full px-2.5 py-1"
+            >
+              <span>Cultura</span>
+              <span class="material-symbols-outlined cursor-pointer text-[14px]">cancel</span>
+            </span>
+            <span
+              class="bg-surface-container-high text-primary font-label-sm text-label-sm inline-flex flex-shrink-0 items-center gap-1 rounded-full px-2.5 py-1"
+            >
+              <span>Este mes</span>
+              <span class="material-symbols-outlined cursor-pointer text-[14px]">cancel</span>
+            </span>
+            <button
+              class="text-secondary font-label-sm text-label-sm flex-shrink-0 px-1 underline"
+              type="button"
+            >
+              Restablecer
+            </button>
+          </div>
+        </section>
+        <!-- Events List Feed -->
+        <section class="px-space-md gap-space-md flex flex-col">
+          <!-- Event Card 1: Robótica e Innovación Mechatronics -->
+          <article
+            class="bg-surface-container-lowest flex flex-col overflow-hidden rounded-xl shadow-sm transition-shadow hover:shadow-md"
+          >
+            <!-- Media Header with Floating Badges -->
+            <div class="relative h-44 w-full overflow-hidden">
+              <img
+                class="h-full w-full object-cover"
+                data-alt="Vibrant university mechatronics and engineering project fair inside a brightly lit modern glass campus hall with students showcasing autonomous robotic dog prototypes on stands with laptops and posters in modern collegial atmosphere"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-orYrcbLhPisc4vG2Md4KPQWPL0CuprSWt8d8IDDjrjBzfZaIo2wAFacyzJrUNktHW6SzeJebzbD2M3-Ve3yIOqTibSnVbuJboCD5WclInn4bEPNxDmUTY342-yjh5MrWyVB_O1mk12RL3e538gOsHt6Hn8zNU0DLQvPkVxHJnXjNd4KkwaqAQhS4gwfpU2cl7cmC4uf6WYn-uqdZPFJ0dDv0LX5CSxNlD4bi_OQApxRcgVdbTj5iLQ"
+              />
+              <div
+                class="from-primary/80 via-primary/20 absolute inset-0 bg-gradient-to-t to-transparent"
+              ></div>
+              <!-- Category Pill & Horas Beca badge -->
+              <div class="absolute top-3 left-3 flex items-center gap-1.5">
+                <span
+                  class="bg-secondary text-on-secondary font-label-sm text-label-sm flex items-center gap-1 rounded-full px-2.5 py-1 shadow-sm"
+                >
+                  <span class="bg-secondary-container h-2 w-2 rounded-full"></span>
+                  Tecnología
+                </span>
+                <span
+                  class="bg-surface-container-lowest/90 text-primary font-label-sm text-label-sm flex items-center gap-0.5 rounded-full px-2 py-1 shadow-sm backdrop-blur"
+                >
+                  <span class="material-symbols-outlined text-secondary text-[14px]">school</span>
+                  +4h Beca
+                </span>
+              </div>
+              <!-- Bookmark / Save Button -->
+              <button
+                aria-label="Guardar evento"
+                class="bookmark-toggle bg-surface-container-lowest/90 text-primary hover:text-secondary absolute top-3 right-3 flex h-9 w-9 items-center justify-center rounded-full shadow-sm backdrop-blur transition-transform active:scale-90"
+                type="button"
+              >
+                <span class="material-symbols-outlined text-[20px]">bookmark</span>
+              </button>
+              <!-- Date Ribbon Bottom Left of Image -->
+              <div class="absolute bottom-3 left-3 flex items-center gap-2">
+                <div
+                  class="bg-primary-container text-on-primary flex flex-col items-center rounded-lg px-2.5 py-1 text-center leading-none"
+                >
+                  <span
+                    class="font-caption-caps text-caption-caps text-secondary-container uppercase"
+                    >NOV</span
+                  >
+                  <span class="font-title-md text-title-md text-on-primary font-bold">18</span>
+                </div>
+                <span
+                  class="font-label-sm text-label-sm text-on-primary bg-primary/60 rounded-md px-2 py-1 backdrop-blur"
+                  >09:00 - 15:00 hrs</span
+                >
+              </div>
+            </div>
+            <!-- Card Content -->
+            <div class="p-space-md gap-space-xs flex flex-col">
+              <div class="flex items-center gap-2">
+                <span
+                  class="font-caption-caps text-caption-caps text-secondary inline-flex items-center gap-1 uppercase"
+                >
+                  <span class="material-symbols-outlined text-[14px]">groups</span>
+                  AEII • Mecatrónica UVG
+                </span>
+              </div>
+              <h3 class="font-title-md text-title-md text-primary leading-snug font-bold">
+                Feria Tecnológica de Prototipos e Innovación 2024
+              </h3>
+              <p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+                Exhibición de robótica bípeda, algoritmos de visión por computadora y proyectos de
+                automatización aplicada por estudiantes.
+              </p>
+              <!-- Campus Location & Seats status -->
+              <div class="text-on-surface-variant flex items-center justify-between pt-1">
+                <div class="flex min-w-0 items-center gap-1">
+                  <span class="material-symbols-outlined text-secondary flex-shrink-0 text-[16px]"
+                    >pin_drop</span
+                  >
+                  <span class="font-body-sm text-body-sm truncate"
+                    >Campus Central • Salón de Usos Múltiples I-100</span
+                  >
+                </div>
+              </div>
+              <!-- Card Action Footer -->
+              <div
+                class="pt-space-xs mt-space-2xs bg-surface-container-low -mx-space-md -mb-space-md px-space-md flex items-center justify-between py-2.5"
+              >
+                <div class="flex items-center -space-x-2 overflow-hidden">
+                  <span
+                    class="bg-secondary-fixed text-on-secondary-fixed ring-surface-container-lowest flex inline-block h-6 w-6 items-center justify-center rounded-full text-[10px] font-bold ring-2"
+                    >VR</span
+                  >
+                  <span
+                    class="bg-tertiary-fixed text-on-tertiary-fixed ring-surface-container-lowest flex inline-block h-6 w-6 items-center justify-center rounded-full text-[10px] font-bold ring-2"
+                    >LM</span
+                  >
+                  <span
+                    class="bg-primary-fixed text-on-primary-fixed ring-surface-container-lowest flex inline-block h-6 w-6 items-center justify-center rounded-full text-[10px] font-bold ring-2"
+                    >+64</span
+                  >
+                  <span class="font-caption-caps text-caption-caps text-on-surface-variant ml-3"
+                    >asistirán</span
+                  >
+                </div>
+                <button
+                  class="bg-primary text-on-primary font-label-sm text-label-sm hover:bg-primary-container flex items-center gap-1 rounded-lg px-3.5 py-1.5 transition-colors"
+                  type="button"
+                >
+                  <span>Ver detalle</span>
+                  <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+                </button>
+              </div>
+            </div>
+          </article>
+          <!-- Event Card 2: Festival Cultural & Concierto UVG -->
+          <article
+            class="bg-surface-container-lowest flex flex-col overflow-hidden rounded-xl shadow-sm transition-shadow hover:shadow-md"
+          >
+            <div class="relative h-44 w-full overflow-hidden">
+              <img
+                class="h-full w-full object-cover"
+                data-alt="Outdoor college cultural music festival at sunset in university campus square plaza with illuminated stage, energetic young crowd holding cups, colorful flags and food stalls in Guatemala"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjl9dfoSscHo0FADE2ylW4bQPZlO4uVQXo3Yyc2KUhC1-0aYVVuQoeSXGk2Zo7eaDUYFeR3FOBM2IiZXLQXc8UVmBI974CZQ-6SBhDBDgnMsf2re4aL3JCo7T4a8TnV-oI8T0T4sO-9QtOmcfFdPOwYU-irX1lG6pgUqTSv0KFWYxwJROdBOHVUMf_i9FHOvIwLbLiRlhsA1Xme0NoX9s8wPegROvXL6-nkwIJcMZDsXpPP12WpQnaaQ"
+              />
+              <div
+                class="from-primary/80 via-primary/20 absolute inset-0 bg-gradient-to-t to-transparent"
+              ></div>
+              <div class="absolute top-3 left-3 flex items-center gap-1.5">
+                <span
+                  class="bg-tertiary-container text-on-tertiary-container font-label-sm text-label-sm flex items-center gap-1 rounded-full px-2.5 py-1 shadow-sm"
+                >
+                  <span class="bg-on-tertiary-container h-2 w-2 rounded-full"></span>
+                  Cultura y Arte
+                </span>
+                <span
+                  class="bg-surface-container-lowest/90 text-primary font-label-sm text-label-sm rounded-full px-2 py-1 shadow-sm backdrop-blur"
+                >
+                  Entrada Libre
+                </span>
+              </div>
+              <button
+                aria-label="Guardar evento"
+                class="bookmark-toggle bg-surface-container-lowest/90 text-primary hover:text-secondary absolute top-3 right-3 flex h-9 w-9 items-center justify-center rounded-full shadow-sm backdrop-blur transition-transform active:scale-90"
+                type="button"
+              >
+                <span class="material-symbols-outlined text-[20px]">bookmark</span>
+              </button>
+              <div class="absolute bottom-3 left-3 flex items-center gap-2">
+                <div
+                  class="bg-primary-container text-on-primary flex flex-col items-center rounded-lg px-2.5 py-1 text-center leading-none"
+                >
+                  <span
+                    class="font-caption-caps text-caption-caps text-secondary-container uppercase"
+                    >NOV</span
+                  >
+                  <span class="font-title-md text-title-md text-on-primary font-bold">22</span>
+                </div>
+                <span
+                  class="font-label-sm text-label-sm text-on-primary bg-primary/60 rounded-md px-2 py-1 backdrop-blur"
+                  >17:30 - 21:00 hrs</span
+                >
+              </div>
+            </div>
+            <div class="p-space-md gap-space-xs flex flex-col">
+              <div class="flex items-center gap-2">
+                <span
+                  class="font-caption-caps text-caption-caps text-secondary inline-flex items-center gap-1 uppercase"
+                >
+                  <span class="material-symbols-outlined text-[14px]">diversity_3</span>
+                  AEUVG • Club de Expresión Musical
+                </span>
+              </div>
+              <h3 class="font-title-md text-title-md text-primary leading-snug font-bold">
+                Festival Intercultural UVG 2024: Música y Tradición
+              </h3>
+              <p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+                Bandas estudiantiles en vivo, comida típica, stands culturales de las distintas
+                regiones de Guatemala y presentaciones artísticas.
+              </p>
+              <div class="text-on-surface-variant flex items-center justify-between pt-1">
+                <div class="flex min-w-0 items-center gap-1">
+                  <span class="material-symbols-outlined text-secondary flex-shrink-0 text-[16px]"
+                    >pin_drop</span
+                  >
+                  <span class="font-body-sm text-body-sm truncate"
+                    >Campus Central • Plaza Fuentelapiedra</span
+                  >
+                </div>
+              </div>
+              <div
+                class="pt-space-xs mt-space-2xs bg-surface-container-low -mx-space-md -mb-space-md px-space-md flex items-center justify-between py-2.5"
+              >
+                <div class="flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-secondary text-[16px]"
+                    >local_activity</span
+                  >
+                  <span class="font-label-sm text-label-sm text-primary font-medium"
+                    >Cupo: 350 personas</span
+                  >
+                </div>
+                <button
+                  class="bg-primary text-on-primary font-label-sm text-label-sm hover:bg-primary-container flex items-center gap-1 rounded-lg px-3.5 py-1.5 transition-colors"
+                  type="button"
+                >
+                  <span>Ver detalle</span>
+                  <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+                </button>
+              </div>
+            </div>
+          </article>
+          <!-- Event Card 3: Taller Académico de Biología y Sostenibilidad -->
+          <article
+            class="bg-surface-container-lowest flex flex-col overflow-hidden rounded-xl shadow-sm transition-shadow hover:shadow-md"
+          >
+            <div class="relative h-44 w-full overflow-hidden">
+              <img
+                class="h-full w-full object-cover"
+                data-alt="University biology laboratory with undergraduate students in white lab coats analyzing microalgae samples in flasks under microscope with high tech equipment in educational research setting"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4iucYT_8PEai3oAFYS59Iabj-ukNXadzDGjJXzPAZ8z4zj3266jRNvlRZxM7IW98s956i5CAT1FDznsPFYAZ9HlMLhMq1EAKbupU0OdibvQ4SKYLlaG_xGoNKSa4XuV2iEfyMsWK-2eQoQzJrZNxCU9XWeaat-exbMn5A-_F8p4tLlIXVZrX5fJWcfAtIFDrmR-57EsUoXJYX6mdbEHCXEBRspYbQEw75W15H8tSGWiOZf5vdtQlOSg"
+              />
+              <div
+                class="from-primary/80 via-primary/20 absolute inset-0 bg-gradient-to-t to-transparent"
+              ></div>
+              <div class="absolute top-3 left-3 flex items-center gap-1.5">
+                <span
+                  class="bg-primary-fixed text-on-primary-fixed-variant font-label-sm text-label-sm flex items-center gap-1 rounded-full px-2.5 py-1 shadow-sm"
+                >
+                  <span class="bg-secondary h-2 w-2 rounded-full"></span>
+                  Académico
+                </span>
+                <span
+                  class="bg-surface-container-lowest/90 text-primary font-label-sm text-label-sm flex items-center gap-0.5 rounded-full px-2 py-1 shadow-sm backdrop-blur"
+                >
+                  <span class="material-symbols-outlined text-secondary text-[14px]">school</span>
+                  +2h Beca
+                </span>
+              </div>
+              <button
+                aria-label="Guardar evento"
+                class="bookmark-toggle bg-surface-container-lowest/90 text-primary hover:text-secondary absolute top-3 right-3 flex h-9 w-9 items-center justify-center rounded-full shadow-sm backdrop-blur transition-transform active:scale-90"
+                type="button"
+              >
+                <span class="material-symbols-outlined text-[20px]">bookmark</span>
+              </button>
+              <div class="absolute bottom-3 left-3 flex items-center gap-2">
+                <div
+                  class="bg-primary-container text-on-primary flex flex-col items-center rounded-lg px-2.5 py-1 text-center leading-none"
+                >
+                  <span
+                    class="font-caption-caps text-caption-caps text-secondary-container uppercase"
+                    >NOV</span
+                  >
+                  <span class="font-title-md text-title-md text-on-primary font-bold">26</span>
+                </div>
+                <span
+                  class="font-label-sm text-label-sm text-on-primary bg-primary/60 rounded-md px-2 py-1 backdrop-blur"
+                  >14:00 - 16:30 hrs</span
+                >
+              </div>
+            </div>
+            <div class="p-space-md gap-space-xs flex flex-col">
+              <div class="flex items-center gap-2">
+                <span
+                  class="font-caption-caps text-caption-caps text-secondary inline-flex items-center gap-1 uppercase"
+                >
+                  <span class="material-symbols-outlined text-[14px]">biotech</span>
+                  Asociación de Estudiantes de Bioquímica (AEBQ)
+                </span>
+              </div>
+              <h3 class="font-title-md text-title-md text-primary leading-snug font-bold">
+                Taller Práctico: Biorremediación y Recursos Hídricos
+              </h3>
+              <p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+                Metodologías biológicas aplicadas al rescate de cuencas lacustres en Guatemala y
+                análisis de bioindicadores en laboratorio.
+              </p>
+              <div class="text-on-surface-variant flex items-center justify-between pt-1">
+                <div class="flex min-w-0 items-center gap-1">
+                  <span class="material-symbols-outlined text-secondary flex-shrink-0 text-[16px]"
+                    >pin_drop</span
+                  >
+                  <span class="font-body-sm text-body-sm truncate"
+                    >Edificio C • Laboratorio C-302</span
+                  >
+                </div>
+              </div>
+              <div
+                class="pt-space-xs mt-space-2xs bg-surface-container-low -mx-space-md -mb-space-md px-space-md flex items-center justify-between py-2.5"
+              >
+                <div class="flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-error text-[16px]"
+                    >hourglass_top</span
+                  >
+                  <span class="font-label-sm text-label-sm text-error font-medium"
+                    >Últimos 6 cupos disponibles</span
+                  >
+                </div>
+                <button
+                  class="bg-primary text-on-primary font-label-sm text-label-sm hover:bg-primary-container flex items-center gap-1 rounded-lg px-3.5 py-1.5 transition-colors"
+                  type="button"
+                >
+                  <span>Ver detalle</span>
+                  <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+                </button>
+              </div>
+            </div>
+          </article>
+        </section>
+        <!-- Load More / Pagination Button -->
+        <section class="px-space-md py-space-lg flex flex-col items-center gap-2">
+          <button
+            class="bg-surface-container-high text-primary hover:bg-surface-container-highest font-label-md text-label-md flex w-full items-center justify-center gap-2 rounded-xl py-3 shadow-sm transition-all active:scale-[0.98]"
+            id="load-more-btn"
+            type="button"
+          >
+            <span class="material-symbols-outlined text-[18px]">expand_more</span>
+            <span>Cargar más eventos (5 restantes)</span>
+          </button>
+          <p
+            class="font-caption-caps text-caption-caps text-outline text-center tracking-wider uppercase"
+          >
+            Mostrando 3 de 8 eventos encontrados
+          </p>
+        </section>
+        <!-- Interactive Bottom Sheet Modal: Filtros de Búsqueda -->
+        <!-- Backdrop -->
+        <div
+          class="bg-primary/60 pointer-events-auto fixed inset-0 z-50 opacity-100 backdrop-blur-sm transition-opacity duration-300"
+          id="filter-backdrop"
+        >
+          <!-- Sliding Sheet Container -->
+          <div
+            class="bg-surface-container-lowest fixed right-0 bottom-0 left-0 flex max-h-[751px] translate-y-0 transform flex-col overflow-hidden rounded-t-3xl shadow-2xl transition-transform duration-300"
+            id="filter-sheet"
+          >
+            <!-- Drag Handle Bar -->
+            <div class="flex w-full cursor-grab items-center justify-center pt-3 pb-2">
+              <div class="bg-outline-variant h-1.5 w-12 rounded-full"></div>
+            </div>
+            <!-- Header with active filter badge and actions -->
+            <div class="px-space-md pb-space-sm flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <h3 class="font-headline-sm text-headline-sm text-primary font-bold">
+                  Filtros de búsqueda
+                </h3>
+                <span
+                  class="bg-secondary text-on-secondary font-label-sm text-label-sm rounded-full px-2 py-0.5 text-[11px]"
+                  >3 activos</span
+                >
+              </div>
+              <button
+                class="text-secondary hover:text-primary font-label-sm text-label-sm"
+                id="reset-filter-btn"
+                type="button"
+              >
+                Limpiar
+              </button>
+            </div>
+            <!-- Scrollable Filter Body -->
+            <div class="px-space-md gap-space-md flex flex-col divide-y-0 overflow-y-auto pb-24">
+              <!-- Filter Block 1: Rango de Fechas -->
+              <div class="flex flex-col gap-2 pt-1">
+                <span
+                  class="font-label-md text-label-md text-primary flex items-center justify-between font-bold"
+                >
+                  <span>Rango de fechas</span>
+                  <span class="material-symbols-outlined text-on-surface-variant text-[18px]"
+                    >calendar_today</span
+                  >
+                </span>
+                <div class="grid grid-cols-2 gap-2">
+                  <label
+                    class="bg-surface-container-low text-on-surface font-label-sm text-label-sm hover:bg-surface-container has-[:checked]:bg-primary has-[:checked]:text-on-primary flex cursor-pointer items-center justify-center rounded-xl p-2.5 transition-colors"
+                  >
+                    <input class="sr-only" name="fecha" type="radio" value="hoy" />
+                    <span>Hoy</span>
+                  </label>
+                  <label
+                    class="bg-surface-container-low text-on-surface font-label-sm text-label-sm hover:bg-surface-container has-[:checked]:bg-primary has-[:checked]:text-on-primary flex cursor-pointer items-center justify-center rounded-xl p-2.5 transition-colors"
+                  >
+                    <input class="sr-only" name="fecha" type="radio" value="finde" />
+                    <span>Fin de semana</span>
+                  </label>
+                  <label
+                    class="bg-primary text-on-primary font-label-sm text-label-sm has-[:checked]:bg-primary has-[:checked]:text-on-primary flex cursor-pointer items-center justify-center rounded-xl p-2.5 transition-colors"
+                  >
+                    <input checked="" class="sr-only" name="fecha" type="radio" value="mes" />
+                    <span>Este mes</span>
+                  </label>
+                  <label
+                    class="bg-surface-container-low text-on-surface font-label-sm text-label-sm hover:bg-surface-container has-[:checked]:bg-primary has-[:checked]:text-on-primary flex cursor-pointer items-center justify-center rounded-xl p-2.5 transition-colors"
+                  >
+                    <input class="sr-only" name="fecha" type="radio" value="personalizado" />
+                    <span>Personalizado</span>
+                  </label>
+                </div>
+              </div>
+              <!-- Filter Block 2: Categorías con color tokens AEUVG -->
+              <div class="flex flex-col gap-2 pt-2">
+                <span class="font-label-md text-label-md text-primary font-bold">Categorías</span>
+                <div class="flex flex-wrap gap-2">
+                  <button
+                    class="filter-pill bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm ring-secondary flex items-center gap-1.5 rounded-full px-3 py-1.5 ring-2"
+                    type="button"
+                  >
+                    <span class="bg-secondary h-2.5 w-2.5 rounded-full"></span>
+                    <span>Tecnología</span>
+                  </button>
+                  <button
+                    class="filter-pill bg-surface-container-low text-on-surface font-label-sm text-label-sm hover:bg-surface-container flex items-center gap-1.5 rounded-full px-3 py-1.5"
+                    type="button"
+                  >
+                    <span class="bg-secondary-container h-2.5 w-2.5 rounded-full"></span>
+                    <span>Académico</span>
+                  </button>
+                  <button
+                    class="filter-pill bg-tertiary-fixed text-on-tertiary-fixed-variant font-label-sm text-label-sm ring-on-tertiary-container flex items-center gap-1.5 rounded-full px-3 py-1.5 ring-2"
+                    type="button"
+                  >
+                    <span class="bg-error h-2.5 w-2.5 rounded-full"></span>
+                    <span>Cultura y Arte</span>
+                  </button>
+                  <button
+                    class="filter-pill bg-surface-container-low text-on-surface font-label-sm text-label-sm hover:bg-surface-container flex items-center gap-1.5 rounded-full px-3 py-1.5"
+                    type="button"
+                  >
+                    <span class="bg-surface-tint h-2.5 w-2.5 rounded-full"></span>
+                    <span>Deportes</span>
+                  </button>
+                  <button
+                    class="filter-pill bg-surface-container-low text-on-surface font-label-sm text-label-sm hover:bg-surface-container flex items-center gap-1.5 rounded-full px-3 py-1.5"
+                    type="button"
+                  >
+                    <span class="bg-on-tertiary-fixed h-2.5 w-2.5 rounded-full"></span>
+                    <span>Liderazgo AEUVG</span>
+                  </button>
+                </div>
+              </div>
+              <!-- Filter Block 3: Tipo de Actividad -->
+              <div class="flex flex-col gap-2 pt-2">
+                <span class="font-label-md text-label-md text-primary font-bold"
+                  >Tipo de actividad</span
+                >
+                <div class="grid grid-cols-2 gap-2">
+                  <label
+                    class="bg-surface-container-low flex cursor-pointer items-center gap-2 rounded-xl p-2.5"
+                  >
+                    <input checked="" class="accent-primary h-4 w-4 rounded" type="checkbox" />
+                    <span class="font-body-sm text-body-sm text-on-surface"
+                      >Horas Beca válidas</span
+                    >
+                  </label>
+                  <label
+                    class="bg-surface-container-low flex cursor-pointer items-center gap-2 rounded-xl p-2.5"
+                  >
+                    <input class="accent-primary h-4 w-4 rounded" type="checkbox" />
+                    <span class="font-body-sm text-body-sm text-on-surface">Entrada libre</span>
+                  </label>
+                  <label
+                    class="bg-surface-container-low flex cursor-pointer items-center gap-2 rounded-xl p-2.5"
+                  >
+                    <input class="accent-primary h-4 w-4 rounded" type="checkbox" />
+                    <span class="font-body-sm text-body-sm text-on-surface"
+                      >Talleres prácticos</span
+                    >
+                  </label>
+                  <label
+                    class="bg-surface-container-low flex cursor-pointer items-center gap-2 rounded-xl p-2.5"
+                  >
+                    <input class="accent-primary h-4 w-4 rounded" type="checkbox" />
+                    <span class="font-body-sm text-body-sm text-on-surface">Voluntariado</span>
+                  </label>
+                </div>
+              </div>
+              <!-- Filter Block 4: Asociación o Club Organizador -->
+              <div class="flex flex-col gap-2 pt-2">
+                <span class="font-label-md text-label-md text-primary font-bold"
+                  >Asociación o Club</span
+                >
+                <div class="relative w-full">
+                  <select
+                    class="bg-surface-container-low text-on-surface font-body-sm text-body-sm w-full rounded-xl p-2.5 pr-8 focus:outline-none"
+                  >
+                    <option>Todas las asociaciones y clubes</option>
+                    <option selected="">AEII - Ingeniería Industrial y Mecatrónica</option>
+                    <option>AEBQ - Bioquímica y Farmacia</option>
+                    <option>Club de Robótica UVG</option>
+                    <option>Club de Expresión Musical</option>
+                    <option>AEUVG - Junta Directiva Central</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <!-- Sticky Bottom Action Button inside Sheet -->
+            <div
+              class="p-space-md bg-surface-container-lowest/95 absolute right-0 bottom-0 left-0 flex items-center gap-2 shadow-[0_-4px_12px_rgba(13,35,58,0.08)] backdrop-blur-md"
+            >
+              <button
+                class="bg-surface-container-high text-primary hover:bg-surface-container-highest flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl transition-colors"
+                id="close-sheet-btn"
+                type="button"
+              >
+                <span class="material-symbols-outlined text-[20px]">close</span>
+              </button>
+              <button
+                class="bg-primary text-on-primary font-label-md text-label-md hover:bg-primary-container flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-3 font-bold shadow-md transition-all active:scale-[0.98]"
+                id="apply-filters-btn"
+                type="button"
+              >
+                <span class="material-symbols-outlined text-secondary-container text-[18px]"
+                  >check_circle</span
+                >
+                <span>Aplicar filtros (8 eventos)</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script>
+        (function () {
+          const filterBackdrop = document.getElementById("filter-backdrop");
+          const filterSheet = document.getElementById("filter-sheet");
+          const openBtn = document.getElementById("open-filter-btn");
+          const closeBtn = document.getElementById("close-sheet-btn");
+          const applyBtn = document.getElementById("apply-filters-btn");
+          const resetBtn = document.getElementById("reset-filter-btn");
+
+          function openModal() {
+            filterBackdrop.classList.remove("opacity-0", "pointer-events-none");
+            filterBackdrop.classList.add("opacity-100", "pointer-events-auto");
+            filterSheet.classList.remove("translate-y-full");
+            filterSheet.classList.add("translate-y-0");
+          }
+
+          function closeModal() {
+            filterBackdrop.classList.remove("opacity-100", "pointer-events-auto");
+            filterBackdrop.classList.add("opacity-0", "pointer-events-none");
+            filterSheet.classList.remove("translate-y-0");
+            filterSheet.classList.add("translate-y-full");
+          }
+
+          if (openBtn) openBtn.addEventListener("click", openModal);
+          if (closeBtn) closeBtn.addEventListener("click", closeModal);
+          if (applyBtn) applyBtn.addEventListener("click", closeModal);
+
+          if (filterBackdrop) {
+            filterBackdrop.addEventListener("click", (e) => {
+              if (e.target === filterBackdrop) {
+                closeModal();
+              }
+            });
+          }
+
+          // Bookmark Micro-interactions
+          const bookmarks = document.querySelectorAll(".bookmark-toggle");
+          bookmarks.forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+              e.stopPropagation();
+              const icon = btn.querySelector(".material-symbols-outlined");
+              if (icon.textContent === "bookmark") {
+                icon.textContent = "bookmark_added";
+                btn.classList.add("text-secondary");
+              } else {
+                icon.textContent = "bookmark";
+                btn.classList.remove("text-secondary");
+              }
+            });
+          });
+
+          // View switch micro-toggle
+          const listBtn = document.getElementById("view-list-btn");
+          const calBtn = document.getElementById("view-cal-btn");
+
+          if (listBtn && calBtn) {
+            listBtn.addEventListener("click", () => {
+              listBtn.classList.add("bg-surface-container-lowest", "shadow-sm", "text-primary");
+              listBtn.classList.remove("text-on-surface-variant");
+              calBtn.classList.remove("bg-surface-container-lowest", "shadow-sm", "text-primary");
+              calBtn.classList.add("text-on-surface-variant");
+            });
+
+            calBtn.addEventListener("click", () => {
+              calBtn.classList.add("bg-surface-container-lowest", "shadow-sm", "text-primary");
+              calBtn.classList.remove("text-on-surface-variant");
+              listBtn.classList.remove("bg-surface-container-lowest", "shadow-sm", "text-primary");
+              listBtn.classList.add("text-on-surface-variant");
+            });
+          }
+        })();
+      </script>
+    </main>
+    <nav
+      class="pb-safe bg-surface/90 fixed bottom-0 z-50 w-full shadow-[0_-2px_12px_rgba(13,35,58,0.06)] backdrop-blur-xl"
+      data-active-classes="text-secondary font-semibold"
+    >
+      <div class="px-space-xs flex h-16 items-center justify-around">
+        <a
+          class="text-on-surface-variant hover:text-on-surface flex h-12 w-16 flex-col items-center justify-center gap-0.5 transition-colors"
+          data-path="inicio"
+          href="#"
+          ><span class="material-symbols-outlined text-[22px]">home</span
+          ><span class="font-caption-caps text-caption-caps">Inicio</span></a
+        ><a
+          aria-current="page"
+          class="text-secondary flex h-12 w-16 flex-col items-center justify-center gap-0.5 font-semibold transition-colors"
+          data-path="eventos"
+          href="#"
+          ><span class="material-symbols-outlined text-[22px]">event</span
+          ><span class="font-caption-caps text-caption-caps">Eventos</span></a
+        ><a
+          class="text-on-surface-variant hover:text-on-surface flex h-12 w-16 flex-col items-center justify-center gap-0.5 transition-colors"
+          data-path="asociaciones"
+          href="#"
+          ><span class="material-symbols-outlined text-[22px]">groups</span
+          ><span class="font-caption-caps text-caption-caps">Asociaciones</span></a
+        ><a
+          class="text-on-surface-variant hover:text-on-surface flex h-12 w-16 flex-col items-center justify-center gap-0.5 transition-colors"
+          data-path="clubes"
+          href="#"
+          ><span class="material-symbols-outlined text-[22px]">diversity_3</span
+          ><span class="font-caption-caps text-caption-caps">Clubes</span></a
+        ><a
+          class="text-on-surface-variant hover:text-on-surface flex h-12 w-16 flex-col items-center justify-center gap-0.5 transition-colors"
+          data-path="tutorias"
+          href="#"
+          ><span class="material-symbols-outlined text-[22px]">school</span
+          ><span class="font-caption-caps text-caption-caps">Tutorías</span></a
+        >
+      </div>
+    </nav>
+    <div
+      id="snapdom-sandbox"
+      data-snapdom-sandbox="true"
+      aria-hidden="true"
+      style="
+        position: absolute;
+        left: -9999px;
+        top: -9999px;
+        width: 0px;
+        height: 0px;
+        overflow: hidden;
+      "
+    ></div>
+  </body>
+</html>

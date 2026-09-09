@@ -1,0 +1,688 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+      name="viewport"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @layer base {
+        html,
+        body {
+          width: 100vw;
+          margin: 0;
+          padding: 0;
+        }
+        body {
+          overscroll-behavior: none;
+        }
+        .pb-safe {
+          padding-bottom: env(safe-area-inset-bottom, 0px);
+        }
+        .pt-safe {
+          padding-top: env(safe-area-inset-top, 0px);
+        }
+        main > :first-child {
+          margin-top: 0 !important;
+        }
+        main > :last-child {
+          margin-bottom: 0 !important;
+        }
+      }
+      ::-webkit-scrollbar {
+        display: none;
+      }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+      tailwind.config={darkMode:"class",theme:{extend:{colors:{"surface-bright":"#fff8f3","on-secondary":"#ffffff","surface-container-lowest":"#ffffff","tertiary-fixed":"#ffdad8","primary-fixed-dim":"#b98aff","secondary-fixed-dim":"#3ec1ff","primary-container":"#6d4aff","on-secondary-fixed":"#0d3b34","on-secondary-container":"#00806c","on-secondary-fixed-variant":"#00806c","outline-variant":"#ebe2d8","inverse-on-surface":"#fff8f3","tertiary-container":"#4d000a","surface":"#fff8f3","on-primary":"#ffffff","on-tertiary":"#ffffff","on-primary-fixed":"#1c162b","tertiary":"#230002","surface-container-highest":"#ede8ff","on-tertiary-container":"#ff5e5b","secondary-container":"#3ec1ff","on-surface-variant":"#6e6580","background":"#fff8f3","on-error-container":"#93000a","inverse-surface":"#1c162b","on-error":"#ffffff","on-primary-fixed-variant":"#5a35e8","tertiary-fixed-dim":"#ffb3b1","on-background":"#1c162b","primary-fixed":"#ede8ff","surface-tint":"#6d4aff","surface-container-low":"#f7f1ea","surface-container-high":"#ede8ff","surface-variant":"#ede8ff","on-tertiary-fixed":"#410007","on-tertiary-fixed-variant":"#92001c","on-primary-container":"#ede8ff","secondary":"#00c9a7","error":"#f5455c","error-container":"#ffdad6","surface-container":"#f7f1ea","on-surface":"#1c162b","primary":"#1c162b","outline":"#d9cec2","surface-dim":"#f0e6da","inverse-primary":"#b98aff","secondary-fixed":"#d6f7f1"},borderRadius:{DEFAULT:"0.25rem",lg:"0.5rem",xl:"0.75rem",full:"9999px"},spacing:{"space-2xs":"0.25rem","space-sm":"0.75rem","margin-mobile":"1rem","container-max":"1280px","space-2xl":"3rem","margin-desktop":"2rem","space-xs":"0.5rem","space-lg":"1.5rem","space-3xl":"4rem","gutter-desktop":"1.5rem","space-xl":"2rem","gutter-mobile":"1rem","space-md":"1rem"},fontFamily:{"headline-md":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"],"caption-caps":["Plus Jakarta Sans"],"title-md":["Plus Jakarta Sans"],"body-md":["Plus Jakarta Sans"],"headline-lg":["Plus Jakarta Sans"],"display-hero":["Plus Jakarta Sans"],"headline-lg-mobile":["Plus Jakarta Sans"],"body-sm":["Plus Jakarta Sans"],"label-sm":["Plus Jakarta Sans"],"display-hero-mobile":["Plus Jakarta Sans"],"label-md":["Plus Jakarta Sans"],"body-lg":["Plus Jakarta Sans"]},fontSize:{"headline-md":["24px",{lineHeight:"32px",letterSpacing:"-0.01em",fontWeight:"600"}],"headline-sm":["20px",{lineHeight:"28px",fontWeight:"600"}],"caption-caps":["11px",{lineHeight:"14px",letterSpacing:"0.06em",fontWeight:"700"}],"title-md":["18px",{lineHeight:"26px",fontWeight:"600"}],"body-md":["15px",{lineHeight:"24px",fontWeight:"400"}],"headline-lg":["32px",{lineHeight:"40px",letterSpacing:"-0.015em",fontWeight:"700"}],"display-hero":["40px",{lineHeight:"48px",letterSpacing:"-0.02em",fontWeight:"800"}],"headline-lg-mobile":["26px",{lineHeight:"34px",letterSpacing:"-0.01em",fontWeight:"700"}],"body-sm":["14px",{lineHeight:"20px",fontWeight:"400"}],"label-sm":["12px",{lineHeight:"16px",letterSpacing:"0.01em",fontWeight:"600"}],"display-hero-mobile":["30px",{lineHeight:"38px",letterSpacing:"-0.015em",fontWeight:"800"}],"label-md":["14px",{lineHeight:"20px",letterSpacing:"0.005em",fontWeight:"600"}],"body-lg":["16px",{lineHeight:"26px",fontWeight:"400"}]}}};
+    </script>
+    <style>
+      body {
+        min-height: max(884px, 100dvh);
+      }
+    </style>
+  </head>
+  <body class="bg-surface text-on-surface flex min-h-screen flex-col">
+    <header
+      class="bg-surface/85 pt-safe fixed inset-x-0 top-0 z-50 shadow-[0_1px_8px_rgba(0,0,0,0.04)] backdrop-blur-xl"
+    >
+      <div class="px-gutter-mobile gap-space-sm flex h-16 items-center justify-between">
+        <div class="gap-space-xs flex items-center">
+          <button
+            aria-label="Abrir menú"
+            class="text-on-surface hover:bg-surface-container flex h-11 w-11 items-center justify-center rounded-lg transition-colors"
+            type="button"
+          >
+            <span class="material-symbols-outlined text-[24px]">menu</span></button
+          ><img
+            alt="Logo circular de AEUVG compuesto por figuras humanas estilizadas unidas en círculo de colores vivos (rojo, coral, morado, celeste, naranja, verde lima y azul marino) con las siglas AEUVG limpias y modernas.. Brand logo. - Primary color: #6d4aff
+- Font: plusJakartaSans
+- Mode: light
+- Roundness: rounded-md
+"
+            class="h-8 w-auto object-contain"
+            src="logo-aeuvg.png"
+          /><span
+            class="font-title-md text-title-md text-primary hidden font-bold tracking-tight sm:inline"
+            >AEUVG</span
+          >
+        </div>
+        <div class="gap-space-xs flex items-center">
+          <span class="font-label-md text-label-md text-on-surface-variant max-w-[120px] truncate"
+            >Sobre Aeuvg</span
+          >
+          <div class="bg-primary flex h-8 w-8 shrink-0 items-center justify-center rounded-full">
+            <span class="material-symbols-outlined text-on-primary text-[18px]">person</span>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main class="bg-surface relative flex w-full flex-1 flex-col pt-16 pb-28">
+      <div class="flex w-full flex-col">
+        <div class="px-gutter-mobile pt-space-sm pb-space-lg gap-space-md flex flex-col">
+          <div class="gap-space-xs flex items-center">
+            <span
+              class="bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 shadow-sm"
+            >
+              <span class="bg-secondary h-2 w-2 animate-pulse rounded-full"></span>
+              Conoce nuestra organización
+            </span>
+          </div>
+          <div class="gap-space-xs flex flex-col">
+            <h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary tracking-tight">
+              Sobre AEUVG
+            </h1>
+            <p class="font-body-md text-body-md text-on-surface-variant">
+              La voz unificada, plural y representativa de la comunidad estudiantil de la
+              Universidad del Valle de Guatemala, impulsando la excelencia, la equidad y la vida de
+              campus desde las bases.
+            </p>
+          </div>
+          <div class="gap-space-xs pt-space-2xs grid grid-cols-2">
+            <div
+              class="bg-surface-container-lowest p-space-sm flex flex-col gap-1 rounded-xl shadow-sm"
+            >
+              <div
+                class="bg-surface-container-high text-secondary flex h-8 w-8 items-center justify-center rounded-lg"
+              >
+                <span class="material-symbols-outlined text-[20px]">diversity_3</span>
+              </div>
+              <span class="font-headline-sm text-headline-sm text-primary font-bold tracking-tight"
+                >14</span
+              >
+              <span class="font-label-sm text-label-sm text-on-surface-variant"
+                >Asociaciones activas</span
+              >
+            </div>
+            <div
+              class="bg-surface-container-lowest p-space-sm flex flex-col gap-1 rounded-xl shadow-sm"
+            >
+              <div
+                class="bg-secondary-fixed text-on-secondary-fixed-variant flex h-8 w-8 items-center justify-center rounded-lg"
+              >
+                <span class="material-symbols-outlined text-[20px]">local_activity</span>
+              </div>
+              <span class="font-headline-sm text-headline-sm text-primary font-bold tracking-tight"
+                >28+</span
+              >
+              <span class="font-label-sm text-label-sm text-on-surface-variant"
+                >Clubes estudiantiles</span
+              >
+            </div>
+            <div
+              class="bg-surface-container-lowest p-space-sm flex flex-col gap-1 rounded-xl shadow-sm"
+            >
+              <div
+                class="bg-surface-container text-secondary flex h-8 w-8 items-center justify-center rounded-lg"
+              >
+                <span class="material-symbols-outlined text-[20px]">groups</span>
+              </div>
+              <span class="font-headline-sm text-headline-sm text-primary font-bold tracking-tight"
+                >4.2k</span
+              >
+              <span class="font-label-sm text-label-sm text-on-surface-variant"
+                >Estudiantes UVG</span
+              >
+            </div>
+            <div
+              class="bg-surface-container-lowest p-space-sm flex flex-col gap-1 rounded-xl shadow-sm"
+            >
+              <div
+                class="bg-primary-fixed text-on-primary-fixed flex h-8 w-8 items-center justify-center rounded-lg"
+              >
+                <span class="material-symbols-outlined text-[20px]">history_edu</span>
+              </div>
+              <span class="font-headline-sm text-headline-sm text-primary font-bold tracking-tight"
+                >45</span
+              >
+              <span class="font-label-sm text-label-sm text-on-surface-variant"
+                >Años de trayectoria</span
+              >
+            </div>
+          </div>
+        </div>
+        <section class="px-gutter-mobile py-space-md gap-space-md flex flex-col">
+          <div
+            class="bg-surface-container-lowest p-space-md gap-space-xs relative flex flex-col overflow-hidden rounded-xl shadow-sm"
+          >
+            <div
+              class="bg-primary-container text-on-primary flex h-10 w-10 items-center justify-center rounded-xl shadow-sm"
+            >
+              <span class="material-symbols-outlined text-[22px]">rocket_launch</span>
+            </div>
+            <div class="flex flex-col">
+              <span
+                class="font-caption-caps text-caption-caps text-secondary tracking-wider uppercase"
+                >Propósito Fundamental</span
+              >
+              <h2 class="font-headline-sm text-headline-sm text-primary">Nuestra Misión</h2>
+            </div>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">
+              Representar, vincular y empoderar a cada estudiante de la UVG mediante iniciativas
+              transparentes, proyectos de impacto social, tutorías formativas y espacios plurales
+              que garanticen el bienestar académico, humano y comunitario dentro y fuera de las
+              aulas.
+            </p>
+          </div>
+          <div
+            class="bg-surface-container-lowest p-space-md gap-space-xs relative flex flex-col overflow-hidden rounded-xl shadow-sm"
+          >
+            <div
+              class="bg-secondary-container text-on-secondary-container flex h-10 w-10 items-center justify-center rounded-xl shadow-sm"
+            >
+              <span class="material-symbols-outlined text-[22px]">visibility</span>
+            </div>
+            <div class="flex flex-col">
+              <span
+                class="font-caption-caps text-caption-caps text-secondary tracking-wider uppercase"
+                >Hacia el Futuro</span
+              >
+              <h2 class="font-headline-sm text-headline-sm text-primary">Nuestra Visión</h2>
+            </div>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">
+              Ser el referente regional de liderazgo universitario y gobernanza estudiantil
+              caracterizado por la integridad, la innovación colaborativa y la transformación activa
+              de Guatemala, dejando una huella sostenible en las futuras generaciones.
+            </p>
+          </div>
+        </section>
+        <section class="px-gutter-mobile py-space-md gap-space-md flex flex-col">
+          <div class="flex flex-col gap-1">
+            <span
+              class="font-caption-caps text-caption-caps text-secondary tracking-wider uppercase"
+              >Pilares Estratégicos</span
+            >
+            <h2 class="font-headline-sm text-headline-sm text-primary">Nuestros Objetivos</h2>
+          </div>
+          <div class="gap-space-xs flex flex-col">
+            <div
+              class="bg-surface-container-lowest p-space-sm gap-space-sm flex items-start rounded-xl shadow-sm"
+            >
+              <div class="bg-primary-container mt-1 h-3.5 w-3.5 shrink-0 rounded-full"></div>
+              <div class="flex flex-col">
+                <span class="font-label-md text-label-md text-primary font-bold"
+                  >Defensa y Representatividad</span
+                >
+                <p class="font-body-sm text-body-sm text-on-surface-variant">
+                  Garantizar una interlocución legítima, ética y continua con las autoridades
+                  académicas en favor del cuerpo estudiantil.
+                </p>
+              </div>
+            </div>
+            <div
+              class="bg-surface-container-lowest p-space-sm gap-space-sm flex items-start rounded-xl shadow-sm"
+            >
+              <div class="bg-secondary-container mt-1 h-3.5 w-3.5 shrink-0 rounded-full"></div>
+              <div class="flex flex-col">
+                <span class="font-label-md text-label-md text-primary font-bold"
+                  >Acompañamiento Académico Integral</span
+                >
+                <p class="font-body-sm text-body-sm text-on-surface-variant">
+                  Coordinar la red solidaria de tutorías gratuitas y programas de desarrollo para el
+                  rendimiento formativo.
+                </p>
+              </div>
+            </div>
+            <div
+              class="bg-surface-container-lowest p-space-sm gap-space-sm flex items-start rounded-xl shadow-sm"
+            >
+              <div class="bg-tertiary-fixed-dim mt-1 h-3.5 w-3.5 shrink-0 rounded-full"></div>
+              <div class="flex flex-col">
+                <span class="font-label-md text-label-md text-primary font-bold"
+                  >Cultura, Deporte y Convivencia</span
+                >
+                <p class="font-body-sm text-body-sm text-on-surface-variant">
+                  Fortalecer el tejido universitario patrocinando festivales, ligas interfacultades
+                  y foros de divulgación científica.
+                </p>
+              </div>
+            </div>
+            <div
+              class="bg-surface-container-lowest p-space-sm gap-space-sm flex items-start rounded-xl shadow-sm"
+            >
+              <div class="bg-secondary mt-1 h-3.5 w-3.5 shrink-0 rounded-full"></div>
+              <div class="flex flex-col">
+                <span class="font-label-md text-label-md text-primary font-bold"
+                  >Transparencia y Gestión Abierta</span
+                >
+                <p class="font-body-sm text-body-sm text-on-surface-variant">
+                  Rendir cuentas periódicas sobre el uso de recursos y decisiones estratégicas con
+                  asambleas abiertas.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="px-gutter-mobile py-space-md gap-space-md flex flex-col">
+          <div class="flex flex-col gap-1">
+            <div class="flex items-center justify-between">
+              <h2 class="font-headline-sm text-headline-sm text-primary">Junta Directiva</h2>
+              <span class="font-label-sm text-label-sm text-on-surface-variant"
+                >Período 2024-2025</span
+              >
+            </div>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">
+              Líderes elegidos mediante votación universal para coordinar los esfuerzos asociativos.
+            </p>
+          </div>
+          <div class="gap-space-sm flex flex-col">
+            <div
+              class="bg-surface-container-lowest p-space-sm gap-space-sm flex items-center justify-between rounded-xl shadow-sm"
+            >
+              <div class="gap-space-sm flex min-w-0 items-center">
+                <img
+                  class="h-14 w-14 shrink-0 rounded-full object-cover shadow-sm"
+                  data-alt="Retrato profesional sonriente de estudiante universitaria guatemalteca joven con blazer azul marino, fondo desenfocado de campus universitario moderno iluminado por luz natural de mañana cálida, estilo fotográfico limpio institucional."
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQiiWsn6ixdLAsbMeqw7so6CmXCScRbcDrRAdXuqPr-Fk_mvsc7qJ929TNLtqG2jYOMiXxghhccCseDZDTvVOaNEhqrYpZ3hau_8-jv3PQlPeTzxEIETaR-a9s_KX18KtPiaAH0gy_ON7Hnj46YFCbIzZmKq_-dcGITYk85KmcoMOAywbTGgU6XzhNucSWMwtJSeZC2ic2eq0qEhXuz8BqOglgNjfnaEXIqH8Z7OL4hsXR-FOKsb-P2Q"
+                />
+                <div class="flex min-w-0 flex-col">
+                  <span class="font-label-md text-label-md text-primary truncate font-bold"
+                    >Mariandrée Cifuentes</span
+                  >
+                  <div class="mt-0.5 flex items-center gap-1.5">
+                    <span
+                      class="bg-primary-fixed text-on-primary-fixed font-caption-caps text-caption-caps inline-block rounded-full px-2 py-0.5 uppercase"
+                      >Presidenta</span
+                    >
+                  </div>
+                  <span class="font-body-sm text-body-sm text-on-surface-variant mt-0.5 truncate"
+                    >Ingeniería Química</span
+                  >
+                </div>
+              </div>
+              <a
+                aria-label="Contactar a Presidenta"
+                class="bg-surface-container-low hover:bg-surface-container text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition-colors"
+                href="mailto:presidencia.aeuvg@uvg.edu.gt"
+              >
+                <span class="material-symbols-outlined text-[20px]">mail</span>
+              </a>
+            </div>
+            <div
+              class="bg-surface-container-lowest p-space-sm gap-space-sm flex items-center justify-between rounded-xl shadow-sm"
+            >
+              <div class="gap-space-sm flex min-w-0 items-center">
+                <img
+                  class="h-14 w-14 shrink-0 rounded-full object-cover shadow-sm"
+                  data-alt="Fotografía frontal de estudiante universitario masculino hispano con camisa celeste y expresión amable, fondo de biblioteca contemporánea con luz tenue y libros de ingeniería ordenados, enfoque nítido de retrato editorial corporativo."
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAgT6emE9TsiiNoCTHhORDS_xYj51OyHyHMzVg0W1Q5Gmq4a7chI0anUaXpH7ux7pdKzuNfpYNOaKNO9IqGskyPdG0lV16l1zpfkPHbvBXrU8-0lfgeQWC6d8GlaLuJEvM_sdCc9FmwWLbY-q-dI-NPYK1sPmlCN8k13N2Vzg8c3pf1z91Dl1Cw2tAXB55Mt0Ui7lp1MAytkOnmYBTmXYqBltpSfYcwrh4A5K7p-ZlGWJLiRP6JJkSOw"
+                />
+                <div class="flex min-w-0 flex-col">
+                  <span class="font-label-md text-label-md text-primary truncate font-bold"
+                    >Sebastián Arévalo</span
+                  >
+                  <div class="mt-0.5 flex items-center gap-1.5">
+                    <span
+                      class="bg-surface-container-high text-on-surface-variant font-caption-caps text-caption-caps inline-block rounded-full px-2 py-0.5 uppercase"
+                      >Vicepresidente</span
+                    >
+                  </div>
+                  <span class="font-body-sm text-body-sm text-on-surface-variant mt-0.5 truncate"
+                    >Ciencias de la Computación</span
+                  >
+                </div>
+              </div>
+              <a
+                aria-label="Contactar a Vicepresidente"
+                class="bg-surface-container-low hover:bg-surface-container text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition-colors"
+                href="mailto:vicepresidencia.aeuvg@uvg.edu.gt"
+              >
+                <span class="material-symbols-outlined text-[20px]">mail</span>
+              </a>
+            </div>
+            <div
+              class="bg-surface-container-lowest p-space-sm gap-space-sm flex items-center justify-between rounded-xl shadow-sm"
+            >
+              <div class="gap-space-sm flex min-w-0 items-center">
+                <img
+                  class="h-14 w-14 shrink-0 rounded-full object-cover shadow-sm"
+                  data-alt="Retrato en primer plano de estudiante universitaria sonriente con cabello recogido y suéter formal sobrio, fondo arquitectónico minimalista con cristalería moderna, iluminación suave de estudio estudiantil."
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2AlfejUX_HB336xTMlsZfnT3o-9rQZY09HjGxMsaAEGaxpOR7LQKFlVbcn6f7dRQHR4ZLSqiBXxbLBJxQ79mMu6lXqLqni8pBZBZ373wvI2n7sLpqE9ueCMB-XRbq_zcOjqJWM4UvMh7IEWwtRBUoYC-ywHaS6-4csLt2PrMtr2OLzQ5DsG3cSA0VY9l4xiL-40lkYvTe_ElBSTIAmEPMVwf0kkSuioKf4L6wZV8Bm9hCR6LDA0P0mQ"
+                />
+                <div class="flex min-w-0 flex-col">
+                  <span class="font-label-md text-label-md text-primary truncate font-bold"
+                    >Lucía Monterroso</span
+                  >
+                  <div class="mt-0.5 flex items-center gap-1.5">
+                    <span
+                      class="bg-secondary-fixed text-on-secondary-fixed-variant font-caption-caps text-caption-caps inline-block rounded-full px-2 py-0.5 uppercase"
+                      >Secretaria General</span
+                    >
+                  </div>
+                  <span class="font-body-sm text-body-sm text-on-surface-variant mt-0.5 truncate"
+                    >Bioquímica y Microbiología</span
+                  >
+                </div>
+              </div>
+              <a
+                aria-label="Contactar a Secretaria"
+                class="bg-surface-container-low hover:bg-surface-container text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition-colors"
+                href="mailto:secretaria.aeuvg@uvg.edu.gt"
+              >
+                <span class="material-symbols-outlined text-[20px]">mail</span>
+              </a>
+            </div>
+            <div
+              class="bg-surface-container-lowest p-space-sm gap-space-sm flex items-center justify-between rounded-xl shadow-sm"
+            >
+              <div class="gap-space-sm flex min-w-0 items-center">
+                <img
+                  class="h-14 w-14 shrink-0 rounded-full object-cover shadow-sm"
+                  data-alt="Foto de perfil de joven universitario latinoamericano con lentes y polo azul oscuro, expresión profesional y cercana con jardín universitario en segundo plano bokeh, luz diurna clara."
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAY1xdR51o0WBhsk0GXrx_Gye51H1D44Pt7WFMdxp5pymmBmW-ccfQpxj-VTRrefy5OoxtEE7orpo2WJP4ka14lwzxgghIYSqTj-y-p3aRlhBCj9JWxvaMxyB3jTHVwjw0_S6IBnxynUw9RME_z07MnJscfkYLPHeoBdldfi2HLvuyh4G8YONxrlf1zJeJrzO1_bcJE0LH5KZHUvx2blViY-eJc8YgliwfY8AhN7ICgpXgxXfW2HK1hNA"
+                />
+                <div class="flex min-w-0 flex-col">
+                  <span class="font-label-md text-label-md text-primary truncate font-bold"
+                    >Diego Castillo</span
+                  >
+                  <div class="mt-0.5 flex items-center gap-1.5">
+                    <span
+                      class="bg-tertiary-fixed text-on-tertiary-fixed-variant font-caption-caps text-caption-caps inline-block rounded-full px-2 py-0.5 uppercase"
+                      >Tesorero</span
+                    >
+                  </div>
+                  <span class="font-body-sm text-body-sm text-on-surface-variant mt-0.5 truncate"
+                    >Ingeniería Industrial</span
+                  >
+                </div>
+              </div>
+              <a
+                aria-label="Contactar a Tesorero"
+                class="bg-surface-container-low hover:bg-surface-container text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition-colors"
+                href="mailto:finanzas.aeuvg@uvg.edu.gt"
+              >
+                <span class="material-symbols-outlined text-[20px]">mail</span>
+              </a>
+            </div>
+          </div>
+        </section>
+        <section class="px-gutter-mobile py-space-md gap-space-md flex flex-col">
+          <div class="flex flex-col gap-1">
+            <div class="flex items-center justify-between">
+              <h2 class="font-headline-sm text-headline-sm text-primary">Comisiones y Equipo</h2>
+              <span class="font-label-sm text-label-sm text-secondary font-bold">24 Miembros</span>
+            </div>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">
+              Estudiantes comprometidos al servicio de las comisiones operativas de AEUVG.
+            </p>
+          </div>
+          <div class="gap-space-xs grid grid-cols-2">
+            <div
+              class="bg-surface-container-lowest p-space-sm gap-space-xs flex items-center rounded-xl shadow-sm"
+            >
+              <div
+                class="bg-surface-container-high font-title-md text-title-md text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-full font-bold"
+              >
+                VP
+              </div>
+              <div class="flex min-w-0 flex-col">
+                <span class="font-label-sm text-label-sm text-primary truncate font-bold"
+                  >Valeria Paz</span
+                >
+                <span class="font-caption-caps text-caption-caps text-on-surface-variant truncate"
+                  >Logística &amp; Eventos</span
+                >
+              </div>
+            </div>
+            <div
+              class="bg-surface-container-lowest p-space-sm gap-space-xs flex items-center rounded-xl shadow-sm"
+            >
+              <div
+                class="bg-secondary-fixed font-title-md text-title-md text-on-secondary-fixed-variant flex h-10 w-10 shrink-0 items-center justify-center rounded-full font-bold"
+              >
+                JG
+              </div>
+              <div class="flex min-w-0 flex-col">
+                <span class="font-label-sm text-label-sm text-primary truncate font-bold"
+                  >Javier Gómez</span
+                >
+                <span class="font-caption-caps text-caption-caps text-on-surface-variant truncate"
+                  >Tutorías Pares</span
+                >
+              </div>
+            </div>
+            <div
+              class="bg-surface-container-lowest p-space-sm gap-space-xs flex items-center rounded-xl shadow-sm"
+            >
+              <div
+                class="bg-tertiary-fixed font-title-md text-title-md text-on-tertiary-fixed flex h-10 w-10 shrink-0 items-center justify-center rounded-full font-bold"
+              >
+                AR
+              </div>
+              <div class="flex min-w-0 flex-col">
+                <span class="font-label-sm text-label-sm text-primary truncate font-bold"
+                  >Ana Robles</span
+                >
+                <span class="font-caption-caps text-caption-caps text-on-surface-variant truncate"
+                  >Medios &amp; Difusión</span
+                >
+              </div>
+            </div>
+            <div
+              class="bg-surface-container-lowest p-space-sm gap-space-xs flex items-center rounded-xl shadow-sm"
+            >
+              <div
+                class="bg-primary-fixed font-title-md text-title-md text-on-primary-fixed flex h-10 w-10 shrink-0 items-center justify-center rounded-full font-bold"
+              >
+                FM
+              </div>
+              <div class="flex min-w-0 flex-col">
+                <span class="font-label-sm text-label-sm text-primary truncate font-bold"
+                  >Felipe Morales</span
+                >
+                <span class="font-caption-caps text-caption-caps text-on-surface-variant truncate"
+                  >Asuntos Académicos</span
+                >
+              </div>
+            </div>
+            <div
+              class="bg-surface-container-lowest p-space-sm gap-space-xs flex items-center rounded-xl shadow-sm"
+            >
+              <div
+                class="bg-surface-container-low font-title-md text-title-md text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-full font-bold"
+              >
+                SR
+              </div>
+              <div class="flex min-w-0 flex-col">
+                <span class="font-label-sm text-label-sm text-primary truncate font-bold"
+                  >Sofía Rodas</span
+                >
+                <span class="font-caption-caps text-caption-caps text-on-surface-variant truncate"
+                  >Responsabilidad Social</span
+                >
+              </div>
+            </div>
+            <div
+              class="bg-surface-container-lowest p-space-sm gap-space-xs flex items-center rounded-xl shadow-sm"
+            >
+              <div
+                class="bg-surface-container font-title-md text-title-md text-secondary flex h-10 w-10 shrink-0 items-center justify-center rounded-full font-bold"
+              >
+                CL
+              </div>
+              <div class="flex min-w-0 flex-col">
+                <span class="font-label-sm text-label-sm text-primary truncate font-bold"
+                  >Carlos Lima</span
+                >
+                <span class="font-caption-caps text-caption-caps text-on-surface-variant truncate"
+                  >Deportes &amp; Vida UVG</span
+                >
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="px-gutter-mobile py-space-md">
+          <div
+            class="bg-primary-container text-on-primary p-space-md gap-space-md flex flex-col rounded-xl shadow-md"
+          >
+            <div class="flex flex-col gap-1">
+              <div
+                class="bg-surface-container-lowest/10 text-on-primary flex h-8 w-8 items-center justify-center rounded-lg"
+              >
+                <span class="material-symbols-outlined text-[20px]">forum</span>
+              </div>
+              <h3 class="font-headline-sm text-headline-sm text-on-primary mt-1">
+                ¿Tienes propuestas o dudas?
+              </h3>
+              <p class="font-body-sm text-body-sm text-on-primary-container">
+                Las puertas de AEUVG están abiertas para escuchar a cualquier estudiante u
+                organización de la comunidad.
+              </p>
+            </div>
+            <div
+              class="gap-space-xs text-on-primary-container font-body-sm text-body-sm flex flex-col"
+            >
+              <div class="gap-space-xs flex items-center">
+                <span class="material-symbols-outlined text-secondary-container text-[18px]"
+                  >pin_drop</span
+                >
+                <span class="text-on-primary"
+                  >Oficina AEUVG, Edificio I, Nivel 1 (Frente a Cafetería)</span
+                >
+              </div>
+              <div class="gap-space-xs flex items-center">
+                <span class="material-symbols-outlined text-secondary-container text-[18px]"
+                  >mail</span
+                >
+                <a class="text-on-primary hover:underline" href="mailto:aeuvg@uvg.edu.gt"
+                  >aeuvg@uvg.edu.gt</a
+                >
+              </div>
+              <div class="gap-space-xs flex items-center">
+                <span class="material-symbols-outlined text-secondary-container text-[18px]"
+                  >alternate_email</span
+                >
+                <span class="text-on-primary">@aeuvg en Instagram y TikTok</span>
+              </div>
+            </div>
+            <button
+              class="bg-secondary-container hover:bg-secondary text-on-secondary-container hover:text-on-secondary font-label-md text-label-md flex w-full items-center justify-center gap-2 rounded-lg px-4 py-3 shadow-sm transition-colors"
+              id="btn-contactar"
+              type="button"
+            >
+              <span class="material-symbols-outlined text-[18px]">send</span>
+              Escribir a la Junta Directiva
+            </button>
+          </div>
+        </section>
+      </div>
+      <script>
+        (function () {
+          const contactBtn = document.getElementById("btn-contactar");
+          if (contactBtn) {
+            contactBtn.addEventListener("click", function () {
+              window.location.href =
+                "mailto:aeuvg@uvg.edu.gt?subject=Mensaje%20desde%20App%20AEUVG&body=Hola%20Junta%20Directiva%20AEUVG,%0A%0AMi%20nombre%20es:%20%0AMi%20carn%C3%A9:%20%0AConsulta%20o%20propuesta:%20";
+            });
+          }
+        })();
+      </script>
+      <footer
+        class="mt-space-2xl bg-surface-container-low px-gutter-mobile py-space-xl gap-space-sm flex flex-col items-center text-center"
+      >
+        <div class="gap-space-xs flex items-center justify-center">
+          <img
+            alt="AEUVG Footer"
+            class="h-6 w-auto object-contain opacity-80"
+            src="logo-aeuvg.png"
+          /><span class="font-title-md text-title-md text-primary font-bold">AEUVG</span>
+        </div>
+        <p class="font-body-sm text-body-sm text-on-surface-variant">
+          Asociación de Estudiantes de la Universidad del Valle de Guatemala
+        </p>
+        <div
+          class="gap-space-2xs text-on-surface-variant font-label-sm text-label-sm flex flex-col"
+        >
+          <span>Campus Central, 18 Av. 11-95 Zona 15, V.H. III</span
+          ><a class="text-secondary hover:underline" href="mailto:aeuvg@uvg.edu.gt"
+            >aeuvg@uvg.edu.gt</a
+          ><span>PBX: +502 2507-1500</span>
+        </div>
+        <p
+          class="font-caption-caps text-caption-caps text-outline mt-space-xs tracking-wider uppercase"
+        >
+          © 2024 AEUVG • Compromiso, Liderazgo e Integridad
+        </p>
+      </footer>
+    </main>
+    <nav
+      class="pb-safe bg-surface/90 fixed inset-x-0 bottom-0 z-50 shadow-[0_-2px_12px_rgba(13,35,58,0.06)] backdrop-blur-xl"
+      data-active-classes="text-secondary font-bold"
+    >
+      <div class="px-space-2xs flex h-16 items-center justify-around">
+        <a
+          class="text-on-surface-variant hover:text-on-surface flex h-14 w-14 flex-col items-center justify-center gap-0.5 transition-colors"
+          data-path="inicio"
+          href="#"
+          ><span class="material-symbols-outlined text-[22px]">home</span
+          ><span class="font-label-sm text-[11px] leading-tight">Inicio</span></a
+        ><a
+          class="text-on-surface-variant hover:text-on-surface flex h-14 w-14 flex-col items-center justify-center gap-0.5 transition-colors"
+          data-path="eventos"
+          href="#"
+          ><span class="material-symbols-outlined text-[22px]">calendar_month</span
+          ><span class="font-label-sm text-[11px] leading-tight">Eventos</span></a
+        ><a
+          class="text-on-surface-variant hover:text-on-surface flex h-14 w-14 flex-col items-center justify-center gap-0.5 transition-colors"
+          data-path="asociaciones"
+          href="#"
+          ><span class="material-symbols-outlined text-[22px]">diversity_3</span
+          ><span class="font-label-sm text-[11px] leading-tight">Asoc.</span></a
+        ><a
+          class="text-on-surface-variant hover:text-on-surface flex h-14 w-14 flex-col items-center justify-center gap-0.5 transition-colors"
+          data-path="clubes"
+          href="#"
+          ><span class="material-symbols-outlined text-[22px]">local_activity</span
+          ><span class="font-label-sm text-[11px] leading-tight">Clubes</span></a
+        ><a
+          class="text-on-surface-variant hover:text-on-surface flex h-14 w-14 flex-col items-center justify-center gap-0.5 transition-colors"
+          data-path="tutorias"
+          href="#"
+          ><span class="material-symbols-outlined text-[22px]">school</span
+          ><span class="font-label-sm text-[11px] leading-tight">Tutorías</span></a
+        ><a
+          aria-current="page"
+          class="text-secondary flex h-14 w-14 flex-col items-center justify-center gap-0.5 font-bold transition-colors"
+          data-path="sobre-aeuvg"
+          href="#"
+          ><span class="material-symbols-outlined text-[22px]">info</span
+          ><span class="font-label-sm text-[11px] leading-tight">AEUVG</span></a
+        >
+      </div>
+    </nav>
+  </body>
+</html>
