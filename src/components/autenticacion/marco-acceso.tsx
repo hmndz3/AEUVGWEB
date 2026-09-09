@@ -45,11 +45,10 @@ export function EncabezadoAcceso() {
             href="/recuperar-contrasena"
             className="text-texto-suave hover:text-texto text-xs font-semibold"
           >
-            Ayuda de cuenta
+            Recuperar contraseña
           </Link>
-          <span className="text-texto-suave text-xs font-semibold">Centro de ayuda</span>
           <Link href="/" className="text-texto-suave hover:text-texto text-xs font-semibold">
-            Volver al portal
+            Volver al inicio
           </Link>
           <span className="bg-texto flex size-7 items-center justify-center rounded-full text-white">
             <Icono nombre="persona" className="size-4" />

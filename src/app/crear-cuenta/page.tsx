@@ -106,7 +106,7 @@ function PanelRegistro() {
       </div>
       <div className="mt-auto flex items-center justify-between pt-8 text-[11px] font-semibold text-white/60">
         <span className="flex items-center gap-1.5">
-          <Icono nombre="candado" className="size-4" /> Cifrado seguro UVG
+          <Icono nombre="candado" className="size-4" /> Cuenta institucional
         </span>
         <span>2026</span>
       </div>
