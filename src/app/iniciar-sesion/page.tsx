@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { FormEvent, useState } from "react";
 
 import { CampoAcceso } from "@/components/autenticacion/campo-acceso";
 import { Icono } from "@/components/autenticacion/icono";
@@ -76,6 +79,34 @@ function TarjetaPanel({
 }
 
 export default function PaginaInicioSesion() {
+  const [correo, setCorreo] = useState("");
+  const [contrasena, setContrasena] = useState("");
+  const [mensaje, setMensaje] = useState("");
+  const [enviando, setEnviando] = useState(false);
+  const [sesionIniciada, setSesionIniciada] = useState(false);
+
+  async function iniciarSesion(evento: FormEvent<HTMLFormElement>) {
+    evento.preventDefault();
+    setEnviando(true);
+    setMensaje("");
+
+    try {
+      const respuesta = await fetch("/api/auth/iniciar-sesion", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ correo, contrasena }),
+      });
+      const resultado = (await respuesta.json()) as { mensaje: string };
+      setMensaje(resultado.mensaje);
+      setSesionIniciada(respuesta.ok);
+    } catch {
+      setMensaje("El servicio de autenticación no está disponible temporalmente.");
+      setSesionIniciada(false);
+    } finally {
+      setEnviando(false);
+    }
+  }
+
   return (
     <MarcoAcceso panel={<PanelInicioSesion />}>
       <div className="flex min-h-[590px] flex-col justify-between">
@@ -92,9 +123,10 @@ export default function PaginaInicioSesion() {
             para gestionar tus eventos, tutorías y horas beca.
           </p>
 
-          <form className="mt-8 flex max-w-xl flex-col gap-5">
+          <form className="mt-8 flex max-w-xl flex-col gap-5" onSubmit={iniciarSesion} noValidate>
             <CampoAcceso
               id="correo"
+              name="correo"
               etiqueta="Correo institucional UVG"
               icono="at"
               textoLateral="Dominio institucional"
@@ -102,9 +134,12 @@ export default function PaginaInicioSesion() {
               placeholder="ejemplo@uvg.edu.gt"
               autoComplete="email"
               ayuda="Ingresa tu usuario institucional asignado."
+              value={correo}
+              onChange={(evento) => setCorreo(evento.target.value)}
             />
             <CampoAcceso
               id="contrasena"
+              name="contrasena"
               etiqueta="Contraseña"
               icono="candado"
               textoLateral="Requerido"
@@ -112,6 +147,8 @@ export default function PaginaInicioSesion() {
               placeholder="••••••••••"
               autoComplete="current-password"
               botonFinal
+              value={contrasena}
+              onChange={(evento) => setContrasena(evento.target.value)}
             />
             <div className="flex flex-col items-start justify-between gap-3 pt-1 sm:flex-row sm:items-center">
               <label className="text-texto flex cursor-pointer items-center gap-2 text-sm font-medium">
@@ -126,11 +163,25 @@ export default function PaginaInicioSesion() {
               </Link>
             </div>
             <button
-              type="button"
-              className="bg-primario hover:bg-primario-fuerte mt-1 flex h-12 w-full items-center justify-center gap-2 rounded-xl text-sm font-bold text-white shadow-md transition-colors"
+              type="submit"
+              disabled={enviando}
+              className="bg-primario hover:bg-primario-fuerte disabled:bg-texto-suave mt-1 flex h-12 w-full items-center justify-center gap-2 rounded-xl text-sm font-bold text-white shadow-md transition-colors disabled:cursor-not-allowed"
             >
-              Iniciar sesión <Icono nombre="flecha" className="text-cielo" />
+              {enviando ? "Verificando…" : "Iniciar sesión"}
+              <Icono nombre="flecha" className="text-cielo" />
             </button>
+            {mensaje && (
+              <p
+                className={
+                  sesionIniciada
+                    ? "text-exito text-sm font-semibold"
+                    : "text-error text-sm font-semibold"
+                }
+                role="status"
+              >
+                {mensaje}
+              </p>
+            )}
           </form>
           <p className="text-texto-suave mt-6 text-center text-sm">
             ¿No tienes cuenta?

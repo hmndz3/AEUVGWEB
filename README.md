@@ -86,6 +86,9 @@ El registro y la verificación de correo se documentan en
 [docs/registro-estudiantes.md](docs/registro-estudiantes.md). El proveedor local predeterminado no
 envía correos reales; consulta ese documento antes de habilitar Resend.
 
+El funcionamiento del inicio de sesión, sesiones y credenciales ficticias locales se documenta en
+[docs/autenticacion-sesion.md](docs/autenticacion-sesion.md).
+
 ## Flujo de trabajo con Git
 
 - **`main`** — rama principal. Cada push genera un despliegue automático en Railway (producción).
