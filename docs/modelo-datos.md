@@ -6,7 +6,7 @@ El modelo centraliza la estructura académica, cuentas y roles, organizaciones, 
 
 - Base de datos: PostgreSQL 17.
 - ORM y migraciones: Prisma 7.10.0.
-- Alcance inicial: 28 modelos, 12 enumeraciones, 28 llaves primarias, 44 relaciones declaradas, 25 restricciones únicas, 14 restricciones `CHECK` y 47 índices de búsqueda explícitos.
+- Alcance actual: 29 modelos, 12 enumeraciones, 29 llaves primarias, 45 relaciones declaradas, 26 restricciones únicas, 14 restricciones `CHECK` y 49 índices de búsqueda explícitos.
 
 ## Convenciones
 
@@ -16,13 +16,13 @@ El modelo centraliza la estructura académica, cuentas y roles, organizaciones, 
 - Las relaciones reales usan llaves foráneas con acciones referenciales explícitas.
 - Las marcas de tiempo de auditoría usan `TIMESTAMPTZ(3)`. Las fechas sin hora usan `DATE` y los horarios aislados usan `TIME(0)`.
 - Las entidades administrables usan `activo` o un estado para eliminación lógica. Los historiales académicos y de horas se conservan mediante acciones `Restrict` o `SetNull`.
-- `Cascade` se limita a dependencias sin significado independiente, por ejemplo roles de usuario, eventos guardados y tablas de relación.
+- `Cascade` se limita a dependencias sin significado independiente, por ejemplo roles de usuario, tokens de verificación, eventos guardados y tablas de relación.
 
 ## Entidades por módulo
 
 | Módulo                        | Modelos                                                                                                  | Responsabilidad                                                       |
 | ----------------------------- | -------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| Estructura académica y acceso | `Facultad`, `Carrera`, `Estudiante`, `Usuario`, `Rol`, `UsuarioRol`                                      | Catálogo académico, identidad estudiantil, credenciales y permisos.   |
+| Estructura académica y acceso | `Facultad`, `Carrera`, `Estudiante`, `Usuario`, `TokenVerificacionCorreo`, `Rol`, `UsuarioRol`           | Catálogo académico, identidad estudiantil, credenciales y permisos.   |
 | Asociaciones y clubes         | `Asociacion`, `IntegranteAsociacion`, `Club`, `RedSocial`                                                | Directorio de organizaciones, integrantes y presencia digital.        |
 | Eventos                       | `CategoriaEvento`, `Evento`, `OrganizadorEvento`, `EventoGuardado`                                       | Publicación, clasificación, organización y favoritos.                 |
 | Horas beca                    | `OportunidadHoraBeca`, `InscripcionOportunidad`, `ImportacionHoras`, `RegistroHoraBeca`                  | Convocatorias, inscripciones, importaciones, registro y acreditación. |
@@ -35,6 +35,7 @@ El modelo centraliza la estructura académica, cuentas y roles, organizaciones, 
 - Una `Carrera` contiene muchos `Estudiante`.
 - Un `Estudiante` puede tener cero o un `Usuario`; todo usuario pertenece exactamente a un estudiante.
 - `Usuario` y `Rol` tienen una relación muchos-a-muchos mediante `UsuarioRol`.
+- Un `Usuario` pendiente puede tener varios tokens históricos de verificación; cada token pertenece a un solo usuario.
 - Una `Asociacion` tiene integrantes y redes sociales; un `Club` tiene redes sociales.
 - Una `RedSocial` pertenece exactamente a una asociación o a un club.
 - Un `Evento` pertenece a una categoría, es creado por un usuario y puede tener varios organizadores.
@@ -57,6 +58,7 @@ erDiagram
   ESTUDIANTE ||--o| USUARIO : puede_tener
   USUARIO ||--o{ USUARIO_ROL : recibe
   ROL ||--o{ USUARIO_ROL : asigna
+  USUARIO ||--o{ TOKEN_VERIFICACION_CORREO : verifica
 
   ASOCIACION ||--o{ INTEGRANTE_ASOCIACION : integra
   ASOCIACION ||--o{ RED_SOCIAL : publica
@@ -123,6 +125,7 @@ Las restricciones más relevantes son:
 - Código y nombre de facultad; código de carrera y nombre dentro de su facultad.
 - Carnet y correo institucional de estudiante.
 - Estudiante y correo de inicio de sesión de usuario.
+- Hash del token de verificación de correo.
 - Nombre de rol, asociación, club y categoría de evento.
 - Combinaciones usuario-rol, usuario-evento guardado y oportunidad-estudiante inscrito.
 - Plataforma y URL dentro de la asociación o club propietario.
@@ -153,10 +156,11 @@ Prisma no expresa todos los `CHECK`; están versionados manualmente en la migrac
 
 ## Índices de búsqueda
 
-Además de las 28 llaves primarias y 25 restricciones únicas, el esquema declara 47 índices no únicos. Cubren principalmente:
+Además de las 29 llaves primarias y 26 restricciones únicas, el esquema declara 49 índices no únicos. Cubren principalmente:
 
 - Relaciones académicas: carrera de estudiante y rol de una asignación.
 - Usuarios: estado.
+- Tokens de verificación: usuario con fecha de creación y fecha de expiración.
 - Eventos: fecha, estado, categoría, creador y compuesto estado-fecha.
 - Horas beca: fecha/estado de oportunidades, estudiantes inscritos, importaciones y registros por estudiante, estado, fecha, origen, creador y acreditador.
 - Tutorías: postulaciones, cursos, tutores, disponibilidades, estado y fecha de sesiones.

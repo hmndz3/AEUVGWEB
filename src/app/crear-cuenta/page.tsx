@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 
 import { CampoAcceso } from "@/components/autenticacion/campo-acceso";
 import { Icono } from "@/components/autenticacion/icono";
@@ -9,20 +12,40 @@ function Selector({
   etiqueta,
   icono,
   children,
+  id,
+  value,
+  onChange,
+  disabled,
+  error,
 }: {
   etiqueta: string;
   icono: "edificio" | "graduacion";
   children: React.ReactNode;
+  id: string;
+  value: string;
+  onChange: React.ChangeEventHandler<HTMLSelectElement>;
+  disabled?: boolean;
+  error?: string;
 }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-texto text-sm font-semibold">{etiqueta}</label>
+      <label htmlFor={id} className="text-texto text-sm font-semibold">
+        {etiqueta}
+      </label>
       <div className="relative">
         <Icono
           nombre={icono}
           className="text-texto-suave pointer-events-none absolute top-3.5 left-3.5"
         />
-        <select className="border-borde bg-superficie text-texto focus:border-primario focus:ring-primario/20 h-12 w-full appearance-none rounded-xl border py-3 pr-10 pl-11 text-sm shadow-sm outline-none focus:ring-4">
+        <select
+          id={id}
+          name={id}
+          value={value}
+          onChange={onChange}
+          disabled={disabled}
+          aria-invalid={Boolean(error)}
+          className="border-borde bg-superficie text-texto focus:border-primario focus:ring-primario/20 disabled:bg-superficie-suave h-12 w-full appearance-none rounded-xl border py-3 pr-10 pl-11 text-sm shadow-sm outline-none focus:ring-4 disabled:cursor-not-allowed"
+        >
           {children}
         </select>
         <Icono
@@ -30,9 +53,27 @@ function Selector({
           className="text-texto-suave pointer-events-none absolute top-3.5 right-3.5"
         />
       </div>
+      {error && <p className="text-error text-xs font-semibold">{error}</p>}
     </div>
   );
 }
+
+type Facultad = {
+  idFacultad: number;
+  nombre: string;
+  carreras: { idCarrera: number; nombre: string }[];
+};
+
+const datosIniciales = {
+  nombreCompleto: "",
+  carnet: "",
+  correo: "",
+  idFacultad: "",
+  idCarrera: "",
+  contrasena: "",
+  confirmarContrasena: "",
+  aceptaTerminos: false,
+};
 
 function PanelRegistro() {
   return (
@@ -97,6 +138,81 @@ function BloqueRegistro({
 }
 
 export default function PaginaCrearCuenta() {
+  const [datos, setDatos] = useState(datosIniciales);
+  const [facultades, setFacultades] = useState<Facultad[]>([]);
+  const [dominio, setDominio] = useState("institucional");
+  const [errores, setErrores] = useState<Record<string, string[]>>({});
+  const [mensaje, setMensaje] = useState("");
+  const [enviando, setEnviando] = useState(false);
+  const [registrado, setRegistrado] = useState(false);
+
+  useEffect(() => {
+    const controlador = new AbortController();
+
+    void fetch("/api/catalogos/academicos", { signal: controlador.signal, cache: "no-store" })
+      .then(async (respuesta) => {
+        if (!respuesta.ok) throw new Error();
+        return (await respuesta.json()) as {
+          facultades: Facultad[];
+          dominioInstitucional: string;
+        };
+      })
+      .then((catalogos) => {
+        setFacultades(catalogos.facultades);
+        setDominio(catalogos.dominioInstitucional);
+      })
+      .catch((error: unknown) => {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+        setMensaje("No fue posible cargar facultades y carreras. Intenta nuevamente.");
+      });
+
+    return () => controlador.abort();
+  }, []);
+
+  const carreras = useMemo(
+    () =>
+      facultades.find((facultad) => facultad.idFacultad === Number(datos.idFacultad))?.carreras ??
+      [],
+    [datos.idFacultad, facultades]
+  );
+
+  function actualizarCampo(evento: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
+    const { name, value } = evento.target;
+    setDatos((actuales) => ({
+      ...actuales,
+      [name]: value,
+      ...(name === "idFacultad" ? { idCarrera: "" } : {}),
+    }));
+    setErrores((actuales) => ({ ...actuales, [name]: [] }));
+  }
+
+  async function enviarFormulario(evento: FormEvent<HTMLFormElement>) {
+    evento.preventDefault();
+    setEnviando(true);
+    setMensaje("");
+    setErrores({});
+
+    try {
+      const respuesta = await fetch("/api/auth/registro", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(datos),
+      });
+      const resultado = (await respuesta.json()) as {
+        mensaje: string;
+        errores?: Record<string, string[]>;
+      };
+
+      setMensaje(resultado.mensaje);
+      setErrores(resultado.errores ?? {});
+      if (respuesta.status === 202) setRegistrado(true);
+    } catch {
+      setMensaje("No fue posible conectar con el servicio de registro.");
+    } finally {
+      setEnviando(false);
+    }
+  }
+
   return (
     <MarcoAcceso panel={<PanelRegistro />}>
       <div>
@@ -111,94 +227,166 @@ export default function PaginaCrearCuenta() {
           eventos y acceder a tutorías académicas.
         </p>
 
-        <form className="mt-7 grid max-w-2xl gap-5">
-          <CampoAcceso
-            id="nombre"
-            etiqueta="Nombre completo"
-            icono="persona"
-            placeholder="Ej. Sofía Castillo Pineda"
-            autoComplete="name"
-          />
-          <CampoAcceso
-            id="carnet"
-            etiqueta="Carnet universitario"
-            icono="id"
-            placeholder="Ej. 22450"
-            inputMode="numeric"
-            ayuda="Tu número de carnet permite asociar y acreditar tus horas beca institucionales."
-          />
-          <CampoAcceso
-            id="correo"
-            etiqueta="Correo institucional UVG"
-            icono="at"
-            textoLateral="Obligatorio @uvg.edu.gt"
-            type="email"
-            defaultValue="sofia.castillo@gmail.com"
-            error="Debes ingresar tu correo institucional oficial (@uvg.edu.gt)."
-          />
-          <div className="grid gap-5 sm:grid-cols-2">
-            <Selector etiqueta="Facultad" icono="edificio">
-              <option>Selecciona tu facultad</option>
-              <option>Facultad de Ingeniería</option>
-              <option>Facultad de Ciencias y Humanidades</option>
-              <option>Facultad de Educación</option>
-            </Selector>
-            <Selector etiqueta="Carrera" icono="graduacion">
-              <option>Selecciona tu carrera</option>
-              <option>Ingeniería en Ciencias de la Computación y TI</option>
-              <option>Ingeniería Industrial</option>
-              <option>Psicología</option>
-            </Selector>
-          </div>
-          <CampoAcceso
-            id="contrasena"
-            etiqueta="Contraseña"
-            icono="candado"
-            type="password"
-            placeholder="Mínimo 8 caracteres"
-            botonFinal
-          />
-          <div className="bg-superficie-suave rounded-xl p-3">
-            <div className="flex gap-1.5">
-              <span className="bg-turquesa h-1.5 flex-1 rounded-full" />
-              <span className="bg-turquesa h-1.5 flex-1 rounded-full" />
-              <span className="bg-borde h-1.5 flex-1 rounded-full" />
-            </div>
-            <p className="text-texto-suave mt-2 flex items-center gap-1.5 text-xs">
-              <Icono nombre="escudo" className="text-turquesa size-4" /> Nivel de seguridad:{" "}
-              <strong className="text-turquesa">Media</strong> (agrega un símbolo especial).
-            </p>
-          </div>
-          <CampoAcceso
-            id="confirmar-contrasena"
-            etiqueta="Confirmar contraseña"
-            icono="candado"
-            type="password"
-            placeholder="Repite tu contraseña"
-            botonFinal
-          />
-          <label className="bg-superficie-suave text-texto flex items-start gap-3 rounded-xl p-3.5 text-sm leading-relaxed">
-            <input
-              className="accent-primario mt-0.5 size-4 shrink-0"
-              type="checkbox"
-              defaultChecked
-            />
-            Acepto los <span className="text-turquesa font-semibold">Términos y Condiciones</span> y
-            la Política de Privacidad de AEUVG.
-          </label>
-          <button
-            type="button"
-            className="bg-primario hover:bg-primario-fuerte flex h-12 items-center justify-center gap-2 rounded-xl text-sm font-bold text-white shadow-md transition-colors"
-          >
-            Crear cuenta estudiantil <Icono nombre="flecha" />
-          </button>
-          <p className="text-texto-suave text-center text-sm">
-            ¿Ya tienes cuenta?
-            <Link href="/iniciar-sesion" className="text-primario ml-1 font-bold hover:underline">
-              Inicia sesión
+        {registrado ? (
+          <div className="bg-superficie-suave mt-8 max-w-2xl rounded-2xl p-6" role="status">
+            <span className="bg-turquesa/15 text-turquesa flex size-12 items-center justify-center rounded-full">
+              <Icono nombre="verificado" />
+            </span>
+            <h2 className="text-texto mt-4 text-xl font-extrabold">
+              Revisa tu correo institucional
+            </h2>
+            <p className="text-texto-suave mt-2 text-sm leading-relaxed">{mensaje}</p>
+            <Link
+              href="/reenviar-verificacion"
+              className="text-turquesa mt-5 inline-block text-sm font-bold hover:underline"
+            >
+              ¿No recibiste el enlace? Solicita uno nuevo
             </Link>
-          </p>
-        </form>
+          </div>
+        ) : (
+          <form className="mt-7 grid max-w-2xl gap-5" onSubmit={enviarFormulario} noValidate>
+            <CampoAcceso
+              id="nombre"
+              name="nombreCompleto"
+              etiqueta="Nombre completo"
+              icono="persona"
+              placeholder="Ej. Sofía Castillo Pineda"
+              autoComplete="name"
+              value={datos.nombreCompleto}
+              onChange={actualizarCampo}
+              error={errores.nombreCompleto?.[0]}
+            />
+            <CampoAcceso
+              id="carnet"
+              name="carnet"
+              etiqueta="Carnet universitario"
+              icono="id"
+              placeholder="Ej. 22450"
+              inputMode="numeric"
+              ayuda="Tu número de carnet permite asociar y acreditar tus horas beca institucionales."
+              value={datos.carnet}
+              onChange={actualizarCampo}
+              error={errores.carnet?.[0]}
+            />
+            <CampoAcceso
+              id="correo"
+              name="correo"
+              etiqueta="Correo institucional UVG"
+              icono="at"
+              textoLateral={`Obligatorio @${dominio}`}
+              type="email"
+              placeholder={`usuario@${dominio}`}
+              autoComplete="email"
+              value={datos.correo}
+              onChange={actualizarCampo}
+              error={errores.correo?.[0]}
+            />
+            <div className="grid gap-5 sm:grid-cols-2">
+              <Selector
+                id="idFacultad"
+                etiqueta="Facultad"
+                icono="edificio"
+                value={datos.idFacultad}
+                onChange={actualizarCampo}
+                error={errores.idFacultad?.[0]}
+              >
+                <option value="">Selecciona tu facultad</option>
+                {facultades.map((facultad) => (
+                  <option key={facultad.idFacultad} value={facultad.idFacultad}>
+                    {facultad.nombre}
+                  </option>
+                ))}
+              </Selector>
+              <Selector
+                id="idCarrera"
+                etiqueta="Carrera"
+                icono="graduacion"
+                value={datos.idCarrera}
+                onChange={actualizarCampo}
+                disabled={!datos.idFacultad}
+                error={errores.idCarrera?.[0]}
+              >
+                <option value="">Selecciona tu carrera</option>
+                {carreras.map((carrera) => (
+                  <option key={carrera.idCarrera} value={carrera.idCarrera}>
+                    {carrera.nombre}
+                  </option>
+                ))}
+              </Selector>
+            </div>
+            <CampoAcceso
+              id="contrasena"
+              name="contrasena"
+              etiqueta="Contraseña"
+              icono="candado"
+              type="password"
+              placeholder="Mínimo 8 caracteres"
+              botonFinal
+              autoComplete="new-password"
+              value={datos.contrasena}
+              onChange={actualizarCampo}
+              error={errores.contrasena?.[0]}
+            />
+            <div className="bg-superficie-suave rounded-xl p-3">
+              <div className="flex gap-1.5">
+                <span className="bg-turquesa h-1.5 flex-1 rounded-full" />
+                <span className="bg-turquesa h-1.5 flex-1 rounded-full" />
+                <span className="bg-borde h-1.5 flex-1 rounded-full" />
+              </div>
+              <p className="text-texto-suave mt-2 flex items-center gap-1.5 text-xs">
+                <Icono nombre="escudo" className="text-turquesa size-4" /> Nivel de seguridad:{" "}
+                <strong className="text-turquesa">Media</strong> (agrega un símbolo especial).
+              </p>
+            </div>
+            <CampoAcceso
+              id="confirmar-contrasena"
+              name="confirmarContrasena"
+              etiqueta="Confirmar contraseña"
+              icono="candado"
+              type="password"
+              placeholder="Repite tu contraseña"
+              botonFinal
+              autoComplete="new-password"
+              value={datos.confirmarContrasena}
+              onChange={actualizarCampo}
+              error={errores.confirmarContrasena?.[0]}
+            />
+            <label className="bg-superficie-suave text-texto flex items-start gap-3 rounded-xl p-3.5 text-sm leading-relaxed">
+              <input
+                className="accent-primario mt-0.5 size-4 shrink-0"
+                type="checkbox"
+                name="aceptaTerminos"
+                checked={datos.aceptaTerminos}
+                onChange={(evento) =>
+                  setDatos((actuales) => ({ ...actuales, aceptaTerminos: evento.target.checked }))
+                }
+              />
+              Acepto los <span className="text-turquesa font-semibold">Términos y Condiciones</span>{" "}
+              y la Política de Privacidad de AEUVG.
+            </label>
+            {errores.aceptaTerminos?.[0] && (
+              <p className="text-error text-xs font-semibold">{errores.aceptaTerminos[0]}</p>
+            )}
+            {mensaje && (
+              <p className="text-error text-sm font-semibold" role="alert">
+                {mensaje}
+              </p>
+            )}
+            <button
+              type="submit"
+              disabled={enviando || facultades.length === 0}
+              className="bg-primario hover:bg-primario-fuerte disabled:bg-texto-suave flex h-12 items-center justify-center gap-2 rounded-xl text-sm font-bold text-white shadow-md transition-colors disabled:cursor-not-allowed"
+            >
+              {enviando ? "Creando cuenta…" : "Crear cuenta estudiantil"} <Icono nombre="flecha" />
+            </button>
+            <p className="text-texto-suave text-center text-sm">
+              ¿Ya tienes cuenta?
+              <Link href="/iniciar-sesion" className="text-primario ml-1 font-bold hover:underline">
+                Inicia sesión
+              </Link>
+            </p>
+          </form>
+        )}
       </div>
     </MarcoAcceso>
   );
