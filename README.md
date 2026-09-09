@@ -78,8 +78,13 @@ docker compose --profile app up --build
 | `npm run build`        | Build de producción                         |
 | `npm run start`        | Servir el build de producción               |
 | `npm run lint`         | Análisis de código con ESLint               |
+| `npm test`             | Pruebas automatizadas del servicio          |
 | `npm run format`       | Formatear todo el código con Prettier       |
 | `npm run format:check` | Verificar el formato sin modificar archivos |
+
+El registro y la verificación de correo se documentan en
+[docs/registro-estudiantes.md](docs/registro-estudiantes.md). El proveedor local predeterminado no
+envía correos reales; consulta ese documento antes de habilitar Resend.
 
 ## Flujo de trabajo con Git
 
