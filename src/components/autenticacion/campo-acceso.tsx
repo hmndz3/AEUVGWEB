@@ -1,3 +1,7 @@
+"use client";
+
+import { useState } from "react";
+
 import { Icono } from "@/components/autenticacion/icono";
 import { cn } from "@/lib/utils";
 
@@ -19,9 +23,12 @@ export function CampoAcceso({
   botonFinal = false,
   id,
   className,
+  type = "text",
   ...props
 }: CampoAccesoProps) {
   const idCampo = id ?? props.name;
+  const [contrasenaVisible, setContrasenaVisible] = useState(false);
+  const esContrasena = type === "password" && botonFinal;
 
   return (
     <div className="flex flex-col gap-1.5">
@@ -45,6 +52,7 @@ export function CampoAcceso({
         />
         <input
           id={idCampo}
+          type={esContrasena && contrasenaVisible ? "text" : type}
           aria-invalid={Boolean(error)}
           className={cn(
             "border-borde bg-superficie text-texto placeholder:text-texto-suave h-12 w-full rounded-xl border py-3 pr-11 pl-11 text-sm shadow-sm transition outline-none",
@@ -54,10 +62,12 @@ export function CampoAcceso({
           )}
           {...props}
         />
-        {botonFinal && (
+        {esContrasena && (
           <button
             type="button"
-            aria-label="Mostrar u ocultar contraseña"
+            aria-label={contrasenaVisible ? "Ocultar contraseña" : "Mostrar contraseña"}
+            aria-pressed={contrasenaVisible}
+            onClick={() => setContrasenaVisible((visible) => !visible)}
             className="text-texto-suave hover:text-texto absolute right-2 rounded-full p-2 transition-colors"
           >
             <Icono nombre="ojo" className="size-5" />

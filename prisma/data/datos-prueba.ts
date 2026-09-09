@@ -8,10 +8,16 @@ export const CARNETS_PRUEBA = {
 } as const;
 
 export const CORREOS_PRUEBA = {
-  administrador: "admin.aeuvg@example.test",
-  ana: "estudiante.ana@example.test",
-  carlos: "estudiante.carlos@example.test",
-  maria: "tutor.maria@example.test",
+  administrador: "admin.prueba@uvg.edu.gt",
+  ana: "estudiante.prueba@uvg.edu.gt",
+  carlos: "sin-cuenta.prueba@uvg.edu.gt",
+  maria: "tutor.prueba@uvg.edu.gt",
+} as const;
+
+/** Credenciales ficticias, exclusivas para la base local de desarrollo. */
+export const CREDENCIALES_PRUEBA = {
+  correo: CORREOS_PRUEBA.ana,
+  contrasena: "PruebaSegura1!",
 } as const;
 
 export const NOMBRES_PRUEBA = {
@@ -61,4 +67,4 @@ export const FECHAS_PRUEBA = {
 } as const;
 
 export const HASH_DESARROLLO =
-  "sha256$7aefc0d4844f51c82fe52dd0c8ce1058e2257f933c1c978f8130ca45f07d6158";
+  "scrypt$16384$8$1$YWV1dmctcHJ1ZWJhLXNlZWQ$f2kV5H9V6EjELwbMWgSV9tyWyrPFDtvBK5NYgl54i18QZvWR-RQANGelMo7wLABpwFvh2BBIy_FiT7YN1Kc3YQ";

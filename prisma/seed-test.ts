@@ -176,15 +176,21 @@ async function cargarDatos(tx: Prisma.TransactionClient): Promise<Resultados> {
       correoVerificado: true,
       ultimoAcceso: null,
     };
-    await sincronizar({
-      tabla: "Usuario",
-      datos,
-      buscar: () => tx.usuario.findUnique({ where: { correo: usuario.correo } }),
-      crear: () =>
-        tx.usuario.upsert({ where: { correo: usuario.correo }, create: datos, update: datos }),
-      actualizar: () => tx.usuario.update({ where: { correo: usuario.correo }, data: datos }),
-      resultados,
+    // También se busca por estudiante: así el seed puede migrar sus correos
+    // ficticios sin intentar crear una segunda cuenta para el mismo estudiante.
+    const existente = await tx.usuario.findFirst({
+      where: { OR: [{ correo: usuario.correo }, { idEstudiante: datos.idEstudiante }] },
     });
+
+    if (!existente) {
+      await tx.usuario.create({ data: datos });
+      registrar(resultados, "Usuario", "creados");
+    } else if (!contieneDatos(existente, datos)) {
+      await tx.usuario.update({ where: { idUsuario: existente.idUsuario }, data: datos });
+      registrar(resultados, "Usuario", "actualizados");
+    } else {
+      registrar(resultados, "Usuario", "sinCambios");
+    }
   }
 
   const usuarios = await tx.usuario.findMany({

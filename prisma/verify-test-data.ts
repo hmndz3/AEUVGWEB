@@ -64,7 +64,7 @@ async function verificar(): Promise<void> {
     asegurar(usuarios.length === 3, "Deben existir exactamente tres usuarios ficticios.");
     asegurar(
       usuarios.every(
-        ({ contrasenaHash }) => contrasenaHash.startsWith("sha256$") && contrasenaHash.length > 60
+        ({ contrasenaHash }) => contrasenaHash.startsWith("scrypt$") && contrasenaHash.length > 90
       ),
       "Los usuarios ficticios no contienen el hash de desarrollo esperado."
     );
