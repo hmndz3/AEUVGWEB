@@ -1,0 +1,929 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+      rel="stylesheet"
+    />
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @layer base {
+        html,
+        body {
+          margin: 0;
+          padding: 0;
+        }
+        body {
+          overscroll-behavior: none;
+        }
+        main > :first-child {
+          margin-top: 0 !important;
+        }
+        main > :last-child {
+          margin-bottom: 0 !important;
+        }
+      }
+      ::-webkit-scrollbar {
+        display: none;
+      }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-tint": "#6d4aff",
+              "primary-container": "#6d4aff",
+              "on-surface-variant": "#6e6580",
+              "on-tertiary-fixed-variant": "#92001c",
+              "inverse-primary": "#b98aff",
+              "on-error-container": "#93000a",
+              outline: "#d9cec2",
+              "outline-variant": "#ebe2d8",
+              "on-secondary": "#ffffff",
+              "tertiary-container": "#4d000a",
+              "surface-container-highest": "#ede8ff",
+              error: "#f5455c",
+              "tertiary-fixed": "#ffdad8",
+              "on-surface": "#1c162b",
+              "primary-fixed": "#ede8ff",
+              tertiary: "#230002",
+              "secondary-container": "#3ec1ff",
+              "inverse-surface": "#1c162b",
+              "surface-container-lowest": "#ffffff",
+              "on-tertiary-fixed": "#410007",
+              "on-background": "#1c162b",
+              "on-tertiary": "#ffffff",
+              "error-container": "#ffdad6",
+              "on-primary-fixed-variant": "#5a35e8",
+              surface: "#fff8f3",
+              background: "#fff8f3",
+              "secondary-fixed-dim": "#3ec1ff",
+              "tertiary-fixed-dim": "#ffb3b1",
+              primary: "#1c162b",
+              secondary: "#00c9a7",
+              "on-primary-container": "#ede8ff",
+              "surface-variant": "#ede8ff",
+              "on-tertiary-container": "#ff5e5b",
+              "surface-container-low": "#f7f1ea",
+              "on-primary-fixed": "#1c162b",
+              "surface-bright": "#fff8f3",
+              "on-error": "#ffffff",
+              "surface-container-high": "#ede8ff",
+              "inverse-on-surface": "#fff8f3",
+              "surface-dim": "#f0e6da",
+              "surface-container": "#f7f1ea",
+              "on-secondary-fixed-variant": "#00806c",
+              "on-primary": "#ffffff",
+              "secondary-fixed": "#d6f7f1",
+              "on-secondary-container": "#00806c",
+              "primary-fixed-dim": "#b98aff",
+              "on-secondary-fixed": "#0d3b34",
+            },
+            borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+            spacing: {
+              "space-xs": "0.5rem",
+              "space-md": "1rem",
+              "space-2xl": "3rem",
+              "container-max": "1280px",
+              "space-2xs": "0.25rem",
+              "margin-desktop": "2rem",
+              "space-lg": "1.5rem",
+              "space-3xl": "4rem",
+              "space-xl": "2rem",
+              "gutter-mobile": "1rem",
+              "gutter-desktop": "1.5rem",
+              "margin-mobile": "1rem",
+              "space-sm": "0.75rem",
+            },
+            fontFamily: {
+              "headline-sm": ["Plus Jakarta Sans"],
+              "headline-lg": ["Plus Jakarta Sans"],
+              "caption-caps": ["Plus Jakarta Sans"],
+              "display-hero": ["Plus Jakarta Sans"],
+              "body-md": ["Plus Jakarta Sans"],
+              "title-md": ["Plus Jakarta Sans"],
+              "body-lg": ["Plus Jakarta Sans"],
+              "headline-md": ["Plus Jakarta Sans"],
+              "label-sm": ["Plus Jakarta Sans"],
+              "display-hero-mobile": ["Plus Jakarta Sans"],
+              "body-sm": ["Plus Jakarta Sans"],
+              "headline-lg-mobile": ["Plus Jakarta Sans"],
+              "label-md": ["Plus Jakarta Sans"],
+            },
+            fontSize: {
+              "headline-sm": ["20px", { lineHeight: "28px", fontWeight: "600" }],
+              "headline-lg": [
+                "32px",
+                { lineHeight: "40px", letterSpacing: "-0.015em", fontWeight: "700" },
+              ],
+              "caption-caps": [
+                "11px",
+                { lineHeight: "14px", letterSpacing: "0.06em", fontWeight: "700" },
+              ],
+              "display-hero": [
+                "40px",
+                { lineHeight: "48px", letterSpacing: "-0.02em", fontWeight: "800" },
+              ],
+              "body-md": ["15px", { lineHeight: "24px", fontWeight: "400" }],
+              "title-md": ["18px", { lineHeight: "26px", fontWeight: "600" }],
+              "body-lg": ["16px", { lineHeight: "26px", fontWeight: "400" }],
+              "headline-md": [
+                "24px",
+                { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "600" },
+              ],
+              "label-sm": [
+                "12px",
+                { lineHeight: "16px", letterSpacing: "0.01em", fontWeight: "600" },
+              ],
+              "display-hero-mobile": [
+                "30px",
+                { lineHeight: "38px", letterSpacing: "-0.015em", fontWeight: "800" },
+              ],
+              "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+              "headline-lg-mobile": [
+                "26px",
+                { lineHeight: "34px", letterSpacing: "-0.01em", fontWeight: "700" },
+              ],
+              "label-md": [
+                "14px",
+                { lineHeight: "20px", letterSpacing: "0.005em", fontWeight: "600" },
+              ],
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-background font-body-md text-on-surface min-h-screen">
+    <header
+      class="bg-surface-container-lowest/95 fixed top-0 left-0 z-50 w-full shadow-[0_1px_8px_rgba(13,35,58,0.06)] backdrop-blur-md"
+    >
+      <div
+        class="max-w-container-max px-margin-mobile lg:px-margin-desktop gap-space-md mx-auto flex h-16 items-center justify-between"
+      >
+        <div class="gap-space-sm flex shrink-0 items-center">
+          <img
+            alt="Logo circular de AEUVG compuesto por figuras humanas estilizadas unidas en círculo de colores vivos (rojo, coral, morado, celeste, naranja, verde lima y azul marino) con las siglas AEUVG limpias y modernas.. Brand logo. - Primary color: #6d4aff
+- Font: plusJakartaSans
+- Mode: light
+- Roundness: rounded-md
+"
+            class="h-8 w-auto object-contain"
+            src="logo-aeuvg.png"
+          />
+          <div class="flex flex-col">
+            <span class="font-title-md text-title-md text-primary-container leading-none font-bold"
+              >AEUVG</span
+            ><span
+              class="font-caption-caps text-caption-caps text-on-surface-variant hidden tracking-wider uppercase sm:block"
+              >Estudiantes UVG</span
+            >
+          </div>
+        </div>
+        <nav
+          class="gap-space-xs hidden items-center lg:flex"
+          data-active-classes="bg-surface-container-high text-on-surface font-semibold rounded-lg"
+        >
+          <a
+            class="font-label-md text-label-md px-space-sm py-space-xs text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors"
+            data-path="inicio"
+            href="#"
+            >Inicio</a
+          ><a
+            aria-current="page"
+            class="px-space-sm py-space-xs bg-surface-container-high text-on-surface rounded-lg font-semibold transition-colors"
+            data-path="eventos"
+            href="#"
+            >Eventos</a
+          ><a
+            class="font-label-md text-label-md px-space-sm py-space-xs text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors"
+            data-path="asociaciones"
+            href="#"
+            >Asociaciones</a
+          ><a
+            class="font-label-md text-label-md px-space-sm py-space-xs text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors"
+            data-path="clubes"
+            href="#"
+            >Clubes</a
+          ><a
+            class="font-label-md text-label-md px-space-sm py-space-xs text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors"
+            data-path="tutorias"
+            href="#"
+            >Tutorías</a
+          ><a
+            class="font-label-md text-label-md px-space-sm py-space-xs text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors"
+            data-path="sobre-aeuvg"
+            href="#"
+            >Sobre AEUVG</a
+          >
+        </nav>
+        <div class="gap-space-sm flex shrink-0 items-center">
+          <a
+            class="font-label-md text-label-md px-space-md py-space-xs text-primary-container hover:bg-surface-container hidden rounded-lg transition-colors sm:inline-flex"
+            data-path="iniciar-sesion"
+            href="#"
+            >Iniciar sesión</a
+          ><a
+            class="font-label-md text-label-md px-space-md py-space-xs bg-primary-container text-on-primary hover:bg-primary rounded-lg shadow-[0_1px_3px_0_rgba(13,35,58,0.12)] transition-colors"
+            data-path="crear-cuenta"
+            href="#"
+            >Crear cuenta</a
+          >
+          <div class="bg-primary flex h-8 w-8 shrink-0 items-center justify-center rounded-full">
+            <span class="material-symbols-outlined text-on-primary text-[18px]">person</span>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main class="bg-background w-full pt-16">
+      <div class="flex w-full flex-col">
+        <div class="bg-surface-container-low py-space-xl w-full">
+          <div class="max-w-container-max px-margin-mobile lg:px-margin-desktop mx-auto">
+            <div class="gap-space-md flex flex-col justify-between md:flex-row md:items-end">
+              <div class="space-y-space-2xs">
+                <div class="gap-space-xs flex items-center">
+                  <span
+                    class="font-caption-caps text-caption-caps text-secondary font-bold tracking-widest uppercase"
+                    >Agenda Estudiantil UVG</span
+                  >
+                  <span class="bg-secondary h-1.5 w-1.5 rounded-full"></span>
+                  <span class="font-label-sm text-label-sm text-on-surface-variant"
+                    >Ciclo I - 2025</span
+                  >
+                </div>
+                <h1 class="font-display-hero text-display-hero text-on-surface tracking-tight">
+                  Eventos del Campus
+                </h1>
+                <p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+                  Descubre conferencias, actividades de carrera, voluntariados y convocatorias
+                  organizadas por AEUVG y asociaciones estudiantiles.
+                </p>
+              </div>
+              <div
+                class="gap-space-sm bg-surface-container-lowest flex items-center self-start rounded-xl p-1.5 shadow-sm md:self-auto"
+              >
+                <button
+                  class="gap-space-2xs px-space-md py-space-xs bg-primary-container text-on-primary font-label-md text-label-md flex items-center rounded-lg transition-all"
+                  type="button"
+                >
+                  <span class="material-symbols-outlined text-[18px]">format_list_bulleted</span>
+                  <span>Lista</span>
+                </button>
+                <button
+                  class="gap-space-2xs px-space-md py-space-xs text-on-surface-variant hover:bg-surface-container-high font-label-md text-label-md flex items-center rounded-lg transition-all"
+                  type="button"
+                >
+                  <span class="material-symbols-outlined text-[18px]">calendar_month</span>
+                  <span>Calendario</span>
+                </button>
+              </div>
+            </div>
+            <div
+              class="mt-space-lg bg-surface-container-lowest p-space-sm gap-space-sm flex flex-col items-stretch rounded-xl shadow-sm lg:flex-row"
+            >
+              <div class="relative flex-1">
+                <span
+                  class="material-symbols-outlined text-on-surface-variant absolute top-1/2 left-3.5 -translate-y-1/2 text-[20px]"
+                  >search</span
+                >
+                <input
+                  class="bg-surface font-body-md text-body-md text-on-surface focus:bg-surface-container-lowest w-full rounded-lg py-2.5 pr-10 pl-10 transition-all outline-none focus:shadow-[0_0_0_2px_#6d4aff]"
+                  id="eventSearchInput"
+                  placeholder="Buscar por nombre, ponente, asociación o tema..."
+                  type="text"
+                  value="Hackathon Aeroespacial 2026"
+                />
+                <button
+                  class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container absolute top-1/2 right-3 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full transition-colors"
+                  onclick="
+                    document.getElementById('eventSearchInput').value = '';
+                    document.getElementById('eventSearchInput').focus();
+                  "
+                  type="button"
+                >
+                  <span class="material-symbols-outlined text-[16px]">close</span>
+                </button>
+              </div>
+              <div class="gap-space-xs flex flex-wrap items-center">
+                <div
+                  class="gap-space-2xs bg-surface-container px-space-sm font-label-sm text-label-sm text-on-surface flex items-center rounded-lg py-2"
+                >
+                  <span class="material-symbols-outlined text-secondary text-[16px]"
+                    >location_on</span
+                  >
+                  <span>Campus Central</span>
+                </div>
+                <div
+                  class="gap-space-2xs bg-surface-container px-space-sm font-label-sm text-label-sm text-on-surface flex items-center rounded-lg py-2"
+                >
+                  <span class="material-symbols-outlined text-secondary text-[16px]">tune</span>
+                  <span>3 filtros activos</span>
+                </div>
+                <button
+                  class="font-label-sm text-label-sm text-error px-space-xs py-1 hover:underline"
+                  type="button"
+                >
+                  Limpiar todo
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="max-w-container-max px-margin-mobile lg:px-margin-desktop py-space-xl mx-auto w-full"
+        >
+          <div class="gap-space-lg grid grid-cols-1 items-start lg:grid-cols-12">
+            <aside class="space-y-space-md lg:col-span-3">
+              <div
+                class="bg-surface-container-lowest p-space-md space-y-space-md rounded-xl shadow-sm"
+              >
+                <div class="flex items-center justify-between">
+                  <div class="gap-space-2xs flex items-center">
+                    <span class="material-symbols-outlined text-primary-container text-[20px]"
+                      >filter_list</span
+                    >
+                    <h2 class="font-title-md text-title-md text-primary-container font-bold">
+                      Filtros
+                    </h2>
+                  </div>
+                  <button
+                    class="font-caption-caps text-caption-caps text-secondary uppercase hover:underline"
+                    type="button"
+                  >
+                    Reiniciar
+                  </button>
+                </div>
+                <div class="space-y-space-xs">
+                  <span
+                    class="font-label-sm text-label-sm text-on-surface-variant font-bold tracking-wider uppercase"
+                    >Filtros aplicados</span
+                  >
+                  <div class="flex flex-wrap gap-1.5">
+                    <span
+                      class="bg-surface-container-high text-primary-container font-label-sm text-label-sm inline-flex items-center gap-1 rounded-full px-2.5 py-1"
+                    >
+                      Próxima semana
+                      <button class="hover:text-error transition-colors" type="button">
+                        <span class="material-symbols-outlined text-[14px]">close</span>
+                      </button>
+                    </span>
+                    <span
+                      class="bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm inline-flex items-center gap-1 rounded-full px-2.5 py-1"
+                    >
+                      Tecnología
+                      <button class="hover:text-error transition-colors" type="button">
+                        <span class="material-symbols-outlined text-[14px]">close</span>
+                      </button>
+                    </span>
+                    <span
+                      class="bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm inline-flex items-center gap-1 rounded-full px-2.5 py-1"
+                    >
+                      Voluntariado
+                      <button class="hover:text-error transition-colors" type="button">
+                        <span class="material-symbols-outlined text-[14px]">close</span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+                <div class="space-y-space-xs pt-space-xs">
+                  <div class="flex cursor-pointer items-center justify-between">
+                    <span class="font-label-md text-label-md text-on-surface font-semibold"
+                      >Temporalidad</span
+                    >
+                    <span class="material-symbols-outlined text-on-surface-variant text-[18px]"
+                      >expand_less</span
+                    >
+                  </div>
+                  <div class="space-y-1.5 pl-1">
+                    <label
+                      class="text-on-surface-variant text-body-sm font-body-sm flex cursor-pointer items-center gap-2"
+                    >
+                      <input class="accent-primary-container" name="date-filter" type="radio" />
+                      <span>Hoy</span>
+                    </label>
+                    <label
+                      class="text-on-surface-variant text-body-sm font-body-sm flex cursor-pointer items-center gap-2"
+                    >
+                      <input class="accent-primary-container" name="date-filter" type="radio" />
+                      <span>Este fin de semana</span>
+                    </label>
+                    <label
+                      class="text-primary-container text-body-sm font-body-sm flex cursor-pointer items-center gap-2 font-semibold"
+                    >
+                      <input
+                        checked=""
+                        class="accent-primary-container"
+                        name="date-filter"
+                        type="radio"
+                      />
+                      <span>Próxima semana</span>
+                    </label>
+                    <label
+                      class="text-on-surface-variant text-body-sm font-body-sm flex cursor-pointer items-center gap-2"
+                    >
+                      <input class="accent-primary-container" name="date-filter" type="radio" />
+                      <span>Este mes (Marzo)</span>
+                    </label>
+                  </div>
+                </div>
+                <div class="space-y-space-xs pt-space-xs">
+                  <div class="flex cursor-pointer items-center justify-between">
+                    <span class="font-label-md text-label-md text-on-surface font-semibold"
+                      >Área / Categoría</span
+                    >
+                    <span class="material-symbols-outlined text-on-surface-variant text-[18px]"
+                      >expand_less</span
+                    >
+                  </div>
+                  <div class="space-y-1.5 pl-1">
+                    <label
+                      class="text-on-surface-variant text-body-sm font-body-sm flex cursor-pointer items-center justify-between"
+                    >
+                      <span class="flex items-center gap-2">
+                        <input class="accent-primary-container rounded" type="checkbox" />
+                        <span>Académico y Científico</span>
+                      </span>
+                      <span class="font-caption-caps text-caption-caps text-on-surface-variant"
+                        >14</span
+                      >
+                    </label>
+                    <label
+                      class="text-primary-container text-body-sm font-body-sm flex cursor-pointer items-center justify-between font-semibold"
+                    >
+                      <span class="flex items-center gap-2">
+                        <input
+                          checked=""
+                          class="accent-primary-container rounded"
+                          type="checkbox"
+                        />
+                        <span>Tecnología e Innovación</span>
+                      </span>
+                      <span class="font-caption-caps text-caption-caps text-on-surface-variant"
+                        >0</span
+                      >
+                    </label>
+                    <label
+                      class="text-on-surface-variant text-body-sm font-body-sm flex cursor-pointer items-center justify-between"
+                    >
+                      <span class="flex items-center gap-2">
+                        <input class="accent-primary-container rounded" type="checkbox" />
+                        <span>Liderazgo y Comunidad</span>
+                      </span>
+                      <span class="font-caption-caps text-caption-caps text-on-surface-variant"
+                        >9</span
+                      >
+                    </label>
+                    <label
+                      class="text-on-surface-variant text-body-sm font-body-sm flex cursor-pointer items-center justify-between"
+                    >
+                      <span class="flex items-center gap-2">
+                        <input class="accent-primary-container rounded" type="checkbox" />
+                        <span>Cultura y Arte</span>
+                      </span>
+                      <span class="font-caption-caps text-caption-caps text-on-surface-variant"
+                        >5</span
+                      >
+                    </label>
+                  </div>
+                </div>
+                <div class="space-y-space-xs pt-space-xs">
+                  <div class="flex cursor-pointer items-center justify-between">
+                    <span class="font-label-md text-label-md text-on-surface font-semibold"
+                      >Modalidad y Tipo</span
+                    >
+                    <span class="material-symbols-outlined text-on-surface-variant text-[18px]"
+                      >expand_less</span
+                    >
+                  </div>
+                  <div class="space-y-1.5 pl-1">
+                    <label
+                      class="text-primary-container text-body-sm font-body-sm flex cursor-pointer items-center gap-2 font-semibold"
+                    >
+                      <input checked="" class="accent-primary-container rounded" type="checkbox" />
+                      <span>Horas Beca / Voluntariado</span>
+                    </label>
+                    <label
+                      class="text-on-surface-variant text-body-sm font-body-sm flex cursor-pointer items-center gap-2"
+                    >
+                      <input class="accent-primary-container rounded" type="checkbox" />
+                      <span>Presencial en Campus</span>
+                    </label>
+                    <label
+                      class="text-on-surface-variant text-body-sm font-body-sm flex cursor-pointer items-center gap-2"
+                    >
+                      <input class="accent-primary-container rounded" type="checkbox" />
+                      <span>Híbrido / Virtual</span>
+                    </label>
+                  </div>
+                </div>
+                <div class="pt-space-sm">
+                  <div
+                    class="p-space-sm bg-surface-container-low gap-space-xs flex items-start rounded-lg"
+                  >
+                    <span
+                      class="material-symbols-outlined text-secondary mt-0.5 shrink-0 text-[20px]"
+                      >info</span
+                    >
+                    <p class="font-label-sm text-label-sm text-on-surface-variant">
+                      ¿Tu asociación planea una actividad? Solicita espacio a través del portal de
+                      gestión AEUVG.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </aside>
+            <main class="space-y-space-lg lg:col-span-9">
+              <div
+                class="bg-surface-container-lowest p-space-xl lg:p-space-2xl relative flex flex-col items-center justify-center overflow-hidden rounded-2xl text-center shadow-sm"
+              >
+                <div
+                  class="bg-secondary-container/10 pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full blur-3xl"
+                ></div>
+                <div
+                  class="bg-primary-container/5 pointer-events-none absolute -bottom-24 -left-24 h-72 w-72 rounded-full blur-3xl"
+                ></div>
+                <div class="mb-space-lg relative">
+                  <div
+                    class="bg-surface-container relative flex h-32 w-32 items-center justify-center rounded-3xl shadow-inner"
+                  >
+                    <svg
+                      class="text-primary-container"
+                      fill="none"
+                      height="84"
+                      viewBox="0 0 84 84"
+                      width="84"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <rect fill="#ede8ff" height="48" rx="10" width="56" x="14" y="20"></rect>
+                      <path
+                        d="M14 32H70"
+                        stroke="#6d4aff"
+                        stroke-linecap="round"
+                        stroke-width="3"
+                      ></path>
+                      <rect fill="#00c9a7" height="10" rx="2" width="4" x="24" y="14"></rect>
+                      <rect fill="#00c9a7" height="10" rx="2" width="4" x="56" y="14"></rect>
+                      <circle
+                        cx="42"
+                        cy="46"
+                        fill="#ffffff"
+                        r="14"
+                        stroke="#6d4aff"
+                        stroke-width="3"
+                      ></circle>
+                      <path
+                        d="M52 56L62 66"
+                        stroke="#00c9a7"
+                        stroke-linecap="round"
+                        stroke-width="3.5"
+                      ></path>
+                      <path
+                        d="M42 38V46L47 49"
+                        stroke="#ff5e5b"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2.5"
+                      ></path>
+                      <circle cx="28" cy="42" fill="#ede8ff" r="2"></circle>
+                      <circle cx="28" cy="52" fill="#ede8ff" r="2"></circle>
+                      <circle cx="56" cy="42" fill="#ede8ff" r="2"></circle>
+                    </svg>
+                    <div
+                      class="bg-surface-container-lowest absolute -right-2 -bottom-2 rounded-full p-1 shadow-md"
+                    >
+                      <div
+                        class="bg-secondary text-on-secondary flex h-8 w-8 items-center justify-center rounded-full"
+                      >
+                        <span class="material-symbols-outlined text-[18px]">travel_explore</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="space-y-space-xs max-w-xl">
+                  <div
+                    class="bg-surface-container text-on-surface-variant font-label-sm text-label-sm mb-space-2xs inline-flex items-center gap-1.5 rounded-full px-3 py-1"
+                  >
+                    <span class="material-symbols-outlined text-error text-[16px]">search_off</span>
+                    <span>0 coincidencias registradas</span>
+                  </div>
+                  <h2
+                    class="font-headline-lg text-headline-lg text-primary-container font-bold tracking-tight"
+                  >
+                    No encontramos eventos que coincidan con tu búsqueda
+                  </h2>
+                  <p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+                    No hay actividades programadas con el término
+                    <span
+                      class="text-on-surface bg-surface-container rounded px-2 py-0.5 font-semibold"
+                      >“Hackathon Aeroespacial 2026”</span
+                    >
+                    bajo los filtros de <strong class="text-on-surface">Próxima semana</strong> y
+                    <strong class="text-on-surface">Voluntariado</strong>.
+                  </p>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant">
+                    Intenta ajustar los filtros de fecha o categoría, o prueba con términos más
+                    generales como
+                    <button
+                      class="text-secondary font-semibold hover:underline"
+                      onclick="document.getElementById('eventSearchInput').value = 'feria'"
+                      type="button"
+                    >
+                      “feria”</button
+                    >,
+                    <button
+                      class="text-secondary font-semibold hover:underline"
+                      onclick="document.getElementById('eventSearchInput').value = 'taller'"
+                      type="button"
+                    >
+                      “taller”
+                    </button>
+                    o
+                    <button
+                      class="text-secondary font-semibold hover:underline"
+                      onclick="document.getElementById('eventSearchInput').value = 'conferencia'"
+                      type="button"
+                    >
+                      “conferencia”</button
+                    >.
+                  </p>
+                </div>
+                <div
+                  class="mt-space-lg gap-space-sm flex w-full max-w-md flex-col items-center justify-center sm:flex-row"
+                >
+                  <button
+                    class="px-space-lg bg-primary-container text-on-primary font-label-md text-label-md hover:bg-primary flex w-full items-center justify-center gap-2 rounded-xl py-3 shadow-md transition-all hover:shadow-lg sm:w-auto"
+                    onclick="document.getElementById('eventSearchInput').value = ''"
+                    type="button"
+                  >
+                    <span class="material-symbols-outlined text-[18px]">restart_alt</span>
+                    <span>Restablecer todos los filtros</span>
+                  </button>
+                  <button
+                    class="px-space-lg bg-surface-container-high text-primary-container font-label-md text-label-md hover:bg-surface-container-highest flex w-full items-center justify-center gap-2 rounded-xl py-3 transition-all sm:w-auto"
+                    type="button"
+                  >
+                    <span class="material-symbols-outlined text-[18px]">calendar_view_month</span>
+                    <span>Ver todos los eventos del mes</span>
+                  </button>
+                </div>
+                <div class="mt-space-xl pt-space-lg w-full">
+                  <div class="mb-space-md flex items-center justify-between text-left">
+                    <div>
+                      <span
+                        class="font-caption-caps text-caption-caps text-secondary font-bold tracking-wider uppercase"
+                        >Recomendaciones AEUVG</span
+                      >
+                      <h3 class="font-title-md text-title-md text-primary-container font-bold">
+                        O explora los eventos más populares para ti
+                      </h3>
+                    </div>
+                    <a
+                      class="font-label-sm text-label-sm text-secondary hidden items-center gap-1 font-semibold hover:underline sm:inline-flex"
+                      href="#"
+                    >
+                      <span>Ver cartelera completa</span>
+                      <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+                    </a>
+                  </div>
+                  <div class="gap-space-md grid grid-cols-1 text-left md:grid-cols-2">
+                    <div
+                      class="bg-surface p-space-md group flex flex-col justify-between rounded-xl transition-all hover:shadow-md"
+                    >
+                      <div class="space-y-space-xs">
+                        <div class="gap-space-xs flex items-start justify-between">
+                          <div class="gap-space-xs flex items-center">
+                            <div
+                              class="bg-primary-container text-on-primary flex h-12 w-12 flex-col items-center justify-center rounded-xl leading-none"
+                            >
+                              <span
+                                class="font-caption-caps text-caption-caps text-secondary-fixed uppercase"
+                                >MAR</span
+                              >
+                              <span class="font-title-md text-title-md mt-0.5 font-bold">24</span>
+                            </div>
+                            <div>
+                              <span
+                                class="bg-secondary-fixed text-on-secondary-fixed font-caption-caps text-caption-caps inline-block rounded-full px-2 py-0.5 font-bold uppercase"
+                              >
+                                Tecnología &amp; IA
+                              </span>
+                              <p class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">
+                                16:00 - 18:30 hrs
+                              </p>
+                            </div>
+                          </div>
+                          <span
+                            class="bg-surface-container-highest font-caption-caps text-caption-caps text-primary-container rounded-full px-2 py-1 font-bold"
+                          >
+                            Horas Beca
+                          </span>
+                        </div>
+                        <h4
+                          class="font-headline-sm text-headline-sm text-primary-container group-hover:text-secondary mt-2 line-clamp-1 font-bold transition-colors"
+                        >
+                          Simposio de Robótica y Sistemas Autónomos UVG
+                        </h4>
+                        <p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+                          Charlas con investigadores del CIT y demostración de prototipos creados
+                          por estudiantes de Ingeniería Mecatrónica.
+                        </p>
+                      </div>
+                      <div
+                        class="mt-space-md pt-space-xs text-on-surface-variant font-label-sm text-label-sm flex items-center justify-between"
+                      >
+                        <span class="flex max-w-[180px] items-center gap-1 truncate">
+                          <span class="material-symbols-outlined text-secondary text-[16px]"
+                            >apartment</span
+                          >
+                          Auditorio CIT (I-100)
+                        </span>
+                        <span class="text-secondary flex items-center gap-1 font-semibold">
+                          Inscribirse
+                          <span
+                            class="material-symbols-outlined text-[16px] transition-transform group-hover:translate-x-1"
+                            >chevron_right</span
+                          >
+                        </span>
+                      </div>
+                    </div>
+                    <div
+                      class="bg-surface p-space-md group flex flex-col justify-between rounded-xl transition-all hover:shadow-md"
+                    >
+                      <div class="space-y-space-xs">
+                        <div class="gap-space-xs flex items-start justify-between">
+                          <div class="gap-space-xs flex items-center">
+                            <div
+                              class="bg-tertiary-container text-on-tertiary flex h-12 w-12 flex-col items-center justify-center rounded-xl leading-none"
+                            >
+                              <span
+                                class="font-caption-caps text-caption-caps text-tertiary-fixed uppercase"
+                                >MAR</span
+                              >
+                              <span class="font-title-md text-title-md mt-0.5 font-bold">28</span>
+                            </div>
+                            <div>
+                              <span
+                                class="bg-tertiary-fixed text-on-tertiary-fixed font-caption-caps text-caption-caps inline-block rounded-full px-2 py-0.5 font-bold uppercase"
+                              >
+                                Comunidad UVG
+                              </span>
+                              <p class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">
+                                09:00 - 15:00 hrs
+                              </p>
+                            </div>
+                          </div>
+                          <span
+                            class="bg-surface-container-highest font-caption-caps text-caption-caps text-primary-container rounded-full px-2 py-1 font-bold"
+                          >
+                            Abierto
+                          </span>
+                        </div>
+                        <h4
+                          class="font-headline-sm text-headline-sm text-primary-container group-hover:text-secondary mt-2 line-clamp-1 font-bold transition-colors"
+                        >
+                          Feria de Asociaciones y Clubes Estudiantiles
+                        </h4>
+                        <p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+                          Conoce las más de 30 agrupaciones estudiantiles, proyectos
+                          interdisciplinarios e involúcrate activamente este ciclo.
+                        </p>
+                      </div>
+                      <div
+                        class="mt-space-md pt-space-xs text-on-surface-variant font-label-sm text-label-sm flex items-center justify-between"
+                      >
+                        <span class="flex max-w-[180px] items-center gap-1 truncate">
+                          <span class="material-symbols-outlined text-secondary text-[16px]"
+                            >deck</span
+                          >
+                          Plaza Fuentelapiedra
+                        </span>
+                        <span class="text-secondary flex items-center gap-1 font-semibold">
+                          Ver detalles
+                          <span
+                            class="material-symbols-outlined text-[16px] transition-transform group-hover:translate-x-1"
+                            >chevron_right</span
+                          >
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </main>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="bg-primary-container text-on-primary py-space-2xl w-full">
+      <div class="max-w-container-max px-margin-mobile lg:px-margin-desktop mx-auto">
+        <div class="gap-space-xl mb-space-xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+          <div class="space-y-space-sm">
+            <div class="gap-space-xs flex items-center">
+              <span class="font-headline-sm text-headline-sm text-on-primary font-bold">AEUVG</span>
+            </div>
+            <p class="font-body-sm text-body-sm text-on-primary-container">
+              Asociación General de Estudiantes de la Universidad del Valle de Guatemala. Impulsando
+              la representación, el liderazgo y la vida estudiantil en el campus.
+            </p>
+            <div class="pt-space-xs">
+              <p class="font-label-sm text-label-sm text-on-primary-container">
+                Campus Central UVG, Zona 15
+              </p>
+              <p class="font-body-sm text-body-sm text-surface-container-highest">
+                18 Avenida 11-95, Ciudad de Guatemala
+              </p>
+            </div>
+          </div>
+          <div>
+            <h3 class="font-title-md text-title-md text-on-primary mb-space-sm font-semibold">
+              Vida Universitaria
+            </h3>
+            <ul class="space-y-space-xs font-body-sm text-body-sm">
+              <li class="text-on-primary-container hover:text-on-primary transition-colors">
+                <a data-path="eventos" href="#">Eventos y Conferencias</a>
+              </li>
+              <li class="text-on-primary-container hover:text-on-primary transition-colors">
+                <a data-path="asociaciones" href="#">Asociaciones por Carrera</a>
+              </li>
+              <li class="text-on-primary-container hover:text-on-primary transition-colors">
+                <a data-path="clubes" href="#">Clubes Estudiantiles</a>
+              </li>
+              <li class="text-on-primary-container hover:text-on-primary transition-colors">
+                <a data-path="tutorias" href="#">Programa de Tutorías</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="font-title-md text-title-md text-on-primary mb-space-sm font-semibold">
+              Institucional
+            </h3>
+            <ul class="space-y-space-xs font-body-sm text-body-sm">
+              <li class="text-on-primary-container hover:text-on-primary transition-colors">
+                <a data-path="sobre-aeuvg" href="#">Sobre la Asociación</a>
+              </li>
+              <li class="text-on-primary-container hover:text-on-primary transition-colors">
+                <a data-path="estatutos" href="#">Estatutos Generales</a>
+              </li>
+              <li class="text-on-primary-container hover:text-on-primary transition-colors">
+                <a data-path="terminos" href="#">Términos y Condiciones</a>
+              </li>
+              <li class="text-on-primary-container hover:text-on-primary transition-colors">
+                <a data-path="privacidad" href="#">Política de Privacidad</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="font-title-md text-title-md text-on-primary mb-space-sm font-semibold">
+              Comunidad y Contacto
+            </h3>
+            <p class="font-body-sm text-body-sm text-on-primary-container mb-space-sm">
+              Canal directo de atención para inquietudes estudiantiles y solicitudes de apoyo.
+            </p>
+            <div class="gap-space-xs mb-space-sm flex items-center">
+              <span class="font-label-sm text-label-sm text-surface-variant font-medium"
+                >correo: aeuvg@uvg.edu.gt</span
+              >
+            </div>
+            <div class="gap-space-sm text-on-primary-container flex items-center">
+              <span
+                class="font-caption-caps text-caption-caps text-on-primary-container tracking-widest uppercase"
+                >@AEUVG OFICIAL</span
+              >
+            </div>
+          </div>
+        </div>
+        <div
+          class="pt-space-lg border-on-surface-variant/20 gap-space-sm text-on-primary-container font-label-sm text-label-sm flex flex-col items-center justify-between border-t sm:flex-row"
+        >
+          <div>
+            © 2025 Asociación General de Estudiantes de la Universidad del Valle de Guatemala
+            (AEUVG). Todos los derechos reservados.
+          </div>
+          <div class="gap-space-md flex items-center">
+            <a class="hover:text-on-primary transition-colors" data-path="privacidad" href="#"
+              >Privacidad</a
+            ><a class="hover:text-on-primary transition-colors" data-path="terminos" href="#"
+              >Términos</a
+            ><a class="hover:text-on-primary transition-colors" data-path="estatutos" href="#"
+              >Estatutos</a
+            >
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
