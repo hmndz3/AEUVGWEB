@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { crearServicioAutenticacion } from "@/lib/auth/crear-servicio-autenticacion";
-import { NOMBRE_COOKIE_SESION } from "@/lib/auth/sesion";
+import { NOMBRE_COOKIE_SESION, opcionesCookieSesion } from "@/lib/auth/sesion";
+import { obtenerConfiguracionSesion } from "@/lib/configuracion-sesion";
 
 export const runtime = "nodejs";
 
@@ -35,4 +36,21 @@ export async function GET(solicitud: NextRequest) {
       { status: 401, headers: { "Cache-Control": "no-store" } }
     );
   }
+}
+
+/** Cierra la sesión borrando la cookie. Es idempotente: sin sesión también responde 204. */
+export async function DELETE() {
+  const respuesta = new NextResponse(null, {
+    status: 204,
+    headers: { "Cache-Control": "no-store" },
+  });
+
+  respuesta.cookies.set({
+    ...opcionesCookieSesion(obtenerConfiguracionSesion()),
+    name: NOMBRE_COOKIE_SESION,
+    value: "",
+    maxAge: 0,
+  });
+
+  return respuesta;
 }
