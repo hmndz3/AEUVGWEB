@@ -24,31 +24,37 @@ export type AsociacionGeneral = {
  * mientras AEUVG no entregue su información y no exista el registro (AEUVG-40).
  */
 export async function obtenerAsociacionGeneral(): Promise<AsociacionGeneral | null> {
-  return obtenerPrisma().asociacion.findFirst({
-    where: {
-      activo: true,
-      nombre: { equals: NOMBRE_ASOCIACION_GENERAL, mode: "insensitive" },
-    },
-    select: {
-      nombre: true,
-      descripcion: true,
-      mision: true,
-      vision: true,
-      correo: true,
-      informacionContacto: true,
-      integrantes: {
-        where: { activo: true },
-        orderBy: [{ ordenVisualizacion: "asc" }, { nombre: "asc" }],
-        select: {
-          idIntegrante: true,
-          nombre: true,
-          cargo: true,
-          periodo: true,
-          fotoUrl: true,
+  try {
+    return await obtenerPrisma().asociacion.findFirst({
+      where: {
+        activo: true,
+        nombre: { equals: NOMBRE_ASOCIACION_GENERAL, mode: "insensitive" },
+      },
+      select: {
+        nombre: true,
+        descripcion: true,
+        mision: true,
+        vision: true,
+        correo: true,
+        informacionContacto: true,
+        integrantes: {
+          where: { activo: true },
+          orderBy: [{ ordenVisualizacion: "asc" }, { nombre: "asc" }],
+          select: {
+            idIntegrante: true,
+            nombre: true,
+            cargo: true,
+            periodo: true,
+            fotoUrl: true,
+          },
         },
       },
-    },
-  });
+    });
+  } catch {
+    // La página institucional es pública: ante un fallo muestra los bloques
+    // pendientes en lugar de responder con un error.
+    return null;
+  }
 }
 
 /** Iniciales para quienes no tienen fotografía registrada. */
