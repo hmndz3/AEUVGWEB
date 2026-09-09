@@ -81,14 +81,15 @@ export function EstadoSesion() {
         </Link>
       )}
 
-      <Link href="/perfil" className="flex items-center gap-2" title={usuario.correo}>
+      {/* El perfil se implementa en el Sprint 3; por ahora solo se identifica la sesión. */}
+      <span className="flex items-center gap-2" title={usuario.correo}>
         <span className="bg-primario grid size-9 place-items-center rounded-full text-xs font-bold text-white">
           {inicialesDe(usuario.nombreCompleto)}
         </span>
         <span className="text-texto hidden max-w-32 truncate text-sm font-semibold sm:inline">
           {usuario.nombreCompleto}
         </span>
-      </Link>
+      </span>
 
       <button
         type="button"

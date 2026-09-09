@@ -57,3 +57,29 @@ Consideraciones:
 - [ ] Una cuenta sin sesión es redirigida a `/iniciar-sesion` al entrar a `/admin` o `/perfil`.
 - [ ] Una cuenta de administrador ve el enlace al panel y accede a sus secciones.
 - [ ] `GET /api/admin/resumen` responde `401` sin sesión y `404` con una cuenta sin el rol.
+
+## 5. Cuentas de demostración
+
+Para revisar la plataforma sin usar una cuenta personal existen dos cuentas de demostración:
+
+| Cuenta                       | Roles                      |
+| ---------------------------- | -------------------------- |
+| `demo.estudiante@uvg.edu.gt` | Estudiante                 |
+| `demo.admin@uvg.edu.gt`      | Estudiante y administrador |
+
+Se crean o se rotan con:
+
+```bash
+npm run db:demo          # base local
+npm run db:railway:demo  # base de Railway, con el TCP Proxy habilitado
+```
+
+Las contraseñas **no están en el repositorio**: se generan al momento y se escriben en `credenciales-demo.local.txt`, que el `.gitignore` excluye. Volver a ejecutar el comando genera contraseñas nuevas.
+
+Esta es la diferencia con el seed de datos ficticios (`db:seed:test`), cuya contraseña sí está versionada y que por eso se niega a ejecutarse en producción: una contraseña publicada en el repositorio, sobre una cuenta con rol de administrador, equivaldría a dejar el panel abierto.
+
+Para saber quién tiene acceso al panel:
+
+```bash
+npm run db:railway:admins
+```
