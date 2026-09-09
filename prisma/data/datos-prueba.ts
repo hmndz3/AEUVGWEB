@@ -8,10 +8,16 @@ export const CARNETS_PRUEBA = {
 } as const;
 
 export const CORREOS_PRUEBA = {
-  administrador: "admin.aeuvg@example.test",
-  ana: "estudiante.ana@example.test",
-  carlos: "estudiante.carlos@example.test",
-  maria: "tutor.maria@example.test",
+  administrador: "admin.prueba@uvg.edu.gt",
+  ana: "estudiante.prueba@uvg.edu.gt",
+  carlos: "sin-cuenta.prueba@uvg.edu.gt",
+  maria: "tutor.prueba@uvg.edu.gt",
+} as const;
+
+/** Credenciales ficticias, exclusivas para la base local de desarrollo. */
+export const CREDENCIALES_PRUEBA = {
+  correo: CORREOS_PRUEBA.ana,
+  contrasena: "PruebaSegura1!",
 } as const;
 
 export const NOMBRES_PRUEBA = {
@@ -60,5 +66,10 @@ export const FECHAS_PRUEBA = {
   tutoriaCompletadaFin: new Date("2026-09-02T17:30:00.000Z"),
 } as const;
 
+/**
+ * Hash de CREDENCIALES_PRUEBA.contrasena en el mismo formato que produce el
+ * registro. Usa una sal fija de 16 bytes para que el seed sea reproducible;
+ * el verificador rechaza cualquier otra longitud de sal.
+ */
 export const HASH_DESARROLLO =
-  "sha256$7aefc0d4844f51c82fe52dd0c8ce1058e2257f933c1c978f8130ca45f07d6158";
+  "scrypt$16384$8$1$YWV1dmctc2VlZC1sb2NhbA$rX7fh4FCeJzlk55DZnj96avxeBrKPrlrSjNaBDEXQFW1m5gmXtsJBk3LGxFnRZfiuaVyAx6BiA6UE07nkK8V_Q";

@@ -1,26 +1,49 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+ * Sistema de diseño de AEUVG.
+ * La paleta se deriva del logo: figuras humanas de colores distintos formando un
+ * círculo. El violeta funciona como color de acción y los demás tonos del logo
+ * se reparten como acentos, uno por cada categoría de evento.
+ * Documentado en docs/diseno/sistema-diseno.md
+ */
+@theme {
+  /* Acción */
+  --color-primario: #6d4aff;
+  --color-primario-fuerte: #5a35e8;
+  --color-primario-suave: #ede8ff;
+  --color-sobre-primario: #ffffff;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* Acentos tomados del logo */
+  --color-coral: #ff5e5b;
+  --color-turquesa: #00c9a7;
+  --color-ambar: #ffb627;
+  --color-magenta: #ff4fa3;
+  --color-lima: #7bc950;
+  --color-cielo: #3ec1ff;
+  --color-lavanda: #b98aff;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Neutros cálidos: el fondo crema es lo que evita el aspecto clínico */
+  --color-fondo: #fff8f3;
+  --color-superficie: #ffffff;
+  --color-superficie-suave: #f7f1ea;
+  --color-borde: #ebe2d8;
+  --color-texto: #1c162b;
+  --color-texto-suave: #6e6580;
+
+  /* Estados */
+  --color-exito: #15b67a;
+  --color-advertencia: #ffa31a;
+  --color-error: #f5455c;
+  --color-informativo: #3ea8ff;
+
+  --font-sans: var(--font-jakarta), system-ui, sans-serif;
+
+  --radius-campo: 1rem;
+  --radius-tarjeta: 1.25rem;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-fondo);
+  color: var(--color-texto);
 }

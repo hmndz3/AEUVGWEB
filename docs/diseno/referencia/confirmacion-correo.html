@@ -1,0 +1,629 @@
+<!doctype html>
+<html lang="es" style="width: 1280px; height: 1052px; overflow: hidden; position: relative">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>AEUVG - Portal de Acceso</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @layer base {
+        html,
+        body {
+          margin: 0;
+          padding: 0;
+        }
+        body {
+          overscroll-behavior: none;
+        }
+        main > :first-child {
+          margin-top: 0 !important;
+        }
+        main > :last-child {
+          margin-bottom: 0 !important;
+        }
+      }
+      ::-webkit-scrollbar {
+        display: none;
+      }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-secondary-fixed-variant": "#00806c",
+              "on-background": "#1c162b",
+              "on-primary": "#ffffff",
+              "surface-dim": "#f0e6da",
+              "on-tertiary-fixed-variant": "#92001c",
+              "on-tertiary": "#ffffff",
+              "secondary-fixed": "#d6f7f1",
+              "inverse-surface": "#1c162b",
+              error: "#f5455c",
+              "on-secondary": "#ffffff",
+              "surface-bright": "#fff8f3",
+              background: "#fff8f3",
+              "surface-container-low": "#f7f1ea",
+              primary: "#1c162b",
+              "on-surface-variant": "#6e6580",
+              "surface-container-highest": "#ede8ff",
+              secondary: "#00c9a7",
+              "secondary-container": "#3ec1ff",
+              "on-error-container": "#93000a",
+              "on-secondary-container": "#00806c",
+              "on-tertiary-fixed": "#410007",
+              "outline-variant": "#ebe2d8",
+              "primary-fixed": "#ede8ff",
+              "on-primary-fixed-variant": "#5a35e8",
+              "tertiary-fixed-dim": "#ffb3b1",
+              "on-secondary-fixed": "#0d3b34",
+              "on-primary-container": "#ede8ff",
+              surface: "#fff8f3",
+              "on-primary-fixed": "#1c162b",
+              "on-error": "#ffffff",
+              "error-container": "#ffdad6",
+              "primary-fixed-dim": "#b98aff",
+              tertiary: "#230002",
+              "on-surface": "#1c162b",
+              "on-tertiary-container": "#ff5e5b",
+              "surface-container-lowest": "#ffffff",
+              "surface-container": "#f7f1ea",
+              "tertiary-container": "#4d000a",
+              "secondary-fixed-dim": "#3ec1ff",
+              "tertiary-fixed": "#ffdad8",
+              "surface-variant": "#ede8ff",
+              "primary-container": "#6d4aff",
+              outline: "#d9cec2",
+              "inverse-on-surface": "#fff8f3",
+              "inverse-primary": "#b98aff",
+              "surface-tint": "#6d4aff",
+              "surface-container-high": "#ede8ff",
+            },
+            borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+            spacing: {
+              "space-3xl": "4rem",
+              "space-2xs": "0.25rem",
+              "space-2xl": "3rem",
+              "margin-mobile": "1rem",
+              "space-xs": "0.5rem",
+              "space-md": "1rem",
+              "space-lg": "1.5rem",
+              "gutter-mobile": "1rem",
+              "gutter-desktop": "1.5rem",
+              "space-xl": "2rem",
+              "space-sm": "0.75rem",
+              "container-max": "1280px",
+              "margin-desktop": "2rem",
+            },
+            fontFamily: {
+              "body-lg": ["Plus Jakarta Sans"],
+              "display-hero": ["Plus Jakarta Sans"],
+              "body-md": ["Plus Jakarta Sans"],
+              "label-sm": ["Plus Jakarta Sans"],
+              "display-hero-mobile": ["Plus Jakarta Sans"],
+              "headline-lg-mobile": ["Plus Jakarta Sans"],
+              "headline-md": ["Plus Jakarta Sans"],
+              "caption-caps": ["Plus Jakarta Sans"],
+              "body-sm": ["Plus Jakarta Sans"],
+              "headline-lg": ["Plus Jakarta Sans"],
+              "label-md": ["Plus Jakarta Sans"],
+              "title-md": ["Plus Jakarta Sans"],
+              "headline-sm": ["Plus Jakarta Sans"],
+            },
+            fontSize: {
+              "body-lg": ["16px", { lineHeight: "26px", fontWeight: "400" }],
+              "display-hero": [
+                "40px",
+                { lineHeight: "48px", letterSpacing: "-0.02em", fontWeight: "800" },
+              ],
+              "body-md": ["15px", { lineHeight: "24px", fontWeight: "400" }],
+              "label-sm": [
+                "12px",
+                { lineHeight: "16px", letterSpacing: "0.01em", fontWeight: "600" },
+              ],
+              "display-hero-mobile": [
+                "30px",
+                { lineHeight: "38px", letterSpacing: "-0.015em", fontWeight: "800" },
+              ],
+              "headline-lg-mobile": [
+                "26px",
+                { lineHeight: "34px", letterSpacing: "-0.01em", fontWeight: "700" },
+              ],
+              "headline-md": [
+                "24px",
+                { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "600" },
+              ],
+              "caption-caps": [
+                "11px",
+                { lineHeight: "14px", letterSpacing: "0.06em", fontWeight: "700" },
+              ],
+              "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+              "headline-lg": [
+                "32px",
+                { lineHeight: "40px", letterSpacing: "-0.015em", fontWeight: "700" },
+              ],
+              "label-md": [
+                "14px",
+                { lineHeight: "20px", letterSpacing: "0.005em", fontWeight: "600" },
+              ],
+              "title-md": ["18px", { lineHeight: "26px", fontWeight: "600" }],
+              "headline-sm": ["20px", { lineHeight: "28px", fontWeight: "600" }],
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body
+    class="bg-background font-body-md text-on-surface flex min-h-screen flex-col justify-between antialiased"
+  >
+    <header
+      class="bg-surface/85 fixed top-0 z-50 w-full shadow-[0_1px_8px_rgba(13,35,58,0.04)] backdrop-blur-xl"
+    >
+      <div
+        class="max-w-container-max px-margin-desktop mx-auto flex h-16 items-center justify-between"
+      >
+        <div class="gap-space-sm flex items-center">
+          <img
+            alt="Logo circular de AEUVG compuesto por figuras humanas estilizadas unidas en círculo de colores vivos (rojo, coral, morado, celeste, naranja, verde lima y azul marino) con las siglas AEUVG limpias y modernas.. Brand logo. - Primary color: #6d4aff
+- Font: plusJakartaSans
+- Mode: light
+- Roundness: rounded-md
+"
+            class="h-8 w-auto object-contain"
+            src="logo-aeuvg.png"
+          />
+          <div class="flex flex-col">
+            <span class="font-label-md text-label-md text-on-surface font-bold tracking-tight"
+              >AEUVG</span
+            ><span
+              class="font-caption-caps text-caption-caps text-on-surface-variant tracking-wider uppercase"
+              >Asociación de Estudiantes UVG</span
+            >
+          </div>
+        </div>
+        <div class="gap-space-lg flex items-center">
+          <nav
+            class="gap-space-md flex items-center"
+            data-active-classes="text-primary font-label-md"
+          >
+            <a
+              class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors"
+              data-path="login"
+              href="#"
+              >Iniciar Sesión</a
+            ><a
+              class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors"
+              data-path="registro-estudiantil"
+              href="#"
+              >Registrarse</a
+            ><a
+              aria-current="page"
+              class="text-primary font-label-md transition-colors"
+              data-path="recuperar-credenciales"
+              href="#"
+              >Ayuda de Cuenta</a
+            ><a
+              class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors"
+              data-path="centro-de-ayuda"
+              href="#"
+              >Centro de Ayuda</a
+            ><a
+              class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors"
+              data-path="portal-general"
+              href="#"
+              >Volver al Portal</a
+            >
+          </nav>
+          <div class="bg-primary flex h-8 w-8 items-center justify-center rounded-full">
+            <span class="material-symbols-outlined text-on-primary text-[18px]">person</span>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main class="bg-background flex w-full flex-1 flex-col items-center justify-center pt-16">
+      <div class="py-space-xl px-margin-mobile md:px-margin-desktop flex w-full flex-col">
+        <div class="max-w-container-max mx-auto flex w-full flex-col items-center justify-center">
+          <div
+            class="bg-surface-container-lowest w-full max-w-5xl overflow-hidden rounded-xl shadow-xl"
+          >
+            <div class="grid min-h-[580px] grid-cols-1 lg:grid-cols-12">
+              <!-- COLUMNA IZQUIERDA: Estado de confirmación y éxito (7 cols) -->
+              <div class="p-space-xl lg:p-space-2xl flex flex-col justify-between lg:col-span-7">
+                <div>
+                  <!-- Badge & Visual Success Header -->
+                  <div class="gap-space-sm mb-space-lg flex items-center justify-between">
+                    <div
+                      class="gap-space-xs px-space-sm bg-surface-container-high text-on-surface inline-flex items-center rounded-full py-1"
+                    >
+                      <span class="bg-secondary h-2 w-2 rounded-full"></span>
+                      <span class="font-label-sm text-label-sm">Recuperación de Acceso</span>
+                    </div>
+                    <span
+                      class="font-caption-caps text-caption-caps text-on-surface-variant tracking-wider uppercase"
+                      >Paso 2 de 2</span
+                    >
+                  </div>
+                  <!-- Animated / Rich Success Indicator -->
+                  <div class="gap-space-md mb-space-lg relative flex items-center">
+                    <div
+                      class="bg-surface-container text-secondary relative flex h-16 w-16 items-center justify-center rounded-2xl shadow-sm"
+                    >
+                      <span
+                        class="material-symbols-outlined text-[32px]"
+                        style="font-variation-settings: &quot;FILL&quot; 1"
+                        >mark_email_read</span
+                      >
+                      <div
+                        class="bg-secondary text-on-secondary absolute -right-1 -bottom-1 flex h-6 w-6 items-center justify-center rounded-full shadow-md"
+                      >
+                        <span class="material-symbols-outlined text-[15px]">check</span>
+                      </div>
+                    </div>
+                    <div class="flex flex-col">
+                      <span
+                        class="font-label-sm text-label-sm text-secondary inline-flex items-center gap-1 font-semibold"
+                      >
+                        <span class="material-symbols-outlined text-[16px]">verified</span>
+                        Correo enviado con éxito
+                      </span>
+                      <span class="font-caption-caps text-caption-caps text-on-surface-variant"
+                        >Servidor seguro SMTP UVG</span
+                      >
+                    </div>
+                  </div>
+                  <!-- Título Principal -->
+                  <h1
+                    class="font-headline-lg text-headline-lg text-on-surface mb-space-sm tracking-tight"
+                  >
+                    ¡Revisa tu bandeja de entrada!
+                  </h1>
+                  <p class="font-body-md text-body-md text-on-surface-variant mb-space-md">
+                    Hemos enviado un enlace de recuperación seguro con un token de autenticación
+                    cifrado a:
+                  </p>
+                  <!-- Recuadro del correo de destino -->
+                  <div
+                    class="gap-space-sm p-space-md bg-surface-container mb-space-lg flex items-center rounded-lg"
+                  >
+                    <span class="material-symbols-outlined text-secondary text-[22px]"
+                      >alternate_email</span
+                    >
+                    <div class="flex min-w-0 flex-col">
+                      <span
+                        class="font-caption-caps text-caption-caps text-on-surface-variant uppercase"
+                        >Cuenta de Estudiante UVG</span
+                      >
+                      <span class="font-title-md text-title-md text-on-surface truncate font-bold"
+                        >valeria.morales@uvg.edu.gt</span
+                      >
+                    </div>
+                  </div>
+                  <!-- Instrucciones Claras y Cronómetro -->
+                  <div class="space-y-space-sm mb-space-xl">
+                    <div
+                      class="gap-space-sm p-space-sm bg-surface-container-low flex items-start rounded-lg"
+                    >
+                      <span class="material-symbols-outlined text-secondary mt-0.5 text-[20px]"
+                        >link</span
+                      >
+                      <p class="font-body-sm text-body-sm text-on-surface">
+                        Haz clic en el enlace adjunto en el correo para crear tu nueva contraseña
+                        segura.
+                      </p>
+                    </div>
+                    <div
+                      class="gap-space-sm p-space-sm bg-surface-container-low flex items-start rounded-lg"
+                    >
+                      <span class="material-symbols-outlined text-secondary mt-0.5 text-[20px]"
+                        >markunread_mailbox</span
+                      >
+                      <p class="font-body-sm text-body-sm text-on-surface">
+                        Si no lo encuentras en tu bandeja principal, verifica la carpeta de
+                        <strong class="text-on-surface font-semibold"
+                          >correo no deseado (Spam)</strong
+                        >
+                        o promociones.
+                      </p>
+                    </div>
+                    <div
+                      class="p-space-sm bg-surface-container-highest/60 text-on-surface flex items-center justify-between rounded-lg"
+                    >
+                      <div class="gap-space-xs flex items-center">
+                        <span class="material-symbols-outlined text-secondary text-[18px]"
+                          >timer</span
+                        >
+                        <span class="font-label-sm text-label-sm font-semibold"
+                          >Validez del enlace temporal:</span
+                        >
+                      </div>
+                      <div
+                        class="font-label-md text-label-md text-secondary flex items-center gap-1 font-bold"
+                      >
+                        <span>14:59 min</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Acciones y Reenvío -->
+                <div class="pt-space-md gap-space-md flex flex-col">
+                  <div class="gap-space-sm flex flex-col items-center sm:flex-row">
+                    <button
+                      class="gap-space-xs px-space-md bg-surface-container text-on-surface-variant font-label-md text-label-md flex w-full flex-1 cursor-not-allowed items-center justify-center rounded-lg py-2.5 transition-all sm:w-auto"
+                      id="resend-btn"
+                      disabled=""
+                    >
+                      <span class="material-symbols-outlined text-[18px]">refresh</span>
+                      <span>Reenviar correo de recuperación</span>
+                      <span
+                        class="bg-surface-container-highest text-on-surface font-caption-caps text-caption-caps rounded-full px-2 py-0.5"
+                        id="countdown-badge"
+                        >Espera 56s</span
+                      >
+                    </button>
+                    <a
+                      class="gap-space-2xs px-space-md bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md flex w-full items-center justify-center rounded-lg py-2.5 transition-colors sm:w-auto"
+                      data-path="centro-de-ayuda"
+                      href="#"
+                    >
+                      <span class="material-symbols-outlined text-[18px]">help_outline</span>
+                      <span>¿No te llega?</span>
+                    </a>
+                  </div>
+                  <div class="pt-space-xs flex items-center justify-center">
+                    <a
+                      class="gap-space-2xs font-label-md text-label-md text-secondary hover:text-on-secondary-container inline-flex items-center transition-colors"
+                      data-path="login"
+                      href="#"
+                    >
+                      <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                      <span>Volver al inicio de sesión</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <!-- COLUMNA DERECHA: Panel Institucional de Confianza (5 cols) -->
+              <div
+                class="bg-primary-container text-on-primary p-space-xl lg:p-space-2xl relative flex flex-col justify-between overflow-hidden lg:col-span-5"
+              >
+                <!-- Elemento ambiental decorativo de fondo -->
+                <div
+                  class="bg-secondary/15 pointer-events-none absolute -top-16 -right-16 h-64 w-64 rounded-full blur-3xl"
+                ></div>
+                <div
+                  class="bg-secondary-container/10 pointer-events-none absolute bottom-0 -left-12 h-48 w-48 rounded-full blur-2xl"
+                ></div>
+                <div class="relative z-10 flex flex-col">
+                  <!-- Brand Logo AEUVG -->
+                  <div class="gap-space-sm mb-space-xl flex items-center">
+                    <div class="bg-surface-container-lowest/10 rounded-xl p-2 backdrop-blur-md">
+                      <img
+                        alt="Logo AEUVG"
+                        class="h-10 w-auto object-contain"
+                        src="logo-aeuvg.png"
+                      />
+                    </div>
+                    <div class="flex flex-col">
+                      <span
+                        class="font-headline-sm text-headline-sm text-on-primary font-bold tracking-tight"
+                        >AEUVG</span
+                      >
+                      <span
+                        class="font-caption-caps text-caption-caps text-on-primary-container tracking-wider uppercase"
+                        >Asociación de Estudiantes UVG</span
+                      >
+                    </div>
+                  </div>
+                  <!-- Título Institucional -->
+                  <h2
+                    class="font-title-md text-title-md text-on-primary mb-space-sm gap-space-xs flex items-center font-bold"
+                  >
+                    <span class="material-symbols-outlined text-secondary-container text-[22px]"
+                      >shield</span
+                    >
+                    Soporte y Asistencia AEUVG
+                  </h2>
+                  <!-- Card de Advertencia de Seguridad -->
+                  <div
+                    class="p-space-md bg-surface-container-lowest/10 mb-space-lg text-on-primary rounded-xl backdrop-blur-md"
+                  >
+                    <div class="gap-space-sm flex items-start">
+                      <span
+                        class="material-symbols-outlined text-secondary-container mt-0.5 text-[20px]"
+                        >lock_person</span
+                      >
+                      <div class="flex flex-col">
+                        <span class="font-label-sm text-label-sm text-on-primary mb-1 font-semibold"
+                          >Recomendación de Seguridad</span
+                        >
+                        <p
+                          class="font-body-sm text-body-sm text-on-primary-container leading-relaxed"
+                        >
+                          Nunca compartas este enlace con nadie. Los administradores, directivos y
+                          comités de AEUVG <strong>jamás</strong> te solicitarán tu contraseña por
+                          correo electrónico, llamadas o redes sociales.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Canales de Ayuda Rápida -->
+                  <div class="space-y-space-sm">
+                    <span
+                      class="font-caption-caps text-caption-caps text-on-primary-container block tracking-widest uppercase"
+                      >Canales de Ayuda Presencial &amp; Digital</span
+                    >
+                    <div
+                      class="gap-space-sm p-space-sm bg-surface-container-lowest/5 flex items-center rounded-lg"
+                    >
+                      <div
+                        class="bg-secondary/30 text-on-primary flex h-8 w-8 items-center justify-center rounded-lg"
+                      >
+                        <span class="material-symbols-outlined text-[18px]">location_on</span>
+                      </div>
+                      <div class="flex min-w-0 flex-col">
+                        <span class="font-label-sm text-label-sm text-on-primary font-semibold"
+                          >Oficina Central AEUVG</span
+                        >
+                        <span class="font-body-sm text-body-sm text-on-primary-container truncate"
+                          >Edificio I, Nivel 1, Campus Central UVG</span
+                        >
+                      </div>
+                    </div>
+                    <div
+                      class="gap-space-sm p-space-sm bg-surface-container-lowest/5 flex items-center rounded-lg"
+                    >
+                      <div
+                        class="bg-secondary/30 text-on-primary flex h-8 w-8 items-center justify-center rounded-lg"
+                      >
+                        <span class="material-symbols-outlined text-[18px]">support_agent</span>
+                      </div>
+                      <div class="flex min-w-0 flex-col">
+                        <span class="font-label-sm text-label-sm text-on-primary font-semibold"
+                          >Soporte Informático y Cuentas</span
+                        >
+                        <span class="font-body-sm text-body-sm text-on-primary-container truncate"
+                          >soporte.estudiantes@aeuvg.org.gt</span
+                        >
+                      </div>
+                    </div>
+                    <div
+                      class="gap-space-sm p-space-sm bg-surface-container-lowest/5 flex items-center rounded-lg"
+                    >
+                      <div
+                        class="bg-secondary/30 text-on-primary flex h-8 w-8 items-center justify-center rounded-lg"
+                      >
+                        <span class="material-symbols-outlined text-[18px]">schedule</span>
+                      </div>
+                      <div class="flex min-w-0 flex-col">
+                        <span class="font-label-sm text-label-sm text-on-primary font-semibold"
+                          >Horario de Atención</span
+                        >
+                        <span class="font-body-sm text-body-sm text-on-primary-container"
+                          >Lunes a Viernes: 07:30 - 18:00 hrs</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Pie del panel institucional -->
+                <div
+                  class="pt-space-lg mt-space-md text-on-primary-container font-caption-caps text-caption-caps relative z-10 flex items-center justify-between"
+                >
+                  <span>Seguridad Informática UVG</span>
+                  <span class="flex items-center gap-1">
+                    <span class="bg-secondary-container h-1.5 w-1.5 rounded-full"></span>
+                    Sistemas Operativos 100%
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Micro-FAQ o Aviso adicional -->
+          <div class="mt-space-lg max-w-xl text-center">
+            <p class="font-body-sm text-body-sm text-on-surface-variant">
+              ¿Ya no tienes acceso a tu carné o correo institucional? Acércate a la Dirección de
+              Registro Académico o contacta a soporte técnico de la universidad.
+            </p>
+          </div>
+        </div>
+      </div>
+      <script>
+        (function () {
+          let timeLeft = 58;
+          const badge = document.getElementById("countdown-badge");
+          const button = document.getElementById("resend-btn");
+
+          const timer = setInterval(() => {
+            timeLeft--;
+            if (timeLeft > 0) {
+              if (badge) badge.textContent = `Espera ${timeLeft}s`;
+            } else {
+              clearInterval(timer);
+              if (badge) badge.classList.add("hidden");
+              if (button) {
+                button.removeAttribute("disabled");
+                button.classList.remove(
+                  "cursor-not-allowed",
+                  "bg-surface-container",
+                  "text-on-surface-variant"
+                );
+                button.classList.add(
+                  "bg-primary-container",
+                  "text-on-primary",
+                  "hover:bg-primary",
+                  "cursor-pointer"
+                );
+              }
+            }
+          }, 1000);
+
+          if (button) {
+            button.addEventListener("click", function (e) {
+              if (!button.hasAttribute("disabled")) {
+                alert("Se ha enviado un nuevo enlace de restablecimiento a tu correo.");
+              }
+            });
+          }
+        })();
+      </script>
+    </main>
+    <footer class="bg-surface-container-low py-space-lg w-full">
+      <div
+        class="max-w-container-max px-margin-desktop gap-space-sm mx-auto flex flex-col items-center justify-between text-center md:flex-row md:text-left"
+      >
+        <div
+          class="gap-space-xs font-body-sm text-body-sm text-on-surface-variant flex flex-col items-center sm:flex-row"
+        >
+          <span>© 2025 Asociación de Estudiantes Universidad del Valle de Guatemala.</span
+          ><span class="hidden sm:inline">•</span><span>Todos los derechos reservados.</span>
+        </div>
+        <div class="gap-space-lg font-label-sm text-label-sm flex items-center">
+          <a
+            class="text-on-surface-variant hover:text-on-surface transition-colors"
+            data-path="terminos-del-servicio"
+            href="#"
+            >Términos y Condiciones</a
+          ><a
+            class="text-on-surface-variant hover:text-on-surface transition-colors"
+            data-path="politica-de-privacidad"
+            href="#"
+            >Política de Privacidad</a
+          ><a
+            class="text-on-surface-variant hover:text-on-surface transition-colors"
+            data-path="soporte-institucional"
+            href="#"
+            >Soporte Institucional</a
+          >
+        </div>
+      </div>
+    </footer>
+    <div
+      id="snapdom-sandbox"
+      data-snapdom-sandbox="true"
+      aria-hidden="true"
+      style="
+        position: absolute;
+        left: -9999px;
+        top: -9999px;
+        width: 0px;
+        height: 0px;
+        overflow: hidden;
+      "
+    ></div>
+  </body>
+</html>

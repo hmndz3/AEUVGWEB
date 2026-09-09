@@ -1,0 +1,1022 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Portal Administrativo AEUVG</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @layer base {
+        html,
+        body {
+          margin: 0;
+          padding: 0;
+        }
+        body {
+          overscroll-behavior: none;
+        }
+        main > :first-child {
+          margin-top: 0 !important;
+        }
+        main > :last-child {
+          margin-bottom: 0 !important;
+        }
+      }
+      ::-webkit-scrollbar {
+        display: none;
+      }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-primary-container": "#ede8ff",
+              "inverse-on-surface": "#fff8f3",
+              "primary-container": "#6d4aff",
+              "surface-container": "#f7f1ea",
+              secondary: "#00c9a7",
+              tertiary: "#230002",
+              "tertiary-container": "#4d000a",
+              background: "#fff8f3",
+              "on-error-container": "#93000a",
+              "on-primary-fixed-variant": "#5a35e8",
+              primary: "#1c162b",
+              "outline-variant": "#ebe2d8",
+              "tertiary-fixed": "#ffdad8",
+              "primary-fixed": "#ede8ff",
+              "on-primary": "#ffffff",
+              surface: "#fff8f3",
+              "on-error": "#ffffff",
+              "on-secondary-fixed-variant": "#00806c",
+              "on-tertiary-fixed": "#410007",
+              outline: "#d9cec2",
+              "secondary-container": "#3ec1ff",
+              "on-secondary-container": "#00806c",
+              "on-surface": "#1c162b",
+              "on-surface-variant": "#6e6580",
+              "error-container": "#ffdad6",
+              "inverse-surface": "#1c162b",
+              "inverse-primary": "#b98aff",
+              "on-tertiary-fixed-variant": "#92001c",
+              "surface-dim": "#f0e6da",
+              "surface-container-high": "#ede8ff",
+              "surface-container-low": "#f7f1ea",
+              "secondary-fixed": "#d6f7f1",
+              "secondary-fixed-dim": "#3ec1ff",
+              "on-tertiary-container": "#ff5e5b",
+              "on-primary-fixed": "#1c162b",
+              "on-tertiary": "#ffffff",
+              "surface-container-lowest": "#ffffff",
+              "surface-container-highest": "#ede8ff",
+              "tertiary-fixed-dim": "#ffb3b1",
+              "on-background": "#1c162b",
+              "primary-fixed-dim": "#b98aff",
+              "on-secondary": "#ffffff",
+              "on-secondary-fixed": "#0d3b34",
+              "surface-bright": "#fff8f3",
+              "surface-tint": "#6d4aff",
+              "surface-variant": "#ede8ff",
+              error: "#f5455c",
+            },
+            borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+            spacing: {
+              "space-sm": "0.75rem",
+              "space-xs": "0.5rem",
+              "space-2xl": "3rem",
+              "margin-desktop": "2rem",
+              "container-max": "1280px",
+              "space-2xs": "0.25rem",
+              "space-lg": "1.5rem",
+              "gutter-mobile": "1rem",
+              "margin-mobile": "1rem",
+              "space-md": "1rem",
+              "space-3xl": "4rem",
+              "gutter-desktop": "1.5rem",
+              "space-xl": "2rem",
+            },
+            fontFamily: {
+              "display-hero-mobile": ["Plus Jakarta Sans"],
+              "caption-caps": ["Plus Jakarta Sans"],
+              "display-hero": ["Plus Jakarta Sans"],
+              "headline-sm": ["Plus Jakarta Sans"],
+              "label-md": ["Plus Jakarta Sans"],
+              "body-md": ["Plus Jakarta Sans"],
+              "body-sm": ["Plus Jakarta Sans"],
+              "body-lg": ["Plus Jakarta Sans"],
+              "title-md": ["Plus Jakarta Sans"],
+              "headline-lg": ["Plus Jakarta Sans"],
+              "headline-md": ["Plus Jakarta Sans"],
+              "label-sm": ["Plus Jakarta Sans"],
+              "headline-lg-mobile": ["Plus Jakarta Sans"],
+            },
+            fontSize: {
+              "display-hero-mobile": [
+                "30px",
+                { lineHeight: "38px", letterSpacing: "-0.015em", fontWeight: "800" },
+              ],
+              "caption-caps": [
+                "11px",
+                { lineHeight: "14px", letterSpacing: "0.06em", fontWeight: "700" },
+              ],
+              "display-hero": [
+                "40px",
+                { lineHeight: "48px", letterSpacing: "-0.02em", fontWeight: "800" },
+              ],
+              "headline-sm": ["20px", { lineHeight: "28px", fontWeight: "600" }],
+              "label-md": [
+                "14px",
+                { lineHeight: "20px", letterSpacing: "0.005em", fontWeight: "600" },
+              ],
+              "body-md": ["15px", { lineHeight: "24px", fontWeight: "400" }],
+              "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+              "body-lg": ["16px", { lineHeight: "26px", fontWeight: "400" }],
+              "title-md": ["18px", { lineHeight: "26px", fontWeight: "600" }],
+              "headline-lg": [
+                "32px",
+                { lineHeight: "40px", letterSpacing: "-0.015em", fontWeight: "700" },
+              ],
+              "headline-md": [
+                "24px",
+                { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "600" },
+              ],
+              "label-sm": [
+                "12px",
+                { lineHeight: "16px", letterSpacing: "0.01em", fontWeight: "600" },
+              ],
+              "headline-lg-mobile": [
+                "26px",
+                { lineHeight: "34px", letterSpacing: "-0.01em", fontWeight: "700" },
+              ],
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-background font-body-md text-on-surface min-h-screen antialiased">
+    <aside
+      class="bg-primary-container text-on-primary fixed top-0 left-0 z-50 flex h-full w-72 flex-col justify-between shadow-[0_1px_8px_rgba(0,0,0,0.06)]"
+    >
+      <div class="flex h-full flex-col overflow-hidden">
+        <div class="px-space-md bg-primary flex h-16 shrink-0 items-center justify-between">
+          <div class="gap-space-sm flex items-center">
+            <img
+              alt="Logo circular de AEUVG compuesto por figuras humanas estilizadas unidas en círculo de colores vivos (rojo, coral, morado, celeste, naranja, verde lima y azul marino) con las siglas AEUVG limpias y modernas.. Brand logo. - Primary color: #6d4aff
+- Font: plusJakartaSans
+- Mode: light
+- Roundness: rounded-md
+"
+              class="h-8 w-auto object-contain"
+              src="logo-aeuvg.png"
+            />
+            <div class="flex flex-col">
+              <span
+                class="font-title-md text-title-md text-on-primary leading-tight font-bold tracking-tight"
+                >AEUVG Admin</span
+              ><span class="font-label-sm text-label-sm text-on-primary-container leading-none"
+                >Universidad del Valle</span
+              >
+            </div>
+          </div>
+          <div class="bg-primary flex h-8 w-8 items-center justify-center rounded-full">
+            <span class="material-symbols-outlined text-on-primary text-[18px]">person</span>
+          </div>
+        </div>
+        <div class="px-space-md py-space-sm bg-primary/40 gap-space-sm flex items-center">
+          <div
+            class="bg-secondary text-on-secondary text-label-md font-label-md flex h-9 w-9 shrink-0 items-center justify-center rounded-full font-bold"
+          >
+            JD
+          </div>
+          <div class="flex min-w-0 flex-1 flex-col">
+            <span class="font-label-md text-label-md text-on-primary truncate font-semibold"
+              >Junta Directiva</span
+            ><span class="font-label-sm text-label-sm text-on-primary-container truncate"
+              >admin@aeuvg.edu.gt</span
+            >
+          </div>
+          <span class="bg-secondary-container h-2 w-2 rounded-full"></span>
+        </div>
+        <nav
+          class="px-space-xs py-space-sm flex-1 space-y-1 overflow-y-auto"
+          data-active-classes="bg-secondary text-on-secondary font-semibold"
+        >
+          <a
+            aria-current="page"
+            class="gap-space-sm px-space-sm py-space-xs bg-secondary text-on-secondary flex items-center rounded-lg font-semibold transition-colors"
+            data-path="resumen"
+            href="#"
+            ><span class="material-symbols-outlined text-[20px]">dashboard</span
+            ><span>Resumen</span></a
+          ><a
+            class="gap-space-sm px-space-sm py-space-xs text-on-primary-container hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md flex items-center rounded-lg transition-colors"
+            data-path="eventos"
+            href="#"
+            ><span class="material-symbols-outlined text-[20px]">event</span><span>Eventos</span></a
+          ><a
+            class="gap-space-sm px-space-sm py-space-xs text-on-primary-container hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md flex items-center rounded-lg transition-colors"
+            data-path="calendario"
+            href="#"
+            ><span class="material-symbols-outlined text-[20px]">calendar_month</span
+            ><span>Calendario</span></a
+          ><a
+            class="gap-space-sm px-space-sm py-space-xs text-on-primary-container hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md flex items-center rounded-lg transition-colors"
+            data-path="asociaciones"
+            href="#"
+            ><span class="material-symbols-outlined text-[20px]">groups</span
+            ><span>Asociaciones</span></a
+          ><a
+            class="gap-space-sm px-space-sm py-space-xs text-on-primary-container hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md flex items-center rounded-lg transition-colors"
+            data-path="clubes"
+            href="#"
+            ><span class="material-symbols-outlined text-[20px]">diversity_3</span
+            ><span>Clubes</span></a
+          ><a
+            class="gap-space-sm px-space-sm py-space-xs text-on-primary-container hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md flex items-center rounded-lg transition-colors"
+            data-path="horas-beca"
+            href="#"
+            ><span class="material-symbols-outlined text-[20px]">schedule</span
+            ><span>Horas beca</span></a
+          ><a
+            class="gap-space-sm px-space-sm py-space-xs text-on-primary-container hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md flex items-center rounded-lg transition-colors"
+            data-path="oportunidades-de-horas"
+            href="#"
+            ><span class="material-symbols-outlined text-[20px]">volunteer_activism</span
+            ><span>Oportunidades de horas</span></a
+          ><a
+            class="gap-space-sm px-space-sm py-space-xs text-on-primary-container hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md flex items-center rounded-lg transition-colors"
+            data-path="tutores"
+            href="#"
+            ><span class="material-symbols-outlined text-[20px]">school</span
+            ><span>Tutores</span></a
+          ><a
+            class="gap-space-sm px-space-sm py-space-xs text-on-primary-container hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md flex items-center rounded-lg transition-colors"
+            data-path="postulaciones"
+            href="#"
+            ><span class="material-symbols-outlined text-[20px]">assignment_turned_in</span
+            ><span>Postulaciones</span></a
+          ><a
+            class="gap-space-sm px-space-sm py-space-xs text-on-primary-container hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md flex items-center rounded-lg transition-colors"
+            data-path="estudiantes"
+            href="#"
+            ><span class="material-symbols-outlined text-[20px]">badge</span
+            ><span>Estudiantes</span></a
+          ><a
+            class="gap-space-sm px-space-sm py-space-xs text-on-primary-container hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md flex items-center rounded-lg transition-colors"
+            data-path="reportes"
+            href="#"
+            ><span class="material-symbols-outlined text-[20px]">analytics</span
+            ><span>Reportes</span></a
+          >
+        </nav>
+      </div>
+      <div class="p-space-xs bg-primary/60 shrink-0 space-y-1">
+        <a
+          class="gap-space-sm px-space-sm py-space-xs text-on-primary-container hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md flex items-center rounded-lg transition-colors"
+          data-path="configuracion"
+          href="#"
+          ><span class="material-symbols-outlined text-[20px]">settings</span
+          ><span>Configuración</span></a
+        ><button
+          class="px-space-sm py-space-xs text-on-primary-container hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md flex w-full items-center justify-between rounded-lg transition-colors"
+          type="button"
+        >
+          <span class="gap-space-sm flex items-center"
+            ><span class="material-symbols-outlined text-[20px]">dock_to_left</span
+            ><span>Colapsar menú</span></span
+          ><span
+            class="font-caption-caps text-caption-caps bg-primary-container text-on-primary-container rounded px-1 py-0.5"
+            >Ctrl+B</span
+          >
+        </button>
+      </div>
+    </aside>
+    <div class="pl-72">
+      <header
+        class="bg-surface/85 px-space-lg fixed top-0 right-0 left-72 z-40 flex h-16 items-center justify-between shadow-[0_1px_8px_rgba(13,35,58,0.04)] backdrop-blur-xl"
+      >
+        <div class="gap-space-md flex max-w-xl flex-1 items-center">
+          <div class="relative w-full">
+            <span
+              class="material-symbols-outlined text-outline absolute top-1/2 left-3 -translate-y-1/2 text-[20px]"
+              >search</span
+            ><input
+              class="pr-space-md bg-surface-container-lowest text-on-surface placeholder:text-outline text-body-sm font-body-sm focus:ring-secondary w-full rounded-lg py-2 pl-10 shadow-[0_1px_3px_0_rgba(13,35,58,0.04)] transition-all focus:ring-2 focus:outline-none"
+              placeholder="Buscar estudiantes, carnets, eventos..."
+              type="text"
+            />
+          </div>
+        </div>
+        <div class="gap-space-md flex items-center">
+          <div
+            class="bg-surface-container-lowest px-space-sm flex items-center gap-2 rounded-lg py-1.5 shadow-[0_1px_3px_0_rgba(13,35,58,0.04)]"
+          >
+            <span class="material-symbols-outlined text-secondary text-[18px]">calendar_today</span
+            ><select
+              class="text-on-surface font-label-sm text-label-sm cursor-pointer bg-transparent focus:outline-none"
+            >
+              <option value="2025-1">Ciclo I - 2025</option>
+              <option value="2024-2">Ciclo II - 2024</option>
+              <option value="2024-1">Ciclo I - 2024</option>
+            </select>
+          </div>
+          <button
+            aria-label="Notificaciones"
+            class="bg-surface-container-lowest text-on-surface hover:bg-surface-container-high hover:text-on-surface relative flex h-10 w-10 items-center justify-center rounded-lg shadow-[0_1px_3px_0_rgba(13,35,58,0.04)] transition-colors"
+            type="button"
+          >
+            <span class="material-symbols-outlined text-[20px]">notifications</span
+            ><span
+              class="bg-error ring-surface-container-lowest absolute top-2 right-2 h-2 w-2 rounded-full ring-2"
+            ></span>
+          </button>
+          <div class="gap-space-sm pl-space-xs flex items-center">
+            <div class="bg-primary flex h-8 w-8 items-center justify-center rounded-full">
+              <span class="material-symbols-outlined text-on-primary text-[18px]">person</span>
+            </div>
+            <div class="hidden flex-col text-left md:flex">
+              <span class="font-label-sm text-label-sm text-on-surface leading-tight font-semibold"
+                >Admin AEUVG</span
+              ><span class="font-caption-caps text-caption-caps text-outline leading-none"
+                >Junta Directiva</span
+              >
+            </div>
+            <span class="material-symbols-outlined text-outline text-[18px]">expand_more</span>
+          </div>
+        </div>
+      </header>
+      <main class="px-space-lg py-space-lg bg-background relative min-h-screen w-full pt-16">
+        <div class="space-y-space-xl flex w-full flex-col">
+          <div
+            class="from-primary via-primary-container to-secondary p-space-xl text-on-primary relative overflow-hidden rounded-xl bg-gradient-to-r shadow-xl"
+          >
+            <div
+              class="bg-secondary-container/10 pointer-events-none absolute -top-12 -right-12 h-64 w-64 rounded-full blur-3xl"
+            ></div>
+            <div
+              class="bg-on-tertiary-container/15 pointer-events-none absolute right-32 -bottom-16 h-48 w-48 rounded-full blur-2xl"
+            ></div>
+            <div
+              class="gap-space-lg relative z-10 flex flex-col items-start justify-between md:flex-row md:items-center"
+            >
+              <div class="space-y-space-2xs max-w-2xl">
+                <div
+                  class="px-space-xs bg-surface-container-lowest/15 text-primary-fixed inline-flex items-center gap-2 rounded-full py-0.5 backdrop-blur-md"
+                >
+                  <span class="bg-secondary-container h-2 w-2 animate-pulse rounded-full"></span>
+                  <span class="font-caption-caps text-caption-caps tracking-widest uppercase"
+                    >Período Académico Vigente</span
+                  >
+                </div>
+                <h1
+                  class="font-headline-lg text-headline-lg text-on-primary font-bold tracking-tight"
+                >
+                  Resumen General
+                </h1>
+                <p class="font-body-md text-body-md text-primary-fixed-dim">
+                  Monitoreo del ciclo académico activo 2025 y gestión institucional de la Asociación
+                  de Estudiantes UVG.
+                </p>
+              </div>
+              <div class="gap-space-sm flex flex-wrap items-center self-stretch md:self-auto">
+                <button
+                  class="px-space-md bg-surface-container-lowest/10 hover:bg-surface-container-lowest/20 text-on-primary font-label-md text-label-md inline-flex flex-1 items-center justify-center gap-2 rounded-lg py-2.5 shadow-sm backdrop-blur-sm transition-all active:scale-95 md:flex-none"
+                  type="button"
+                >
+                  <span class="material-symbols-outlined text-[18px]">file_download</span>
+                  <span>Descargar reporte</span>
+                </button>
+                <button
+                  class="px-space-md bg-secondary text-on-secondary hover:bg-secondary-container hover:text-on-secondary-container font-label-md text-label-md inline-flex flex-1 items-center justify-center gap-2 rounded-lg py-2.5 font-semibold shadow-md transition-all active:scale-95 md:flex-none"
+                  type="button"
+                >
+                  <span class="material-symbols-outlined text-[18px]">add_circle</span>
+                  <span>Nueva convocatoria</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <section class="gap-space-md grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
+            <div
+              class="group bg-surface-container-lowest p-space-lg relative overflow-hidden rounded-xl shadow-sm transition-all duration-200 hover:shadow-md"
+            >
+              <div class="flex items-start justify-between">
+                <div class="space-y-1">
+                  <span
+                    class="font-label-sm text-label-sm text-outline font-semibold tracking-wider uppercase"
+                    >Total Estudiantes</span
+                  >
+                  <div
+                    class="font-display-hero text-display-hero text-on-surface font-extrabold tracking-tight"
+                  >
+                    5,420
+                  </div>
+                </div>
+                <div
+                  class="bg-secondary-fixed text-on-secondary-fixed-variant flex h-12 w-12 items-center justify-center rounded-xl shadow-inner"
+                >
+                  <span class="material-symbols-outlined text-[24px]">group</span>
+                </div>
+              </div>
+              <div class="mt-space-md flex items-center gap-2">
+                <span
+                  class="font-label-sm text-label-sm text-secondary inline-flex items-center gap-1 font-bold"
+                >
+                  <span class="material-symbols-outlined text-[16px]">trending_up</span>+12%
+                </span>
+                <span class="font-body-sm text-body-sm text-on-surface-variant"
+                  >vs. Ciclo II 2024</span
+                >
+              </div>
+              <div class="bg-surface-container mt-3 h-1.5 w-full overflow-hidden rounded-full">
+                <div class="bg-secondary h-full rounded-full" style="width: 78%"></div>
+              </div>
+            </div>
+            <div
+              class="group bg-surface-container-lowest p-space-lg relative overflow-hidden rounded-xl shadow-sm transition-all duration-200 hover:shadow-md"
+            >
+              <div class="flex items-start justify-between">
+                <div class="space-y-1">
+                  <span
+                    class="font-label-sm text-label-sm text-outline font-semibold tracking-wider uppercase"
+                    >Eventos Publicados</span
+                  >
+                  <div
+                    class="font-display-hero text-display-hero text-on-surface font-extrabold tracking-tight"
+                  >
+                    48
+                  </div>
+                </div>
+                <div
+                  class="bg-primary-fixed text-on-primary-fixed-variant flex h-12 w-12 items-center justify-center rounded-xl shadow-inner"
+                >
+                  <span class="material-symbols-outlined text-[24px]">event_available</span>
+                </div>
+              </div>
+              <div class="mt-space-md flex items-center gap-2">
+                <span
+                  class="bg-surface-container-high font-label-sm text-label-sm text-primary inline-flex items-center rounded-full px-2 py-0.5 font-semibold"
+                >
+                  14 activos
+                </span>
+                <span class="font-body-sm text-body-sm text-on-surface-variant"
+                  >en agenda este mes</span
+                >
+              </div>
+              <div class="bg-surface-container mt-3 h-1.5 w-full overflow-hidden rounded-full">
+                <div class="bg-primary-container h-full rounded-full" style="width: 62%"></div>
+              </div>
+            </div>
+            <div
+              class="group bg-surface-container-lowest p-space-lg relative overflow-hidden rounded-xl shadow-sm transition-all duration-200 hover:shadow-md"
+            >
+              <div class="flex items-start justify-between">
+                <div class="space-y-1">
+                  <span
+                    class="font-label-sm text-label-sm text-outline font-semibold tracking-wider uppercase"
+                    >Horas Beca Pendientes</span
+                  >
+                  <div
+                    class="font-display-hero text-display-hero text-on-surface font-extrabold tracking-tight"
+                  >
+                    184
+                  </div>
+                </div>
+                <div
+                  class="bg-error-container text-on-error-container flex h-12 w-12 items-center justify-center rounded-xl shadow-inner"
+                >
+                  <span class="material-symbols-outlined text-[24px]">pending_actions</span>
+                </div>
+              </div>
+              <div class="mt-space-md flex items-center gap-2">
+                <span
+                  class="font-label-sm text-label-sm text-on-error-container inline-flex items-center gap-1 font-bold"
+                >
+                  <span class="material-symbols-outlined text-[16px]">priority_high</span>Revisión
+                  urgente
+                </span>
+                <span class="font-body-sm text-body-sm text-on-surface-variant">42 vencen hoy</span>
+              </div>
+              <div class="bg-surface-container mt-3 h-1.5 w-full overflow-hidden rounded-full">
+                <div class="bg-error h-full rounded-full" style="width: 86%"></div>
+              </div>
+            </div>
+            <div
+              class="group bg-surface-container-lowest p-space-lg relative overflow-hidden rounded-xl shadow-sm transition-all duration-200 hover:shadow-md"
+            >
+              <div class="flex items-start justify-between">
+                <div class="space-y-1">
+                  <span
+                    class="font-label-sm text-label-sm text-outline font-semibold tracking-wider uppercase"
+                    >Postulaciones Tutores</span
+                  >
+                  <div
+                    class="font-display-hero text-display-hero text-on-surface font-extrabold tracking-tight"
+                  >
+                    32
+                  </div>
+                </div>
+                <div
+                  class="bg-secondary-fixed-dim text-on-secondary-fixed-variant flex h-12 w-12 items-center justify-center rounded-xl shadow-inner"
+                >
+                  <span class="material-symbols-outlined text-[24px]">school</span>
+                </div>
+              </div>
+              <div class="mt-space-md flex items-center gap-2">
+                <span
+                  class="bg-secondary-container/20 font-label-sm text-label-sm text-on-secondary-container inline-flex items-center rounded-full px-2 py-0.5 font-semibold"
+                >
+                  +9 nuevas
+                </span>
+                <span class="font-body-sm text-body-sm text-on-surface-variant"
+                  >en la última semana</span
+                >
+              </div>
+              <div class="bg-surface-container mt-3 h-1.5 w-full overflow-hidden rounded-full">
+                <div class="bg-secondary-container h-full rounded-full" style="width: 45%"></div>
+              </div>
+            </div>
+          </section>
+          <div class="gap-space-xl grid grid-cols-1 items-start lg:grid-cols-12">
+            <section class="space-y-space-md flex flex-col lg:col-span-7">
+              <div class="flex items-center justify-between pb-1">
+                <div>
+                  <h2
+                    class="font-title-md text-title-md text-on-surface flex items-center gap-2 font-bold"
+                  >
+                    <span class="material-symbols-outlined text-secondary text-[22px]"
+                      >pulse_alert</span
+                    >
+                    Actividad Reciente
+                  </h2>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant">
+                    Registro en tiempo real de acreditaciones y trámites del sistema
+                  </p>
+                </div>
+                <button
+                  class="font-label-sm text-label-sm text-secondary hover:text-on-secondary-container flex items-center gap-1 font-bold transition-colors"
+                  type="button"
+                >
+                  <span>Ver registro completo</span>
+                  <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+                </button>
+              </div>
+              <div
+                class="bg-surface-container-lowest p-space-md space-y-space-sm rounded-xl shadow-sm"
+              >
+                <div
+                  class="group gap-space-md p-space-sm hover:bg-surface-container-low flex items-start rounded-lg transition-colors"
+                >
+                  <div
+                    class="bg-surface-container relative mt-0.5 h-10 w-10 shrink-0 overflow-hidden rounded-full"
+                  >
+                    <img
+                      class="h-full w-full object-cover"
+                      data-alt="Fotografía de retrato en primer plano de estudiante universitario masculino hispano sonriendo con ropa casual moderna en el campus universitario de UVG con fondo verde desenfocado, iluminación natural cálida."
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwthxbX363ySqzPufrOYjrwPMfY6Wa62CwEW4TdE-obJV52AzqVZ_GJeIbNyk7NkEQgf7bJzHZMlXpDImt5T1ty3ieOliuCbEb-kX7mDKsz91dqcD3rzMCOH7VVNFdlWJc0EPL6-fk6SpnlTjMc62BzcmJ3FHuQftJH6igD60sKPoJ_Acii-BKMbsMpoAwNglbZz6C-9Tv2IUFIHxzMn9Uv7f9fVOq3uMZxm13Wx7ZQybHP7xtBAXHHQ"
+                    />
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <div class="flex items-center justify-between gap-2">
+                      <span class="font-label-md text-label-md text-on-surface truncate font-bold"
+                        >Carlos Mendoza (Carné 21849)</span
+                      >
+                      <span
+                        class="font-caption-caps text-caption-caps text-outline whitespace-nowrap"
+                        >Hace 14 min</span
+                      >
+                    </div>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                      Completó y acreditó
+                      <span class="text-on-surface font-semibold">12 hrs de logística</span> para la
+                      Bienvenida de Primer Ingreso.
+                    </p>
+                    <div class="mt-2 flex items-center gap-2">
+                      <span
+                        class="bg-surface-container-high text-secondary inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold"
+                      >
+                        Horas Beca
+                      </span>
+                      <span
+                        class="inline-flex items-center rounded-full bg-[#DCFCE7] px-2 py-0.5 text-[11px] font-semibold text-[#166534]"
+                      >
+                        Aprobado por Junta
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="group gap-space-md p-space-sm hover:bg-surface-container-low flex items-start rounded-lg transition-colors"
+                >
+                  <div
+                    class="bg-surface-container relative mt-0.5 h-10 w-10 shrink-0 overflow-hidden rounded-full"
+                  >
+                    <img
+                      class="h-full w-full object-cover"
+                      data-alt="Retrato profesional de estudiante universitaria femenina de ingeniería con anteojos sonriente en una sala de computación universitaria moderna con iluminación sutil azul y tonos neutros corporativos."
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZqJwNXJ9vmI56CT0tp8AViS23Dqk2Mp2cvGBQp2spNWYPIInGjDVAldTEwCWy5Gwaxk1OmjyEbAXuUDZtBYq2toSyETl3U9hPqHcipdIhXCNy6astTzdjcv0F3bsbsZXSHXpZ1fQ_0hQxQtgKaiy4rAOsR-Zz0tnJdkO9qKJJR2y8HbdOK3bvnN-jecJtYSgMTo4IMPKe4p9W7Ijz0-9tDvTTbtxfuCpOlEqgBil3Cn5PTa4JhlH7qQ"
+                    />
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <div class="flex items-center justify-between gap-2">
+                      <span class="font-label-md text-label-md text-on-surface truncate font-bold"
+                        >Sofía Castillo (Carné 22301)</span
+                      >
+                      <span
+                        class="font-caption-caps text-caption-caps text-outline whitespace-nowrap"
+                        >Hace 48 min</span
+                      >
+                    </div>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                      Ingresó nueva postulación para ser
+                      <span class="text-on-surface font-semibold"
+                        >Tutora Académica de Algoritmos y Estructuras</span
+                      >. Promedio acumulado: 91 pts.
+                    </p>
+                    <div class="mt-2 flex items-center gap-2">
+                      <span
+                        class="inline-flex items-center rounded-full bg-[#FFEDD5] px-2 py-0.5 text-[11px] font-semibold text-[#C2410C]"
+                      >
+                        Pendiente de Entrevista
+                      </span>
+                      <button
+                        class="font-label-sm text-label-sm text-secondary font-semibold hover:underline"
+                        type="button"
+                      >
+                        Evaluar expediente
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="group gap-space-md p-space-sm hover:bg-surface-container-low flex items-start rounded-lg transition-colors"
+                >
+                  <div
+                    class="bg-secondary-fixed text-on-secondary-fixed-variant mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
+                  >
+                    <span class="material-symbols-outlined text-[20px]">how_to_reg</span>
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <div class="flex items-center justify-between gap-2">
+                      <span class="font-label-md text-label-md text-on-surface truncate font-bold"
+                        >Aforo Completado: Simposio de Robótica</span
+                      >
+                      <span
+                        class="font-caption-caps text-caption-caps text-outline whitespace-nowrap"
+                        >Hace 2 horas</span
+                      >
+                    </div>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                      El evento alcanzó su límite de
+                      <span class="text-on-surface font-semibold">150 inscripciones</span> en el
+                      Auditorio I-100. Se habilitó lista de espera automática.
+                    </p>
+                    <div class="mt-2">
+                      <span
+                        class="bg-surface-container-high text-on-surface inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold"
+                      >
+                        Aforo Lleno (150/150)
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="group gap-space-md p-space-sm hover:bg-surface-container-low flex items-start rounded-lg transition-colors"
+                >
+                  <div
+                    class="bg-primary-fixed text-on-primary-fixed-variant mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
+                  >
+                    <span class="material-symbols-outlined text-[20px]">upload_file</span>
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <div class="flex items-center justify-between gap-2">
+                      <span class="font-label-md text-label-md text-on-surface truncate font-bold"
+                        >Carga Masiva de Estudiantes</span
+                      >
+                      <span
+                        class="font-caption-caps text-caption-caps text-outline whitespace-nowrap"
+                        >Hace 3 horas</span
+                      >
+                    </div>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                      Se importaron satisfactoriamente
+                      <span class="text-on-surface font-semibold">35 estudiantes</span> de la
+                      carrera de Ingeniería Mecánica al padrón activo 2025.
+                    </p>
+                    <div class="mt-2 flex items-center gap-2">
+                      <span
+                        class="bg-surface-container text-on-surface-variant inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold"
+                      >
+                        Archivo: mec_2025_c1.xlsx
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section class="space-y-space-md flex flex-col lg:col-span-5">
+              <div class="flex items-center justify-between pb-1">
+                <div>
+                  <h2
+                    class="font-title-md text-title-md text-on-surface flex items-center gap-2 font-bold"
+                  >
+                    <span class="material-symbols-outlined text-secondary text-[22px]"
+                      >calendar_clock</span
+                    >
+                    Próximos Eventos &amp; Fechas Límite
+                  </h2>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant">
+                    Hitos críticos y actividades de la semana
+                  </p>
+                </div>
+                <span
+                  class="font-caption-caps text-caption-caps bg-surface-container-high text-primary rounded px-2 py-0.5 font-bold"
+                >
+                  3 Próximos
+                </span>
+              </div>
+              <div class="space-y-space-sm">
+                <div
+                  class="bg-surface-container-lowest p-space-md space-y-space-sm flex flex-col justify-between rounded-xl shadow-sm transition-all hover:shadow-md"
+                >
+                  <div class="gap-space-md flex items-start">
+                    <div
+                      class="bg-primary text-on-primary flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-lg"
+                    >
+                      <span
+                        class="font-caption-caps text-caption-caps text-secondary-fixed tracking-wider uppercase"
+                        >Mar</span
+                      >
+                      <span class="font-headline-md text-headline-md leading-none font-bold"
+                        >18</span
+                      >
+                    </div>
+                    <div class="min-w-0 flex-1">
+                      <div class="flex items-center justify-between gap-2">
+                        <span
+                          class="bg-secondary-fixed text-on-secondary-fixed-variant inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold"
+                        >
+                          Tecnología &amp; Robótica
+                        </span>
+                        <span class="font-caption-caps text-caption-caps text-outline font-semibold"
+                          >14:00 - 18:00</span
+                        >
+                      </div>
+                      <h3
+                        class="font-title-md text-title-md text-on-surface mt-1 truncate font-bold"
+                      >
+                        Feria de Innovación y Robótica 2025
+                      </h3>
+                      <p
+                        class="font-body-sm text-body-sm text-on-surface-variant mt-0.5 flex items-center gap-1"
+                      >
+                        <span class="material-symbols-outlined text-outline text-[16px]"
+                          >location_on</span
+                        >
+                        Plaza Fuentelapiedra &amp; Laboratorio CIT-204
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    class="bg-surface-container-low/50 -mx-space-md -mb-space-md px-space-md flex items-center justify-between rounded-b-xl py-2.5 pt-2"
+                  >
+                    <div class="flex items-center gap-2">
+                      <span class="font-label-sm text-label-sm text-on-surface font-semibold"
+                        >180 / 200 inscritos</span
+                      >
+                      <span class="text-outline text-[11px]">• Organiza AEMEC</span>
+                    </div>
+                    <a
+                      class="font-label-sm text-label-sm text-secondary hover:text-on-secondary-container inline-flex items-center gap-0.5 font-bold"
+                      href="#"
+                    >
+                      <span>Gestionar</span>
+                      <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+                    </a>
+                  </div>
+                </div>
+                <div
+                  class="bg-surface-container-lowest p-space-md space-y-space-sm flex flex-col justify-between rounded-xl shadow-sm transition-all hover:shadow-md"
+                >
+                  <div class="gap-space-md flex items-start">
+                    <div
+                      class="bg-primary text-on-primary flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-lg"
+                    >
+                      <span
+                        class="font-caption-caps text-caption-caps text-secondary-fixed tracking-wider uppercase"
+                        >Jue</span
+                      >
+                      <span class="font-headline-md text-headline-md leading-none font-bold"
+                        >20</span
+                      >
+                    </div>
+                    <div class="min-w-0 flex-1">
+                      <div class="flex items-center justify-between gap-2">
+                        <span
+                          class="bg-surface-container-high text-primary inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold"
+                        >
+                          Taller Especializado
+                        </span>
+                        <span class="font-caption-caps text-caption-caps text-outline font-semibold"
+                          >10:00 - 12:30</span
+                        >
+                      </div>
+                      <h3
+                        class="font-title-md text-title-md text-on-surface mt-1 truncate font-bold"
+                      >
+                        Taller Introductorio a ROS2 &amp; Drones
+                      </h3>
+                      <p
+                        class="font-body-sm text-body-sm text-on-surface-variant mt-0.5 flex items-center gap-1"
+                      >
+                        <span class="material-symbols-outlined text-outline text-[16px]"
+                          >location_on</span
+                        >
+                        Auditorio I-100 • Cupo limitado
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    class="bg-surface-container-low/50 -mx-space-md -mb-space-md px-space-md flex items-center justify-between rounded-b-xl py-2.5 pt-2"
+                  >
+                    <div class="flex items-center gap-2">
+                      <span class="font-label-sm text-label-sm text-on-surface font-semibold"
+                        >45 / 50 inscritos</span
+                      >
+                      <span class="text-outline text-[11px]">• Organiza Club Robótica</span>
+                    </div>
+                    <a
+                      class="font-label-sm text-label-sm text-secondary hover:text-on-secondary-container inline-flex items-center gap-0.5 font-bold"
+                      href="#"
+                    >
+                      <span>Gestionar</span>
+                      <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+                    </a>
+                  </div>
+                </div>
+                <div
+                  class="bg-surface-container-lowest p-space-md space-y-space-sm flex flex-col justify-between rounded-xl shadow-sm transition-all hover:shadow-md"
+                >
+                  <div class="gap-space-md flex items-start">
+                    <div
+                      class="bg-error text-on-error flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-lg"
+                    >
+                      <span
+                        class="font-caption-caps text-caption-caps text-error-container tracking-wider uppercase"
+                        >Vie</span
+                      >
+                      <span class="font-headline-md text-headline-md leading-none font-bold"
+                        >21</span
+                      >
+                    </div>
+                    <div class="min-w-0 flex-1">
+                      <div class="flex items-center justify-between gap-2">
+                        <span
+                          class="inline-flex items-center rounded-full bg-[#FEE2E2] px-2 py-0.5 text-[11px] font-semibold text-[#991B1B]"
+                        >
+                          Fecha Límite Institucional
+                        </span>
+                        <span class="font-caption-caps text-caption-caps text-error font-bold"
+                          >23:59 hrs</span
+                        >
+                      </div>
+                      <h3
+                        class="font-title-md text-title-md text-on-surface mt-1 truncate font-bold"
+                      >
+                        Cierre de Constancias Horas Beca
+                      </h3>
+                      <p
+                        class="font-body-sm text-body-sm text-on-surface-variant mt-0.5 flex items-center gap-1"
+                      >
+                        <span class="material-symbols-outlined text-outline text-[16px]"
+                          >description</span
+                        >
+                        Recepción del 1er corte Ciclo I 2025
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    class="bg-error-container/20 -mx-space-md -mb-space-md px-space-md flex items-center justify-between rounded-b-xl py-2.5 pt-2"
+                  >
+                    <span class="font-label-sm text-label-sm text-on-error-container font-semibold"
+                      >Afecta a 612 becarios activos</span
+                    >
+                    <a
+                      class="font-label-sm text-label-sm text-error inline-flex items-center gap-0.5 font-bold hover:underline"
+                      href="#"
+                    >
+                      <span>Ver pendientes</span>
+                      <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+          <section class="bg-surface-container-low p-space-lg rounded-xl shadow-sm">
+            <div
+              class="gap-space-md mb-space-md flex flex-col justify-between sm:flex-row sm:items-center"
+            >
+              <div>
+                <h2 class="font-title-md text-title-md text-on-surface font-bold">
+                  Accesos Directos de Administración
+                </h2>
+                <p class="font-body-sm text-body-sm text-on-surface-variant">
+                  Acciones inmediatas frecuentes para la Junta Directiva
+                </p>
+              </div>
+              <span
+                class="font-caption-caps text-caption-caps text-outline tracking-wider uppercase"
+                >AEUVG • 2024-2025</span
+              >
+            </div>
+            <div class="gap-space-md grid grid-cols-1 md:grid-cols-3">
+              <a
+                class="group gap-space-md p-space-md bg-surface-container-lowest hover:bg-surface-container flex items-center rounded-xl shadow-sm transition-all hover:shadow-md"
+                href="#"
+              >
+                <div
+                  class="bg-primary text-on-primary flex h-12 w-12 shrink-0 items-center justify-center rounded-xl transition-transform group-hover:scale-105"
+                >
+                  <span class="material-symbols-outlined text-[26px]">schedule</span>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <span class="font-label-md text-label-md text-on-surface block truncate font-bold"
+                    >Gestionar Horas Beca</span
+                  >
+                  <span class="font-body-sm text-body-sm text-on-surface-variant block truncate"
+                    >Validar constancias y firmas</span
+                  >
+                </div>
+                <span
+                  class="material-symbols-outlined text-outline group-hover:text-primary text-[20px] transition-colors"
+                  >chevron_right</span
+                >
+              </a>
+              <a
+                class="group gap-space-md p-space-md bg-surface-container-lowest hover:bg-surface-container flex items-center rounded-xl shadow-sm transition-all hover:shadow-md"
+                href="#"
+              >
+                <div
+                  class="bg-secondary text-on-secondary flex h-12 w-12 shrink-0 items-center justify-center rounded-xl transition-transform group-hover:scale-105"
+                >
+                  <span class="material-symbols-outlined text-[26px]">assignment_ind</span>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <span class="font-label-md text-label-md text-on-surface block truncate font-bold"
+                    >Revisar Postulaciones</span
+                  >
+                  <span class="font-body-sm text-body-sm text-on-surface-variant block truncate"
+                    >32 tutores en espera</span
+                  >
+                </div>
+                <span
+                  class="material-symbols-outlined text-outline group-hover:text-secondary text-[20px] transition-colors"
+                  >chevron_right</span
+                >
+              </a>
+              <a
+                class="group gap-space-md p-space-md bg-surface-container-lowest hover:bg-surface-container flex items-center rounded-xl shadow-sm transition-all hover:shadow-md"
+                href="#"
+              >
+                <div
+                  class="bg-primary-container text-on-primary flex h-12 w-12 shrink-0 items-center justify-center rounded-xl transition-transform group-hover:scale-105"
+                >
+                  <span class="material-symbols-outlined text-[26px]">add_box</span>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <span class="font-label-md text-label-md text-on-surface block truncate font-bold"
+                    >Publicar Evento</span
+                  >
+                  <span class="font-body-sm text-body-sm text-on-surface-variant block truncate"
+                    >Nueva actividad en el calendario</span
+                  >
+                </div>
+                <span
+                  class="material-symbols-outlined text-outline group-hover:text-primary text-[20px] transition-colors"
+                  >chevron_right</span
+                >
+              </a>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
