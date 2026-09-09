@@ -6,6 +6,7 @@ import { HASH_COMPARACION_FALSA } from "../src/lib/auth/servicio-autenticacion";
 import { esAdministrador, normalizarRol, ROLES, tieneRol } from "../src/lib/auth/roles";
 import { NOMBRE_COOKIE_SESION, opcionesCookieSesion } from "../src/lib/auth/sesion";
 import type { ConfiguracionSesion } from "../src/lib/configuracion-sesion";
+import { destinoSeguro } from "../src/lib/auth/destino-seguro";
 import { inicialesDe } from "../src/lib/auth/usuario-sesion-cliente";
 
 const configuracion: ConfiguracionSesion = {
@@ -67,4 +68,15 @@ test("las iniciales del avatar se arman con el nombre y el primer apellido", () 
   assert.equal(inicialesDe("Harry Daniel Méndez"), "HD");
   assert.equal(inicialesDe("Ana"), "A");
   assert.equal(inicialesDe("   "), "?");
+});
+
+test("el destino tras iniciar sesión rechaza cualquier salida fuera del sitio", () => {
+  assert.equal(destinoSeguro("/perfil"), "/perfil");
+  assert.equal(destinoSeguro("/admin/horas-beca"), "/admin/horas-beca");
+  assert.equal(destinoSeguro(null), "/");
+  assert.equal(destinoSeguro(""), "/");
+  assert.equal(destinoSeguro("https://sitio-externo.example"), "/");
+  assert.equal(destinoSeguro("//sitio-externo.example"), "/");
+  assert.equal(destinoSeguro("/\\sitio-externo.example"), "/");
+  assert.equal(destinoSeguro("javascript:alert(1)"), "/");
 });

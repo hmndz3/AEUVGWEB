@@ -2,11 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { FormEvent, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { FormEvent, Suspense, useState } from "react";
 
 import { CampoAcceso } from "@/components/autenticacion/campo-acceso";
 import { Icono } from "@/components/autenticacion/icono";
 import { MarcoAcceso } from "@/components/autenticacion/marco-acceso";
+import { destinoSeguro } from "@/lib/auth/destino-seguro";
 
 function PanelInicioSesion() {
   return (
@@ -78,7 +80,9 @@ function TarjetaPanel({
   );
 }
 
-export default function PaginaInicioSesion() {
+function FormularioInicioSesion() {
+  const router = useRouter();
+  const parametros = useSearchParams();
   const [correo, setCorreo] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [mensaje, setMensaje] = useState("");
@@ -99,6 +103,12 @@ export default function PaginaInicioSesion() {
       const resultado = (await respuesta.json()) as { mensaje: string };
       setMensaje(resultado.mensaje);
       setSesionIniciada(respuesta.ok);
+
+      if (respuesta.ok) {
+        // El middleware conserva la ruta pedida cuando redirige al acceso.
+        router.replace(destinoSeguro(parametros.get("continuar")));
+        router.refresh();
+      }
     } catch {
       setMensaje("El servicio de autenticación no está disponible temporalmente.");
       setSesionIniciada(false);
@@ -196,5 +206,15 @@ export default function PaginaInicioSesion() {
         </div>
       </div>
     </MarcoAcceso>
+  );
+}
+
+// useSearchParams obliga a delimitar la parte dinámica para poder prerenderizar
+// el resto de la pantalla.
+export default function PaginaInicioSesion() {
+  return (
+    <Suspense fallback={null}>
+      <FormularioInicioSesion />
+    </Suspense>
   );
 }
