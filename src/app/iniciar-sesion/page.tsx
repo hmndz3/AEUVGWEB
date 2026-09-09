@@ -41,7 +41,7 @@ function PanelInicioSesion() {
       </div>
       <div className="mt-auto flex items-center justify-between pt-8 text-[11px] font-semibold text-white/60">
         <span className="flex items-center gap-1.5">
-          <Icono nombre="candado" className="size-4" /> Cifrado seguro UVG
+          <Icono nombre="candado" className="size-4" /> Cuenta institucional
         </span>
         <span>2026</span>
       </div>
@@ -202,7 +202,7 @@ function FormularioInicioSesion() {
         </div>
         <div className="bg-superficie-suave text-texto-suave mt-8 flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-xs font-semibold">
           <Icono nombre="escudo" className="text-turquesa size-4" />
-          Acceso protegido mediante UVG Single Sign-On
+          Tu contraseña se guarda cifrada y nunca viaja en el enlace
         </div>
       </div>
     </MarcoAcceso>
