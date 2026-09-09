@@ -3,12 +3,22 @@
 const { Packer } = require("docx");
 const fs = require("fs");
 const path = require("path");
-const { p, bullet, h1, h2, makeTable, spacer, cover, buildDocument } = require("./template");
+const {
+  p,
+  bullet,
+  h1,
+  h2,
+  makeTable,
+  spacer,
+  figura,
+  cover,
+  buildDocument,
+} = require("./template");
 
 const doc = buildDocument([
   ...cover({
     subtitle: "Documento de Desarrollo del Sprint 1",
-    date: "Guatemala, 8 de septiembre del 2026",
+    date: "Guatemala, 9 de septiembre del 2026",
   }),
 
   // ---------- 1. Introducción ----------
@@ -42,8 +52,8 @@ const doc = buildDocument([
       ],
       [
         "Estilos / UI",
-        "Tailwind CSS 4 + shadcn/ui",
-        "Interfaz consistente, responsive y personalizable a la identidad de AEUVG.",
+        "Tailwind CSS 4 y componentes propios",
+        "Interfaz consistente y adaptable, construida sobre la paleta de AEUVG.",
       ],
       [
         "Backend",
@@ -62,8 +72,8 @@ const doc = buildDocument([
       ],
       [
         "Autenticación",
-        "Auth.js (NextAuth v5)",
-        "Registro, sesiones, recuperación de contraseña y roles; registro restringido a correos UVG.",
+        "scrypt para las contraseñas y jose para las sesiones firmadas",
+        "Registro, sesiones y roles propios; registro restringido a correos institucionales.",
       ],
       ["Validación", "Zod", "Mismos esquemas de validación en cliente y servidor."],
       [
@@ -174,10 +184,266 @@ const doc = buildDocument([
     "La aplicación se conecta a PostgreSQL a través de un cliente único y reutilizado, que se crea la primera vez que se solicita. Para verificar la conexión de forma directa se implementó el punto de acceso /api/health, que consulta la base de datos y responde si la comunicación es correcta. Esta verificación permite confirmar el estado del sistema desde el navegador, sin necesidad de revisar los registros del servidor."
   ),
 
-  // ---------- 4. Estado ----------
-  h1("4. Estado del sprint"),
+  // ---------- 4. HU-03 ----------
+  h1("4. HU-03 - Sistema de diseño y prototipos de las pantallas principales"),
   p(
-    "Al momento de esta actualización, las historias de usuario HU-01 y HU-02 se encuentran completadas. El sistema cuenta con:"
+    "Esta historia define la identidad visual de la plataforma, los prototipos de sus pantallas principales y la biblioteca de componentes con la que se construirán todas las interfaces. Su propósito es que el desarrollo sea consistente durante el resto del proyecto y que no deba rediseñarse en cada sprint."
+  ),
+
+  h2("4.1. Identidad visual y paleta"),
+  p(
+    "La paleta se derivó del logo de AEUVG, que representa figuras humanas de colores distintos formando un círculo, en alusión a la unión de las asociaciones estudiantiles. Dado que ningún color del logo predomina sobre los demás, se tomó el violeta como color de acción, por ser el que mejor se identifica como elemento interactivo, y los tonos restantes se repartieron como acentos a lo largo de la interfaz."
+  ),
+  spacer(),
+  makeTable(
+    [2600, 2000, 4760],
+    ["Grupo", "Color", "Uso"],
+    [
+      ["Acción", "Violeta #6D4AFF", "Botones principales, enlaces y navegación."],
+      [
+        "Acentos",
+        "Coral, turquesa, ámbar, magenta, lima, cielo y lavanda",
+        "Diferenciación de las categorías de eventos y realces de sección.",
+      ],
+      [
+        "Neutros",
+        "Fondo crema #FFF8F3 y texto #1C162B",
+        "Fondos y texto. Se eligieron neutros cálidos en lugar de grises para que la interfaz no resulte fría.",
+      ],
+      [
+        "Estados",
+        "Éxito, advertencia, error e informativo",
+        "Las horas beca acreditadas se muestran en turquesa y las pendientes en ámbar.",
+      ],
+    ]
+  ),
+  spacer(),
+  p(
+    "Cada una de las ocho categorías de eventos cargadas durante la historia anterior tiene asignado uno de los colores de acento, almacenado en la propia base de datos. La paleta completa quedó documentada en el repositorio e implementada como variables de diseño dentro del proyecto, de modo que todas las pantallas la consumen desde un único lugar."
+  ),
+
+  h2("4.2. Tipografía y forma"),
+  p(
+    "Se seleccionó la familia tipográfica Plus Jakarta Sans, de trazo geométrico y aspecto amable, con soporte completo de acentos y ñ. Se definió una escala de siete tamaños que abarca desde el titular principal hasta las etiquetas, con variantes propias para la vista móvil."
+  ),
+  p(
+    "En cuanto a la forma, se establecieron radios amplios para campos y tarjetas, botones y etiquetas de estado con radio completo, y sombras suaves teñidas del color del elemento en lugar de sombras grises neutras. Estas decisiones buscan que la plataforma resulte cercana para el estudiantado y se distinga de la estética de un portal administrativo."
+  ),
+
+  h2("4.3. Biblioteca de componentes"),
+  p(
+    "Se implementó dentro del proyecto la biblioteca de componentes base sobre la que se construirán todas las pantallas: botones en sus cinco variantes con sus estados, campos de formulario con etiqueta, texto de ayuda y estado de error, tarjetas, tablas de datos, etiquetas de estado, mensajes de alerta, encabezado de navegación y pie de página."
+  ),
+  p(
+    "Los componentes consumen directamente las variables de la paleta, por lo que un ajuste de color se refleja en toda la plataforma sin modificar cada pantalla. Se incluyó además una página interna que reúne todos los componentes, la cual sirve como referencia visual para el equipo y permite verificar su comportamiento en distintos tamaños de pantalla."
+  ),
+  ...figura(
+    "docs/diseno/documento/sistema-componentes.png",
+    620,
+    720,
+    "Biblioteca de componentes base implementada en el proyecto."
+  ),
+
+  h2("4.4. Prototipos de las pantallas principales"),
+  p(
+    "Se elaboraron los prototipos de las pantallas principales de la plataforma, en sus versiones para computadora y para dispositivos móviles. Las pantallas cubiertas son la página principal, la página sobre AEUVG, la creación de cuenta, el inicio de sesión con sus flujos de recuperación y restablecimiento de contraseña, la confirmación de correo, el listado y el detalle de eventos, el perfil del estudiante en sus distintas pestañas, y el panel administrativo con su resumen y la gestión de horas beca."
+  ),
+  p(
+    "Los prototipos se revisaron contra el modelo de datos implementado en la historia anterior, de modo que la información mostrada corresponda con la que el sistema efectivamente almacena. A continuación se presentan las pantallas más representativas."
+  ),
+  ...figura("docs/diseno/documento/landing-escritorio.png", 620, 720, "Página principal."),
+  ...figura(
+    "docs/diseno/documento/eventos-escritorio.png",
+    620,
+    720,
+    "Listado de eventos con sus filtros."
+  ),
+  ...figura(
+    "docs/diseno/documento/sobre-aeuvg-escritorio.png",
+    620,
+    720,
+    "Página informativa sobre AEUVG."
+  ),
+  ...figura("docs/diseno/documento/registro-escritorio.png", 620, 720, "Creación de cuenta."),
+  ...figura(
+    "docs/diseno/documento/perfil-horas-beca-escritorio.png",
+    620,
+    720,
+    "Perfil del estudiante con el resumen de sus horas beca."
+  ),
+  ...figura(
+    "docs/diseno/documento/admin-resumen.png",
+    620,
+    581,
+    "Panel administrativo: resumen general."
+  ),
+  ...figura(
+    "docs/diseno/documento/admin-horas-beca.png",
+    620,
+    581,
+    "Panel administrativo: gestión de horas beca."
+  ),
+
+  h2("4.5. Diseño adaptable"),
+  p(
+    "Se adoptaron los puntos de corte estándar del sistema de estilos del proyecto, correspondientes a teléfono, tableta, escritorio y escritorio amplio, con un ancho máximo de contenido de 1280 píxeles. El diseño prioriza la vista móvil, considerando que la mayoría de los estudiantes accede desde el teléfono."
+  ),
+  ...figura(
+    "docs/diseno/documento/landing-movil.png",
+    250,
+    620,
+    "Página principal en su versión para dispositivos móviles."
+  ),
+  ...figura(
+    "docs/diseno/documento/perfil-horas-beca-movil.png",
+    250,
+    620,
+    "Perfil del estudiante en su versión para dispositivos móviles."
+  ),
+
+  h2("4.6. Validación con AEUVG"),
+  p(
+    "Los prototipos y el sistema de diseño fueron presentados a AEUVG para su revisión. La asociación dio su aprobación sin solicitar cambios, por lo que la identidad visual y la estructura de las pantallas quedan confirmadas como base para el desarrollo de los módulos funcionales en los sprints siguientes."
+  ),
+
+  // ---------- 5. HU-04 ----------
+  h1("5. HU-04 - Registro, inicio de sesión y recuperación de contraseña"),
+  p(
+    "Esta historia implementa el acceso de los estudiantes a la plataforma: la creación de cuenta con verificación del correo institucional, el inicio y el cierre de sesión, y la recuperación de la contraseña. Con ella, la información personal de cada estudiante queda asociada a una cuenta propia y protegida."
+  ),
+
+  h2("5.1. Registro de cuenta"),
+  p(
+    "El registro solicita el nombre completo, el carnet universitario, el correo institucional, el teléfono de forma opcional, la facultad, la carrera y la contraseña. Las facultades y las carreras se cargan desde los catálogos de la base de datos, y la carrera disponible depende de la facultad elegida."
+  ),
+  p(
+    "Las validaciones se aplican tanto en el formulario como en el servidor. Solo se admiten correos del dominio institucional, y se rechazan las direcciones de dominios que únicamente se le parecen. El carnet y el correo deben ser únicos, y la carrera seleccionada debe pertenecer efectivamente a la facultad indicada. La contraseña exige al menos ocho caracteres con mayúscula, minúscula, número y símbolo, y el formulario muestra un indicador de seguridad mientras se escribe."
+  ),
+  p(
+    "La cuenta se crea en estado pendiente y se activa al verificar el correo. La verificación usa un enlace temporal de un solo uso: del enlace enviado únicamente se almacena su huella, de modo que ni siquiera con acceso a la base de datos podría reconstruirse. El reenvío del enlace tiene un tiempo de espera entre solicitudes y un máximo por hora."
+  ),
+  ...figura(
+    "docs/diseno/documento/sprint1-crear-cuenta.png",
+    620,
+    602,
+    "Creación de cuenta con la carga de facultades y carreras."
+  ),
+
+  h2("5.2. Cifrado de contraseñas y sesión"),
+  p(
+    "Las contraseñas nunca se almacenan en texto claro. Se guardan derivadas con scrypt, junto con una sal distinta por cuenta y los parámetros usados, de manera que el formato pueda evolucionar sin invalidar las contraseñas existentes."
+  ),
+  p(
+    "El inicio de sesión responde de forma idéntica ante un correo inexistente y ante una contraseña incorrecta, para que no sea posible averiguar qué correos están registrados. Además, cuando la cuenta no existe se realiza una comparación contra un valor de descarte, de modo que el intento tarde lo mismo en ambos casos y el tiempo de respuesta tampoco delate la existencia de la cuenta."
+  ),
+  p(
+    "La sesión se emite como un token firmado con vigencia limitada y se guarda en una cookie que el navegador no puede leer desde el código de la página. El cierre de sesión borra esa cookie y el encabezado del sitio muestra en todo momento si hay una sesión activa, con el nombre de la persona y su acceso al panel cuando corresponde."
+  ),
+  ...figura("docs/diseno/documento/sprint1-iniciar-sesion.png", 620, 473, "Inicio de sesión."),
+
+  h2("5.3. Recuperación de contraseña"),
+  p(
+    "La recuperación envía al correo institucional un enlace temporal de un solo uso. Al igual que en la verificación, solo se almacena la huella del enlace; solicitar uno nuevo invalida el anterior, y al usarlo queda consumido de inmediato, de modo que dos intentos simultáneos no puedan aprovecharlo dos veces."
+  ),
+  p(
+    "La solicitud responde siempre con el mismo mensaje, exista o no una cuenta con ese correo, para no revelar quiénes están registrados. La contraseña nueva se somete a las mismas reglas de seguridad que la del registro."
+  ),
+  ...figura(
+    "docs/diseno/documento/sprint1-recuperar.png",
+    620,
+    473,
+    "Solicitud del enlace de recuperación."
+  ),
+
+  h2("5.4. Pruebas"),
+  p(
+    "Los cuatro flujos quedaron cubiertos por pruebas automatizadas que verifican, entre otros casos, que el dominio institucional se respete, que el correo y el carnet duplicados se rechacen, que los enlaces caduquen y no puedan reutilizarse, que los límites de envío se apliquen y que el cierre de sesión invalide la cookie."
+  ),
+
+  // ---------- 6. HU-05 ----------
+  h1("6. HU-05 - Roles, permisos y acceso al panel administrativo"),
+  p(
+    "Esta historia distingue lo que puede hacer cada tipo de usuario dentro de la plataforma y habilita el espacio de trabajo de la Junta Directiva."
+  ),
+
+  h2("6.1. Roles y asignación"),
+  p(
+    "El sistema define tres roles: estudiante, tutor y administrador. El rol de estudiante se asigna automáticamente al crear la cuenta; el de tutor se otorgará al aprobar una postulación de tutoría, y el de administrador se concede de forma explícita. Una misma persona puede tener más de un rol. Los nombres de rol que no correspondan a alguno de los tres se descartan al leerlos, de modo que un registro manual erróneo en la base de datos no conceda permisos."
+  ),
+
+  h2("6.2. Dónde se decide el acceso"),
+  p(
+    "La comprobación de permisos se realiza siempre en el servidor, a partir de los roles almacenados en la base de datos. Los servicios responden que no existe el recurso cuando la persona tiene sesión pero no el rol necesario, de manera que la existencia de una sección administrativa no se revele a quien no debe verla."
+  ),
+  p(
+    "Sobre esa base se agregan dos capas que mejoran la experiencia pero no sustituyen a la comprobación: una que evita mostrar pantallas privadas a quien no ha iniciado sesión, conservando la ruta solicitada para volver a ella después de entrar, y el menú de navegación, que muestra únicamente las secciones que el rol puede usar. Quien escriba directamente la dirección de una sección protegida vuelve a pasar por la comprobación del servidor."
+  ),
+
+  h2("6.3. Panel administrativo"),
+  p(
+    "El panel cuenta con su barra lateral y sus once secciones: resumen, eventos, calendario, asociaciones, clubes, horas beca, oportunidades de horas, tutores, postulaciones, estudiantes y reportes. El resumen muestra los indicadores de estudiantes registrados, eventos publicados, horas beca por acreditar y postulaciones sin revisar. Las secciones cuyos módulos corresponden a sprints posteriores quedan habilitadas e indican en cuál se implementan, en lugar de presentar pantallas en blanco."
+  ),
+  p(
+    "Las cuentas de administrador no pueden originarse en el registro público. Se otorgan mediante un procedimiento explícito que crea la cuenta o promueve una existente, dejándola activa y con el correo verificado. La contraseña se entrega por medio de una variable de entorno y no como argumento, para que no quede registrada en el historial del sistema."
+  ),
+
+  h2("6.4. Pruebas"),
+  p(
+    "La política de acceso se verificó con pruebas para los tres roles: sin sesión, con rol de estudiante y con rol de tutor no se alcanza una sección de administración; con rol de administrador sí. También se cubrieron los casos de una persona con varios roles, de una sección que solo exige sesión y de una cuenta sin ningún rol asignado."
+  ),
+
+  // ---------- 7. HU-06 ----------
+  h1("7. HU-06 - Landing page y página sobre AEUVG"),
+  p(
+    "Esta historia construye las páginas públicas de la plataforma, que son la puerta de entrada para el estudiantado."
+  ),
+
+  h2("7.1. Estructura del sitio"),
+  p(
+    "Las páginas públicas comparten un encabezado con la navegación principal y un pie con los accesos a las secciones del sitio, a la vida estudiantil y a la cuenta. El encabezado muestra el estado de la sesión y adapta sus opciones al rol."
+  ),
+
+  h2("7.2. Página principal"),
+  p(
+    "La portada abre con una sección principal que presenta la plataforma y ofrece los accesos a los eventos y a la información institucional. A continuación se encuentran los accesos rápidos hacia eventos y calendario, horas beca, tutorías, y asociaciones y clubes, presentados como un mosaico con un color de acento por bloque."
+  ),
+  p(
+    "Debajo se muestran las actividades destacadas y los próximos eventos, que se consultan directamente de la base de datos, junto con las redes sociales de la asociación. Como el módulo de eventos se implementa en el Sprint 2, cada sección presenta su estado vacío mientras no haya información publicada, y el bloque de redes se omite mientras no exista ninguna registrada."
+  ),
+  ...figura("docs/diseno/documento/sprint1-portada.png", 620, 731, "Página principal."),
+
+  h2("7.3. Página sobre AEUVG"),
+  p(
+    "La página institucional presenta la descripción de la asociación, su misión y su visión, la Junta Directiva y los medios de contacto. Toda esa información se lee de la base de datos, de modo que actualizarla no exija modificar el código. Los integrantes que no tengan fotografía se muestran con sus iniciales sobre un color de la paleta, de manera que la ausencia de una imagen no impida publicar la página."
+  ),
+  p(
+    "La información institucional fue solicitada formalmente a la Junta Directiva mediante un documento que detalla los textos requeridos, los datos de cada integrante, las condiciones técnicas de las fotografías y la autorización de uso de imagen que cada persona debe otorgar. Mientras esa información no se reciba, cada bloque indica que está pendiente en lugar de mostrar texto de relleno."
+  ),
+  ...figura(
+    "docs/diseno/documento/sprint1-sobre-aeuvg.png",
+    620,
+    645,
+    "Página sobre AEUVG con los bloques pendientes de información."
+  ),
+
+  h2("7.4. Diseño adaptable y optimización"),
+  p(
+    "Ambas páginas se verificaron en anchos de teléfono, tableta y escritorio, comprobando que ninguna produce desplazamiento horizontal. La verificación en ejecución permitió detectar que en pantallas menores a mil veinticuatro píxeles no existía navegación alguna, por lo que se incorporó un menú desplegable que respeta los permisos del rol y que incluye el acceso a la cuenta, ya que el encabezado no dispone de espacio en esos anchos."
+  ),
+  p(
+    "En cuanto a los recursos, se retiraron los archivos de la plantilla inicial que ninguna pantalla utilizaba y se redujo el peso del logotipo de ciento treinta y uno a cuarenta y un kilobytes, ajustándolo al mayor tamaño en que se muestra y priorizando su carga en el encabezado."
+  ),
+  ...figura(
+    "docs/diseno/documento/sprint1-portada-movil.png",
+    250,
+    620,
+    "Página principal en su versión para dispositivos móviles."
+  ),
+
+  // ---------- 8. Estado ----------
+  h1("8. Estado del sprint"),
+  p(
+    "Con el cierre de estas historias, las seis comprometidas para el Sprint 1 se encuentran completadas. La plataforma cuenta con:"
   ),
   bullet("El stack tecnológico definido y documentado."),
   bullet("El repositorio configurado, con las ramas de trabajo y el archivo README."),
@@ -186,9 +452,22 @@ const doc = buildDocument([
   ),
   bullet("La aplicación desplegada en Railway y accesible desde internet."),
   bullet("La base de datos PostgreSQL creada, con su esquema completo y sus catálogos cargados."),
-  bullet("La conexión entre la aplicación y la base de datos verificada."),
+  bullet("El sistema de diseño y la biblioteca de componentes base implementados."),
+  bullet(
+    "Los prototipos de las pantallas principales elaborados para computadora y móvil, y aprobados por AEUVG."
+  ),
+  bullet(
+    "El registro con verificación del correo institucional, el inicio y el cierre de sesión, y la recuperación de contraseña."
+  ),
+  bullet(
+    "Los roles y permisos aplicados, y el panel administrativo con su estructura de secciones."
+  ),
+  bullet("La página principal y la página sobre AEUVG publicadas."),
   p(
-    "El trámite del dominio institucional continúa en gestión ante la universidad. Las historias restantes del sprint corresponden al sistema de diseño y prototipos, la autenticación de usuarios, los roles y permisos, y las páginas informativas de AEUVG."
+    "Quedan dos asuntos en gestión ante terceros, ambos fuera del control del equipo: el trámite del dominio institucional ante la universidad y la entrega de la información institucional y las fotografías por parte de la Junta Directiva de AEUVG. La plataforma está preparada para incorporar ambos sin cambios en el código."
+  ),
+  p(
+    "El desarrollo continúa en el Sprint 2 con el módulo de eventos, que constituye la funcionalidad principal de consulta para el estudiantado."
   ),
 ]);
 

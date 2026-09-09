@@ -7,6 +7,7 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
+    "test": "node scripts/pruebas.js",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "postinstall": "prisma generate",
@@ -17,15 +18,21 @@
     "db:railway:status": "node scripts/db/railway.js prisma migrate status",
     "db:seed:test": "tsx prisma/seed-test.ts",
     "db:verify-catalogs": "tsx prisma/verify-catalogs.ts",
-    "db:verify-test-data": "tsx prisma/verify-test-data.ts"
+    "db:verify-test-data": "tsx prisma/verify-test-data.ts",
+    "db:admin": "tsx prisma/crear-administrador.ts",
+    "db:railway:admin": "node scripts/db/railway.js tsx prisma/crear-administrador.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.10.0",
     "@prisma/client": "^7.10.0",
+    "clsx": "^2.1.1",
+    "jose": "^6.2.12",
     "next": "16.3.3",
     "pg": "^8.23.0",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "tailwind-merge": "^3.6.0",
+    "zod": "^4.5.4"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

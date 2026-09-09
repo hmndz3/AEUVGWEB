@@ -1,0 +1,1030 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>AEUVG - Plataforma Estudiantil</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @layer base {
+        html,
+        body {
+          margin: 0;
+          padding: 0;
+        }
+        body {
+          overscroll-behavior: none;
+        }
+        main > :first-child {
+          margin-top: 0 !important;
+        }
+        main > :last-child {
+          margin-bottom: 0 !important;
+        }
+      }
+      ::-webkit-scrollbar {
+        display: none;
+      }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-primary": "#b98aff",
+              "secondary-fixed-dim": "#3ec1ff",
+              "on-error-container": "#93000a",
+              "on-primary-container": "#ede8ff",
+              secondary: "#00c9a7",
+              "inverse-on-surface": "#fff8f3",
+              "tertiary-container": "#4d000a",
+              "surface-container-low": "#f7f1ea",
+              "on-secondary-fixed-variant": "#00806c",
+              "on-background": "#1c162b",
+              tertiary: "#230002",
+              "error-container": "#ffdad6",
+              "on-tertiary": "#ffffff",
+              "on-primary-fixed-variant": "#5a35e8",
+              "primary-fixed": "#ede8ff",
+              "on-secondary-fixed": "#0d3b34",
+              "surface-container": "#f7f1ea",
+              "primary-container": "#6d4aff",
+              "surface-bright": "#fff8f3",
+              "on-error": "#ffffff",
+              "on-primary": "#ffffff",
+              error: "#f5455c",
+              "surface-container-highest": "#ede8ff",
+              "surface-container-high": "#ede8ff",
+              "on-surface": "#1c162b",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-fixed-dim": "#ffb3b1",
+              "on-tertiary-container": "#ff5e5b",
+              "tertiary-fixed": "#ffdad8",
+              "on-surface-variant": "#6e6580",
+              "on-tertiary-fixed": "#410007",
+              "on-secondary": "#ffffff",
+              "surface-variant": "#ede8ff",
+              primary: "#1c162b",
+              "on-secondary-container": "#00806c",
+              background: "#fff8f3",
+              "on-primary-fixed": "#1c162b",
+              "surface-tint": "#6d4aff",
+              "surface-dim": "#f0e6da",
+              "outline-variant": "#ebe2d8",
+              "secondary-container": "#3ec1ff",
+              "inverse-surface": "#1c162b",
+              "secondary-fixed": "#d6f7f1",
+              surface: "#fff8f3",
+              "primary-fixed-dim": "#b98aff",
+              outline: "#d9cec2",
+              "on-tertiary-fixed-variant": "#92001c",
+            },
+            borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+            spacing: {
+              "margin-desktop": "2rem",
+              "space-3xl": "4rem",
+              "space-sm": "0.75rem",
+              "space-xs": "0.5rem",
+              "space-2xl": "3rem",
+              "space-2xs": "0.25rem",
+              "margin-mobile": "1rem",
+              "container-max": "1280px",
+              "space-xl": "2rem",
+              "gutter-desktop": "1.5rem",
+              "gutter-mobile": "1rem",
+              "space-md": "1rem",
+              "space-lg": "1.5rem",
+            },
+            fontFamily: {
+              "headline-md": ["Plus Jakarta Sans"],
+              "headline-sm": ["Plus Jakarta Sans"],
+              "label-md": ["Plus Jakarta Sans"],
+              "title-md": ["Plus Jakarta Sans"],
+              "caption-caps": ["Plus Jakarta Sans"],
+              "display-hero-mobile": ["Plus Jakarta Sans"],
+              "display-hero": ["Plus Jakarta Sans"],
+              "body-sm": ["Plus Jakarta Sans"],
+              "headline-lg-mobile": ["Plus Jakarta Sans"],
+              "body-md": ["Plus Jakarta Sans"],
+              "label-sm": ["Plus Jakarta Sans"],
+              "body-lg": ["Plus Jakarta Sans"],
+              "headline-lg": ["Plus Jakarta Sans"],
+            },
+            fontSize: {
+              "headline-md": [
+                "24px",
+                { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "600" },
+              ],
+              "headline-sm": ["20px", { lineHeight: "28px", fontWeight: "600" }],
+              "label-md": [
+                "14px",
+                { lineHeight: "20px", letterSpacing: "0.005em", fontWeight: "600" },
+              ],
+              "title-md": ["18px", { lineHeight: "26px", fontWeight: "600" }],
+              "caption-caps": [
+                "11px",
+                { lineHeight: "14px", letterSpacing: "0.06em", fontWeight: "700" },
+              ],
+              "display-hero-mobile": [
+                "30px",
+                { lineHeight: "38px", letterSpacing: "-0.015em", fontWeight: "800" },
+              ],
+              "display-hero": [
+                "40px",
+                { lineHeight: "48px", letterSpacing: "-0.02em", fontWeight: "800" },
+              ],
+              "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+              "headline-lg-mobile": [
+                "26px",
+                { lineHeight: "34px", letterSpacing: "-0.01em", fontWeight: "700" },
+              ],
+              "body-md": ["15px", { lineHeight: "24px", fontWeight: "400" }],
+              "label-sm": [
+                "12px",
+                { lineHeight: "16px", letterSpacing: "0.01em", fontWeight: "600" },
+              ],
+              "body-lg": ["16px", { lineHeight: "26px", fontWeight: "400" }],
+              "headline-lg": [
+                "32px",
+                { lineHeight: "40px", letterSpacing: "-0.015em", fontWeight: "700" },
+              ],
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-surface font-body-md text-body-md text-on-surface antialiased">
+    <header
+      class="bg-primary-container fixed top-0 right-0 left-0 z-50 shadow-[0_2px_8px_rgba(13,35,58,0.12)]"
+    >
+      <div
+        class="max-w-container-max px-gutter-desktop mx-auto flex h-16 items-center justify-between"
+      >
+        <div class="gap-space-md flex items-center">
+          <img
+            alt="Logo circular de AEUVG compuesto por figuras humanas estilizadas unidas en círculo de colores vivos (rojo, coral, morado, celeste, naranja, verde lima y azul marino) con las siglas AEUVG limpias y modernas.. Brand logo. - Primary color: #6d4aff
+- Font: plusJakartaSans
+- Mode: light
+- Roundness: rounded-md
+"
+            class="h-8 w-auto object-contain"
+            src="logo-aeuvg.png"
+          />
+          <div class="flex flex-col">
+            <span
+              class="font-label-md text-label-md text-on-primary leading-none font-bold tracking-wide"
+              >AEUVG</span
+            ><span
+              class="font-caption-caps text-caption-caps text-on-primary-container tracking-wider uppercase"
+              >Universidad del Valle</span
+            >
+          </div>
+        </div>
+        <nav
+          class="gap-space-xs hidden items-center lg:flex"
+          data-active-classes="bg-surface-container-lowest/15 text-on-primary font-semibold rounded-lg"
+        >
+          <a
+            class="font-label-md text-label-md text-on-primary-container hover:text-on-primary hover:bg-surface-container-lowest/10 px-space-sm py-space-xs rounded-lg transition-colors"
+            data-path="inicio"
+            href="#"
+            >Inicio</a
+          ><a
+            class="font-label-md text-label-md text-on-primary-container hover:text-on-primary hover:bg-surface-container-lowest/10 px-space-sm py-space-xs rounded-lg transition-colors"
+            data-path="eventos"
+            href="#"
+            >Eventos</a
+          ><a
+            class="font-label-md text-label-md text-on-primary-container hover:text-on-primary hover:bg-surface-container-lowest/10 px-space-sm py-space-xs rounded-lg transition-colors"
+            data-path="asociaciones"
+            href="#"
+            >Asociaciones</a
+          ><a
+            class="font-label-md text-label-md text-on-primary-container hover:text-on-primary hover:bg-surface-container-lowest/10 px-space-sm py-space-xs rounded-lg transition-colors"
+            data-path="clubes"
+            href="#"
+            >Clubes</a
+          ><a
+            class="font-label-md text-label-md text-on-primary-container hover:text-on-primary hover:bg-surface-container-lowest/10 px-space-sm py-space-xs rounded-lg transition-colors"
+            data-path="tutorias"
+            href="#"
+            >Tutorías</a
+          ><a
+            class="font-label-md text-label-md text-on-primary-container hover:text-on-primary hover:bg-surface-container-lowest/10 px-space-sm py-space-xs rounded-lg transition-colors"
+            data-path="sobre-aeuvg"
+            href="#"
+            >Sobre AEUVG</a
+          >
+        </nav>
+        <div class="gap-space-md flex items-center">
+          <button
+            aria-label="Notificaciones"
+            class="p-space-xs text-on-primary-container hover:text-on-primary hover:bg-surface-container-lowest/10 relative rounded-full transition-colors"
+            type="button"
+          >
+            <span class="material-symbols-outlined text-[22px]">notifications</span
+            ><span
+              class="bg-secondary-container absolute top-1 right-1 h-2 w-2 rounded-full"
+            ></span>
+          </button>
+          <div class="gap-space-sm pl-space-xs flex cursor-pointer items-center select-none">
+            <div
+              class="bg-primary ring-on-primary-container/20 flex h-8 w-8 items-center justify-center rounded-full ring-2"
+            >
+              <span class="material-symbols-outlined text-on-primary text-[18px]">person</span>
+            </div>
+            <div class="hidden flex-col text-left sm:flex">
+              <span class="font-label-sm text-label-sm text-on-primary leading-tight font-semibold"
+                >Valeria Morales</span
+              ><span class="font-caption-caps text-caption-caps text-on-primary-container"
+                >Carné 21548</span
+              >
+            </div>
+            <span class="material-symbols-outlined text-on-primary-container text-[18px]"
+              >expand_more</span
+            >
+          </div>
+        </div>
+      </div>
+    </header>
+    <main class="bg-surface w-full pt-16">
+      <div class="flex w-full flex-col">
+        <div class="bg-surface-container-low pb-space-2xl w-full">
+          <div class="max-w-container-max px-gutter-desktop pt-space-xl mx-auto">
+            <!-- Banner / Identity Header Card -->
+            <section
+              class="bg-surface-container-lowest mb-space-xl relative w-full overflow-hidden rounded-xl shadow-sm"
+            >
+              <div
+                class="from-primary-container via-secondary to-primary-container relative h-32 w-full bg-gradient-to-r"
+              >
+                <div
+                  class="absolute inset-0 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px] opacity-20"
+                ></div>
+                <div
+                  class="gap-space-xs text-on-primary bg-primary/40 px-space-sm py-space-2xs absolute top-4 right-6 flex items-center rounded-full backdrop-blur-sm"
+                >
+                  <span class="bg-secondary-container h-2 w-2 animate-pulse rounded-full"></span>
+                  <span
+                    class="font-caption-caps text-caption-caps text-secondary-fixed tracking-wider uppercase"
+                    >Semestre I • 2025</span
+                  >
+                </div>
+              </div>
+              <div
+                class="px-space-xl pb-space-lg gap-space-lg relative z-10 -mt-12 flex flex-col justify-between md:flex-row md:items-end"
+              >
+                <div class="gap-space-lg flex flex-col items-start sm:flex-row sm:items-end">
+                  <div class="group relative">
+                    <div
+                      class="bg-primary-container text-on-primary font-display-hero text-display-hero flex h-24 w-24 items-center justify-center rounded-2xl font-bold tracking-tight shadow-md"
+                    >
+                      VM
+                    </div>
+                    <span
+                      class="bg-secondary-container text-on-secondary-container absolute -right-1 -bottom-1 flex h-6 w-6 items-center justify-center rounded-full shadow-sm"
+                    >
+                      <span
+                        class="material-symbols-outlined text-[14px]"
+                        style="font-variation-settings: &quot;FILL&quot; 1"
+                        >verified</span
+                      >
+                    </span>
+                  </div>
+                  <div class="flex flex-col">
+                    <div class="gap-space-xs mb-space-2xs flex flex-wrap items-center">
+                      <h1 class="font-headline-lg text-headline-lg text-on-surface">
+                        Valeria Sofía Morales
+                      </h1>
+                      <span
+                        class="font-label-sm text-label-sm px-space-xs py-space-2xs bg-surface-container text-secondary rounded-full font-semibold"
+                        >Pregrado</span
+                      >
+                    </div>
+                    <div
+                      class="gap-x-space-md gap-y-space-2xs font-body-sm text-body-sm text-on-surface-variant flex flex-wrap items-center"
+                    >
+                      <span class="text-on-surface font-semibold">Carné 21890</span>
+                      <span>•</span>
+                      <span>Ingeniería en Ciencias de la Computación</span>
+                      <span>•</span>
+                      <span class="gap-space-2xs text-secondary flex items-center font-medium">
+                        <span class="material-symbols-outlined text-[16px]">school</span>
+                        4to. Año
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="gap-space-sm flex items-center self-start md:self-end">
+                  <button
+                    class="gap-space-xs font-label-md text-label-md bg-surface-container-high hover:bg-surface-container-highest text-on-surface px-space-md py-space-xs flex items-center rounded-lg shadow-sm transition-colors"
+                    type="button"
+                  >
+                    <span class="material-symbols-outlined text-[18px]">badge</span>
+                    <span>Carné Virtual</span>
+                  </button>
+                  <button
+                    class="gap-space-xs font-label-md text-label-md bg-primary-container hover:bg-primary text-on-primary px-space-md py-space-xs flex items-center rounded-lg shadow-sm transition-all"
+                    type="button"
+                  >
+                    <span class="material-symbols-outlined text-[18px]">edit</span>
+                    <span>Editar perfil</span>
+                  </button>
+                </div>
+              </div>
+              <!-- Navigation Tabs Bar -->
+              <div class="px-space-xl pt-space-xs bg-surface-container-low/50">
+                <div class="gap-space-sm no-scrollbar flex items-center overflow-x-auto">
+                  <button
+                    class="font-label-md text-label-md py-space-sm px-space-md text-on-surface-variant hover:text-on-surface whitespace-nowrap transition-colors"
+                    type="button"
+                  >
+                    Resumen Académico
+                  </button>
+                  <button
+                    class="font-label-md text-label-md py-space-sm px-space-md text-on-surface-variant hover:text-on-surface whitespace-nowrap transition-colors"
+                    type="button"
+                  >
+                    Horas Beca &amp; Servicio
+                  </button>
+                  <button
+                    class="font-label-md text-label-md py-space-sm px-space-md text-on-surface-variant hover:text-on-surface whitespace-nowrap transition-colors"
+                    type="button"
+                  >
+                    Mis Inscripciones
+                  </button>
+                  <button
+                    class="font-label-md text-label-md py-space-sm px-space-md text-secondary gap-space-xs relative flex items-center font-bold whitespace-nowrap"
+                    type="button"
+                  >
+                    <span
+                      class="material-symbols-outlined text-[18px]"
+                      style="font-variation-settings: &quot;FILL&quot; 1"
+                      >bookmark</span
+                    >
+                    <span>Eventos guardados</span>
+                    <span
+                      class="font-caption-caps text-caption-caps bg-secondary text-on-secondary rounded-full px-2 py-0.5 font-bold"
+                      >3</span
+                    >
+                    <span
+                      class="bg-secondary absolute right-0 bottom-0 left-0 h-0.5 rounded-full"
+                    ></span>
+                  </button>
+                  <button
+                    class="font-label-md text-label-md py-space-sm px-space-md text-on-surface-variant hover:text-on-surface whitespace-nowrap transition-colors"
+                    type="button"
+                  >
+                    Tutorías Agendadas
+                  </button>
+                  <button
+                    class="font-label-md text-label-md py-space-sm px-space-md text-on-surface-variant hover:text-on-surface whitespace-nowrap transition-colors"
+                    type="button"
+                  >
+                    Mis Asociaciones
+                  </button>
+                </div>
+              </div>
+            </section>
+            <!-- Main Saved Events Content -->
+            <section class="space-y-space-lg">
+              <!-- Section Title & Counter Card -->
+              <div
+                class="bg-surface-container-lowest p-space-lg gap-space-md flex flex-col justify-between rounded-xl shadow-sm md:flex-row md:items-center"
+              >
+                <div class="space-y-space-2xs">
+                  <div class="gap-space-xs flex items-center">
+                    <span class="material-symbols-outlined text-secondary text-[24px]"
+                      >collections_bookmark</span
+                    >
+                    <h2 class="font-headline-md text-headline-md text-on-surface">
+                      Tus eventos guardados
+                    </h2>
+                  </div>
+                  <p class="font-body-md text-body-md text-on-surface-variant">
+                    Mantén un seguimiento de las actividades de tu interés antes de que se agoten
+                    los cupos disponibles en el campus.
+                  </p>
+                </div>
+                <div class="gap-space-sm flex shrink-0 items-center">
+                  <span
+                    class="font-label-sm text-label-sm bg-surface-container text-on-surface-variant px-space-sm py-space-2xs gap-space-2xs flex items-center rounded-lg"
+                  >
+                    <span class="material-symbols-outlined text-secondary text-[16px]">update</span>
+                    Ciclo I - 2025
+                  </span>
+                  <div class="bg-surface-container-low flex items-center rounded-lg p-1">
+                    <button
+                      class="p-space-2xs bg-surface-container-lowest text-primary rounded shadow-xs"
+                      title="Vista de cuadrícula"
+                      type="button"
+                    >
+                      <span class="material-symbols-outlined text-[18px]">grid_view</span>
+                    </button>
+                    <button
+                      class="p-space-2xs text-outline hover:text-on-surface rounded"
+                      title="Vista de lista"
+                      type="button"
+                    >
+                      <span class="material-symbols-outlined text-[18px]">view_agenda</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <!-- 3-Column Event Grid -->
+              <div
+                class="gap-space-lg grid grid-cols-1 items-stretch md:grid-cols-2 lg:grid-cols-3"
+                id="saved-events-container"
+              >
+                <!-- Event 1: Feria de Innovación & Robótica -->
+                <article
+                  class="event-card group bg-surface-container-lowest flex flex-col overflow-hidden rounded-xl shadow-sm transition-all duration-200 hover:shadow-md"
+                  data-event-id="1"
+                >
+                  <div class="bg-surface-container relative h-48 w-full overflow-hidden">
+                    <img
+                      alt="Feria de Innovación &amp; Robótica UVG 2025"
+                      class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      src="https://lh3.googleusercontent.com/aida/AEtjO1ViMua5orfeXVbq1FKkDLDbThmlRW_vYkvKgnF1r4Pqz72x2Q8rCijGoIRh81Vzh623TkXO8EGskSxxZGhdsU4aGgRtfqQ2gfqb0Eu4q9EXTkb_7cNdpVVGHjPX__AejOU1Q40U_VCboZX_6jN4ZStjPLbWjB6eVQwO1-lz49buwcb3qLJwx0fgAFZ4Hv1rCkKKNOWOxPzw-hU0wUwJzquVR12bJ9cFyzdfIJDRg__JhFGOFOpsr0QPlSU5"
+                    />
+                    <!-- Date Badge -->
+                    <div
+                      class="bg-primary-container text-on-primary absolute top-3 left-3 flex flex-col items-center rounded-lg px-2.5 py-1.5 shadow-md"
+                    >
+                      <span
+                        class="font-caption-caps text-caption-caps text-secondary-fixed-dim tracking-widest uppercase"
+                        >ABR</span
+                      >
+                      <span class="font-headline-sm text-headline-sm leading-none font-bold"
+                        >24</span
+                      >
+                    </div>
+                    <!-- Category Badge -->
+                    <div class="absolute top-3 right-3">
+                      <span
+                        class="font-caption-caps text-caption-caps text-primary-container flex items-center gap-1 rounded-full bg-amber-500/90 px-2.5 py-1 font-bold tracking-wider shadow-sm backdrop-blur-xs"
+                      >
+                        <span class="bg-primary-container h-1.5 w-1.5 rounded-full"></span>
+                        TECNOLOGÍA E INNOVACIÓN
+                      </span>
+                    </div>
+                    <!-- Quick action to unsave (pinned top) -->
+                    <button
+                      class="bg-primary-container/80 hover:bg-error text-on-primary absolute right-3 bottom-3 flex h-8 w-8 items-center justify-center rounded-full shadow-md backdrop-blur-sm transition-colors"
+                      onclick="removeEvent(1)"
+                      title="Quitar de guardados"
+                      type="button"
+                    >
+                      <span class="material-symbols-outlined text-[18px]">bookmark_remove</span>
+                    </button>
+                  </div>
+                  <div class="p-space-lg space-y-space-md flex flex-1 flex-col justify-between">
+                    <div class="space-y-space-sm">
+                      <div class="flex items-center justify-between">
+                        <span
+                          class="font-label-sm text-label-sm text-secondary flex items-center gap-1 font-semibold"
+                        >
+                          <span class="material-symbols-outlined text-[16px]">groups</span>
+                          AIM (Mecatrónica)
+                        </span>
+                        <span
+                          class="font-caption-caps text-caption-caps bg-secondary-fixed text-on-secondary-fixed flex items-center gap-1 rounded-full px-2 py-0.5 font-bold"
+                        >
+                          <span class="material-symbols-outlined text-[13px]">verified</span>
+                          5 Horas Beca
+                        </span>
+                      </div>
+                      <h3
+                        class="font-title-md text-title-md text-on-surface group-hover:text-secondary line-clamp-2 transition-colors"
+                      >
+                        Feria de Innovación &amp; Robótica UVG 2025
+                      </h3>
+                      <div class="font-body-sm text-body-sm text-on-surface-variant space-y-1.5">
+                        <div class="flex items-center gap-2">
+                          <span class="material-symbols-outlined text-outline text-[18px]"
+                            >schedule</span
+                          >
+                          <span>Jueves, 24 de Abril • 09:00 hrs</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                          <span class="material-symbols-outlined text-outline text-[18px]"
+                            >location_on</span
+                          >
+                          <span class="truncate">Plaza Mayor &amp; MakerSpace CIT</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="pt-space-sm space-y-space-xs">
+                      <div
+                        class="font-label-sm text-label-sm text-on-surface-variant mb-1 flex items-center justify-between"
+                      >
+                        <span class="flex items-center gap-1 text-xs">
+                          <span class="inline-block h-2 w-2 rounded-full bg-emerald-500"></span>
+                          Quedan 18 cupos
+                        </span>
+                        <span class="text-outline text-xs">Capacidad: 120</span>
+                      </div>
+                      <div
+                        class="bg-surface-container-high h-1.5 w-full overflow-hidden rounded-full"
+                      >
+                        <div class="bg-secondary h-1.5 rounded-full" style="width: 85%"></div>
+                      </div>
+                      <div class="pt-space-xs grid grid-cols-5 gap-2">
+                        <button
+                          class="gap-space-xs font-label-md text-label-md bg-primary-container hover:bg-primary text-on-primary col-span-4 flex items-center justify-center rounded-lg px-3 py-2 shadow-sm transition-colors"
+                          type="button"
+                        >
+                          <span class="material-symbols-outlined text-[18px]">event_seat</span>
+                          <span>Reservar cupo</span>
+                        </button>
+                        <button
+                          class="text-on-surface-variant hover:text-error hover:bg-error-container/40 bg-surface-container col-span-1 flex items-center justify-center rounded-lg transition-colors"
+                          onclick="removeEvent(1)"
+                          title="Quitar de guardados"
+                          type="button"
+                        >
+                          <span class="material-symbols-outlined text-[18px]">delete_outline</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+                <!-- Event 2: Festival Interfacultades de Música y Danza -->
+                <article
+                  class="event-card group bg-surface-container-lowest flex flex-col overflow-hidden rounded-xl shadow-sm transition-all duration-200 hover:shadow-md"
+                  data-event-id="2"
+                >
+                  <div class="bg-surface-container relative h-48 w-full overflow-hidden">
+                    <img
+                      alt="Festival Interfacultades de Música y Danza"
+                      class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      src="https://lh3.googleusercontent.com/aida/AEtjO1U-OCehAQvzi9myD-S8q25nDdnmvKB_V117tCVGVgEpZpUNJ1mg-2PpxBl2eipeqd1CETWpYPPxpXgnQkCS-nLOq5CXebNZYykhC8q-DdczzqpFuKdnyPYDpuqRL5oH5rGXd_YS_DfVQjYik6ShvWE8vfbG9b9FTIXrVmrop6fdCvUynrIkcstSdraTyoLNrDFLJrkHxDjESfi-ARffvGnhXhE73kMpCFfMjqqtQkQ2ZqQKBZgfTzHqvOwc"
+                    />
+                    <!-- Date Badge -->
+                    <div
+                      class="bg-primary-container text-on-primary absolute top-3 left-3 flex flex-col items-center rounded-lg px-2.5 py-1.5 shadow-md"
+                    >
+                      <span
+                        class="font-caption-caps text-caption-caps text-secondary-fixed-dim tracking-widest uppercase"
+                        >ABR</span
+                      >
+                      <span class="font-headline-sm text-headline-sm leading-none font-bold"
+                        >25</span
+                      >
+                    </div>
+                    <!-- Category Badge (Coral / Tertiary style) -->
+                    <div class="absolute top-3 right-3">
+                      <span
+                        class="font-caption-caps text-caption-caps text-on-primary flex items-center gap-1 rounded-full bg-rose-500/90 px-2.5 py-1 font-bold tracking-wider shadow-sm backdrop-blur-xs"
+                      >
+                        <span class="bg-on-primary h-1.5 w-1.5 rounded-full"></span>
+                        CULTURA Y ARTE
+                      </span>
+                    </div>
+                    <!-- Quick action to unsave -->
+                    <button
+                      class="bg-primary-container/80 hover:bg-error text-on-primary absolute right-3 bottom-3 flex h-8 w-8 items-center justify-center rounded-full shadow-md backdrop-blur-sm transition-colors"
+                      onclick="removeEvent(2)"
+                      title="Quitar de guardados"
+                      type="button"
+                    >
+                      <span class="material-symbols-outlined text-[18px]">bookmark_remove</span>
+                    </button>
+                  </div>
+                  <div class="p-space-lg space-y-space-md flex flex-1 flex-col justify-between">
+                    <div class="space-y-space-sm">
+                      <div class="flex items-center justify-between">
+                        <span
+                          class="font-label-sm text-label-sm text-secondary flex items-center gap-1 font-semibold"
+                        >
+                          <span class="material-symbols-outlined text-[16px]">palette</span>
+                          Club de Expresión Artística
+                        </span>
+                        <span
+                          class="font-caption-caps text-caption-caps bg-surface-container-high text-on-surface-variant rounded-full px-2 py-0.5 font-medium"
+                        >
+                          Entrada Libre
+                        </span>
+                      </div>
+                      <h3
+                        class="font-title-md text-title-md text-on-surface group-hover:text-secondary line-clamp-2 transition-colors"
+                      >
+                        Festival Interfacultades de Música y Danza
+                      </h3>
+                      <div class="font-body-sm text-body-sm text-on-surface-variant space-y-1.5">
+                        <div class="flex items-center gap-2">
+                          <span class="material-symbols-outlined text-outline text-[18px]"
+                            >schedule</span
+                          >
+                          <span>Viernes, 25 de Abril • 15:30 hrs</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                          <span class="material-symbols-outlined text-outline text-[18px]"
+                            >location_on</span
+                          >
+                          <span class="truncate">Plaza Fuentelapiedra &amp; Ágora</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="pt-space-sm space-y-space-xs">
+                      <div
+                        class="font-label-sm text-label-sm text-on-surface-variant mb-1 flex items-center justify-between"
+                      >
+                        <span class="flex items-center gap-1 text-xs">
+                          <span class="bg-secondary inline-block h-2 w-2 rounded-full"></span>
+                          Auditorio abierto
+                        </span>
+                        <span class="text-outline text-xs">Comunidad UVG</span>
+                      </div>
+                      <div
+                        class="bg-surface-container-high h-1.5 w-full overflow-hidden rounded-full"
+                      >
+                        <div
+                          class="bg-secondary-container h-1.5 rounded-full"
+                          style="width: 60%"
+                        ></div>
+                      </div>
+                      <div class="pt-space-xs grid grid-cols-5 gap-2">
+                        <button
+                          class="gap-space-xs font-label-md text-label-md bg-surface-container hover:bg-surface-container-high text-on-surface col-span-4 flex items-center justify-center rounded-lg px-3 py-2 shadow-sm transition-colors"
+                          type="button"
+                        >
+                          <span class="material-symbols-outlined text-[18px]">visibility</span>
+                          <span>Ver detalles</span>
+                        </button>
+                        <button
+                          class="text-on-surface-variant hover:text-error hover:bg-error-container/40 bg-surface-container col-span-1 flex items-center justify-center rounded-lg transition-colors"
+                          onclick="removeEvent(2)"
+                          title="Quitar de guardados"
+                          type="button"
+                        >
+                          <span class="material-symbols-outlined text-[18px]">delete_outline</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+                <!-- Event 3: Hackathon UVG 48h -->
+                <article
+                  class="event-card group bg-surface-container-lowest flex flex-col overflow-hidden rounded-xl shadow-sm transition-all duration-200 hover:shadow-md"
+                  data-event-id="3"
+                >
+                  <div class="bg-surface-container relative h-48 w-full overflow-hidden">
+                    <img
+                      class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      data-alt="High-angle cinematic view of Latin American university students coding together in a state-of-the-art tech lab at night, dual monitors showing artificial intelligence algorithms, neon blue and deep navy ambient lighting, modern campus atmosphere"
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfrNIECw3JY1HLkDZyqqC_lR2J_2XpEZBt9xin7Ni-gpIOQPRogiZnHO0XmqTQdsbZPV3On1fUXtcH-AsxgcJyGj4v8W4TBSe6ty22PC4joLIeJt35LZU7dHiiRpSy-9BZ0QCtJe-XoL3IFD5ifnTOBLHwGV15mwpGShHMKrI1YMcP7JAmjCXJVHIKcyWQ4LgC_al8ovIOKgbgZl39zEUG2qLFvEiyikRVzCGt7LtEtZqQtYcZyOUQqA"
+                    />
+                    <!-- Date Badge -->
+                    <div
+                      class="bg-primary-container text-on-primary absolute top-3 left-3 flex flex-col items-center rounded-lg px-2.5 py-1.5 shadow-md"
+                    >
+                      <span
+                        class="font-caption-caps text-caption-caps text-secondary-fixed-dim tracking-widest uppercase"
+                        >ABR</span
+                      >
+                      <span class="font-headline-sm text-headline-sm leading-none font-bold"
+                        >26</span
+                      >
+                    </div>
+                    <!-- Category Badge -->
+                    <div class="absolute top-3 right-3">
+                      <span
+                        class="font-caption-caps text-caption-caps text-primary-container flex items-center gap-1 rounded-full bg-amber-500/90 px-2.5 py-1 font-bold tracking-wider shadow-sm backdrop-blur-xs"
+                      >
+                        <span class="bg-primary-container h-1.5 w-1.5 rounded-full"></span>
+                        TECNOLOGÍA
+                      </span>
+                    </div>
+                    <!-- Quick action to unsave -->
+                    <button
+                      class="bg-primary-container/80 hover:bg-error text-on-primary absolute right-3 bottom-3 flex h-8 w-8 items-center justify-center rounded-full shadow-md backdrop-blur-sm transition-colors"
+                      onclick="removeEvent(3)"
+                      title="Quitar de guardados"
+                      type="button"
+                    >
+                      <span class="material-symbols-outlined text-[18px]">bookmark_remove</span>
+                    </button>
+                  </div>
+                  <div class="p-space-lg space-y-space-md flex flex-1 flex-col justify-between">
+                    <div class="space-y-space-sm">
+                      <div class="flex items-center justify-between">
+                        <span
+                          class="font-label-sm text-label-sm text-secondary flex items-center gap-1 font-semibold"
+                        >
+                          <span class="material-symbols-outlined text-[16px]">terminal</span>
+                          ACE (Computación)
+                        </span>
+                        <span
+                          class="font-caption-caps text-caption-caps bg-secondary-fixed text-on-secondary-fixed flex items-center gap-1 rounded-full px-2 py-0.5 font-bold"
+                        >
+                          <span class="material-symbols-outlined text-[13px]">verified</span>
+                          10 Horas Beca
+                        </span>
+                      </div>
+                      <h3
+                        class="font-title-md text-title-md text-on-surface group-hover:text-secondary line-clamp-2 transition-colors"
+                      >
+                        Hackathon UVG 48h: Inteligencia Artificial
+                      </h3>
+                      <div class="font-body-sm text-body-sm text-on-surface-variant space-y-1.5">
+                        <div class="flex items-center gap-2">
+                          <span class="material-symbols-outlined text-outline text-[18px]"
+                            >schedule</span
+                          >
+                          <span>Sábado, 26 de Abril • 08:00 hrs</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                          <span class="material-symbols-outlined text-outline text-[18px]"
+                            >location_on</span
+                          >
+                          <span class="truncate">CIT Nivel 3 (Laboratorios)</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="pt-space-sm space-y-space-xs">
+                      <div
+                        class="font-label-sm text-label-sm text-on-surface-variant mb-1 flex items-center justify-between"
+                      >
+                        <span class="text-error flex items-center gap-1 text-xs font-medium">
+                          <span
+                            class="bg-error inline-block h-2 w-2 animate-pulse rounded-full"
+                          ></span>
+                          Últimos 6 cupos
+                        </span>
+                        <span class="text-outline text-xs">Capacidad: 60</span>
+                      </div>
+                      <div
+                        class="bg-surface-container-high h-1.5 w-full overflow-hidden rounded-full"
+                      >
+                        <div class="bg-error h-1.5 rounded-full" style="width: 90%"></div>
+                      </div>
+                      <div class="pt-space-xs grid grid-cols-5 gap-2">
+                        <button
+                          class="gap-space-xs font-label-md text-label-md bg-primary-container hover:bg-primary text-on-primary col-span-4 flex items-center justify-center rounded-lg px-3 py-2 shadow-sm transition-colors"
+                          type="button"
+                        >
+                          <span class="material-symbols-outlined text-[18px]">how_to_reg</span>
+                          <span>Inscribirme</span>
+                        </button>
+                        <button
+                          class="text-on-surface-variant hover:text-error hover:bg-error-container/40 bg-surface-container col-span-1 flex items-center justify-center rounded-lg transition-colors"
+                          onclick="removeEvent(3)"
+                          title="Quitar de guardados"
+                          type="button"
+                        >
+                          <span class="material-symbols-outlined text-[18px]">delete_outline</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              </div>
+              <!-- Banner / Subtle Toast Card to explore more events -->
+              <div
+                class="bg-surface-container-high p-space-lg gap-space-md flex flex-col items-center justify-between rounded-xl shadow-xs md:flex-row"
+              >
+                <div class="gap-space-md flex items-center">
+                  <div
+                    class="bg-secondary-fixed text-on-secondary-fixed flex h-12 w-12 shrink-0 items-center justify-center rounded-xl shadow-xs"
+                  >
+                    <span class="material-symbols-outlined text-[24px]">explore</span>
+                  </div>
+                  <div>
+                    <p class="font-title-md text-title-md text-on-surface">
+                      ¿Quieres agregar más actividades a tu lista?
+                    </p>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant">
+                      Explora la Cartelera de Eventos UVG completa y participa en iniciativas
+                      estudiantiles, charlas y talleres extracurriculares.
+                    </p>
+                  </div>
+                </div>
+                <a
+                  class="gap-space-xs font-label-md text-label-md bg-secondary text-on-secondary hover:bg-on-secondary-container px-space-lg py-space-xs inline-flex shrink-0 items-center rounded-lg shadow-sm transition-all"
+                  href="#"
+                >
+                  <span>Ver Cartelera de Eventos</span>
+                  <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+                </a>
+              </div>
+            </section>
+          </div>
+        </div>
+        <!-- Notification Toast for Removal / Undo microinteraction -->
+        <div
+          class="pointer-events-none fixed right-6 bottom-6 z-50 w-full max-w-md translate-y-20 transform px-4 opacity-0 transition-all duration-300"
+          id="toast-notification"
+        >
+          <div
+            class="bg-primary-container text-on-primary p-space-md gap-space-md flex items-center justify-between rounded-xl shadow-xl"
+          >
+            <div class="gap-space-xs font-body-sm text-body-sm flex items-center">
+              <span class="material-symbols-outlined text-secondary-fixed-dim text-[20px]"
+                >check_circle</span
+              >
+              <span id="toast-message">Evento eliminado de tu lista guardada</span>
+            </div>
+            <button
+              class="font-label-sm text-label-sm text-secondary-fixed-dim hover:text-on-primary font-bold tracking-wider uppercase underline"
+              onclick="undoRemove()"
+              type="button"
+            >
+              Deshacer
+            </button>
+          </div>
+        </div>
+        <script>
+          let lastRemovedCard = null;
+          let toastTimeout = null;
+
+          function removeEvent(eventId) {
+            const card = document.querySelector(`.event-card[data-event-id="${eventId}"]`);
+            if (!card) return;
+
+            lastRemovedCard = {
+              element: card,
+              parent: card.parentElement,
+              nextSibling: card.nextSibling,
+            };
+
+            card.style.opacity = "0";
+            card.style.transform = "scale(0.95)";
+            card.style.transition = "all 0.25s ease";
+
+            setTimeout(() => {
+              card.classList.add("hidden");
+              showToast("Evento quitado de tus guardados");
+            }, 250);
+          }
+
+          function showToast(msg) {
+            const toast = document.getElementById("toast-notification");
+            const messageEl = document.getElementById("toast-message");
+            messageEl.textContent = msg;
+
+            toast.classList.remove("translate-y-20", "opacity-0", "pointer-events-none");
+            toast.classList.add("translate-y-0", "opacity-100", "pointer-events-auto");
+
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+              hideToast();
+            }, 4500);
+          }
+
+          function hideToast() {
+            const toast = document.getElementById("toast-notification");
+            toast.classList.add("translate-y-20", "opacity-0", "pointer-events-none");
+            toast.classList.remove("translate-y-0", "opacity-100", "pointer-events-auto");
+          }
+
+          function undoRemove() {
+            if (!lastRemovedCard) return;
+            const card = lastRemovedCard.element;
+            card.classList.remove("hidden");
+            setTimeout(() => {
+              card.style.opacity = "1";
+              card.style.transform = "scale(1)";
+            }, 10);
+            lastRemovedCard = null;
+            hideToast();
+          }
+        </script>
+      </div>
+    </main>
+    <footer class="bg-primary text-on-primary py-space-2xl w-full">
+      <div class="max-w-container-max px-gutter-desktop mx-auto">
+        <div class="gap-space-xl mb-space-2xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+          <div>
+            <div class="gap-space-sm mb-space-md flex items-center">
+              <img
+                alt="Logo circular de AEUVG"
+                class="h-7 w-auto object-contain"
+                src="logo-aeuvg.png"
+              /><span class="font-headline-sm text-headline-sm text-on-primary font-bold"
+                >AEUVG</span
+              >
+            </div>
+            <p class="font-body-sm text-body-sm text-inverse-primary mb-space-md leading-relaxed">
+              Asociación de Estudiantes de la Universidad del Valle de Guatemala. Impulsando la
+              excelencia estudiantil, la representación ética y la vida universitaria colaborativa.
+            </p>
+            <span
+              class="font-caption-caps text-caption-caps text-secondary-fixed-dim tracking-wider uppercase"
+              >Campus Central • Ciudad de Guatemala</span
+            >
+          </div>
+          <div>
+            <span class="font-title-md text-title-md text-on-primary mb-space-md block"
+              >Vida Estudiantil</span
+            >
+            <ul class="space-y-space-xs font-body-sm text-body-sm text-inverse-primary">
+              <li>
+                <a class="hover:text-on-primary transition-colors" href="#"
+                  >Directorio de Asociaciones</a
+                >
+              </li>
+              <li>
+                <a class="hover:text-on-primary transition-colors" href="#"
+                  >Clubes y Capítulos Estudiantiles</a
+                >
+              </li>
+              <li>
+                <a class="hover:text-on-primary transition-colors" href="#"
+                  >Tutorías Académicas Pares</a
+                >
+              </li>
+              <li>
+                <a class="hover:text-on-primary transition-colors" href="#"
+                  >Horas Beca y Servicio</a
+                >
+              </li>
+              <li>
+                <a class="hover:text-on-primary transition-colors" href="#"
+                  >Calendario de Actividades</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <span class="font-title-md text-title-md text-on-primary mb-space-md block"
+              >Institucional</span
+            >
+            <ul class="space-y-space-xs font-body-sm text-body-sm text-inverse-primary">
+              <li>
+                <a class="hover:text-on-primary transition-colors" href="#"
+                  >Junta Directiva AEUVG</a
+                >
+              </li>
+              <li>
+                <a class="hover:text-on-primary transition-colors" href="#"
+                  >Estatutos y Reglamentos</a
+                >
+              </li>
+              <li>
+                <a class="hover:text-on-primary transition-colors" href="#"
+                  >Transparencia y Rendición</a
+                >
+              </li>
+              <li>
+                <a class="hover:text-on-primary transition-colors" href="#"
+                  >Comisiones de Trabajo</a
+                >
+              </li>
+              <li>
+                <a class="hover:text-on-primary transition-colors" href="#"
+                  >Universidad del Valle (UVG)</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <span class="font-title-md text-title-md text-on-primary mb-space-md block"
+              >Contacto y Asistencia</span
+            >
+            <ul class="space-y-space-xs font-body-sm text-body-sm text-inverse-primary mb-space-md">
+              <li>Oficina de Asociaciones, Edificio I</li>
+              <li>aeuvg@uvg.edu.gt</li>
+              <li>PBX: +(502) 2507-1500 Ext. 21450</li>
+            </ul>
+            <div class="gap-space-sm flex items-center">
+              <span class="font-label-sm text-label-sm text-secondary-fixed-dim font-semibold"
+                >#ComunidadUVG</span
+              >
+            </div>
+          </div>
+        </div>
+        <div
+          class="pt-space-lg gap-space-md flex flex-col items-center justify-between sm:flex-row"
+        >
+          <p class="font-caption-caps text-caption-caps text-inverse-primary">
+            © 2025 Asociación de Estudiantes UVG. Todos los derechos reservados.
+          </p>
+          <div
+            class="gap-space-lg font-caption-caps text-caption-caps text-inverse-primary flex items-center"
+          >
+            <a class="hover:text-on-primary transition-colors" href="#">Política de Privacidad</a
+            ><a class="hover:text-on-primary transition-colors" href="#">Términos de Uso</a
+            ><a class="hover:text-on-primary transition-colors" href="#">Buzón Estudiantil</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

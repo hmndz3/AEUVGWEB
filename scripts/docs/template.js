@@ -1,8 +1,11 @@
 // Plantilla de estilos para los documentos formales del proyecto.
 // Convención: Times New Roman — cuerpo 12 pt, subtítulos 15 pt, títulos 17 pt.
 // Los tamaños de docx-js van en medios puntos (12 pt = 24).
+const fs = require("fs");
+const path = require("path");
 const {
   Document,
+  ImageRun,
   Paragraph,
   TextRun,
   HeadingLevel,
@@ -84,6 +87,34 @@ function makeTable(widths, headerCells, rows) {
 
 const spacer = () => new Paragraph({ spacing: { after: 160 }, children: [] });
 
+// Imagen centrada con pie de figura. La ruta es relativa a la raiz del repositorio.
+function figura(rutaRelativa, ancho, alto, pie) {
+  const absoluta = path.join(__dirname, "..", "..", rutaRelativa);
+  const bloques = [
+    new Paragraph({
+      alignment: AlignmentType.CENTER,
+      spacing: { before: 200, after: 80 },
+      children: [
+        new ImageRun({
+          type: "png",
+          data: fs.readFileSync(absoluta),
+          transformation: { width: ancho, height: alto },
+        }),
+      ],
+    }),
+  ];
+  if (pie) {
+    bloques.push(
+      new Paragraph({
+        alignment: AlignmentType.CENTER,
+        spacing: { after: 240 },
+        children: [new TextRun({ text: pie, font: FONT, size: 20, italics: true })],
+      })
+    );
+  }
+  return bloques;
+}
+
 // Portada estándar del proyecto + salto de página.
 function cover({ subtitle, date }) {
   const line = (text, size, bold, after) =>
@@ -136,4 +167,4 @@ function buildDocument(children) {
   });
 }
 
-module.exports = { p, bullet, h1, h2, makeTable, spacer, cover, buildDocument };
+module.exports = { p, bullet, h1, h2, makeTable, spacer, figura, cover, buildDocument };
