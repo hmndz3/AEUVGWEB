@@ -15,7 +15,7 @@ Plataforma web centralizada de la **Asociación General de Estudiantes de la Uni
 | Estilos / UI  | Tailwind CSS 4 + componentes propios         |
 | Base de datos | PostgreSQL 17 (Railway)                      |
 | ORM           | Prisma (a partir de HU-02)                   |
-| Autenticación | Auth.js — NextAuth v5 (a partir de HU-05)    |
+| Autenticación | scrypt y jose (implementación propia)        |
 | Contenedores  | Docker + Docker Compose                      |
 | Hosting       | Railway (despliegue automático desde `main`) |
 
