@@ -22,11 +22,6 @@ const ENLACES: Enlace[] = [
   { href: "/clubes", texto: "Clubes" },
   { href: "/tutorias", texto: "Tutorías" },
   { href: "/sobre-aeuvg", texto: "Sobre AEUVG" },
-  {
-    href: "/perfil",
-    texto: "Mi perfil",
-    roles: [ROLES.estudiante, ROLES.tutor, ROLES.administrador],
-  },
   { href: "/admin", texto: "Panel", roles: [ROLES.administrador] },
 ];
 
