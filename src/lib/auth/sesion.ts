@@ -1,5 +1,5 @@
-import { randomUUID } from "node:crypto";
-
+// Se usa la API Web de criptografía, disponible tanto en Node como en el
+// runtime Edge del middleware; node:crypto no existe en Edge.
 import { jwtVerify, SignJWT } from "jose";
 
 import type { ConfiguracionSesion } from "@/lib/configuracion-sesion";
@@ -26,7 +26,7 @@ export async function crearTokenSesion(
     .setIssuer(emisor)
     .setAudience(audiencia)
     .setSubject(String(datos.idUsuario))
-    .setJti(randomUUID())
+    .setJti(crypto.randomUUID())
     .setIssuedAt(emitidoEn)
     .setExpirationTime(emitidoEn + configuracion.duracionSegundos)
     .sign(claveSesion(configuracion.secreto));
