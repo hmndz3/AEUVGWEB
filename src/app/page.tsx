@@ -1,16 +1,18 @@
-export default function Home() {
+import { MarcoSitio } from "@/components/layout/marco-sitio";
+
+export default function PaginaInicio() {
   return (
-    <main className="flex flex-1 flex-col items-center justify-center gap-6 bg-slate-950 px-6 text-center">
-      <span className="rounded-full border border-emerald-500/40 bg-emerald-500/10 px-4 py-1 text-sm font-medium text-emerald-400">
-        Sprint 1 · Fundamentos del sistema
-      </span>
-      <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">AEUVG</h1>
-      <p className="max-w-xl text-lg text-slate-300">
-        Plataforma web de la Asociación General de Estudiantes de la Universidad del Valle de
-        Guatemala. Estamos construyendo el espacio central para eventos, asociaciones, clubes,
-        tutorías y horas beca.
-      </p>
-      <p className="text-sm text-slate-500">Sitio en construcción · agosto 2026</p>
-    </main>
+    <MarcoSitio>
+      <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
+        <h1 className="text-texto max-w-3xl text-4xl font-extrabold tracking-tight sm:text-6xl">
+          Tu comunidad, tus eventos, tu voz en UVG
+        </h1>
+        <p className="text-texto-suave mt-5 max-w-2xl text-lg leading-relaxed">
+          La plataforma de la Asociación General de Estudiantes de la Universidad del Valle de
+          Guatemala para descubrir eventos, conocer asociaciones y clubes, encontrar tutorías y
+          llevar el control de tus horas beca.
+        </p>
+      </section>
+    </MarcoSitio>
   );
 }
