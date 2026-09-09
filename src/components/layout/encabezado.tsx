@@ -3,14 +3,7 @@ import Link from "next/link";
 
 import { EstadoSesion } from "@/components/layout/estado-sesion";
 
-const ENLACES = [
-  { href: "/", texto: "Inicio" },
-  { href: "/eventos", texto: "Eventos" },
-  { href: "/asociaciones", texto: "Asociaciones" },
-  { href: "/clubes", texto: "Clubes" },
-  { href: "/tutorias", texto: "Tutorías" },
-  { href: "/sobre-aeuvg", texto: "Sobre AEUVG" },
-];
+import { NavegacionPrincipal } from "@/components/layout/navegacion-principal";
 
 export function Encabezado() {
   return (
@@ -29,17 +22,7 @@ export function Encabezado() {
           <span className="text-texto text-lg leading-none font-extrabold">AEUVG</span>
         </Link>
 
-        <nav className="hidden items-center gap-1 lg:flex">
-          {ENLACES.map((enlace) => (
-            <Link
-              key={enlace.href}
-              href={enlace.href}
-              className="text-texto-suave hover:text-texto hover:bg-superficie-suave rounded-full px-3 py-2 text-sm font-medium transition-colors"
-            >
-              {enlace.texto}
-            </Link>
-          ))}
-        </nav>
+        <NavegacionPrincipal />
 
         <EstadoSesion />
       </div>
