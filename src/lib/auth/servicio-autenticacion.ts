@@ -9,9 +9,14 @@ import { validarTokenSesion } from "@/lib/auth/sesion";
 import type { ConfiguracionSesion } from "@/lib/configuracion-sesion";
 import type { DatosInicioSesion } from "@/validators/inicio-sesion";
 
-// Evita que la ausencia de una cuenta reduzca apreciablemente el costo del intento.
-const hashComparacionFalsa =
-  "scrypt$16384$8$1$YWV1dmctcHJ1ZWJhLXNlZWQ$f2kV5H9V6EjELwbMWgSV9tyWyrPFDtvBK5NYgl54i18QZvWR-RQANGelMo7wLABpwFvh2BBIy_FiT7YN1Kc3YQ";
+/**
+ * Evita que la ausencia de una cuenta reduzca el costo del intento. Debe ser un
+ * hash con el formato exacto que produce el registro: si no lo fuera, la
+ * verificación saldría antes de derivar la clave y un correo inexistente
+ * respondería más rápido que uno existente.
+ */
+export const HASH_COMPARACION_FALSA =
+  "scrypt$16384$8$1$YWV1dmctc2VlZC1sb2NhbA$rX7fh4FCeJzlk55DZnj96avxeBrKPrlrSjNaBDEXQFW1m5gmXtsJBk3LGxFnRZfiuaVyAx6BiA6UE07nkK8V_Q";
 
 export type ResultadoInicioSesion =
   | { tipo: "autenticado"; usuario: UsuarioAutenticacion }
@@ -30,7 +35,7 @@ export class ServicioAutenticacion {
 
     const contrasenaCorrecta = await verificarContrasena(
       datos.contrasena,
-      usuario?.contrasenaHash ?? hashComparacionFalsa
+      usuario?.contrasenaHash ?? HASH_COMPARACION_FALSA
     );
 
     if (!usuario || !contrasenaCorrecta) {
