@@ -14,7 +14,7 @@ export function perteneceAlDominio(correo: string, dominio: string): boolean {
   return partes.length === 2 && partes[0].length > 0 && partes[1] === dominioNormalizado;
 }
 
-const contrasena = z
+export const reglasContrasena = z
   .string()
   .min(8, "La contraseña debe tener al menos 8 caracteres.")
   .max(128, "La contraseña no puede exceder 128 caracteres.")
@@ -40,7 +40,7 @@ export function crearEsquemaRegistro(dominioInstitucional: string) {
         .transform(normalizarCorreo),
       idFacultad: z.coerce.number().int().positive(),
       idCarrera: z.coerce.number().int().positive(),
-      contrasena,
+      contrasena: reglasContrasena,
       confirmarContrasena: z.string(),
       aceptaTerminos: z.literal(true, {
         error: "Debes aceptar los términos y la política de privacidad.",
