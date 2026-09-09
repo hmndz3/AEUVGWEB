@@ -66,5 +66,10 @@ export const FECHAS_PRUEBA = {
   tutoriaCompletadaFin: new Date("2026-09-02T17:30:00.000Z"),
 } as const;
 
+/**
+ * Hash de CREDENCIALES_PRUEBA.contrasena en el mismo formato que produce el
+ * registro. Usa una sal fija de 16 bytes para que el seed sea reproducible;
+ * el verificador rechaza cualquier otra longitud de sal.
+ */
 export const HASH_DESARROLLO =
-  "scrypt$16384$8$1$YWV1dmctcHJ1ZWJhLXNlZWQ$f2kV5H9V6EjELwbMWgSV9tyWyrPFDtvBK5NYgl54i18QZvWR-RQANGelMo7wLABpwFvh2BBIy_FiT7YN1Kc3YQ";
+  "scrypt$16384$8$1$YWV1dmctc2VlZC1sb2NhbA$rX7fh4FCeJzlk55DZnj96avxeBrKPrlrSjNaBDEXQFW1m5gmXtsJBk3LGxFnRZfiuaVyAx6BiA6UE07nkK8V_Q";
