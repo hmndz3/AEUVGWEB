@@ -1,11 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { CampoAcceso } from "@/components/autenticacion/campo-acceso";
 import { Icono } from "@/components/autenticacion/icono";
+import { FormularioRecuperacion } from "@/components/autenticacion/formulario-recuperacion";
 import { MarcoAcceso } from "@/components/autenticacion/marco-acceso";
+import { obtenerConfiguracionRegistro } from "@/lib/configuracion-registro";
 
-function PanelRecuperacion() {
+// Lee la configuracion del ambiente, por lo que no puede prerenderizarse.
+export const dynamic = "force-dynamic";
+
+function PanelRecuperacion({ minutosVigencia }: { minutosVigencia: number }) {
   return (
     <>
       <div className="flex items-center justify-between">
@@ -13,7 +17,7 @@ function PanelRecuperacion() {
           <Image src="/logo-aeuvg.png" alt="AEUVG" width={30} height={30} />
         </span>
         <span className="text-texto-suave text-[10px] font-extrabold tracking-widest">
-          PROTOCOLO TLS 1.3
+          ACCESO SEGURO
         </span>
       </div>
       <div className="bg-turquesa mt-7 h-1 w-10 rounded-full" />
@@ -21,8 +25,8 @@ function PanelRecuperacion() {
         Protegemos tu identidad universitaria
       </h2>
       <p className="text-texto-suave mt-3 text-sm leading-relaxed">
-        El enlace de recuperación expira en 15 minutos por motivos de seguridad académica y
-        resguardo de tus datos de horas beca.
+        El enlace de recuperación vence en {minutosVigencia} minutos y solo puede utilizarse una
+        vez.
       </p>
       <div className="mt-7 rounded-xl bg-white p-5 shadow-md">
         <p className="text-turquesa flex items-center gap-2 text-[10px] font-extrabold tracking-wider uppercase">
@@ -30,10 +34,10 @@ function PanelRecuperacion() {
         </p>
         <ol className="mt-5 space-y-4">
           <Paso numero="1" titulo="Solicita el enlace">
-            Ingresa tu correo institucional validado por el directorio UVG.
+            Ingresa el correo institucional con el que creaste tu cuenta.
           </Paso>
           <Paso numero="2" titulo="Revisa tu bandeja de entrada">
-            Abre el correo con asunto “Recuperación de credencial AEUVG”.
+            Abre el correo con asunto “Restablece tu contraseña de AEUVG”.
           </Paso>
           <Paso numero="3" titulo="Define tu nueva clave">
             Crea una credencial robusta para volver a consultar tutorías y becas.
@@ -41,8 +45,7 @@ function PanelRecuperacion() {
         </ol>
       </div>
       <div className="bg-primario-suave text-turquesa mt-auto flex items-center gap-2 rounded-lg px-3 py-2 text-[11px] font-bold">
-        <Icono nombre="candado" className="size-4" /> Cifrado de punta a punta{" "}
-        <span className="ml-auto text-[9px]">ACTIVO</span>
+        <Icono nombre="candado" className="size-4" /> Enlace de un solo uso
       </div>
     </>
   );
@@ -71,8 +74,13 @@ function Paso({
 }
 
 export default function PaginaRecuperarContrasena() {
+  const { dominioInstitucional, minutosVigenciaToken } = obtenerConfiguracionRegistro();
+
   return (
-    <MarcoAcceso variante="seguridad" panel={<PanelRecuperacion />}>
+    <MarcoAcceso
+      variante="seguridad"
+      panel={<PanelRecuperacion minutosVigencia={minutosVigenciaToken} />}
+    >
       <div className="flex min-h-[590px] flex-col justify-between">
         <div>
           <Link
@@ -91,30 +99,13 @@ export default function PaginaRecuperarContrasena() {
             Ingresa el correo institucional UVG asociado a tu cuenta de estudiante. Te enviaremos un
             enlace seguro para restablecer tu acceso en pocos minutos.
           </p>
-          <form className="mt-8 max-w-xl">
-            <CampoAcceso
-              id="correo-recuperacion"
-              etiqueta="Correo institucional UVG"
-              icono="at"
-              textoLateral="Terminación @uvg.edu.gt"
-              type="email"
-              placeholder="estudiante@uvg.edu.gt"
-              ayuda="Debe ser la dirección oficial proporcionada por la universidad."
-            />
-            <button
-              type="button"
-              className="bg-primario hover:bg-primario-fuerte mt-6 flex h-12 w-full items-center justify-center gap-2 rounded-xl text-sm font-bold text-white shadow-md transition-colors"
-            >
-              Enviar enlace de recuperación <Icono nombre="flecha" />
-            </button>
-          </form>
+          <FormularioRecuperacion dominioInstitucional={dominioInstitucional} />
         </div>
         <div className="bg-superficie-suave text-texto-suave mt-10 flex gap-3 rounded-xl p-4 text-xs leading-relaxed">
           <Icono nombre="informacion" className="mt-0.5 size-5 shrink-0" />
           <p>
-            ¿No recuerdas tu correo o perdiste acceso? Contacta a la coordinación de soporte AEUVG
-            en <span className="text-turquesa font-bold">soporte@aeuvg.uvg.edu.gt</span> o acércate
-            a la oficina en Edificio I.
+            ¿No recuerdas tu correo o perdiste el acceso? Comunícate con la Junta Directiva de AEUVG
+            para que verifiquen tu cuenta.
           </p>
         </div>
       </div>

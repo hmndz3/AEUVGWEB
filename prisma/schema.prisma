@@ -180,6 +180,7 @@ model Usuario {
   interacciones          InteraccionUsuario[]
   notificaciones         Notificacion[]
   tokensVerificacion     TokenVerificacionCorreo[]
+  tokensRecuperacion     TokenRecuperacionContrasena[]
 
   @@index([estado], map: "usuario_estado_idx")
   @@map("usuario")
@@ -198,6 +199,21 @@ model TokenVerificacionCorreo {
   @@index([idUsuario, fechaCreacion], map: "token_verificacion_correo_usuario_fecha_idx")
   @@index([fechaExpiracion], map: "token_verificacion_correo_expiracion_idx")
   @@map("token_verificacion_correo")
+}
+
+model TokenRecuperacionContrasena {
+  idToken           Int       @id @default(autoincrement()) @map("id_token")
+  idUsuario         Int       @map("id_usuario")
+  tokenHash         String    @unique(map: "token_recuperacion_contrasena_token_hash_key") @map("token_hash") @db.VarChar(64)
+  fechaExpiracion   DateTime  @map("fecha_expiracion") @db.Timestamptz(3)
+  fechaUso          DateTime? @map("fecha_uso") @db.Timestamptz(3)
+  fechaInvalidacion DateTime? @map("fecha_invalidacion") @db.Timestamptz(3)
+  fechaCreacion     DateTime  @default(now()) @map("fecha_creacion") @db.Timestamptz(3)
+  usuario           Usuario   @relation(fields: [idUsuario], references: [idUsuario], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([idUsuario, fechaCreacion], map: "token_recuperacion_contrasena_usuario_fecha_idx")
+  @@index([fechaExpiracion], map: "token_recuperacion_contrasena_expiracion_idx")
+  @@map("token_recuperacion_contrasena")
 }
 
 model Rol {
