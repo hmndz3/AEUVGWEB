@@ -24,6 +24,7 @@ export async function GET(solicitud: NextRequest) {
           idUsuario: usuario.idUsuario,
           nombreCompleto: usuario.nombreCompleto,
           correo: usuario.correo,
+          roles: usuario.roles,
         },
       },
       { headers: { "Cache-Control": "no-store" } }

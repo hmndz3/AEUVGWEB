@@ -1,5 +1,6 @@
 import type { EstadoUsuario, PrismaClient } from "@prisma/client";
 
+import { normalizarRol, type Rol } from "@/lib/auth/roles";
 import { obtenerPrisma } from "@/lib/prisma";
 
 export type UsuarioAutenticacion = {
@@ -9,6 +10,7 @@ export type UsuarioAutenticacion = {
   estado: EstadoUsuario;
   correoVerificado: boolean;
   nombreCompleto: string;
+  roles: Rol[];
 };
 
 export type UsuarioSesion = Omit<UsuarioAutenticacion, "contrasenaHash">;
@@ -17,6 +19,16 @@ export interface RepositorioAutenticacion {
   buscarPorCorreo(correo: string): Promise<UsuarioAutenticacion | null>;
   buscarPorId(idUsuario: number): Promise<UsuarioSesion | null>;
   registrarAcceso(idUsuario: number, fecha: Date): Promise<void>;
+}
+
+type FilaRol = { rol: { nombre: string } };
+
+/** Descarta cualquier nombre que no corresponda a un rol conocido del sistema. */
+function rolesDe(filas: FilaRol[]): Rol[] {
+  return filas.flatMap((fila) => {
+    const rol = normalizarRol(fila.rol.nombre);
+    return rol ? [rol] : [];
+  });
 }
 
 export class RepositorioAutenticacionPrisma implements RepositorioAutenticacion {
@@ -33,6 +45,10 @@ export class RepositorioAutenticacionPrisma implements RepositorioAutenticacion 
           estado: true,
           correoVerificado: true,
           estudiante: { select: { nombreCompleto: true } },
+          roles: {
+            where: { activo: true, rol: { activo: true } },
+            select: { rol: { select: { nombre: true } } },
+          },
         },
       })
       .then((usuario) =>
@@ -44,6 +60,7 @@ export class RepositorioAutenticacionPrisma implements RepositorioAutenticacion 
               estado: usuario.estado,
               correoVerificado: usuario.correoVerificado,
               nombreCompleto: usuario.estudiante.nombreCompleto,
+              roles: rolesDe(usuario.roles),
             }
           : null
       );
@@ -59,6 +76,10 @@ export class RepositorioAutenticacionPrisma implements RepositorioAutenticacion 
           estado: true,
           correoVerificado: true,
           estudiante: { select: { nombreCompleto: true } },
+          roles: {
+            where: { activo: true, rol: { activo: true } },
+            select: { rol: { select: { nombre: true } } },
+          },
         },
       })
       .then((usuario) =>
@@ -69,6 +90,7 @@ export class RepositorioAutenticacionPrisma implements RepositorioAutenticacion 
               estado: usuario.estado,
               correoVerificado: usuario.correoVerificado,
               nombreCompleto: usuario.estudiante.nombreCompleto,
+              roles: rolesDe(usuario.roles),
             }
           : null
       );
