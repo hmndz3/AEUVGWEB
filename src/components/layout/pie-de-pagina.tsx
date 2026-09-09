@@ -18,24 +18,32 @@ const SECCIONES = [
       { href: "/tutorias", texto: "Tutorías" },
     ],
   },
+  {
+    titulo: "Tu cuenta",
+    enlaces: [
+      { href: "/crear-cuenta", texto: "Crear cuenta" },
+      { href: "/iniciar-sesion", texto: "Iniciar sesión" },
+      { href: "/recuperar-contrasena", texto: "Recuperar contraseña" },
+    ],
+  },
 ];
 
 export function PieDePagina() {
   return (
     <footer className="bg-texto mt-auto text-white">
-      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-3">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-4">
         <div className="flex flex-col gap-3">
           <div className="flex items-center gap-3">
             <Image
               src="/logo-aeuvg.png"
               alt="AEUVG"
-              width={36}
-              height={36}
+              width={40}
+              height={40}
               className="rounded-full"
             />
             <span className="font-extrabold">AEUVG</span>
           </div>
-          <p className="text-sm text-white/70">
+          <p className="text-sm leading-relaxed text-white/70">
             Asociación General de Estudiantes de la Universidad del Valle de Guatemala.
           </p>
         </div>
@@ -55,6 +63,7 @@ export function PieDePagina() {
           </div>
         ))}
       </div>
+
       <div className="border-t border-white/10 px-4 py-5 text-center text-xs text-white/50 sm:px-6">
         © {new Date().getFullYear()} Asociación General de Estudiantes de la Universidad del Valle
         de Guatemala
