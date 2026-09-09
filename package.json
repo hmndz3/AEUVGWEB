@@ -22,7 +22,9 @@
     "db:admin": "tsx prisma/crear-administrador.ts",
     "db:railway:admin": "node scripts/db/railway.js tsx prisma/crear-administrador.ts",
     "db:admins": "tsx prisma/revisar-administradores.ts",
-    "db:railway:admins": "node scripts/db/railway.js tsx prisma/revisar-administradores.ts"
+    "db:railway:admins": "node scripts/db/railway.js tsx prisma/revisar-administradores.ts",
+    "db:demo": "tsx prisma/crear-cuentas-demo.ts",
+    "db:railway:demo": "node scripts/db/railway.js tsx prisma/crear-cuentas-demo.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.10.0",

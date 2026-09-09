@@ -9,7 +9,7 @@ import { obtenerConfiguracionSesion } from "@/lib/configuracion-sesion";
  * sesión, pero no sustituye a la comprobación de roles, que se hace en el
  * servidor con los datos de la base (ver src/lib/auth/guardias.ts).
  */
-const RUTAS_PRIVADAS = ["/perfil", "/admin"];
+const RUTAS_PRIVADAS = ["/admin"];
 
 /** Rutas de acceso que no tiene sentido ver con la sesión ya iniciada. */
 const RUTAS_DE_ACCESO = ["/iniciar-sesion", "/crear-cuenta"];
@@ -47,5 +47,5 @@ export async function middleware(solicitud: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/perfil/:path*", "/admin/:path*", "/iniciar-sesion", "/crear-cuenta"],
+  matcher: ["/admin/:path*", "/iniciar-sesion", "/crear-cuenta"],
 };
