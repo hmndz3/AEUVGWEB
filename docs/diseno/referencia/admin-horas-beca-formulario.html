@@ -1,0 +1,1178 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Portal Administrativo AEUVG</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @layer base {
+        html,
+        body {
+          margin: 0;
+          padding: 0;
+        }
+        body {
+          overscroll-behavior: none;
+        }
+        main > :first-child {
+          margin-top: 0 !important;
+        }
+        main > :last-child {
+          margin-bottom: 0 !important;
+        }
+      }
+      ::-webkit-scrollbar {
+        display: none;
+      }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-primary-container": "#ede8ff",
+              "inverse-on-surface": "#fff8f3",
+              "primary-container": "#6d4aff",
+              "surface-container": "#f7f1ea",
+              secondary: "#00c9a7",
+              tertiary: "#230002",
+              "tertiary-container": "#4d000a",
+              background: "#fff8f3",
+              "on-error-container": "#93000a",
+              "on-primary-fixed-variant": "#5a35e8",
+              primary: "#1c162b",
+              "outline-variant": "#ebe2d8",
+              "tertiary-fixed": "#ffdad8",
+              "primary-fixed": "#ede8ff",
+              "on-primary": "#ffffff",
+              surface: "#fff8f3",
+              "on-error": "#ffffff",
+              "on-secondary-fixed-variant": "#00806c",
+              "on-tertiary-fixed": "#410007",
+              outline: "#d9cec2",
+              "secondary-container": "#3ec1ff",
+              "on-secondary-container": "#00806c",
+              "on-surface": "#1c162b",
+              "on-surface-variant": "#6e6580",
+              "error-container": "#ffdad6",
+              "inverse-surface": "#1c162b",
+              "inverse-primary": "#b98aff",
+              "on-tertiary-fixed-variant": "#92001c",
+              "surface-dim": "#f0e6da",
+              "surface-container-high": "#ede8ff",
+              "surface-container-low": "#f7f1ea",
+              "secondary-fixed": "#d6f7f1",
+              "secondary-fixed-dim": "#3ec1ff",
+              "on-tertiary-container": "#ff5e5b",
+              "on-primary-fixed": "#1c162b",
+              "on-tertiary": "#ffffff",
+              "surface-container-lowest": "#ffffff",
+              "surface-container-highest": "#ede8ff",
+              "tertiary-fixed-dim": "#ffb3b1",
+              "on-background": "#1c162b",
+              "primary-fixed-dim": "#b98aff",
+              "on-secondary": "#ffffff",
+              "on-secondary-fixed": "#0d3b34",
+              "surface-bright": "#fff8f3",
+              "surface-tint": "#6d4aff",
+              "surface-variant": "#ede8ff",
+              error: "#f5455c",
+            },
+            borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+            spacing: {
+              "space-sm": "0.75rem",
+              "space-xs": "0.5rem",
+              "space-2xl": "3rem",
+              "margin-desktop": "2rem",
+              "container-max": "1280px",
+              "space-2xs": "0.25rem",
+              "space-lg": "1.5rem",
+              "gutter-mobile": "1rem",
+              "margin-mobile": "1rem",
+              "space-md": "1rem",
+              "space-3xl": "4rem",
+              "gutter-desktop": "1.5rem",
+              "space-xl": "2rem",
+            },
+            fontFamily: {
+              "display-hero-mobile": ["Plus Jakarta Sans"],
+              "caption-caps": ["Plus Jakarta Sans"],
+              "display-hero": ["Plus Jakarta Sans"],
+              "headline-sm": ["Plus Jakarta Sans"],
+              "label-md": ["Plus Jakarta Sans"],
+              "body-md": ["Plus Jakarta Sans"],
+              "body-sm": ["Plus Jakarta Sans"],
+              "body-lg": ["Plus Jakarta Sans"],
+              "title-md": ["Plus Jakarta Sans"],
+              "headline-lg": ["Plus Jakarta Sans"],
+              "headline-md": ["Plus Jakarta Sans"],
+              "label-sm": ["Plus Jakarta Sans"],
+              "headline-lg-mobile": ["Plus Jakarta Sans"],
+            },
+            fontSize: {
+              "display-hero-mobile": [
+                "30px",
+                { lineHeight: "38px", letterSpacing: "-0.015em", fontWeight: "800" },
+              ],
+              "caption-caps": [
+                "11px",
+                { lineHeight: "14px", letterSpacing: "0.06em", fontWeight: "700" },
+              ],
+              "display-hero": [
+                "40px",
+                { lineHeight: "48px", letterSpacing: "-0.02em", fontWeight: "800" },
+              ],
+              "headline-sm": ["20px", { lineHeight: "28px", fontWeight: "600" }],
+              "label-md": [
+                "14px",
+                { lineHeight: "20px", letterSpacing: "0.005em", fontWeight: "600" },
+              ],
+              "body-md": ["15px", { lineHeight: "24px", fontWeight: "400" }],
+              "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+              "body-lg": ["16px", { lineHeight: "26px", fontWeight: "400" }],
+              "title-md": ["18px", { lineHeight: "26px", fontWeight: "600" }],
+              "headline-lg": [
+                "32px",
+                { lineHeight: "40px", letterSpacing: "-0.015em", fontWeight: "700" },
+              ],
+              "headline-md": [
+                "24px",
+                { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "600" },
+              ],
+              "label-sm": [
+                "12px",
+                { lineHeight: "16px", letterSpacing: "0.01em", fontWeight: "600" },
+              ],
+              "headline-lg-mobile": [
+                "26px",
+                { lineHeight: "34px", letterSpacing: "-0.01em", fontWeight: "700" },
+              ],
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-background font-body-md text-on-surface min-h-screen antialiased">
+    <aside
+      class="bg-primary-container text-on-primary fixed top-0 left-0 z-50 flex h-full w-72 flex-col justify-between shadow-[0_1px_8px_rgba(0,0,0,0.06)]"
+    >
+      <div class="flex h-full flex-col overflow-hidden">
+        <div class="px-space-md bg-primary flex h-16 shrink-0 items-center justify-between">
+          <div class="gap-space-sm flex items-center">
+            <img
+              alt="Logo circular de AEUVG compuesto por figuras humanas estilizadas unidas en círculo de colores vivos (rojo, coral, morado, celeste, naranja, verde lima y azul marino) con las siglas AEUVG limpias y modernas.. Brand logo. - Primary color: #6d4aff
+- Font: plusJakartaSans
+- Mode: light
+- Roundness: rounded-md
+"
+              class="h-8 w-auto object-contain"
+              src="logo-aeuvg.png"
+            />
+            <div class="flex flex-col">
+              <span
+                class="font-title-md text-title-md text-on-primary leading-tight font-bold tracking-tight"
+                >AEUVG Admin</span
+              ><span class="font-label-sm text-label-sm text-on-primary-container leading-none"
+                >Universidad del Valle</span
+              >
+            </div>
+          </div>
+          <div class="bg-primary flex h-8 w-8 items-center justify-center rounded-full">
+            <span class="material-symbols-outlined text-on-primary text-[18px]">person</span>
+          </div>
+        </div>
+        <div class="px-space-md py-space-sm bg-primary/40 gap-space-sm flex items-center">
+          <div
+            class="bg-secondary text-on-secondary text-label-md font-label-md flex h-9 w-9 shrink-0 items-center justify-center rounded-full font-bold"
+          >
+            JD
+          </div>
+          <div class="flex min-w-0 flex-1 flex-col">
+            <span class="font-label-md text-label-md text-on-primary truncate font-semibold"
+              >Junta Directiva</span
+            ><span class="font-label-sm text-label-sm text-on-primary-container truncate"
+              >admin@aeuvg.edu.gt</span
+            >
+          </div>
+          <span class="bg-secondary-container h-2 w-2 rounded-full"></span>
+        </div>
+        <nav
+          class="px-space-xs py-space-sm flex-1 space-y-1 overflow-y-auto"
+          data-active-classes="bg-secondary text-on-secondary font-semibold"
+        >
+          <a
+            class="gap-space-sm px-space-sm py-space-xs text-on-primary-container hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md flex items-center rounded-lg transition-colors"
+            data-path="resumen"
+            href="#"
+            ><span class="material-symbols-outlined text-[20px]">dashboard</span
+            ><span>Resumen</span></a
+          ><a
+            class="gap-space-sm px-space-sm py-space-xs text-on-primary-container hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md flex items-center rounded-lg transition-colors"
+            data-path="eventos"
+            href="#"
+            ><span class="material-symbols-outlined text-[20px]">event</span><span>Eventos</span></a
+          ><a
+            class="gap-space-sm px-space-sm py-space-xs text-on-primary-container hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md flex items-center rounded-lg transition-colors"
+            data-path="calendario"
+            href="#"
+            ><span class="material-symbols-outlined text-[20px]">calendar_month</span
+            ><span>Calendario</span></a
+          ><a
+            class="gap-space-sm px-space-sm py-space-xs text-on-primary-container hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md flex items-center rounded-lg transition-colors"
+            data-path="asociaciones"
+            href="#"
+            ><span class="material-symbols-outlined text-[20px]">groups</span
+            ><span>Asociaciones</span></a
+          ><a
+            class="gap-space-sm px-space-sm py-space-xs text-on-primary-container hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md flex items-center rounded-lg transition-colors"
+            data-path="clubes"
+            href="#"
+            ><span class="material-symbols-outlined text-[20px]">diversity_3</span
+            ><span>Clubes</span></a
+          ><a
+            aria-current="page"
+            class="gap-space-sm px-space-sm py-space-xs bg-secondary text-on-secondary flex items-center rounded-lg font-semibold transition-colors"
+            data-path="horas-beca"
+            href="#"
+            ><span class="material-symbols-outlined text-[20px]">schedule</span
+            ><span>Horas beca</span></a
+          ><a
+            class="gap-space-sm px-space-sm py-space-xs text-on-primary-container hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md flex items-center rounded-lg transition-colors"
+            data-path="oportunidades-de-horas"
+            href="#"
+            ><span class="material-symbols-outlined text-[20px]">volunteer_activism</span
+            ><span>Oportunidades de horas</span></a
+          ><a
+            class="gap-space-sm px-space-sm py-space-xs text-on-primary-container hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md flex items-center rounded-lg transition-colors"
+            data-path="tutores"
+            href="#"
+            ><span class="material-symbols-outlined text-[20px]">school</span
+            ><span>Tutores</span></a
+          ><a
+            class="gap-space-sm px-space-sm py-space-xs text-on-primary-container hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md flex items-center rounded-lg transition-colors"
+            data-path="postulaciones"
+            href="#"
+            ><span class="material-symbols-outlined text-[20px]">assignment_turned_in</span
+            ><span>Postulaciones</span></a
+          ><a
+            class="gap-space-sm px-space-sm py-space-xs text-on-primary-container hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md flex items-center rounded-lg transition-colors"
+            data-path="estudiantes"
+            href="#"
+            ><span class="material-symbols-outlined text-[20px]">badge</span
+            ><span>Estudiantes</span></a
+          ><a
+            class="gap-space-sm px-space-sm py-space-xs text-on-primary-container hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md flex items-center rounded-lg transition-colors"
+            data-path="reportes"
+            href="#"
+            ><span class="material-symbols-outlined text-[20px]">analytics</span
+            ><span>Reportes</span></a
+          >
+        </nav>
+      </div>
+      <div class="p-space-xs bg-primary/60 shrink-0 space-y-1">
+        <a
+          class="gap-space-sm px-space-sm py-space-xs text-on-primary-container hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md flex items-center rounded-lg transition-colors"
+          data-path="configuracion"
+          href="#"
+          ><span class="material-symbols-outlined text-[20px]">settings</span
+          ><span>Configuración</span></a
+        ><button
+          class="px-space-sm py-space-xs text-on-primary-container hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md flex w-full items-center justify-between rounded-lg transition-colors"
+          type="button"
+        >
+          <span class="gap-space-sm flex items-center"
+            ><span class="material-symbols-outlined text-[20px]">dock_to_left</span
+            ><span>Colapsar menú</span></span
+          ><span
+            class="font-caption-caps text-caption-caps bg-primary-container text-on-primary-container rounded px-1 py-0.5"
+            >Ctrl+B</span
+          >
+        </button>
+      </div>
+    </aside>
+    <div class="pl-72">
+      <header
+        class="bg-surface/85 px-space-lg fixed top-0 right-0 left-72 z-40 flex h-16 items-center justify-between shadow-[0_1px_8px_rgba(13,35,58,0.04)] backdrop-blur-xl"
+      >
+        <div class="gap-space-md flex max-w-xl flex-1 items-center">
+          <div class="relative w-full">
+            <span
+              class="material-symbols-outlined text-outline absolute top-1/2 left-3 -translate-y-1/2 text-[20px]"
+              >search</span
+            ><input
+              class="pr-space-md bg-surface-container-lowest text-on-surface placeholder:text-outline text-body-sm font-body-sm focus:ring-secondary w-full rounded-lg py-2 pl-10 shadow-[0_1px_3px_0_rgba(13,35,58,0.04)] transition-all focus:ring-2 focus:outline-none"
+              placeholder="Buscar estudiantes, carnets, eventos..."
+              type="text"
+            />
+          </div>
+        </div>
+        <div class="gap-space-md flex items-center">
+          <div
+            class="bg-surface-container-lowest px-space-sm flex items-center gap-2 rounded-lg py-1.5 shadow-[0_1px_3px_0_rgba(13,35,58,0.04)]"
+          >
+            <span class="material-symbols-outlined text-secondary text-[18px]">calendar_today</span
+            ><select
+              class="text-on-surface font-label-sm text-label-sm cursor-pointer bg-transparent focus:outline-none"
+            >
+              <option value="2025-1">Ciclo I - 2025</option>
+              <option value="2024-2">Ciclo II - 2024</option>
+              <option value="2024-1">Ciclo I - 2024</option>
+            </select>
+          </div>
+          <button
+            aria-label="Notificaciones"
+            class="bg-surface-container-lowest text-on-surface hover:bg-surface-container-high hover:text-on-surface relative flex h-10 w-10 items-center justify-center rounded-lg shadow-[0_1px_3px_0_rgba(13,35,58,0.04)] transition-colors"
+            type="button"
+          >
+            <span class="material-symbols-outlined text-[20px]">notifications</span
+            ><span
+              class="bg-error ring-surface-container-lowest absolute top-2 right-2 h-2 w-2 rounded-full ring-2"
+            ></span>
+          </button>
+          <div class="gap-space-sm pl-space-xs flex items-center">
+            <div class="bg-primary flex h-8 w-8 items-center justify-center rounded-full">
+              <span class="material-symbols-outlined text-on-primary text-[18px]">person</span>
+            </div>
+            <div class="hidden flex-col text-left md:flex">
+              <span class="font-label-sm text-label-sm text-on-surface leading-tight font-semibold"
+                >Admin AEUVG</span
+              ><span class="font-caption-caps text-caption-caps text-outline leading-none"
+                >Junta Directiva</span
+              >
+            </div>
+            <span class="material-symbols-outlined text-outline text-[18px]">expand_more</span>
+          </div>
+        </div>
+      </header>
+      <main class="px-space-lg py-space-lg bg-background relative min-h-screen w-full pt-16">
+        <div class="flex w-full flex-col">
+          <!-- Capa de Fondo Simulada: Vista General de Horas Beca AEUVG -->
+          <div
+            class="space-y-space-xl pointer-events-none flex w-full flex-col opacity-40 blur-[1.5px] select-none"
+          >
+            <!-- Header de la pantalla principal -->
+            <div class="gap-space-md flex flex-col md:flex-row md:items-center md:justify-between">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span
+                    class="font-caption-caps text-caption-caps text-secondary font-bold tracking-wider uppercase"
+                    >Dirección de Becas y Servicio</span
+                  >
+                  <span class="bg-secondary h-1.5 w-1.5 rounded-full"></span>
+                  <span class="font-caption-caps text-caption-caps text-outline font-semibold"
+                    >Ciclo Académico 2025</span
+                  >
+                </div>
+                <h1
+                  class="font-headline-lg text-headline-lg text-on-surface mt-1 font-extrabold tracking-tight"
+                >
+                  Gestión de Horas Beca
+                </h1>
+                <p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+                  Control, validación institucional y acreditación oficial para becarios
+                  universitarios.
+                </p>
+              </div>
+              <div class="gap-space-sm flex items-center">
+                <button
+                  class="px-space-md bg-surface-container-high text-on-surface font-label-md text-label-md flex items-center gap-2 rounded-lg py-2.5 shadow-sm"
+                  type="button"
+                >
+                  <span class="material-symbols-outlined text-[18px]">file_download</span>
+                  <span>Exportar Matriz</span>
+                </button>
+                <button
+                  class="px-space-md bg-primary text-on-primary font-label-md text-label-md flex items-center gap-2 rounded-lg py-2.5 shadow-md"
+                  type="button"
+                >
+                  <span class="material-symbols-outlined text-[18px]">add_task</span>
+                  <span>Nuevo Registro</span>
+                </button>
+              </div>
+            </div>
+            <!-- Tarjetas de Métricas -->
+            <div class="gap-space-md grid grid-cols-1 md:grid-cols-4">
+              <div
+                class="p-space-md bg-surface-container-lowest flex items-center justify-between rounded-xl shadow-sm"
+              >
+                <div>
+                  <span class="font-caption-caps text-caption-caps text-outline font-bold"
+                    >Total Acreditadas</span
+                  >
+                  <p class="font-headline-md text-headline-md text-on-surface mt-1 font-bold">
+                    4,820
+                    <span class="font-label-sm text-label-sm text-outline font-normal">hrs</span>
+                  </p>
+                </div>
+                <div
+                  class="bg-surface-container-high text-secondary flex h-11 w-11 items-center justify-center rounded-lg"
+                >
+                  <span class="material-symbols-outlined">verified</span>
+                </div>
+              </div>
+              <div
+                class="p-space-md bg-surface-container-lowest flex items-center justify-between rounded-xl shadow-sm"
+              >
+                <div>
+                  <span class="font-caption-caps text-caption-caps text-outline font-bold"
+                    >Pendientes de Firma</span
+                  >
+                  <p class="font-headline-md text-headline-md text-secondary mt-1 font-bold">
+                    18
+                    <span class="font-label-sm text-label-sm text-outline font-normal"
+                      >solicitudes</span
+                    >
+                  </p>
+                </div>
+                <div
+                  class="bg-secondary-fixed text-on-secondary-fixed flex h-11 w-11 items-center justify-center rounded-lg"
+                >
+                  <span class="material-symbols-outlined">pending_actions</span>
+                </div>
+              </div>
+              <div
+                class="p-space-md bg-surface-container-lowest flex items-center justify-between rounded-xl shadow-sm"
+              >
+                <div>
+                  <span class="font-caption-caps text-caption-caps text-outline font-bold"
+                    >Estudiantes Activos</span
+                  >
+                  <p class="font-headline-md text-headline-md text-on-surface mt-1 font-bold">
+                    342
+                  </p>
+                </div>
+                <div
+                  class="bg-surface-container-high text-secondary flex h-11 w-11 items-center justify-center rounded-lg"
+                >
+                  <span class="material-symbols-outlined">group</span>
+                </div>
+              </div>
+              <div
+                class="p-space-md bg-surface-container-lowest flex items-center justify-between rounded-xl shadow-sm"
+              >
+                <div>
+                  <span class="font-caption-caps text-caption-caps text-outline font-bold"
+                    >Meta Cumplida</span
+                  >
+                  <p class="font-headline-md text-headline-md text-on-surface mt-1 font-bold">
+                    87.4%
+                  </p>
+                </div>
+                <div
+                  class="bg-surface-container-high text-secondary flex h-11 w-11 items-center justify-center rounded-lg"
+                >
+                  <span class="material-symbols-outlined">donut_large</span>
+                </div>
+              </div>
+            </div>
+            <!-- Tabla Base Desenfocada -->
+            <div
+              class="bg-surface-container-lowest p-space-md overflow-hidden rounded-xl shadow-sm"
+            >
+              <div class="bg-surface-container-high mb-3 h-8 w-1/4 rounded-md"></div>
+              <div class="space-y-3">
+                <div class="bg-surface-container-low h-12 w-full rounded-lg"></div>
+                <div class="bg-surface-container-low h-12 w-full rounded-lg"></div>
+                <div class="bg-surface-container-low h-12 w-full rounded-lg"></div>
+              </div>
+            </div>
+          </div>
+          <!-- OVERLAY OSCURO Y CONTENEDOR SLIDE-OVER DRAWER -->
+          <div
+            class="bg-primary/60 fixed inset-0 z-50 flex justify-end backdrop-blur-sm transition-all duration-300"
+            id="drawerOverlay"
+          >
+            <!-- Panel Lateral Deslizante -->
+            <div
+              aria-labelledby="modalTitle"
+              aria-modal="true"
+              class="bg-surface animate-in slide-in-from-right relative flex h-screen w-full max-w-2xl flex-col overflow-hidden shadow-2xl duration-300"
+              role="dialog"
+            >
+              <!-- 1. Encabezado del Panel -->
+              <div
+                class="px-space-xl py-space-lg bg-surface-container-lowest flex shrink-0 items-start justify-between shadow-sm"
+              >
+                <div class="space-y-1">
+                  <div class="gap-space-xs flex items-center">
+                    <span
+                      class="font-caption-caps text-caption-caps bg-secondary text-on-secondary inline-flex items-center rounded-full px-2.5 py-0.5 font-bold tracking-wide"
+                    >
+                      Ciclo I - 2025
+                    </span>
+                    <span
+                      class="font-caption-caps text-caption-caps bg-surface-container-high text-secondary inline-flex items-center rounded-full px-2.5 py-0.5 font-bold"
+                    >
+                      ID: HB-2025-042
+                    </span>
+                  </div>
+                  <h2
+                    class="font-headline-md text-headline-md text-on-surface font-extrabold tracking-tight"
+                    id="modalTitle"
+                  >
+                    Registrar Horas Beca
+                  </h2>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant max-w-lg">
+                    Ingresa o edita los datos del estudiante y el reporte de horas para acreditación
+                    oficial de AEUVG.
+                  </p>
+                </div>
+                <button
+                  aria-label="Cerrar panel lateral"
+                  class="bg-surface-container hover:bg-surface-container-high text-on-surface focus:ring-secondary flex h-9 w-9 items-center justify-center rounded-full transition-colors focus:ring-2 focus:outline-none"
+                  id="closeDrawerBtn"
+                  type="button"
+                >
+                  <span class="material-symbols-outlined text-[20px]">close</span>
+                </button>
+              </div>
+              <!-- 2. Contenedor de Formulario Desplazable -->
+              <div class="px-space-xl py-space-lg space-y-space-xl flex-1 overflow-y-auto">
+                <form class="space-y-space-xl" id="horasBecaForm" onsubmit="event.preventDefault()">
+                  <!-- SECCIÓN 1: DATOS DEL ESTUDIANTE -->
+                  <div
+                    class="p-space-lg bg-surface-container-lowest space-y-space-md rounded-xl shadow-sm"
+                  >
+                    <div class="flex items-center justify-between">
+                      <div class="gap-space-xs flex items-center">
+                        <span
+                          class="bg-surface-container text-secondary flex h-7 w-7 items-center justify-center rounded-md"
+                        >
+                          <span class="material-symbols-outlined text-[18px]">badge</span>
+                        </span>
+                        <span class="font-title-md text-title-md text-on-surface font-bold"
+                          >1. Datos del Estudiante</span
+                        >
+                      </div>
+                      <span
+                        class="font-caption-caps text-caption-caps text-secondary bg-secondary-fixed rounded px-2 py-0.5 font-semibold"
+                        >Requerido</span
+                      >
+                    </div>
+                    <!-- Carnet Universitario con Búsqueda -->
+                    <div class="space-y-1.5">
+                      <label
+                        class="font-label-sm text-label-sm text-on-surface block font-bold"
+                        for="carnetInput"
+                      >
+                        Carné universitario <span class="text-error">*</span>
+                      </label>
+                      <div class="gap-space-xs relative flex">
+                        <div class="relative flex-1">
+                          <span
+                            class="material-symbols-outlined text-outline absolute top-1/2 left-3.5 -translate-y-1/2 text-[18px]"
+                            >search</span
+                          >
+                          <input
+                            class="bg-surface-container-low text-on-surface font-body-sm text-body-sm focus:bg-surface-container-lowest focus:ring-secondary w-full rounded-lg py-2.5 pr-3 pl-10 shadow-sm transition-all focus:ring-2 focus:outline-none"
+                            id="carnetInput"
+                            placeholder="Ej. 21845"
+                            type="text"
+                            value="21845"
+                          />
+                        </div>
+                        <button
+                          class="px-space-md bg-secondary text-on-secondary hover:bg-on-secondary-container font-label-md text-label-md flex shrink-0 items-center gap-1.5 rounded-lg py-2.5 shadow-sm transition-colors"
+                          id="buscarEstudianteBtn"
+                          type="button"
+                        >
+                          <span class="material-symbols-outlined text-[18px]">person_search</span>
+                          <span>Buscar en Directorio</span>
+                        </button>
+                      </div>
+                      <p class="font-caption-caps text-caption-caps text-outline">
+                        Ingresa carné numérico UVG para autocompletar credenciales institucionales.
+                      </p>
+                    </div>
+                    <!-- Alerta informativa de verificación -->
+                    <div
+                      class="gap-space-sm p-space-sm bg-surface-container-low flex items-center rounded-lg"
+                    >
+                      <span class="material-symbols-outlined text-secondary shrink-0 text-[20px]"
+                        >check_circle</span
+                      >
+                      <span class="font-body-sm text-body-sm text-on-surface-variant">
+                        Estudiante validado en padrón activo:
+                        <strong class="text-on-surface">Valeria Sofia Carrillo Pineda</strong>
+                      </span>
+                    </div>
+                    <!-- Nombre Completo -->
+                    <div class="space-y-1.5">
+                      <label
+                        class="font-label-sm text-label-sm text-on-surface block font-bold"
+                        for="nombreInput"
+                      >
+                        Nombre completo
+                      </label>
+                      <input
+                        class="bg-surface-container-low text-on-surface font-body-sm text-body-sm focus:bg-surface-container-lowest focus:ring-secondary w-full rounded-lg px-3.5 py-2.5 shadow-sm transition-all focus:ring-2 focus:outline-none"
+                        id="nombreInput"
+                        type="text"
+                        value="Valeria Sofía Carrillo Pineda"
+                      />
+                    </div>
+                    <!-- Contacto: Correo y Teléfono -->
+                    <div class="gap-space-md grid grid-cols-1 md:grid-cols-2">
+                      <div class="space-y-1.5">
+                        <label
+                          class="font-label-sm text-label-sm text-on-surface block font-bold"
+                          for="correoInput"
+                        >
+                          Correo institucional UVG
+                        </label>
+                        <div class="relative">
+                          <span
+                            class="material-symbols-outlined text-outline absolute top-1/2 left-3.5 -translate-y-1/2 text-[18px]"
+                            >mail</span
+                          >
+                          <input
+                            class="bg-surface-container-low text-on-surface font-body-sm text-body-sm focus:bg-surface-container-lowest focus:ring-secondary w-full rounded-lg py-2.5 pr-3 pl-10 shadow-sm transition-all focus:ring-2 focus:outline-none"
+                            id="correoInput"
+                            type="email"
+                            value="car21845@uvg.edu.gt"
+                          />
+                        </div>
+                      </div>
+                      <div class="space-y-1.5">
+                        <label
+                          class="font-label-sm text-label-sm text-on-surface block font-bold"
+                          for="telefonoInput"
+                        >
+                          Teléfono de contacto
+                        </label>
+                        <div class="relative">
+                          <span
+                            class="material-symbols-outlined text-outline absolute top-1/2 left-3.5 -translate-y-1/2 text-[18px]"
+                            >phone</span
+                          >
+                          <input
+                            class="bg-surface-container-low text-on-surface font-body-sm text-body-sm focus:bg-surface-container-lowest focus:ring-secondary w-full rounded-lg py-2.5 pr-3 pl-10 shadow-sm transition-all focus:ring-2 focus:outline-none"
+                            id="telefonoInput"
+                            type="tel"
+                            value="+502 5590-1284"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Facultad y Carrera -->
+                    <div class="gap-space-md grid grid-cols-1 md:grid-cols-2">
+                      <div class="space-y-1.5">
+                        <label
+                          class="font-label-sm text-label-sm text-on-surface block font-bold"
+                          for="facultadSelect"
+                        >
+                          Facultad
+                        </label>
+                        <div class="relative">
+                          <select
+                            class="bg-surface-container-low text-on-surface font-body-sm text-body-sm focus:bg-surface-container-lowest focus:ring-secondary w-full cursor-pointer appearance-none rounded-lg py-2.5 pr-9 pl-3.5 shadow-sm transition-all focus:ring-2 focus:outline-none"
+                            id="facultadSelect"
+                          >
+                            <option selected="" value="ing">Facultad de Ingeniería</option>
+                            <option value="cie">Facultad de Ciencias y Humanidades</option>
+                            <option value="edu">Facultad de Educación</option>
+                            <option value="dis">Facultad de Diseño e Innovación</option>
+                          </select>
+                          <span
+                            class="material-symbols-outlined text-outline pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-[18px]"
+                            >expand_more</span
+                          >
+                        </div>
+                      </div>
+                      <div class="space-y-1.5">
+                        <label
+                          class="font-label-sm text-label-sm text-on-surface block font-bold"
+                          for="carreraSelect"
+                        >
+                          Carrera
+                        </label>
+                        <div class="relative">
+                          <select
+                            class="bg-surface-container-low text-on-surface font-body-sm text-body-sm focus:bg-surface-container-lowest focus:ring-secondary w-full cursor-pointer appearance-none rounded-lg py-2.5 pr-9 pl-3.5 shadow-sm transition-all focus:ring-2 focus:outline-none"
+                            id="carreraSelect"
+                          >
+                            <option selected="" value="biomed">Ingeniería Biomédica</option>
+                            <option value="comp">Ingeniería en Ciencias de la Computación</option>
+                            <option value="mec">Ingeniería Mecatrónica</option>
+                            <option value="ind">Ingeniería Industrial</option>
+                            <option value="qui">Ingeniería Química</option>
+                          </select>
+                          <span
+                            class="material-symbols-outlined text-outline pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-[18px]"
+                            >expand_more</span
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- SECCIÓN 2: DETALLE DE LA ACTIVIDAD Y APOYO -->
+                  <div
+                    class="p-space-lg bg-surface-container-lowest space-y-space-md rounded-xl shadow-sm"
+                  >
+                    <div class="gap-space-xs flex items-center">
+                      <span
+                        class="bg-surface-container text-secondary flex h-7 w-7 items-center justify-center rounded-md"
+                      >
+                        <span class="material-symbols-outlined text-[18px]"
+                          >volunteer_activism</span
+                        >
+                      </span>
+                      <span class="font-title-md text-title-md text-on-surface font-bold"
+                        >2. Detalle de la Actividad y Apoyo</span
+                      >
+                    </div>
+                    <!-- Actividad de Apoyo -->
+                    <div class="space-y-1.5">
+                      <label
+                        class="font-label-sm text-label-sm text-on-surface block font-bold"
+                        for="actividadInput"
+                      >
+                        Actividad de apoyo institucional <span class="text-error">*</span>
+                      </label>
+                      <input
+                        class="bg-surface-container-low text-on-surface font-body-sm text-body-sm focus:bg-surface-container-lowest focus:ring-secondary w-full rounded-lg px-3.5 py-2.5 shadow-sm transition-all focus:ring-2 focus:outline-none"
+                        id="actividadInput"
+                        placeholder="Ej. Tutoría Par de Física I, Monitoría en Makerspace"
+                        type="text"
+                        value="Apoyo Logístico en Feria de Innovación y Transferencia CIT"
+                      />
+                    </div>
+                    <!-- Organización / Dependencia -->
+                    <div class="space-y-1.5">
+                      <label
+                        class="font-label-sm text-label-sm text-on-surface block font-bold"
+                        for="dependenciaInput"
+                      >
+                        Organización o Dependencia responsable <span class="text-error">*</span>
+                      </label>
+                      <div class="relative">
+                        <span
+                          class="material-symbols-outlined text-outline absolute top-1/2 left-3.5 -translate-y-1/2 text-[18px]"
+                          >apartment</span
+                        >
+                        <input
+                          class="bg-surface-container-low text-on-surface font-body-sm text-body-sm focus:bg-surface-container-lowest focus:ring-secondary w-full rounded-lg py-2.5 pr-3 pl-10 shadow-sm transition-all focus:ring-2 focus:outline-none"
+                          id="dependenciaInput"
+                          type="text"
+                          value="AEUVG - Comisión de Asuntos Académicos"
+                        />
+                      </div>
+                    </div>
+                    <!-- Fecha y Horario de Apoyo -->
+                    <div class="gap-space-md grid grid-cols-1 md:grid-cols-2">
+                      <div class="space-y-1.5">
+                        <label
+                          class="font-label-sm text-label-sm text-on-surface block font-bold"
+                          for="fechaActividadInput"
+                        >
+                          Fecha de realización
+                        </label>
+                        <div class="relative">
+                          <span
+                            class="material-symbols-outlined text-outline absolute top-1/2 left-3.5 -translate-y-1/2 text-[18px]"
+                            >calendar_today</span
+                          >
+                          <input
+                            class="bg-surface-container-low text-on-surface font-body-sm text-body-sm focus:bg-surface-container-lowest focus:ring-secondary w-full cursor-pointer rounded-lg py-2.5 pr-3 pl-10 shadow-sm transition-all focus:ring-2 focus:outline-none"
+                            id="fechaActividadInput"
+                            type="date"
+                            value="2025-03-05"
+                          />
+                        </div>
+                      </div>
+                      <div class="space-y-1.5">
+                        <label
+                          class="font-label-sm text-label-sm text-on-surface block font-bold"
+                          for="horarioInput"
+                        >
+                          Horario de apoyo
+                        </label>
+                        <div class="relative">
+                          <span
+                            class="material-symbols-outlined text-outline absolute top-1/2 left-3.5 -translate-y-1/2 text-[18px]"
+                            >schedule</span
+                          >
+                          <input
+                            class="bg-surface-container-low text-on-surface font-body-sm text-body-sm focus:bg-surface-container-lowest focus:ring-secondary w-full rounded-lg py-2.5 pr-3 pl-10 shadow-sm transition-all focus:ring-2 focus:outline-none"
+                            id="horarioInput"
+                            placeholder="Ej. Martes 14:00 - 18:00 hrs"
+                            type="text"
+                            value="Miércoles y Jueves, 13:30 - 18:30 hrs"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Stepper de Horas a Acreditar -->
+                    <div
+                      class="p-space-md bg-surface-container-low gap-space-md flex flex-col rounded-xl md:flex-row md:items-center md:justify-between"
+                    >
+                      <div>
+                        <label class="font-label-sm text-label-sm text-on-surface block font-bold">
+                          Horas a acreditar <span class="text-error">*</span>
+                        </label>
+                        <span class="font-body-sm text-body-sm text-on-surface-variant">
+                          Cómputo efectivo de dedicación validada.
+                        </span>
+                      </div>
+                      <div
+                        class="gap-space-xs bg-surface-container-lowest flex items-center rounded-lg p-1.5 shadow-sm"
+                      >
+                        <button
+                          class="bg-surface-container hover:bg-surface-container-high text-on-surface flex h-8 w-8 items-center justify-center rounded-md font-bold transition-colors"
+                          id="btnDecrementarHoras"
+                          type="button"
+                        >
+                          <span class="material-symbols-outlined text-[16px]">remove</span>
+                        </button>
+                        <div class="w-16 text-center">
+                          <input
+                            class="font-headline-sm text-headline-sm text-secondary [&amp;::-webkit-outer-spin-button]:appearance-none [&amp;::-webkit-inner-spin-button]:appearance-none w-full [appearance:textfield] bg-transparent text-center font-extrabold focus:outline-none"
+                            id="horasInput"
+                            max="80"
+                            min="1"
+                            type="number"
+                            value="12"
+                          />
+                          <span
+                            class="font-caption-caps text-caption-caps text-outline -mt-1 block font-bold uppercase"
+                            >Horas</span
+                          >
+                        </div>
+                        <button
+                          class="bg-surface-container hover:bg-surface-container-high text-on-surface flex h-8 w-8 items-center justify-center rounded-md font-bold transition-colors"
+                          id="btnIncrementarHoras"
+                          type="button"
+                        >
+                          <span class="material-symbols-outlined text-[16px]">add</span>
+                        </button>
+                      </div>
+                    </div>
+                    <!-- Descripción o Tareas -->
+                    <div class="space-y-1.5">
+                      <label
+                        class="font-label-sm text-label-sm text-on-surface block font-bold"
+                        for="descripcionInput"
+                      >
+                        Descripción de tareas realizadas
+                      </label>
+                      <textarea
+                        class="bg-surface-container-low text-on-surface font-body-sm text-body-sm focus:bg-surface-container-lowest focus:ring-secondary w-full resize-y rounded-lg px-3.5 py-2.5 shadow-sm transition-all focus:ring-2 focus:outline-none"
+                        id="descripcionInput"
+                        placeholder="Detalla puntualmente las funciones asumidas, entregables o actividades atendidas durante el periodo..."
+                        rows="3"
+                      >
+Coordinación de registro de participantes externos en el vestíbulo del CIT, asistencia en montaje de pósters científicos estudiantiles y apoyo a los jueces evaluadores de proyectos.</textarea>
+                      <div class="text-outline flex items-center justify-between">
+                        <span class="font-caption-caps text-caption-caps">Máx. 500 caracteres</span>
+                        <span class="font-caption-caps text-caption-caps" id="charCounter"
+                          >178 / 500</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <!-- SECCIÓN 3: ESTADO Y VALIDACIÓN -->
+                  <div
+                    class="p-space-lg bg-surface-container-lowest space-y-space-md rounded-xl shadow-sm"
+                  >
+                    <div class="gap-space-xs flex items-center">
+                      <span
+                        class="bg-surface-container text-secondary flex h-7 w-7 items-center justify-center rounded-md"
+                      >
+                        <span class="material-symbols-outlined text-[18px]">gavel</span>
+                      </span>
+                      <span class="font-title-md text-title-md text-on-surface font-bold"
+                        >3. Estado y Validación Oficial</span
+                      >
+                    </div>
+                    <!-- Selector de Estado de Acreditación (Radio Pills) -->
+                    <div class="space-y-2">
+                      <label class="font-label-sm text-label-sm text-on-surface block font-bold">
+                        Estado de acreditación
+                      </label>
+                      <div
+                        aria-label="Estado de acreditación"
+                        class="gap-space-sm grid grid-cols-2"
+                        role="radiogroup"
+                      >
+                        <!-- Opción Pendiente -->
+                        <label
+                          class="gap-space-sm p-space-sm bg-surface-container-low hover:bg-surface-container flex cursor-pointer items-center rounded-lg transition-all"
+                          id="labelPendiente"
+                        >
+                          <input
+                            class="text-secondary focus:ring-secondary accent-secondary h-4 w-4 cursor-pointer"
+                            name="estadoAcreditacion"
+                            type="radio"
+                            value="pendiente"
+                          />
+                          <div class="flex flex-col">
+                            <span
+                              class="font-label-md text-label-md text-on-surface flex items-center gap-1.5 font-bold"
+                            >
+                              <span class="bg-secondary-container h-2 w-2 rounded-full"></span>
+                              Pendiente
+                            </span>
+                            <span class="font-caption-caps text-caption-caps text-outline"
+                              >En espera de comprobante</span
+                            >
+                          </div>
+                        </label>
+                        <!-- Opción Acreditada -->
+                        <label
+                          class="gap-space-sm p-space-sm bg-secondary-fixed/40 ring-secondary flex cursor-pointer items-center rounded-lg ring-2 transition-all"
+                          id="labelAcreditada"
+                        >
+                          <input
+                            checked=""
+                            class="text-secondary focus:ring-secondary accent-secondary h-4 w-4 cursor-pointer"
+                            name="estadoAcreditacion"
+                            type="radio"
+                            value="acreditada"
+                          />
+                          <div class="flex flex-col">
+                            <span
+                              class="font-label-md text-label-md text-on-surface flex items-center gap-1.5 font-bold"
+                            >
+                              <span class="bg-secondary h-2 w-2 rounded-full"></span>
+                              Acreditada
+                            </span>
+                            <span
+                              class="font-caption-caps text-caption-caps text-secondary font-bold"
+                              >Aprobación inmediata</span
+                            >
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+                    <!-- Contenedor condicional para Fecha de Acreditación -->
+                    <div
+                      class="animate-in fade-in space-y-1.5 duration-200"
+                      id="fechaAcreditacionContainer"
+                    >
+                      <label
+                        class="font-label-sm text-label-sm text-on-surface block font-bold"
+                        for="fechaAcreditacionInput"
+                      >
+                        Fecha oficial de acreditación
+                      </label>
+                      <div class="relative">
+                        <span
+                          class="material-symbols-outlined text-secondary absolute top-1/2 left-3.5 -translate-y-1/2 text-[18px]"
+                          >verified</span
+                        >
+                        <input
+                          class="bg-surface-container-low text-on-surface font-body-sm text-body-sm focus:bg-surface-container-lowest focus:ring-secondary w-full cursor-pointer rounded-lg py-2.5 pr-3 pl-10 shadow-sm transition-all focus:ring-2 focus:outline-none"
+                          id="fechaAcreditacionInput"
+                          type="date"
+                          value="2025-03-08"
+                        />
+                      </div>
+                      <p class="font-caption-caps text-caption-caps text-secondary font-semibold">
+                        Esta fecha se incluirá en el sello institucional de la constancia digital.
+                      </p>
+                    </div>
+                    <!-- Responsable de Validación / Observaciones Directiva -->
+                    <div class="space-y-1.5">
+                      <label
+                        class="font-label-sm text-label-sm text-on-surface block font-bold"
+                        for="observacionesInput"
+                      >
+                        Responsable de validación y comentarios internos
+                      </label>
+                      <div class="relative">
+                        <span
+                          class="material-symbols-outlined text-outline absolute top-3 left-3.5 text-[18px]"
+                          >shield_person</span
+                        >
+                        <textarea
+                          class="bg-surface-container-low text-on-surface font-body-sm text-body-sm focus:bg-surface-container-lowest focus:ring-secondary w-full resize-none rounded-lg py-2 pr-3 pl-10 shadow-sm transition-all focus:ring-2 focus:outline-none"
+                          id="observacionesInput"
+                          placeholder="Anotaciones de la directiva o referencia del correo de confirmación..."
+                          rows="2"
+                        >
+Validado por Juan Diego Morales (Secretaría General AEUVG) según lista de asistencia física firmada por el director del departamento CIT.</textarea>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <!-- 3. Pie de Panel Fijo (Sticky Footer) -->
+              <div
+                class="px-space-xl py-space-md bg-surface-container-lowest gap-space-sm z-10 flex shrink-0 flex-col items-center justify-between shadow-lg sm:flex-row"
+              >
+                <div
+                  class="text-outline text-label-sm font-label-sm flex w-full items-center gap-2 sm:w-auto"
+                >
+                  <span class="material-symbols-outlined text-secondary text-[16px]"
+                    >cloud_done</span
+                  >
+                  <span>Cambios guardados localmente</span>
+                </div>
+                <div class="gap-space-xs flex w-full items-center justify-end sm:w-auto">
+                  <button
+                    class="px-space-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container font-label-md text-label-md rounded-lg py-2.5 transition-colors"
+                    id="btnCancelar"
+                    type="button"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    class="px-space-md bg-surface-container text-on-surface hover:bg-surface-container-high font-label-md text-label-md flex items-center gap-1.5 rounded-lg py-2.5 transition-colors"
+                    id="btnBorrador"
+                    type="button"
+                  >
+                    <span class="material-symbols-outlined text-[18px]">save</span>
+                    <span>Guardar borrador</span>
+                  </button>
+                  <button
+                    class="px-space-lg bg-primary-container text-on-primary hover:bg-primary font-label-md text-label-md focus:ring-secondary flex items-center gap-1.5 rounded-lg py-2.5 shadow-md transition-all hover:shadow-lg focus:ring-2 focus:outline-none"
+                    id="btnGuardarAcreditar"
+                    type="button"
+                  >
+                    <span class="material-symbols-outlined text-[18px]">verified_user</span>
+                    <span>Guardar y Acreditar</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <script>
+          (function () {
+            // Stepper de Horas
+            const horasInput = document.getElementById("horasInput");
+            const btnInc = document.getElementById("btnIncrementarHoras");
+            const btnDec = document.getElementById("btnDecrementarHoras");
+
+            if (horasInput && btnInc && btnDec) {
+              btnInc.addEventListener("click", () => {
+                let val = parseInt(horasInput.value, 10) || 0;
+                if (val < 100) horasInput.value = val + 1;
+              });
+
+              btnDec.addEventListener("click", () => {
+                let val = parseInt(horasInput.value, 10) || 0;
+                if (val > 1) horasInput.value = val - 1;
+              });
+            }
+
+            // Toggle condicional para fecha de acreditación
+            const radioButtons = document.querySelectorAll('input[name="estadoAcreditacion"]');
+            const fechaContainer = document.getElementById("fechaAcreditacionContainer");
+            const labelPendiente = document.getElementById("labelPendiente");
+            const labelAcreditada = document.getElementById("labelAcreditada");
+
+            radioButtons.forEach((radio) => {
+              radio.addEventListener("change", (e) => {
+                if (e.target.value === "acreditada") {
+                  fechaContainer.classList.remove("hidden");
+                  labelAcreditada.classList.add(
+                    "ring-2",
+                    "ring-secondary",
+                    "bg-secondary-fixed/40"
+                  );
+                  labelPendiente.classList.remove(
+                    "ring-2",
+                    "ring-secondary",
+                    "bg-secondary-fixed/40"
+                  );
+
+                  // Asignar fecha actual si está vacía
+                  const fechaInput = document.getElementById("fechaAcreditacionInput");
+                  if (fechaInput && !fechaInput.value) {
+                    fechaInput.value = new Date().toISOString().split("T")[0];
+                  }
+                } else {
+                  fechaContainer.classList.add("hidden");
+                  labelPendiente.classList.add("ring-2", "ring-secondary", "bg-secondary-fixed/40");
+                  labelAcreditada.classList.remove(
+                    "ring-2",
+                    "ring-secondary",
+                    "bg-secondary-fixed/40"
+                  );
+                }
+              });
+            });
+
+            // Contador de caracteres
+            const textarea = document.getElementById("descripcionInput");
+            const charCounter = document.getElementById("charCounter");
+            if (textarea && charCounter) {
+              textarea.addEventListener("input", () => {
+                const length = textarea.value.length;
+                charCounter.textContent = `${length} / 500`;
+              });
+            }
+
+            // Micro-interacción: Búsqueda simulada de Carnet
+            const btnBuscar = document.getElementById("buscarEstudianteBtn");
+            const carnetInput = document.getElementById("carnetInput");
+            if (btnBuscar && carnetInput) {
+              btnBuscar.addEventListener("click", () => {
+                const originalText = btnBuscar.innerHTML;
+                btnBuscar.innerHTML =
+                  '<span class="material-symbols-outlined text-[18px] animate-spin">refresh</span><span>Buscando...</span>';
+                setTimeout(() => {
+                  btnBuscar.innerHTML =
+                    '<span class="material-symbols-outlined text-[18px]">check</span><span>Encontrado</span>';
+                  setTimeout(() => {
+                    btnBuscar.innerHTML = originalText;
+                  }, 1500);
+                }, 600);
+              });
+            }
+
+            // Botones de salida/cancelar con feedback sutil
+            const closeBtn = document.getElementById("closeDrawerBtn");
+            const cancelBtn = document.getElementById("btnCancelar");
+            const overlay = document.getElementById("drawerOverlay");
+
+            function feedbackCierre() {
+              if (overlay) {
+                overlay.classList.add("opacity-0");
+                setTimeout(() => {
+                  overlay.classList.remove("opacity-0");
+                }, 1200);
+              }
+            }
+
+            if (closeBtn) closeBtn.addEventListener("click", feedbackCierre);
+            if (cancelBtn) cancelBtn.addEventListener("click", feedbackCierre);
+
+            // Botón Guardar y Acreditar feedback
+            const btnGuardar = document.getElementById("btnGuardarAcreditar");
+            if (btnGuardar) {
+              btnGuardar.addEventListener("click", () => {
+                btnGuardar.innerHTML =
+                  '<span class="material-symbols-outlined text-[18px] animate-spin">progress_activity</span><span>Acreditando...</span>';
+                setTimeout(() => {
+                  btnGuardar.innerHTML =
+                    '<span class="material-symbols-outlined text-[18px]">done_all</span><span>¡Acreditado con éxito!</span>';
+                  btnGuardar.classList.remove("bg-primary-container");
+                  btnGuardar.classList.add("bg-secondary");
+                }, 900);
+              });
+            }
+          })();
+        </script>
+      </main>
+    </div>
+  </body>
+</html>

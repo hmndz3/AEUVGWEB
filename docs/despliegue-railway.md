@@ -31,16 +31,27 @@ Railway inyecta su propia variable `PORT` en tiempo de ejecución, que tiene pri
 
 Se configuran en el servicio de la aplicación, pestaña **Variables**. Nunca se suben al repositorio: el `.gitignore` excluye todo archivo `.env`.
 
-| Variable              | Valor                                                                  |
-| --------------------- | ---------------------------------------------------------------------- |
-| `DATABASE_URL`        | `${{Postgres.DATABASE_URL}}` — referencia literal que Railway resuelve |
-| `NEXT_PUBLIC_APP_URL` | dominio generado por Railway, con `https://` y sin barra final         |
-| `AUTH_SECRET`         | valor aleatorio propio, generado con `openssl rand -base64 32`         |
-| `PORT`                | `3000`, para que coincida con el puerto del dominio                    |
+| Variable                                     | Valor                                                                  |
+| -------------------------------------------- | ---------------------------------------------------------------------- |
+| `DATABASE_URL`                               | `${{Postgres.DATABASE_URL}}` — referencia literal que Railway resuelve |
+| `NEXT_PUBLIC_APP_URL`                        | dominio generado por Railway, con `https://` y sin barra final         |
+| `INSTITUTIONAL_EMAIL_DOMAIN`                 | `uvg.edu.gt`, sin arroba                                               |
+| `EMAIL_VERIFICATION_TOKEN_TTL_MINUTES`       | `30`                                                                   |
+| `EMAIL_VERIFICATION_RESEND_COOLDOWN_SECONDS` | `60`                                                                   |
+| `EMAIL_VERIFICATION_RESEND_MAX_PER_HOUR`     | `5`                                                                    |
+| `EMAIL_PROVIDER`                             | `resend` en pruebas y producción                                       |
+| `RESEND_API_KEY`                             | clave de envío creada en Resend, nunca versionada                      |
+| `EMAIL_FROM`                                 | remitente perteneciente a un dominio verificado en Resend              |
+| `AUTH_SECRET`                                | valor aleatorio propio, generado con `openssl rand -base64 32`         |
+| `SESSION_DURATION_HOURS`                     | `8`; duración de la sesión firmada, entre 1 y 168 horas                |
+| `PORT`                                       | `3000`, para que coincida con el puerto del dominio                    |
 
-`AUTH_SECRET` firmará las sesiones de los usuarios, por lo que debe ser un valor aleatorio generado con el comando indicado y nunca una palabra escogida a mano. `NEXT_PUBLIC_APP_URL` se incrusta durante el build: cambiar su valor exige un nuevo despliegue para que tome efecto.
+`AUTH_SECRET` firma las sesiones de los usuarios, por lo que debe ser un valor aleatorio generado con el comando indicado y nunca una palabra escogida a mano. `SESSION_DURATION_HOURS` controla su expiración. `NEXT_PUBLIC_APP_URL` se incrusta durante el build: cambiar su valor exige un nuevo despliegue para que tome efecto.
 
-`RESEND_API_KEY` y `EMAIL_FROM` se agregan cuando se implemente el envío de correos; la aplicación funciona sin ellas. La lista completa vive en [.env.example](../.env.example) y cada variable nueva debe documentarse allí.
+El registro solo permite `EMAIL_PROVIDER=memory` fuera de producción. Railway debe usar `resend` y
+un dominio de remitente verificado; de lo contrario, la cuenta puede crearse pero el mensaje no se
+entrega. El detalle del flujo está en [registro-estudiantes.md](registro-estudiantes.md). La lista
+completa vive en [.env.example](../.env.example).
 
 ## 4. Migraciones de la base de datos
 

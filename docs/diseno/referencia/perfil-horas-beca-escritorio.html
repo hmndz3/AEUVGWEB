@@ -1,0 +1,1119 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>AEUVG - Plataforma Estudiantil</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @layer base {
+        html,
+        body {
+          margin: 0;
+          padding: 0;
+        }
+        body {
+          overscroll-behavior: none;
+        }
+        main > :first-child {
+          margin-top: 0 !important;
+        }
+        main > :last-child {
+          margin-bottom: 0 !important;
+        }
+      }
+      ::-webkit-scrollbar {
+        display: none;
+      }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-primary": "#b98aff",
+              "secondary-fixed-dim": "#3ec1ff",
+              "on-error-container": "#93000a",
+              "on-primary-container": "#ede8ff",
+              secondary: "#00c9a7",
+              "inverse-on-surface": "#fff8f3",
+              "tertiary-container": "#4d000a",
+              "surface-container-low": "#f7f1ea",
+              "on-secondary-fixed-variant": "#00806c",
+              "on-background": "#1c162b",
+              tertiary: "#230002",
+              "error-container": "#ffdad6",
+              "on-tertiary": "#ffffff",
+              "on-primary-fixed-variant": "#5a35e8",
+              "primary-fixed": "#ede8ff",
+              "on-secondary-fixed": "#0d3b34",
+              "surface-container": "#f7f1ea",
+              "primary-container": "#6d4aff",
+              "surface-bright": "#fff8f3",
+              "on-error": "#ffffff",
+              "on-primary": "#ffffff",
+              error: "#f5455c",
+              "surface-container-highest": "#ede8ff",
+              "surface-container-high": "#ede8ff",
+              "on-surface": "#1c162b",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-fixed-dim": "#ffb3b1",
+              "on-tertiary-container": "#ff5e5b",
+              "tertiary-fixed": "#ffdad8",
+              "on-surface-variant": "#6e6580",
+              "on-tertiary-fixed": "#410007",
+              "on-secondary": "#ffffff",
+              "surface-variant": "#ede8ff",
+              primary: "#1c162b",
+              "on-secondary-container": "#00806c",
+              background: "#fff8f3",
+              "on-primary-fixed": "#1c162b",
+              "surface-tint": "#6d4aff",
+              "surface-dim": "#f0e6da",
+              "outline-variant": "#ebe2d8",
+              "secondary-container": "#3ec1ff",
+              "inverse-surface": "#1c162b",
+              "secondary-fixed": "#d6f7f1",
+              surface: "#fff8f3",
+              "primary-fixed-dim": "#b98aff",
+              outline: "#d9cec2",
+              "on-tertiary-fixed-variant": "#92001c",
+            },
+            borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+            spacing: {
+              "margin-desktop": "2rem",
+              "space-3xl": "4rem",
+              "space-sm": "0.75rem",
+              "space-xs": "0.5rem",
+              "space-2xl": "3rem",
+              "space-2xs": "0.25rem",
+              "margin-mobile": "1rem",
+              "container-max": "1280px",
+              "space-xl": "2rem",
+              "gutter-desktop": "1.5rem",
+              "gutter-mobile": "1rem",
+              "space-md": "1rem",
+              "space-lg": "1.5rem",
+            },
+            fontFamily: {
+              "headline-md": ["Plus Jakarta Sans"],
+              "headline-sm": ["Plus Jakarta Sans"],
+              "label-md": ["Plus Jakarta Sans"],
+              "title-md": ["Plus Jakarta Sans"],
+              "caption-caps": ["Plus Jakarta Sans"],
+              "display-hero-mobile": ["Plus Jakarta Sans"],
+              "display-hero": ["Plus Jakarta Sans"],
+              "body-sm": ["Plus Jakarta Sans"],
+              "headline-lg-mobile": ["Plus Jakarta Sans"],
+              "body-md": ["Plus Jakarta Sans"],
+              "label-sm": ["Plus Jakarta Sans"],
+              "body-lg": ["Plus Jakarta Sans"],
+              "headline-lg": ["Plus Jakarta Sans"],
+            },
+            fontSize: {
+              "headline-md": [
+                "24px",
+                { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "600" },
+              ],
+              "headline-sm": ["20px", { lineHeight: "28px", fontWeight: "600" }],
+              "label-md": [
+                "14px",
+                { lineHeight: "20px", letterSpacing: "0.005em", fontWeight: "600" },
+              ],
+              "title-md": ["18px", { lineHeight: "26px", fontWeight: "600" }],
+              "caption-caps": [
+                "11px",
+                { lineHeight: "14px", letterSpacing: "0.06em", fontWeight: "700" },
+              ],
+              "display-hero-mobile": [
+                "30px",
+                { lineHeight: "38px", letterSpacing: "-0.015em", fontWeight: "800" },
+              ],
+              "display-hero": [
+                "40px",
+                { lineHeight: "48px", letterSpacing: "-0.02em", fontWeight: "800" },
+              ],
+              "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+              "headline-lg-mobile": [
+                "26px",
+                { lineHeight: "34px", letterSpacing: "-0.01em", fontWeight: "700" },
+              ],
+              "body-md": ["15px", { lineHeight: "24px", fontWeight: "400" }],
+              "label-sm": [
+                "12px",
+                { lineHeight: "16px", letterSpacing: "0.01em", fontWeight: "600" },
+              ],
+              "body-lg": ["16px", { lineHeight: "26px", fontWeight: "400" }],
+              "headline-lg": [
+                "32px",
+                { lineHeight: "40px", letterSpacing: "-0.015em", fontWeight: "700" },
+              ],
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-surface font-body-md text-body-md text-on-surface antialiased">
+    <header
+      class="bg-primary-container fixed top-0 right-0 left-0 z-50 shadow-[0_2px_8px_rgba(13,35,58,0.12)]"
+    >
+      <div
+        class="max-w-container-max px-gutter-desktop mx-auto flex h-16 items-center justify-between"
+      >
+        <div class="gap-space-md flex items-center">
+          <img
+            alt="Logo circular de AEUVG compuesto por figuras humanas estilizadas unidas en círculo de colores vivos (rojo, coral, morado, celeste, naranja, verde lima y azul marino) con las siglas AEUVG limpias y modernas.. Brand logo. - Primary color: #6d4aff
+- Font: plusJakartaSans
+- Mode: light
+- Roundness: rounded-md
+"
+            class="h-8 w-auto object-contain"
+            src="logo-aeuvg.png"
+          />
+          <div class="flex flex-col">
+            <span
+              class="font-label-md text-label-md text-on-primary leading-none font-bold tracking-wide"
+              >AEUVG</span
+            ><span
+              class="font-caption-caps text-caption-caps text-on-primary-container tracking-wider uppercase"
+              >Universidad del Valle</span
+            >
+          </div>
+        </div>
+        <nav
+          class="gap-space-xs hidden items-center lg:flex"
+          data-active-classes="bg-surface-container-lowest/15 text-on-primary font-semibold rounded-lg"
+        >
+          <a
+            class="font-label-md text-label-md text-on-primary-container hover:text-on-primary hover:bg-surface-container-lowest/10 px-space-sm py-space-xs rounded-lg transition-colors"
+            data-path="inicio"
+            href="#"
+            >Inicio</a
+          ><a
+            class="font-label-md text-label-md text-on-primary-container hover:text-on-primary hover:bg-surface-container-lowest/10 px-space-sm py-space-xs rounded-lg transition-colors"
+            data-path="eventos"
+            href="#"
+            >Eventos</a
+          ><a
+            class="font-label-md text-label-md text-on-primary-container hover:text-on-primary hover:bg-surface-container-lowest/10 px-space-sm py-space-xs rounded-lg transition-colors"
+            data-path="asociaciones"
+            href="#"
+            >Asociaciones</a
+          ><a
+            class="font-label-md text-label-md text-on-primary-container hover:text-on-primary hover:bg-surface-container-lowest/10 px-space-sm py-space-xs rounded-lg transition-colors"
+            data-path="clubes"
+            href="#"
+            >Clubes</a
+          ><a
+            class="font-label-md text-label-md text-on-primary-container hover:text-on-primary hover:bg-surface-container-lowest/10 px-space-sm py-space-xs rounded-lg transition-colors"
+            data-path="tutorias"
+            href="#"
+            >Tutorías</a
+          ><a
+            class="font-label-md text-label-md text-on-primary-container hover:text-on-primary hover:bg-surface-container-lowest/10 px-space-sm py-space-xs rounded-lg transition-colors"
+            data-path="sobre-aeuvg"
+            href="#"
+            >Sobre AEUVG</a
+          >
+        </nav>
+        <div class="gap-space-md flex items-center">
+          <button
+            aria-label="Notificaciones"
+            class="p-space-xs text-on-primary-container hover:text-on-primary hover:bg-surface-container-lowest/10 relative rounded-full transition-colors"
+            type="button"
+          >
+            <span class="material-symbols-outlined text-[22px]">notifications</span
+            ><span
+              class="bg-secondary-container absolute top-1 right-1 h-2 w-2 rounded-full"
+            ></span>
+          </button>
+          <div class="gap-space-sm pl-space-xs flex cursor-pointer items-center select-none">
+            <div
+              class="bg-primary ring-on-primary-container/20 flex h-8 w-8 items-center justify-center rounded-full ring-2"
+            >
+              <span class="material-symbols-outlined text-on-primary text-[18px]">person</span>
+            </div>
+            <div class="hidden flex-col text-left sm:flex">
+              <span class="font-label-sm text-label-sm text-on-primary leading-tight font-semibold"
+                >Valeria Morales</span
+              ><span class="font-caption-caps text-caption-caps text-on-primary-container"
+                >Carné 21548</span
+              >
+            </div>
+            <span class="material-symbols-outlined text-on-primary-container text-[18px]"
+              >expand_more</span
+            >
+          </div>
+        </div>
+      </div>
+    </header>
+    <main class="bg-surface w-full pt-16">
+      <div class="flex w-full flex-col">
+        <div
+          class="max-w-container-max px-gutter-desktop py-space-xl gap-space-xl mx-auto flex w-full flex-col"
+        >
+          <!-- BANNER PERFIL Y DATOS INSTITUCIONALES -->
+          <section
+            class="bg-surface-container-lowest relative flex flex-col overflow-hidden rounded-xl shadow-sm"
+          >
+            <div
+              class="from-primary via-primary-container to-secondary p-space-md relative flex h-32 w-full items-end justify-end bg-gradient-to-r sm:h-40"
+            >
+              <div
+                class="absolute inset-0 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px] opacity-15"
+              ></div>
+              <span
+                class="px-space-sm py-space-2xs bg-surface-container-lowest/20 text-on-primary font-caption-caps text-caption-caps relative z-10 rounded-full tracking-wider uppercase backdrop-blur-md"
+              >
+                Periodo Académico Activo: Semestre 1 • 2025
+              </span>
+            </div>
+            <div
+              class="px-space-xl pb-space-xl gap-space-lg relative flex flex-col pt-0 lg:flex-row lg:items-end lg:justify-between"
+            >
+              <!-- Avatar y Datos -->
+              <div
+                class="gap-space-lg relative z-10 -mt-16 flex flex-col items-start sm:-mt-14 sm:flex-row sm:items-end"
+              >
+                <div class="group relative">
+                  <div
+                    class="bg-surface-container-highest h-28 w-28 overflow-hidden rounded-full shadow-md sm:h-32 sm:w-32"
+                  >
+                    <img
+                      class="h-full w-full object-cover"
+                      data-alt="Retrato universitario contemporáneo de Valeria, estudiante hispana de 21 años con cabello castaño y expresión amigable pero decidida, vistiendo un suéter azul marino collegiate y gafas discretas, iluminada con luz suave de estudio fotográfico sobre un fondo neutro académico desenfocado."
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuBONm4667EmUF5run7DH4iPKej-W-y9VfDXFZ61y_jL4lAMOb5dTee7RMOxSM82ENdKJK-vuXmcWfF538uF7Y3Ih3rV9t4c3_VC1MF-_ffXeRN_Me67-35_J9bWHjTmQ9_oSyepGoYA2nah8zznBDkKUHm71kub2-vnAGfCNwzggh7zxka1H8JVpS1TNrLIAeMKq6Upsatz2tob50mMuWsc0X_i_tys4ibJkAMWcaCpLYMnBnPcONoqOQ"
+                    />
+                  </div>
+                  <div
+                    class="bg-surface-container-lowest absolute right-1 bottom-1 flex h-6 w-6 items-center justify-center rounded-full shadow-sm"
+                    title="Cuenta Institucional Verificada"
+                  >
+                    <span
+                      class="material-symbols-outlined text-secondary text-[16px]"
+                      style="font-variation-settings: &quot;FILL&quot; 1"
+                      >verified</span
+                    >
+                  </div>
+                </div>
+                <div class="gap-space-2xs flex min-w-0 flex-col">
+                  <div class="gap-space-xs mb-space-2xs flex flex-wrap items-center">
+                    <span
+                      class="px-space-xs py-space-2xs bg-surface-container-high text-on-secondary-container font-label-sm text-label-sm flex items-center gap-1 rounded-full font-semibold"
+                    >
+                      <span class="bg-secondary h-2 w-2 rounded-full"></span>
+                      Estudiante Regular UVG • 2025
+                    </span>
+                    <span
+                      class="px-space-xs py-space-2xs bg-surface-container text-on-surface-variant font-label-sm text-label-sm rounded-full font-semibold"
+                    >
+                      Carné 21890
+                    </span>
+                  </div>
+                  <h1
+                    class="font-headline-lg text-headline-lg text-on-surface truncate tracking-tight"
+                  >
+                    Valeria Sofía Morales Rodas
+                  </h1>
+                  <div
+                    class="gap-x-space-md text-on-surface-variant font-body-sm text-body-sm flex flex-wrap items-center gap-y-1"
+                  >
+                    <span class="text-on-surface flex items-center gap-1 font-medium">
+                      <span class="material-symbols-outlined text-secondary text-[18px]"
+                        >school</span
+                      >
+                      Ingeniería en Ciencia de la Computación y TI
+                    </span>
+                    <span class="text-outline-variant">•</span>
+                    <span class="flex items-center gap-1">
+                      <span class="material-symbols-outlined text-outline text-[18px]">domain</span>
+                      Facultad de Ingeniería
+                    </span>
+                    <span class="text-outline-variant">•</span>
+                    <a
+                      class="text-secondary flex items-center gap-1 hover:underline"
+                      href="mailto:valeria.morales@uvg.edu.gt"
+                    >
+                      <span class="material-symbols-outlined text-[18px]">alternate_email</span>
+                      valeria.morales@uvg.edu.gt
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <!-- Acciones Principales -->
+              <div
+                class="gap-space-sm pt-space-xs flex items-center self-stretch sm:self-auto lg:pt-0"
+              >
+                <button
+                  class="gap-space-xs px-space-md py-space-xs bg-surface-container-low text-primary-container hover:bg-surface-container font-label-md text-label-md inline-flex flex-1 items-center justify-center rounded-lg shadow-sm transition-colors sm:flex-initial"
+                  type="button"
+                >
+                  <span class="material-symbols-outlined text-[18px]">description</span>
+                  <span>Descargar constancia</span>
+                </button>
+                <button
+                  class="gap-space-xs px-space-md py-space-xs bg-primary text-on-primary hover:bg-primary-container font-label-md text-label-md inline-flex flex-1 items-center justify-center rounded-lg shadow-sm transition-all hover:shadow-md sm:flex-initial"
+                  type="button"
+                >
+                  <span class="material-symbols-outlined text-[18px]">edit</span>
+                  <span>Editar perfil</span>
+                </button>
+              </div>
+            </div>
+          </section>
+          <!-- NAVEGACIÓN POR PESTAÑAS (TABS) -->
+          <section
+            class="flex w-full items-center justify-between overflow-x-auto border-b-0 select-none"
+          >
+            <div class="gap-space-xs flex min-w-max items-center">
+              <!-- Pestaña Activa: Horas Beca -->
+              <button
+                class="gap-space-xs px-space-md py-space-sm bg-primary-container text-on-primary font-label-md text-label-md flex items-center rounded-lg shadow-sm transition-colors"
+                type="button"
+              >
+                <span class="material-symbols-outlined text-[20px]">hourglass_top</span>
+                <span>Mis horas beca</span>
+                <span
+                  class="px-space-xs py-space-2xs bg-secondary text-on-primary font-caption-caps text-caption-caps rounded-full"
+                >
+                  48 hrs
+                </span>
+              </button>
+              <!-- Pestaña: Eventos guardados -->
+              <button
+                class="gap-space-xs px-space-md py-space-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container font-label-md text-label-md flex items-center rounded-lg transition-colors"
+                type="button"
+              >
+                <span class="material-symbols-outlined text-[20px]">bookmark</span>
+                <span>Eventos guardados</span>
+                <span
+                  class="px-space-xs py-space-2xs bg-surface-container-high text-on-surface font-caption-caps text-caption-caps rounded-full"
+                >
+                  3
+                </span>
+              </button>
+              <!-- Pestaña: Tutorías -->
+              <button
+                class="gap-space-xs px-space-md py-space-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container font-label-md text-label-md flex items-center rounded-lg transition-colors"
+                type="button"
+              >
+                <span class="material-symbols-outlined text-[20px]">cast_for_education</span>
+                <span>Tutorías</span>
+                <span
+                  class="px-space-xs py-space-2xs bg-surface-container-high text-on-surface font-caption-caps text-caption-caps rounded-full"
+                >
+                  1
+                </span>
+              </button>
+              <!-- Pestaña: Recomendaciones -->
+              <button
+                class="gap-space-xs px-space-md py-space-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container font-label-md text-label-md flex items-center rounded-lg transition-colors"
+                type="button"
+              >
+                <span class="material-symbols-outlined text-[20px]">recommend</span>
+                <span>Recomendaciones</span>
+              </button>
+              <!-- Pestaña: Datos personales -->
+              <button
+                class="gap-space-xs px-space-md py-space-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container font-label-md text-label-md flex items-center rounded-lg transition-colors"
+                type="button"
+              >
+                <span class="material-symbols-outlined text-[20px]">badge</span>
+                <span>Datos personales</span>
+              </button>
+            </div>
+            <div
+              class="gap-space-xs text-on-surface-variant font-caption-caps text-caption-caps pl-space-md hidden items-center tracking-wider uppercase xl:flex"
+            >
+              <span>Sistema de Horas Beca AEUVG • v2.4</span>
+            </div>
+          </section>
+          <!-- RESUMEN DE MÉTRICAS (3 TARJETAS GRANDES) -->
+          <section class="gap-space-lg grid grid-cols-1 md:grid-cols-3">
+            <!-- Tarjeta 1: Horas Realizadas -->
+            <div
+              class="bg-surface-container-lowest p-space-lg relative flex flex-col justify-between overflow-hidden rounded-xl shadow-sm transition-shadow hover:shadow-md"
+            >
+              <div
+                class="bg-secondary-fixed pointer-events-none absolute -right-6 -bottom-6 h-28 w-28 rounded-full opacity-40"
+              ></div>
+              <div>
+                <div class="mb-space-md flex items-center justify-between">
+                  <span
+                    class="font-caption-caps text-caption-caps text-secondary font-bold tracking-wider uppercase"
+                    >Registro Activo</span
+                  >
+                  <div
+                    class="bg-secondary-fixed text-on-secondary-fixed-variant flex h-10 w-10 items-center justify-center rounded-lg"
+                  >
+                    <span class="material-symbols-outlined text-[22px]">schedule</span>
+                  </div>
+                </div>
+                <span class="font-title-md text-title-md text-on-surface-variant block font-medium"
+                  >Horas realizadas</span
+                >
+                <div class="gap-space-xs mt-space-2xs mb-space-xs flex items-baseline">
+                  <span class="font-display-hero text-display-hero text-on-surface font-extrabold"
+                    >48</span
+                  >
+                  <span class="font-headline-sm text-headline-sm text-on-surface-variant"
+                    >/ 60 hrs</span
+                  >
+                </div>
+              </div>
+              <div class="mt-space-md pt-space-xs">
+                <div
+                  class="mb-space-2xs text-on-surface-variant font-label-sm text-label-sm flex items-center justify-between"
+                >
+                  <span>Meta semestral</span>
+                  <span class="text-on-surface font-bold">80% completado</span>
+                </div>
+                <div class="bg-surface-container-highest h-2 w-full overflow-hidden rounded-full">
+                  <div
+                    class="bg-secondary h-full rounded-full transition-all duration-500"
+                    style="width: 80%"
+                  ></div>
+                </div>
+                <span
+                  class="mt-space-xs font-caption-caps text-caption-caps text-on-surface-variant block"
+                >
+                  Faltan 12 horas para cumplir la cuota del ciclo.
+                </span>
+              </div>
+            </div>
+            <!-- Tarjeta 2: Horas Acreditadas -->
+            <div
+              class="bg-surface-container-lowest p-space-lg relative flex flex-col justify-between overflow-hidden rounded-xl shadow-sm transition-shadow hover:shadow-md"
+            >
+              <div
+                class="bg-surface-container-low pointer-events-none absolute -right-6 -bottom-6 h-28 w-28 rounded-full opacity-40"
+              ></div>
+              <div>
+                <div class="mb-space-md flex items-center justify-between">
+                  <span
+                    class="font-caption-caps text-caption-caps font-bold tracking-wider text-[#166534] uppercase"
+                    >Verificación Oficial</span
+                  >
+                  <div
+                    class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#DCFCE7] text-[#166534]"
+                  >
+                    <span
+                      class="material-symbols-outlined text-[22px]"
+                      style="font-variation-settings: &quot;FILL&quot; 1"
+                      >verified_user</span
+                    >
+                  </div>
+                </div>
+                <span class="font-title-md text-title-md text-on-surface-variant block font-medium"
+                  >Horas acreditadas</span
+                >
+                <div class="gap-space-xs mt-space-2xs mb-space-xs flex items-baseline">
+                  <span class="font-display-hero text-display-hero text-on-surface font-extrabold"
+                    >38</span
+                  >
+                  <span class="font-headline-sm text-headline-sm text-[#166534]"
+                    >hrs aprobadas</span
+                  >
+                </div>
+              </div>
+              <div
+                class="mt-space-md pt-space-xs gap-space-xs p-space-xs flex items-center rounded-lg bg-[#DCFCE7]/40 text-[#166534]"
+              >
+                <span class="material-symbols-outlined text-[18px]">task_alt</span>
+                <span class="font-label-sm text-label-sm font-semibold"
+                  >Validadas por Comité de Becas UVG</span
+                >
+              </div>
+            </div>
+            <!-- Tarjeta 3: Horas Pendientes -->
+            <div
+              class="bg-surface-container-lowest p-space-lg relative flex flex-col justify-between overflow-hidden rounded-xl shadow-sm transition-shadow hover:shadow-md"
+            >
+              <div
+                class="pointer-events-none absolute -right-6 -bottom-6 h-28 w-28 rounded-full bg-[#FFEDD5] opacity-30"
+              ></div>
+              <div>
+                <div class="mb-space-md flex items-center justify-between">
+                  <span
+                    class="font-caption-caps text-caption-caps font-bold tracking-wider text-[#C2410C] uppercase"
+                    >En Trámite</span
+                  >
+                  <div
+                    class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#FFEDD5] text-[#C2410C]"
+                  >
+                    <span class="material-symbols-outlined text-[22px]">pending_actions</span>
+                  </div>
+                </div>
+                <span class="font-title-md text-title-md text-on-surface-variant block font-medium"
+                  >Horas pendientes</span
+                >
+                <div class="gap-space-xs mt-space-2xs mb-space-xs flex items-baseline">
+                  <span class="font-display-hero text-display-hero text-on-surface font-extrabold"
+                    >10</span
+                  >
+                  <span class="font-headline-sm text-headline-sm text-[#C2410C]"
+                    >hrs en revisión</span
+                  >
+                </div>
+              </div>
+              <div
+                class="mt-space-md pt-space-xs gap-space-xs p-space-xs flex items-center rounded-lg bg-[#FFEDD5]/50 text-[#C2410C]"
+              >
+                <span class="material-symbols-outlined text-[18px]">hourglass_empty</span>
+                <span class="font-label-sm text-label-sm font-semibold"
+                  >En revisión de reporte y firmas</span
+                >
+              </div>
+            </div>
+          </section>
+          <!-- HISTORIAL DE ACTIVIDADES Y ACREDITACIONES -->
+          <section
+            class="bg-surface-container-lowest p-space-lg sm:p-space-xl gap-space-lg flex flex-col rounded-xl shadow-sm"
+          >
+            <!-- Barra Superior con Título y Controles -->
+            <div class="gap-space-md flex flex-col justify-between md:flex-row md:items-center">
+              <div>
+                <h2 class="font-headline-sm text-headline-sm text-on-surface">
+                  Historial de actividades y acreditaciones
+                </h2>
+                <p class="font-body-sm text-body-sm text-on-surface-variant">
+                  Detalle cronológico de labores comunitarias y académicas realizadas en 2025.
+                </p>
+              </div>
+              <div class="gap-space-xs sm:gap-space-sm flex flex-wrap items-center">
+                <!-- Buscador de Actividad -->
+                <div class="relative min-w-[240px] flex-1 sm:flex-initial">
+                  <span
+                    class="material-symbols-outlined text-outline absolute top-1/2 left-3 -translate-y-1/2 text-[18px]"
+                    >search</span
+                  >
+                  <input
+                    class="bg-surface-container-lowest text-on-surface font-body-sm text-body-sm placeholder:text-outline focus:ring-primary-container w-full rounded-lg border-0 py-2 pr-3 pl-9 shadow-sm focus:ring-2 focus:outline-none"
+                    id="searchActivity"
+                    placeholder="Buscar por actividad..."
+                    type="text"
+                  />
+                </div>
+                <!-- Filtro por Ciclo -->
+                <div class="relative">
+                  <button
+                    class="gap-space-xs px-space-md bg-surface-container-high text-on-surface font-label-md text-label-md hover:bg-surface-container inline-flex items-center rounded-lg py-2 shadow-sm transition-colors"
+                    type="button"
+                  >
+                    <span class="material-symbols-outlined text-[18px]">calendar_today</span>
+                    <span>Ciclo: 1er Semestre 2025</span>
+                    <span class="material-symbols-outlined text-[18px]">expand_more</span>
+                  </button>
+                </div>
+                <!-- Botón Registrar Nueva Actividad -->
+                <button
+                  class="gap-space-xs px-space-md bg-secondary text-on-secondary font-label-md text-label-md hover:bg-secondary/90 inline-flex items-center rounded-lg py-2 shadow-sm transition-colors"
+                  type="button"
+                >
+                  <span class="material-symbols-outlined text-[18px]">add_circle</span>
+                  <span>Registrar actividad</span>
+                </button>
+              </div>
+            </div>
+            <!-- Tabla de Datos -->
+            <div class="w-full overflow-x-auto rounded-lg">
+              <table class="font-body-sm text-body-sm w-full text-left">
+                <thead>
+                  <tr
+                    class="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm tracking-wider uppercase"
+                  >
+                    <th class="py-space-sm px-space-md rounded-l-lg" scope="col">Fecha</th>
+                    <th class="py-space-sm px-space-md" scope="col">Actividad realizada</th>
+                    <th class="py-space-sm px-space-md text-center" scope="col">Horas</th>
+                    <th class="py-space-sm px-space-md" scope="col">Estado</th>
+                    <th class="py-space-sm px-space-md" scope="col">Fecha acreditación</th>
+                    <th class="py-space-sm px-space-md rounded-r-lg text-right" scope="col">
+                      Acción
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y-0" id="activityTableBody">
+                  <!-- Fila 1 -->
+                  <tr class="hover:bg-surface-container-low transition-colors">
+                    <td
+                      class="py-space-md px-space-md text-on-surface font-medium whitespace-nowrap"
+                    >
+                      <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-outline text-[18px]"
+                          >event</span
+                        >
+                        <span>24 Abr 2025</span>
+                      </div>
+                    </td>
+                    <td class="py-space-md px-space-md">
+                      <div class="flex flex-col">
+                        <span class="text-on-surface font-semibold"
+                          >Apoyo Logístico en Feria de Innovación &amp; Robótica</span
+                        >
+                        <span class="font-caption-caps text-caption-caps text-on-surface-variant"
+                          >Facultad de Ingeniería • Auditorio I-100</span
+                        >
+                      </div>
+                    </td>
+                    <td class="py-space-md px-space-md text-center">
+                      <span
+                        class="px-space-xs py-space-2xs bg-surface-container text-on-surface inline-block rounded font-semibold"
+                        >8 hrs</span
+                      >
+                    </td>
+                    <td class="py-space-md px-space-md whitespace-nowrap">
+                      <span
+                        class="px-space-xs py-space-2xs font-label-sm text-label-sm inline-flex items-center gap-1 rounded-full bg-[#DCFCE7] font-semibold text-[#166534]"
+                      >
+                        <span
+                          class="material-symbols-outlined text-[15px]"
+                          style="font-variation-settings: &quot;FILL&quot; 1"
+                          >check_circle</span
+                        >
+                        Acreditada
+                      </span>
+                    </td>
+                    <td class="py-space-md px-space-md text-on-surface-variant whitespace-nowrap">
+                      26 Abr 2025
+                    </td>
+                    <td class="py-space-md px-space-md text-right whitespace-nowrap">
+                      <button
+                        class="hover:bg-surface-container text-secondary rounded-lg p-2 transition-colors"
+                        title="Ver comprobante digital"
+                        type="button"
+                      >
+                        <span class="material-symbols-outlined text-[20px]">visibility</span>
+                      </button>
+                    </td>
+                  </tr>
+                  <!-- Fila 2 -->
+                  <tr class="hover:bg-surface-container-low transition-colors">
+                    <td
+                      class="py-space-md px-space-md text-on-surface font-medium whitespace-nowrap"
+                    >
+                      <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-outline text-[18px]"
+                          >event</span
+                        >
+                        <span>12 Abr 2025</span>
+                      </div>
+                    </td>
+                    <td class="py-space-md px-space-md">
+                      <div class="flex flex-col">
+                        <span class="text-on-surface font-semibold"
+                          >Tutoría Par de Algoritmos y Estructuras de Datos</span
+                        >
+                        <span class="font-caption-caps text-caption-caps text-on-surface-variant"
+                          >Programa de Éxito Estudiantil • Lab CC-2</span
+                        >
+                      </div>
+                    </td>
+                    <td class="py-space-md px-space-md text-center">
+                      <span
+                        class="px-space-xs py-space-2xs bg-surface-container text-on-surface inline-block rounded font-semibold"
+                        >10 hrs</span
+                      >
+                    </td>
+                    <td class="py-space-md px-space-md whitespace-nowrap">
+                      <span
+                        class="px-space-xs py-space-2xs font-label-sm text-label-sm inline-flex items-center gap-1 rounded-full bg-[#FFEDD5] font-semibold text-[#C2410C]"
+                      >
+                        <span class="material-symbols-outlined text-[15px]">schedule</span>
+                        Pendiente
+                      </span>
+                    </td>
+                    <td
+                      class="py-space-md px-space-md font-medium whitespace-nowrap text-[#C2410C]"
+                    >
+                      En proceso
+                    </td>
+                    <td class="py-space-md px-space-md text-right whitespace-nowrap">
+                      <button
+                        class="hover:bg-surface-container text-on-surface-variant rounded-lg p-2 transition-colors"
+                        title="Ver reporte en revisión"
+                        type="button"
+                      >
+                        <span class="material-symbols-outlined text-[20px]">info</span>
+                      </button>
+                    </td>
+                  </tr>
+                  <!-- Fila 3 -->
+                  <tr class="hover:bg-surface-container-low transition-colors">
+                    <td
+                      class="py-space-md px-space-md text-on-surface font-medium whitespace-nowrap"
+                    >
+                      <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-outline text-[18px]"
+                          >event</span
+                        >
+                        <span>28 Mar 2025</span>
+                      </div>
+                    </td>
+                    <td class="py-space-md px-space-md">
+                      <div class="flex flex-col">
+                        <span class="text-on-surface font-semibold"
+                          >Staff de Acreditación Hackathon UVG</span
+                        >
+                        <span class="font-caption-caps text-caption-caps text-on-surface-variant"
+                          >AEUVG Central • Plaza Fuentelapiedra</span
+                        >
+                      </div>
+                    </td>
+                    <td class="py-space-md px-space-md text-center">
+                      <span
+                        class="px-space-xs py-space-2xs bg-surface-container text-on-surface inline-block rounded font-semibold"
+                        >12 hrs</span
+                      >
+                    </td>
+                    <td class="py-space-md px-space-md whitespace-nowrap">
+                      <span
+                        class="px-space-xs py-space-2xs font-label-sm text-label-sm inline-flex items-center gap-1 rounded-full bg-[#DCFCE7] font-semibold text-[#166534]"
+                      >
+                        <span
+                          class="material-symbols-outlined text-[15px]"
+                          style="font-variation-settings: &quot;FILL&quot; 1"
+                          >check_circle</span
+                        >
+                        Acreditada
+                      </span>
+                    </td>
+                    <td class="py-space-md px-space-md text-on-surface-variant whitespace-nowrap">
+                      02 Abr 2025
+                    </td>
+                    <td class="py-space-md px-space-md text-right whitespace-nowrap">
+                      <button
+                        class="hover:bg-surface-container text-secondary rounded-lg p-2 transition-colors"
+                        title="Ver comprobante digital"
+                        type="button"
+                      >
+                        <span class="material-symbols-outlined text-[20px]">visibility</span>
+                      </button>
+                    </td>
+                  </tr>
+                  <!-- Fila 4 -->
+                  <tr class="hover:bg-surface-container-low transition-colors">
+                    <td
+                      class="py-space-md px-space-md text-on-surface font-medium whitespace-nowrap"
+                    >
+                      <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-outline text-[18px]"
+                          >event</span
+                        >
+                        <span>15 Mar 2025</span>
+                      </div>
+                    </td>
+                    <td class="py-space-md px-space-md">
+                      <div class="flex flex-col">
+                        <span class="text-on-surface font-semibold"
+                          >Revisión Técnica de Proyectos MakerSpace</span
+                        >
+                        <span class="font-caption-caps text-caption-caps text-on-surface-variant"
+                          >Centro de Innovación y Tecnología (CIT-401)</span
+                        >
+                      </div>
+                    </td>
+                    <td class="py-space-md px-space-md text-center">
+                      <span
+                        class="px-space-xs py-space-2xs bg-surface-container text-on-surface inline-block rounded font-semibold"
+                        >6 hrs</span
+                      >
+                    </td>
+                    <td class="py-space-md px-space-md whitespace-nowrap">
+                      <span
+                        class="px-space-xs py-space-2xs font-label-sm text-label-sm inline-flex items-center gap-1 rounded-full bg-[#DCFCE7] font-semibold text-[#166534]"
+                      >
+                        <span
+                          class="material-symbols-outlined text-[15px]"
+                          style="font-variation-settings: &quot;FILL&quot; 1"
+                          >check_circle</span
+                        >
+                        Acreditada
+                      </span>
+                    </td>
+                    <td class="py-space-md px-space-md text-on-surface-variant whitespace-nowrap">
+                      18 Mar 2025
+                    </td>
+                    <td class="py-space-md px-space-md text-right whitespace-nowrap">
+                      <button
+                        class="hover:bg-surface-container text-secondary rounded-lg p-2 transition-colors"
+                        title="Ver comprobante digital"
+                        type="button"
+                      >
+                        <span class="material-symbols-outlined text-[20px]">visibility</span>
+                      </button>
+                    </td>
+                  </tr>
+                  <!-- Fila 5 -->
+                  <tr class="hover:bg-surface-container-low transition-colors">
+                    <td
+                      class="py-space-md px-space-md text-on-surface font-medium whitespace-nowrap"
+                    >
+                      <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-outline text-[18px]"
+                          >event</span
+                        >
+                        <span>04 Mar 2025</span>
+                      </div>
+                    </td>
+                    <td class="py-space-md px-space-md">
+                      <div class="flex flex-col">
+                        <span class="text-on-surface font-semibold"
+                          >Guía en Open Day Admisiones</span
+                        >
+                        <span class="font-caption-caps text-caption-caps text-on-surface-variant"
+                          >Admisiones &amp; Relaciones Institucionales</span
+                        >
+                      </div>
+                    </td>
+                    <td class="py-space-md px-space-md text-center">
+                      <span
+                        class="px-space-xs py-space-2xs bg-surface-container text-on-surface inline-block rounded font-semibold"
+                        >12 hrs</span
+                      >
+                    </td>
+                    <td class="py-space-md px-space-md whitespace-nowrap">
+                      <span
+                        class="px-space-xs py-space-2xs font-label-sm text-label-sm inline-flex items-center gap-1 rounded-full bg-[#DCFCE7] font-semibold text-[#166534]"
+                      >
+                        <span
+                          class="material-symbols-outlined text-[15px]"
+                          style="font-variation-settings: &quot;FILL&quot; 1"
+                          >check_circle</span
+                        >
+                        Acreditada
+                      </span>
+                    </td>
+                    <td class="py-space-md px-space-md text-on-surface-variant whitespace-nowrap">
+                      06 Mar 2025
+                    </td>
+                    <td class="py-space-md px-space-md text-right whitespace-nowrap">
+                      <button
+                        class="hover:bg-surface-container text-secondary rounded-lg p-2 transition-colors"
+                        title="Ver comprobante digital"
+                        type="button"
+                      >
+                        <span class="material-symbols-outlined text-[20px]">visibility</span>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- Paginador Sencillo -->
+            <div
+              class="gap-space-sm pt-space-xs flex flex-col items-center justify-between sm:flex-row"
+            >
+              <span
+                class="font-caption-caps text-caption-caps text-on-surface-variant tracking-wider uppercase"
+              >
+                Mostrando 5 de 5 actividades registradas este ciclo
+              </span>
+              <div class="gap-space-xs flex items-center">
+                <button
+                  class="px-space-sm bg-surface-container text-outline font-label-sm text-label-sm cursor-not-allowed rounded py-1"
+                  disabled=""
+                  type="button"
+                >
+                  Anterior
+                </button>
+                <span
+                  class="px-space-sm bg-primary-container text-on-primary font-label-sm text-label-sm rounded py-1"
+                >
+                  1
+                </span>
+                <button
+                  class="px-space-sm bg-surface-container text-outline font-label-sm text-label-sm cursor-not-allowed rounded py-1"
+                  disabled=""
+                  type="button"
+                >
+                  Siguiente
+                </button>
+              </div>
+            </div>
+          </section>
+          <!-- NOTA INFORMATIVA DE SOPORTE -->
+          <aside
+            class="bg-surface-container-low p-space-md sm:p-space-lg gap-space-md flex w-full items-start rounded-xl shadow-sm"
+          >
+            <div
+              class="bg-secondary-fixed text-on-secondary-fixed flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
+            >
+              <span class="material-symbols-outlined text-[22px]">support_agent</span>
+            </div>
+            <div class="flex flex-col gap-1">
+              <h4 class="font-title-md text-title-md text-on-surface font-semibold">
+                ¿Necesitas asistencia con tus horas beca?
+              </h4>
+              <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                Si tienes dudas sobre tus acreditaciones o necesitas firma de carta compromiso,
+                acércate a la
+                <span class="text-on-surface font-semibold">Dirección de Vida Estudiantil</span>
+                (Edificio I, 2do nivel) o escribe directamente a
+                <a
+                  class="text-secondary font-semibold hover:underline"
+                  href="mailto:horasbeca@uvg.edu.gt"
+                  >horasbeca@uvg.edu.gt</a
+                >.
+              </p>
+            </div>
+          </aside>
+        </div>
+      </div>
+      <script>
+        document.addEventListener("DOMContentLoaded", () => {
+          const searchInput = document.getElementById("searchActivity");
+          const tableBody = document.getElementById("activityTableBody");
+          if (!searchInput || !tableBody) return;
+
+          const rows = tableBody.querySelectorAll("tr");
+
+          searchInput.addEventListener("input", (e) => {
+            const term = e.target.value.toLowerCase().trim();
+            rows.forEach((row) => {
+              const text = row.textContent.toLowerCase();
+              if (text.includes(term)) {
+                row.style.display = "";
+              } else {
+                row.style.display = "none";
+              }
+            });
+          });
+        });
+      </script>
+    </main>
+    <footer class="bg-primary text-on-primary py-space-2xl w-full">
+      <div class="max-w-container-max px-gutter-desktop mx-auto">
+        <div class="gap-space-xl mb-space-2xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+          <div>
+            <div class="gap-space-sm mb-space-md flex items-center">
+              <img
+                alt="Logo circular de AEUVG"
+                class="h-7 w-auto object-contain"
+                src="logo-aeuvg.png"
+              /><span class="font-headline-sm text-headline-sm text-on-primary font-bold"
+                >AEUVG</span
+              >
+            </div>
+            <p class="font-body-sm text-body-sm text-inverse-primary mb-space-md leading-relaxed">
+              Asociación de Estudiantes de la Universidad del Valle de Guatemala. Impulsando la
+              excelencia estudiantil, la representación ética y la vida universitaria colaborativa.
+            </p>
+            <span
+              class="font-caption-caps text-caption-caps text-secondary-fixed-dim tracking-wider uppercase"
+              >Campus Central • Ciudad de Guatemala</span
+            >
+          </div>
+          <div>
+            <span class="font-title-md text-title-md text-on-primary mb-space-md block"
+              >Vida Estudiantil</span
+            >
+            <ul class="space-y-space-xs font-body-sm text-body-sm text-inverse-primary">
+              <li>
+                <a class="hover:text-on-primary transition-colors" href="#"
+                  >Directorio de Asociaciones</a
+                >
+              </li>
+              <li>
+                <a class="hover:text-on-primary transition-colors" href="#"
+                  >Clubes y Capítulos Estudiantiles</a
+                >
+              </li>
+              <li>
+                <a class="hover:text-on-primary transition-colors" href="#"
+                  >Tutorías Académicas Pares</a
+                >
+              </li>
+              <li>
+                <a class="hover:text-on-primary transition-colors" href="#"
+                  >Horas Beca y Servicio</a
+                >
+              </li>
+              <li>
+                <a class="hover:text-on-primary transition-colors" href="#"
+                  >Calendario de Actividades</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <span class="font-title-md text-title-md text-on-primary mb-space-md block"
+              >Institucional</span
+            >
+            <ul class="space-y-space-xs font-body-sm text-body-sm text-inverse-primary">
+              <li>
+                <a class="hover:text-on-primary transition-colors" href="#"
+                  >Junta Directiva AEUVG</a
+                >
+              </li>
+              <li>
+                <a class="hover:text-on-primary transition-colors" href="#"
+                  >Estatutos y Reglamentos</a
+                >
+              </li>
+              <li>
+                <a class="hover:text-on-primary transition-colors" href="#"
+                  >Transparencia y Rendición</a
+                >
+              </li>
+              <li>
+                <a class="hover:text-on-primary transition-colors" href="#"
+                  >Comisiones de Trabajo</a
+                >
+              </li>
+              <li>
+                <a class="hover:text-on-primary transition-colors" href="#"
+                  >Universidad del Valle (UVG)</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <span class="font-title-md text-title-md text-on-primary mb-space-md block"
+              >Contacto y Asistencia</span
+            >
+            <ul class="space-y-space-xs font-body-sm text-body-sm text-inverse-primary mb-space-md">
+              <li>Oficina de Asociaciones, Edificio I</li>
+              <li>aeuvg@uvg.edu.gt</li>
+              <li>PBX: +(502) 2507-1500 Ext. 21450</li>
+            </ul>
+            <div class="gap-space-sm flex items-center">
+              <span class="font-label-sm text-label-sm text-secondary-fixed-dim font-semibold"
+                >#ComunidadUVG</span
+              >
+            </div>
+          </div>
+        </div>
+        <div
+          class="pt-space-lg gap-space-md flex flex-col items-center justify-between sm:flex-row"
+        >
+          <p class="font-caption-caps text-caption-caps text-inverse-primary">
+            © 2025 Asociación de Estudiantes UVG. Todos los derechos reservados.
+          </p>
+          <div
+            class="gap-space-lg font-caption-caps text-caption-caps text-inverse-primary flex items-center"
+          >
+            <a class="hover:text-on-primary transition-colors" href="#">Política de Privacidad</a
+            ><a class="hover:text-on-primary transition-colors" href="#">Términos de Uso</a
+            ><a class="hover:text-on-primary transition-colors" href="#">Buzón Estudiantil</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
