@@ -37,10 +37,10 @@ La separación frontend/backend se mantiene a nivel de estructura interna: los c
 | React                | 19      | Librería de interfaces                                                       |
 | TypeScript           | 5       | Tipado estático en todo el proyecto                                          |
 | Tailwind CSS         | 4       | Sistema de estilos utilitario                                                |
-| shadcn/ui            | —       | Componentes de UI accesibles y personalizables a la identidad de AEUVG       |
+| Componentes propios  | —       | Biblioteca base construida sobre la paleta de AEUVG (HU-03)                  |
 | FullCalendar         | —       | Calendario interactivo de eventos (Sprint 2)                                 |
 
-**Justificación:** Next.js es el framework React con mayor adopción y documentación; su renderizado en servidor beneficia el SEO de las páginas públicas (landing, eventos, asociaciones) y el rendimiento en móviles. Tailwind + shadcn/ui permiten construir una interfaz consistente y responsive rápidamente, criterio de la definición de terminado del proyecto.
+**Justificación:** Next.js es el framework React con mayor adopción y documentación; su renderizado en servidor beneficia el SEO de las páginas públicas (landing, eventos, asociaciones) y el rendimiento en móviles. Tailwind permite construir una interfaz consistente y responsive rápidamente, criterio de la definición de terminado del proyecto. Los componentes base se implementaron dentro del proyecto en lugar de adoptar un kit externo, porque la paleta derivada del logo de AEUVG exigía un control directo sobre los tokens; se incorporarán primitivas accesibles de terceros cuando se necesiten componentes interactivos complejos como selectores, diálogos y pestañas.
 
 ### 3.2. Backend
 
@@ -48,13 +48,13 @@ La separación frontend/backend se mantiene a nivel de estructura interna: los c
 | ----------------------------------- | ---------------------------------------------------------------------------- |
 | Next.js API Routes / Server Actions | Endpoints HTTP y lógica de servidor                                          |
 | Prisma                              | ORM: acceso a datos y migraciones versionadas (desde HU-02)                  |
-| Auth.js (NextAuth v5)               | Autenticación por credenciales, sesiones y roles (desde HU-05)               |
+| scrypt (Node) y jose                | Cifrado de contraseñas y sesiones firmadas, con roles propios                |
 | Zod                                 | Validación de datos en cliente y servidor con un mismo esquema               |
 | exceljs                             | Importación y exportación de archivos Excel para horas beca (Sprints 4-5)    |
 | pdfmake                             | Generación de reportes PDF (Sprint 5)                                        |
 | Resend                              | Envío de correos transaccionales: recuperación de contraseña, notificaciones |
 
-**Justificación:** Prisma proporciona migraciones versionadas en git (criterio de HU-02) y un esquema declarativo que documenta el modelo de datos. Auth.js resuelve registro, inicio/cierre de sesión y recuperación de contraseña con sesiones seguras, permitiendo restringir el registro a correos institucionales `@uvg.edu.gt`. Las contraseñas se almacenarán hasheadas (bcrypt/argon2) y los permisos por rol se verifican siempre en el servidor.
+**Justificación:** Prisma proporciona migraciones versionadas en git (criterio de HU-02) y un esquema declarativo que documenta el modelo de datos. La autenticación se implementó dentro del proyecto: las contraseñas se derivan con scrypt y las sesiones se firman con jose, lo que evita depender de un marco externo para un flujo que el proyecto ya define por completo y restringe el registro a correos institucionales `@uvg.edu.gt`. Las contraseñas se almacenarán hasheadas (bcrypt/argon2) y los permisos por rol se verifican siempre en el servidor.
 
 ### 3.3. Base de datos
 

@@ -1,0 +1,793 @@
+<!doctype html>
+<html lang="es" style="width: 1280px; height: 1294px; overflow: hidden; position: relative">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @layer base {
+        html,
+        body {
+          margin: 0;
+          padding: 0;
+        }
+        body {
+          overscroll-behavior: none;
+        }
+        main > :first-child {
+          margin-top: 0 !important;
+        }
+        main > :last-child {
+          margin-bottom: 0 !important;
+        }
+      }
+      ::-webkit-scrollbar {
+        display: none;
+      }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-low": "#f7f1ea",
+              "secondary-fixed": "#d6f7f1",
+              secondary: "#00c9a7",
+              "surface-variant": "#ede8ff",
+              "outline-variant": "#ebe2d8",
+              "on-tertiary": "#ffffff",
+              "on-primary-fixed-variant": "#5a35e8",
+              "on-error": "#ffffff",
+              "on-error-container": "#93000a",
+              "on-primary": "#ffffff",
+              primary: "#1c162b",
+              "on-background": "#1c162b",
+              "surface-container-lowest": "#ffffff",
+              tertiary: "#230002",
+              "inverse-on-surface": "#fff8f3",
+              "tertiary-fixed": "#ffdad8",
+              "on-surface": "#1c162b",
+              "on-tertiary-fixed": "#410007",
+              "inverse-surface": "#1c162b",
+              "secondary-fixed-dim": "#3ec1ff",
+              "primary-fixed": "#ede8ff",
+              "on-secondary-fixed-variant": "#00806c",
+              "secondary-container": "#3ec1ff",
+              "on-tertiary-container": "#ff5e5b",
+              "on-primary-fixed": "#1c162b",
+              "on-secondary": "#ffffff",
+              "primary-container": "#6d4aff",
+              "primary-fixed-dim": "#b98aff",
+              "surface-container-high": "#ede8ff",
+              "tertiary-container": "#4d000a",
+              "on-primary-container": "#ede8ff",
+              "surface-container-highest": "#ede8ff",
+              error: "#f5455c",
+              surface: "#fff8f3",
+              "error-container": "#ffdad6",
+              "on-tertiary-fixed-variant": "#92001c",
+              "surface-container": "#f7f1ea",
+              background: "#fff8f3",
+              "surface-bright": "#fff8f3",
+              "on-secondary-fixed": "#0d3b34",
+              "surface-tint": "#6d4aff",
+              "surface-dim": "#f0e6da",
+              "tertiary-fixed-dim": "#ffb3b1",
+              "on-surface-variant": "#6e6580",
+              "on-secondary-container": "#00806c",
+              outline: "#d9cec2",
+              "inverse-primary": "#b98aff",
+            },
+            borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+            spacing: {
+              "container-max": "1280px",
+              "margin-desktop": "2rem",
+              "gutter-desktop": "1.5rem",
+              "space-2xl": "3rem",
+              "gutter-mobile": "1rem",
+              "space-2xs": "0.25rem",
+              "space-sm": "0.75rem",
+              "space-xs": "0.5rem",
+              "space-xl": "2rem",
+              "margin-mobile": "1rem",
+              "space-md": "1rem",
+              "space-3xl": "4rem",
+              "space-lg": "1.5rem",
+            },
+            fontFamily: {
+              "headline-lg": ["Plus Jakarta Sans"],
+              "body-lg": ["Plus Jakarta Sans"],
+              "label-md": ["Plus Jakarta Sans"],
+              "display-hero-mobile": ["Plus Jakarta Sans"],
+              "caption-caps": ["Plus Jakarta Sans"],
+              "display-hero": ["Plus Jakarta Sans"],
+              "body-md": ["Plus Jakarta Sans"],
+              "headline-lg-mobile": ["Plus Jakarta Sans"],
+              "headline-md": ["Plus Jakarta Sans"],
+              "headline-sm": ["Plus Jakarta Sans"],
+              "body-sm": ["Plus Jakarta Sans"],
+              "label-sm": ["Plus Jakarta Sans"],
+              "title-md": ["Plus Jakarta Sans"],
+            },
+            fontSize: {
+              "headline-lg": [
+                "32px",
+                { lineHeight: "40px", letterSpacing: "-0.015em", fontWeight: "700" },
+              ],
+              "body-lg": ["16px", { lineHeight: "26px", fontWeight: "400" }],
+              "label-md": [
+                "14px",
+                { lineHeight: "20px", letterSpacing: "0.005em", fontWeight: "600" },
+              ],
+              "display-hero-mobile": [
+                "30px",
+                { lineHeight: "38px", letterSpacing: "-0.015em", fontWeight: "800" },
+              ],
+              "caption-caps": [
+                "11px",
+                { lineHeight: "14px", letterSpacing: "0.06em", fontWeight: "700" },
+              ],
+              "display-hero": [
+                "40px",
+                { lineHeight: "48px", letterSpacing: "-0.02em", fontWeight: "800" },
+              ],
+              "body-md": ["15px", { lineHeight: "24px", fontWeight: "400" }],
+              "headline-lg-mobile": [
+                "26px",
+                { lineHeight: "34px", letterSpacing: "-0.01em", fontWeight: "700" },
+              ],
+              "headline-md": [
+                "24px",
+                { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "600" },
+              ],
+              "headline-sm": ["20px", { lineHeight: "28px", fontWeight: "600" }],
+              "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+              "label-sm": [
+                "12px",
+                { lineHeight: "16px", letterSpacing: "0.01em", fontWeight: "600" },
+              ],
+              "title-md": ["18px", { lineHeight: "26px", fontWeight: "600" }],
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body
+    class="bg-surface text-on-surface font-body-md text-body-md flex min-h-screen flex-col justify-between"
+  >
+    <header
+      class="bg-surface-container-lowest/80 w-full shadow-[0_1px_8px_rgba(13,35,58,0.04)] backdrop-blur-xl"
+    >
+      <div
+        class="max-w-container-max px-margin-mobile md:px-margin-desktop mx-auto flex h-16 items-center justify-between"
+      >
+        <a class="gap-space-sm group flex items-center" data-path="login" href="#"
+          ><img
+            alt="Logo circular de AEUVG compuesto por figuras humanas estilizadas unidas en círculo de colores vivos (rojo, coral, morado, celeste, naranja, verde lima y azul marino) con las siglas AEUVG limpias y modernas.. Brand logo. - Primary color: #6d4aff
+- Font: plusJakartaSans
+- Mode: light
+- Roundness: rounded-md
+"
+            class="h-8 w-auto object-contain"
+            src="logo-aeuvg.png"
+          />
+          <div class="flex flex-col">
+            <span class="font-label-md text-label-md text-primary leading-tight tracking-tight"
+              >AEUVG</span
+            ><span class="font-label-sm text-label-sm text-on-surface-variant leading-tight"
+              >Portal Estudiantil</span
+            >
+          </div></a
+        >
+        <div class="gap-space-lg flex items-center">
+          <a
+            class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface gap-space-2xs flex items-center transition-colors"
+            data-path="ayuda"
+            href="#"
+            ><span class="material-symbols-outlined text-[18px]">help</span
+            ><span class="">Centro de Ayuda</span></a
+          >
+          <div class="bg-outline-variant hidden h-4 w-[1px] sm:block"></div>
+          <a
+            class="gap-space-2xs font-label-md text-label-md text-secondary hover:text-primary hidden items-center transition-colors sm:flex"
+            data-path="login"
+            href="#"
+            ><span class="material-symbols-outlined text-[18px]">arrow_back</span
+            ><span class="">Volver al portal</span></a
+          >
+        </div>
+      </div>
+    </header>
+    <main
+      class="py-space-xl px-margin-mobile md:px-margin-desktop flex w-full flex-1 flex-col items-center justify-center"
+    >
+      <div class="max-w-container-max mx-auto my-auto flex w-full flex-col">
+        <div
+          class="bg-surface-container-lowest grid min-h-[720px] w-full grid-cols-1 overflow-hidden rounded-xl shadow-md lg:grid-cols-12"
+        >
+          <!-- COLUMNA IZQUIERDA: Formulario de Registro -->
+          <div
+            class="bg-surface-container-lowest flex flex-col justify-between p-6 sm:p-10 lg:col-span-7 lg:p-12"
+          >
+            <div>
+              <!-- Encabezado de registro -->
+              <div class="mb-8">
+                <div
+                  class="gap-space-xs bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm mb-3 inline-flex items-center rounded-full px-3 py-1"
+                >
+                  <span class="flex items-center gap-1.5"
+                    ><span class="bg-brand-lime h-2 w-2 rounded-full"></span
+                    ><span class="bg-brand-sky h-2 w-2 rounded-full"></span
+                    ><span class="bg-brand-purple h-2 w-2 rounded-full"></span
+                    ><span class="bg-brand-orange h-2 w-2 rounded-full"></span></span
+                  ><span class="text-primary font-semibold">Admisión • Ciclo Académico 2025</span>
+                </div>
+                <h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">
+                  Crear tu cuenta estudiantil
+                </h1>
+                <p class="font-body-md text-body-md text-on-surface-variant mt-2 max-w-xl">
+                  Únete a la plataforma oficial de AEUVG para gestionar tus horas beca, inscribirte
+                  a eventos y acceder a tutorías académicas.
+                </p>
+              </div>
+              <form class="space-y-5" id="student-register-form" onsubmit="event.preventDefault()">
+                <!-- a) Nombre Completo -->
+                <div class="flex flex-col gap-1.5">
+                  <label
+                    class="font-label-md text-label-md text-on-surface flex items-center justify-between"
+                    for="fullname"
+                  >
+                    <span class="">Nombre completo</span>
+                    <span
+                      class="font-caption-caps text-caption-caps text-on-surface-variant uppercase"
+                      >Requerido</span
+                    >
+                  </label>
+                  <div class="relative flex items-center">
+                    <span
+                      class="material-symbols-outlined text-outline pointer-events-none absolute left-3.5 text-[20px]"
+                      >person</span
+                    >
+                    <input
+                      class="bg-surface-container-lowest text-on-surface font-body-md text-body-md placeholder:text-outline w-full rounded-lg py-2.5 pr-4 pl-11 shadow-sm transition-all outline-none focus:shadow-[0_0_0_3px_rgba(13,35,58,0.12)]"
+                      id="fullname"
+                      name="fullname"
+                      placeholder="Ej. Valeria Sofía Morales Rodas"
+                      type="text"
+                      value="Valeria Sofía Morales Rodas"
+                    />
+                  </div>
+                </div>
+                <!-- b) Carnet Universitario -->
+                <div class="flex flex-col gap-1.5">
+                  <label
+                    class="font-label-md text-label-md text-on-surface flex items-center justify-between"
+                    for="student-id"
+                  >
+                    <span class="">Carnet universitario</span>
+                    <span class="font-label-sm text-label-sm text-secondary font-semibold"
+                      >5 dígitos</span
+                    >
+                  </label>
+                  <div class="relative flex items-center">
+                    <span
+                      class="material-symbols-outlined text-outline pointer-events-none absolute left-3.5 text-[20px]"
+                      >badge</span
+                    >
+                    <input
+                      class="bg-surface-container-lowest text-on-surface font-body-md text-body-md placeholder:text-outline w-full rounded-lg py-2.5 pr-4 pl-11 font-semibold tracking-wider shadow-sm transition-all outline-none focus:shadow-[0_0_0_3px_rgba(13,35,58,0.12)]"
+                      id="student-id"
+                      maxlength="5"
+                      name="student-id"
+                      placeholder="Ej. 21890"
+                      type="text"
+                      value="21890"
+                    />
+                  </div>
+                  <p
+                    class="font-body-sm text-body-sm text-on-surface-variant mt-0.5 flex items-start gap-1"
+                  >
+                    <span
+                      class="material-symbols-outlined text-secondary mt-0.5 shrink-0 text-[16px]"
+                      >info</span
+                    >
+                    <span class=""
+                      >Tu número de carnet es indispensable para validar y acreditar automáticamente
+                      tus horas beca y participación institucional.</span
+                    >
+                  </p>
+                </div>
+                <!-- c) Correo Institucional UVG (Estado de Error) -->
+                <div class="flex flex-col gap-1.5">
+                  <label
+                    class="font-label-md text-label-md text-on-surface flex items-center justify-between"
+                    for="uvg-email"
+                  >
+                    <span class="">Correo institucional UVG</span>
+                    <span class="font-label-sm text-label-sm text-error font-semibold"
+                      >Dominio institucional</span
+                    >
+                  </label>
+                  <div class="relative flex items-center">
+                    <span
+                      class="material-symbols-outlined text-error pointer-events-none absolute left-3.5 text-[20px]"
+                      >mail</span
+                    >
+                    <input
+                      aria-describedby="email-error-msg"
+                      aria-invalid="true"
+                      class="bg-error-container/20 text-on-surface font-body-md text-body-md w-full rounded-lg py-2.5 pr-11 pl-11 shadow-[0_0_0_2px_#f5455c] transition-all outline-none"
+                      id="uvg-email"
+                      name="email"
+                      placeholder="nombre.apellido@uvg.edu.gt"
+                      type="email"
+                      value="valeria.morales@gmail.com"
+                    />
+                    <span
+                      class="material-symbols-outlined text-error absolute right-3.5 text-[20px]"
+                      >error</span
+                    >
+                  </div>
+                  <p
+                    class="font-label-sm text-label-sm text-error mt-0.5 flex items-center gap-1.5"
+                    id="email-error-msg"
+                  >
+                    <span class="material-symbols-outlined shrink-0 text-[16px]">cancel</span>
+                    <span class=""
+                      >Debes ingresar tu correo institucional oficial con terminación
+                      @uvg.edu.gt</span
+                    >
+                  </p>
+                </div>
+                <!-- d & e) Facultad y Carrera en cuadrícula -->
+                <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <!-- d) Facultad -->
+                  <div class="flex flex-col gap-1.5">
+                    <label class="font-label-md text-label-md text-on-surface" for="faculty-select">
+                      Facultad
+                    </label>
+                    <div class="relative flex items-center">
+                      <span
+                        class="material-symbols-outlined text-outline pointer-events-none absolute left-3.5 text-[20px]"
+                        >account_balance</span
+                      >
+                      <select
+                        class="bg-surface-container-lowest text-on-surface font-body-md text-body-md w-full cursor-pointer appearance-none rounded-lg py-2.5 pr-10 pl-11 shadow-sm outline-none focus:shadow-[0_0_0_3px_rgba(13,35,58,0.12)]"
+                        id="faculty-select"
+                        name="faculty"
+                      >
+                        <option selected="" value="ingenieria">Facultad de Ingeniería</option>
+                        <option value="ciencias-humanidades">
+                          Facultad de Ciencias y Humanidades
+                        </option>
+                        <option value="educacion">Facultad de Educación</option>
+                        <option value="ciencias-sociales">Facultad de Ciencias Sociales</option>
+                      </select>
+                      <span
+                        class="material-symbols-outlined text-outline pointer-events-none absolute right-3 text-[20px]"
+                        >expand_more</span
+                      >
+                    </div>
+                  </div>
+                  <!-- e) Carrera -->
+                  <div class="flex flex-col gap-1.5">
+                    <label class="font-label-md text-label-md text-on-surface" for="career-select">
+                      Carrera
+                    </label>
+                    <div class="relative flex items-center">
+                      <span
+                        class="material-symbols-outlined text-outline pointer-events-none absolute left-3.5 text-[20px]"
+                        >school</span
+                      >
+                      <select
+                        class="bg-surface-container-lowest text-on-surface font-body-md text-body-md w-full cursor-pointer appearance-none truncate rounded-lg py-2.5 pr-10 pl-11 shadow-sm outline-none focus:shadow-[0_0_0_3px_rgba(13,35,58,0.12)]"
+                        id="career-select"
+                        name="career"
+                      >
+                        <option selected="" value="computacion">
+                          Ingeniería en Ciencia de la Computación y TI
+                        </option>
+                        <option value="mecatronica">Ingeniería Mecatrónica</option>
+                        <option value="industrial">Ingeniería Industrial</option>
+                        <option value="quimica">Ingeniería Química</option>
+                        <option value="civil">Ingeniería Civil</option>
+                      </select>
+                      <span
+                        class="material-symbols-outlined text-outline pointer-events-none absolute right-3 text-[20px]"
+                        >expand_more</span
+                      >
+                    </div>
+                  </div>
+                </div>
+                <!-- f) Contraseña con Indicador de Fortaleza -->
+                <div class="flex flex-col gap-1.5 pt-1">
+                  <label
+                    class="font-label-md text-label-md text-on-surface flex items-center justify-between"
+                    for="password-input"
+                  >
+                    <span class="">Contraseña</span>
+                    <span class="font-label-sm text-label-sm text-secondary">Nivel Seguro</span>
+                  </label>
+                  <div class="relative flex items-center">
+                    <span
+                      class="material-symbols-outlined text-outline pointer-events-none absolute left-3.5 text-[20px]"
+                      >lock</span
+                    >
+                    <input
+                      class="bg-surface-container-lowest text-on-surface font-body-md text-body-md placeholder:text-outline w-full rounded-lg py-2.5 pr-11 pl-11 shadow-sm transition-all outline-none focus:shadow-[0_0_0_3px_rgba(13,35,58,0.12)]"
+                      id="password-input"
+                      name="password"
+                      placeholder="Crea una contraseña segura"
+                      type="password"
+                      value="ValeriaUVG#2025!"
+                    />
+                    <button
+                      class="text-outline hover:text-on-surface absolute right-3 flex items-center justify-center p-1 transition-colors focus:outline-none"
+                      id="toggle-pwd-btn"
+                      title="Mostrar u ocultar contraseña"
+                      type="button"
+                    >
+                      <span class="material-symbols-outlined text-[20px]" id="pwd-eye-icon"
+                        >visibility</span
+                      >
+                    </button>
+                  </div>
+                  <!-- Indicador visual de seguridad en segmentos -->
+                  <div class="mt-1 space-y-2">
+                    <div class="grid h-1.5 w-full grid-cols-3 gap-1.5">
+                      <div class="bg-brand-lime h-full rounded-full"></div>
+                      <div class="bg-brand-sky h-full rounded-full"></div>
+                      <div class="bg-brand-purple h-full rounded-full"></div>
+                    </div>
+                    <div
+                      class="font-label-sm text-label-sm text-on-surface-variant flex flex-wrap items-center gap-x-4 gap-y-1"
+                    >
+                      <span class="text-secondary inline-flex items-center gap-1 font-semibold">
+                        <span class="material-symbols-outlined text-[16px]">check_circle</span>
+                        Mínimo 8 caracteres
+                      </span>
+                      <span class="text-secondary inline-flex items-center gap-1 font-semibold">
+                        <span class="material-symbols-outlined text-[16px]">check_circle</span>
+                        Al menos un número
+                      </span>
+                      <span class="text-secondary inline-flex items-center gap-1 font-semibold">
+                        <span class="material-symbols-outlined text-[16px]">check_circle</span>
+                        Un símbolo o mayúscula
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <!-- g) Confirmar Contraseña -->
+                <div class="flex flex-col gap-1.5">
+                  <label
+                    class="font-label-md text-label-md text-on-surface flex items-center justify-between"
+                    for="confirm-pwd-input"
+                  >
+                    <span class="">Confirmar contraseña</span>
+                    <span class="font-label-sm text-label-sm text-secondary font-semibold"
+                      >Coincidencia correcta</span
+                    >
+                  </label>
+                  <div class="relative flex items-center">
+                    <span
+                      class="material-symbols-outlined text-outline pointer-events-none absolute left-3.5 text-[20px]"
+                      >lock_clock</span
+                    >
+                    <input
+                      class="bg-surface-container-lowest text-on-surface font-body-md text-body-md placeholder:text-outline w-full rounded-lg py-2.5 pr-11 pl-11 shadow-sm transition-all outline-none focus:shadow-[0_0_0_3px_rgba(13,35,58,0.12)]"
+                      id="confirm-pwd-input"
+                      name="confirm-password"
+                      placeholder="Vuelve a escribir tu contraseña"
+                      type="password"
+                      value="ValeriaUVG#2025!"
+                    />
+                    <span
+                      class="material-symbols-outlined text-secondary absolute right-3.5 text-[20px]"
+                      >check_circle</span
+                    >
+                  </div>
+                </div>
+                <!-- h) Casilla de Aceptación de Términos -->
+                <div class="flex items-start gap-3 pt-2">
+                  <input
+                    checked=""
+                    class="bg-surface-container-lowest text-primary-container focus:ring-secondary accent-primary-container mt-1 h-4 w-4 shrink-0 cursor-pointer rounded"
+                    id="terms-checkbox"
+                    name="terms"
+                    type="checkbox"
+                  />
+                  <label
+                    class="font-body-sm text-body-sm text-on-surface-variant cursor-pointer select-none"
+                    for="terms-checkbox"
+                  >
+                    He leído y acepto los
+                    <a class="text-secondary font-semibold hover:underline" href="#"
+                      >Términos de Uso</a
+                    >
+                    y la
+                    <a class="text-secondary font-semibold hover:underline" href="#"
+                      >Política de Privacidad</a
+                    >
+                    de la plataforma AEUVG.
+                  </label>
+                </div>
+                <!-- i) Botón Principal -->
+                <div class="pt-2">
+                  <button
+                    class="bg-primary-container text-on-primary font-label-md text-label-md hover:bg-primary-container/90 group flex w-full items-center justify-center gap-2 rounded-lg px-6 py-3.5 shadow-md transition-all active:scale-[0.99]"
+                    type="submit"
+                  >
+                    <span class="">Crear cuenta estudiantil</span>
+                    <span
+                      class="material-symbols-outlined text-[20px] transition-transform group-hover:translate-x-1"
+                      >arrow_forward</span
+                    >
+                  </button>
+                </div>
+              </form>
+              <!-- j) Pie del Formulario -->
+              <div class="mt-8 border-t-0 pt-4 text-center">
+                <p class="font-body-md text-body-md text-on-surface-variant">
+                  ¿Ya tienes cuenta?
+                  <a class="text-primary ml-1 font-bold hover:underline" data-path="login" href="#">
+                    Inicia sesión
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
+          <!-- COLUMNA DERECHA: Panel Institucional y Visual de AEUVG -->
+          <div
+            class="from-primary-container text-on-primary relative flex flex-col justify-between overflow-hidden bg-gradient-to-br via-[#6d4aff] to-[#132e4f] p-8 sm:p-12 lg:col-span-5"
+          >
+            <!-- Fondo fotográfico enriquecido del Campus Central UVG -->
+            <div
+              class="pointer-events-none absolute inset-0 bg-cover bg-center opacity-15 mix-blend-luminosity"
+              data-alt="Modern student plaza inside Universidad del Valle de Guatemala surrounded by lush native green trees, contemporary glass and concrete architecture, undergraduate students studying and collaborating on benches under warm natural daylight, creating an inspiring collegiate community atmosphere"
+              style="
+                background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuC4XPkfdkQZiis4tcNTmNvxHPvuXVp5jF7DfyRrFucn2BaiFIC1bdlqVznxm1lzERZoNGCUUVnHoBHozQzk9FyvXJz1zsLyLXepwdVAfnwSDem5c8ZhV3ThRsRKoEIRgdOhDVyxvpJNKq5RDulg6rauOi5S-AzAG1nqaFjymdoMMLwUx9S6IeWa0ljzp7PIYnHyQDhsEHw7Du5PFGpsWFtjFROOD8Yur3TCf4_DGQXHuNSm0xh1hOCotA&quot;);
+              "
+            ></div>
+            <!-- Textura geométrica decorativa institucional con gradientes suaves -->
+            <div
+              class="bg-secondary-container/10 pointer-events-none absolute -top-24 -right-24 h-80 w-80 rounded-full blur-3xl"
+            ></div>
+            <div
+              class="bg-secondary/15 pointer-events-none absolute bottom-10 -left-20 h-72 w-72 rounded-full blur-2xl"
+            ></div>
+            <!-- Contenido Superior: Identidad Oficial AEUVG -->
+            <div class="relative z-10">
+              <div
+                class="bg-surface-container-lowest/15 mb-6 inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 shadow-sm backdrop-blur-md"
+              >
+                <span class="material-symbols-outlined text-secondary-container text-[18px]"
+                  >school</span
+                >
+                <span
+                  class="font-label-sm text-label-sm text-inverse-on-surface font-semibold tracking-wide"
+                  >Comunidad Universitaria Oficial</span
+                >
+              </div>
+              <!-- Tarjeta del Logo Oficial AEUVG -->
+              <div
+                class="bg-surface-container-lowest mb-8 flex max-w-xs items-center justify-center rounded-xl p-4 shadow-xl"
+              >
+                <div class="flex items-center gap-3">
+                  <img
+                    alt="AEUVG Logotipo Oficial Estudiantes UVG"
+                    class="h-16 w-auto object-contain"
+                    src="logo-aeuvg.png"
+                  />
+                  <div class="flex flex-col">
+                    <span
+                      class="text-primary text-[18px] leading-none font-extrabold tracking-tight"
+                      >AEUVG</span
+                    ><span class="text-body-sm text-secondary mt-0.5 leading-tight font-semibold"
+                      >Comunidad Activa UVG</span
+                    >
+                  </div>
+                </div>
+              </div>
+              <h2
+                class="font-headline-lg text-headline-lg text-inverse-on-surface max-w-sm font-extrabold tracking-tight"
+              >
+                Tu voz, tu comunidad y tu participación activa en cada paso.
+              </h2>
+              <p
+                class="font-body-md text-body-md text-primary-fixed-dim mt-3 max-w-sm leading-relaxed"
+              >
+                Desde la gestión de horas de servicio hasta las elecciones estudiantiles, todo tu
+                recorrido universitario unificado en un solo portal.
+              </p>
+            </div>
+            <!-- Contenido Inferior: Tarjetas de Beneficios Flotantes -->
+            <div class="relative z-10 mt-10 space-y-3.5">
+              <!-- Tarjeta Flotante 1: Horas Beca -->
+              <div
+                class="bg-surface-container-lowest/10 flex items-start gap-3.5 rounded-xl p-4 shadow-lg backdrop-blur-md transition-transform hover:-translate-y-0.5"
+              >
+                <div
+                  class="bg-secondary-container/20 text-secondary-container flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
+                >
+                  <span class="material-symbols-outlined text-[24px]">verified</span>
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="font-label-md text-label-md text-inverse-on-surface font-bold"
+                      >Horas Beca Automatizadas</span
+                    >
+                    <span
+                      class="bg-secondary-container text-on-secondary-container font-caption-caps text-caption-caps rounded-full px-2 py-0.5 uppercase"
+                      >Oficial</span
+                    >
+                  </div>
+                  <p class="font-body-sm text-body-sm text-surface-container-high mt-0.5">
+                    Acreditación directa e inmediata con solo escanear tu carnet UVG en actividades
+                    institucionales.
+                  </p>
+                </div>
+              </div>
+              <!-- Tarjeta Flotante 2: Asociaciones & Clubes -->
+              <div
+                class="bg-surface-container-lowest/10 flex items-start gap-3.5 rounded-xl p-4 shadow-lg backdrop-blur-md transition-transform hover:-translate-y-0.5"
+              >
+                <div
+                  class="bg-surface-container-highest/20 text-secondary-fixed flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
+                >
+                  <span class="material-symbols-outlined text-[24px]">groups</span>
+                </div>
+                <div>
+                  <span class="font-label-md text-label-md text-inverse-on-surface font-bold"
+                    >Red Estudiantil Activa</span
+                  >
+                  <p class="font-body-sm text-body-sm text-surface-container-high mt-0.5">
+                    Acceso a más de 25 clubes extracurriculares y 14 asociaciones de facultades del
+                    campus central y sur.
+                  </p>
+                </div>
+              </div>
+              <!-- Pie de Columna con sello de soporte UVG -->
+              <div
+                class="text-on-primary-container font-label-sm text-label-sm flex items-center justify-between pt-4"
+              >
+                <span class="flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-secondary-container text-[16px]"
+                    >lock</span
+                  >
+                  Cifrado seguro UVG Single Sign-On
+                </span>
+                <span class="text-inverse-on-surface font-semibold">2024 • 2025</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script>
+        (function () {
+          // Interacción simple de mostrar / ocultar contraseña
+          const pwdInput = document.getElementById("password-input");
+          const toggleBtn = document.getElementById("toggle-pwd-btn");
+          const eyeIcon = document.getElementById("pwd-eye-icon");
+
+          if (toggleBtn && pwdInput && eyeIcon) {
+            toggleBtn.addEventListener("click", function () {
+              if (pwdInput.type === "password") {
+                pwdInput.type = "text";
+                eyeIcon.textContent = "visibility_off";
+              } else {
+                pwdInput.type = "password";
+                eyeIcon.textContent = "visibility";
+              }
+            });
+          }
+
+          // Vinculación condicional entre Facultad y Carreras
+          const facultySelect = document.getElementById("faculty-select");
+          const careerSelect = document.getElementById("career-select");
+
+          const careersByFaculty = {
+            ingenieria: [
+              { val: "computacion", name: "Ingeniería en Ciencia de la Computación y TI" },
+              { val: "mecatronica", name: "Ingeniería Mecatrónica" },
+              { val: "industrial", name: "Ingeniería Industrial" },
+              { val: "quimica", name: "Ingeniería Química" },
+              { val: "civil", name: "Ingeniería Civil" },
+            ],
+            "ciencias-humanidades": [
+              { val: "biologia", name: "Licenciatura en Biología" },
+              { val: "bioquimica", name: "Licenciatura en Bioquímica y Microbiología" },
+              { val: "fisica", name: "Licenciatura en Física" },
+              { val: "matematica", name: "Licenciatura en Matemática Aplicada" },
+            ],
+            educacion: [
+              { val: "edu-primaria", name: "Licenciatura en Educación Primaria" },
+              { val: "edu-psicopedagogia", name: "Licenciatura en Psicopedagogía" },
+              { val: "edu-bilingue", name: "Licenciatura en Educación Intercultural" },
+            ],
+            "ciencias-sociales": [
+              { val: "psicologia", name: "Licenciatura en Psicología" },
+              { val: "antropologia", name: "Licenciatura en Antropología" },
+              { val: "arqueologia", name: "Licenciatura en Arqueología" },
+            ],
+          };
+
+          if (facultySelect && careerSelect) {
+            facultySelect.addEventListener("change", function (e) {
+              const selectedFaculty = e.target.value;
+              const options = careersByFaculty[selectedFaculty] || [];
+              careerSelect.innerHTML = "";
+              options.forEach(function (career) {
+                const opt = document.createElement("option");
+                opt.value = career.val;
+                opt.textContent = career.name;
+                careerSelect.appendChild(opt);
+              });
+            });
+          }
+        })();
+      </script>
+    </main>
+    <footer class="bg-surface-container-low py-space-lg w-full">
+      <div
+        class="max-w-container-max px-margin-mobile md:px-margin-desktop gap-space-md mx-auto flex flex-col items-center justify-between text-center sm:flex-row sm:text-left"
+      >
+        <div class="gap-space-xs sm:gap-space-sm flex flex-col items-center sm:flex-row">
+          <span class="font-label-sm text-label-sm text-on-surface-variant"
+            >© 2024 Asociación de Estudiantes UVG (AEUVG).</span
+          ><span class="text-on-surface-variant hidden sm:inline">•</span
+          ><span class="font-label-sm text-label-sm text-on-surface-variant"
+            >Universidad del Valle de Guatemala</span
+          >
+        </div>
+        <nav class="gap-space-md flex items-center" data-active-classes="text-primary font-bold">
+          <a
+            class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors"
+            data-path="terminos-condiciones"
+            href="#"
+            >Términos y Condiciones</a
+          ><a
+            class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors"
+            data-path="politica-privacidad"
+            href="#"
+            >Privacidad y Datos</a
+          ><a
+            class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors"
+            data-path="contacto-soporte"
+            href="#"
+            >Soporte</a
+          >
+        </nav>
+      </div>
+    </footer>
+
+    <div
+      id="snapdom-sandbox"
+      data-snapdom-sandbox="true"
+      aria-hidden="true"
+      style="
+        position: absolute;
+        left: -9999px;
+        top: -9999px;
+        width: 0px;
+        height: 0px;
+        overflow: hidden;
+      "
+    ></div>
+  </body>
+</html>

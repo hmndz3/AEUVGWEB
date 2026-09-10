@@ -12,10 +12,10 @@ Plataforma web centralizada de la **Asociación General de Estudiantes de la Uni
 | Capa          | Tecnología                                   |
 | ------------- | -------------------------------------------- |
 | Framework     | Next.js 16 (App Router) + TypeScript         |
-| Estilos / UI  | Tailwind CSS 4 + shadcn/ui                   |
+| Estilos / UI  | Tailwind CSS 4 + componentes propios         |
 | Base de datos | PostgreSQL 17 (Railway)                      |
 | ORM           | Prisma (a partir de HU-02)                   |
-| Autenticación | Auth.js — NextAuth v5 (a partir de HU-05)    |
+| Autenticación | scrypt y jose (implementación propia)        |
 | Contenedores  | Docker + Docker Compose                      |
 | Hosting       | Railway (despliegue automático desde `main`) |
 
@@ -78,8 +78,16 @@ docker compose --profile app up --build
 | `npm run build`        | Build de producción                         |
 | `npm run start`        | Servir el build de producción               |
 | `npm run lint`         | Análisis de código con ESLint               |
+| `npm test`             | Pruebas automatizadas del servicio          |
 | `npm run format`       | Formatear todo el código con Prettier       |
 | `npm run format:check` | Verificar el formato sin modificar archivos |
+
+El registro y la verificación de correo se documentan en
+[docs/registro-estudiantes.md](docs/registro-estudiantes.md). El proveedor local predeterminado no
+envía correos reales; consulta ese documento antes de habilitar Resend.
+
+El funcionamiento del inicio de sesión, sesiones y credenciales ficticias locales se documenta en
+[docs/autenticacion-sesion.md](docs/autenticacion-sesion.md).
 
 ## Flujo de trabajo con Git
 
