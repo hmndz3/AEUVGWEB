@@ -9,9 +9,9 @@ const ACCESOS = [
     ancho: "md:col-span-2",
   },
   {
-    href: "/perfil",
+    href: "/iniciar-sesion",
     titulo: "Horas beca",
-    descripcion: "Revisa tus horas realizadas, acreditadas y pendientes.",
+    descripcion: "Inicia sesión para revisar tus horas realizadas, acreditadas y pendientes.",
     clase: "bg-turquesa/15 text-[#00695a]",
     ancho: "",
   },
