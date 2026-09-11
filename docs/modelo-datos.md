@@ -6,7 +6,7 @@ El modelo centraliza la estructura académica, cuentas y roles, organizaciones, 
 
 - Base de datos: PostgreSQL 17.
 - ORM y migraciones: Prisma 7.10.0.
-- Alcance actual: 29 modelos, 12 enumeraciones, 29 llaves primarias, 45 relaciones declaradas, 26 restricciones únicas, 14 restricciones `CHECK` y 49 índices de búsqueda explícitos.
+- Alcance actual: 29 modelos, 12 enumeraciones, 29 llaves primarias, 45 relaciones declaradas, 26 restricciones únicas, 14 restricciones `CHECK` y 52 índices de búsqueda explícitos.
 
 ## Convenciones
 
@@ -156,12 +156,12 @@ Prisma no expresa todos los `CHECK`; están versionados manualmente en la migrac
 
 ## Índices de búsqueda
 
-Además de las 29 llaves primarias y 26 restricciones únicas, el esquema declara 49 índices no únicos. Cubren principalmente:
+Además de las 29 llaves primarias y 26 restricciones únicas, el esquema declara 52 índices no únicos. Cubren principalmente:
 
 - Relaciones académicas: carrera de estudiante y rol de una asignación.
 - Usuarios: estado.
 - Tokens de verificación: usuario con fecha de creación y fecha de expiración.
-- Eventos: fecha, estado, categoría, creador y compuesto estado-fecha.
+- Eventos: fecha, estado, categoría, tipo de actividad, creador y los compuestos estado-fecha de inicio, estado-fecha de fin y estado-destacado-fecha, agregados en T-07.2 para el calendario, la portada y los filtros.
 - Horas beca: fecha/estado de oportunidades, estudiantes inscritos, importaciones y registros por estudiante, estado, fecha, origen, creador y acreditador.
 - Tutorías: postulaciones, cursos, tutores, disponibilidades, estado y fecha de sesiones.
 - Personalización: usuario, tipo de entidad y fecha de interacción.
