@@ -135,6 +135,10 @@ async function verificar(): Promise<void> {
               NOMBRES_PRUEBA.eventoProximo,
               NOMBRES_PRUEBA.eventoDestacado,
               NOMBRES_PRUEBA.eventoFinalizado,
+              NOMBRES_PRUEBA.eventoVariosDias,
+              NOMBRES_PRUEBA.eventoCancelado,
+              NOMBRES_PRUEBA.eventoBorrador,
+              NOMBRES_PRUEBA.eventoLejano,
             ],
           },
         },
@@ -155,7 +159,7 @@ async function verificar(): Promise<void> {
         ) AS duplicados
       `,
     ]);
-    asegurar(eventos.length === 3, "Deben existir exactamente tres eventos ficticios.");
+    asegurar(eventos.length === 7, "Deben existir exactamente siete eventos ficticios.");
     asegurar(
       eventos.every(({ fechaInicio, fechaFin }) => fechaFin >= fechaInicio),
       "Hay eventos ficticios con fechas inválidas."
@@ -169,8 +173,23 @@ async function verificar(): Promise<void> {
       "Falta el evento ficticio finalizado."
     );
     asegurar(
-      eventos.reduce((total, item) => total + item.organizadores.length, 0) === 4,
-      "Los eventos ficticios deben tener cuatro organizadores."
+      eventos.some(({ estado }) => estado === "CANCELADO"),
+      "Falta el evento ficticio cancelado."
+    );
+    asegurar(
+      eventos.some(({ estado }) => estado === "BORRADOR"),
+      "Falta el evento ficticio en borrador."
+    );
+    asegurar(
+      eventos.some(
+        ({ fechaInicio, fechaFin }) =>
+          fechaFin.getTime() - fechaInicio.getTime() > 24 * 60 * 60 * 1000
+      ),
+      "Falta un evento ficticio que abarque varios días."
+    );
+    asegurar(
+      eventos.reduce((total, item) => total + item.organizadores.length, 0) === 8,
+      "Los eventos ficticios deben tener ocho organizadores."
     );
     asegurar(
       eventos.some(({ organizadores }) => organizadores.length > 1),
