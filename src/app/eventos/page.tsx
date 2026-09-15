@@ -35,7 +35,9 @@ export default async function PaginaEventos({
   return (
     <MarcoSitio>
       <section className="mx-auto max-w-7xl px-4 pt-12 pb-6 sm:px-6">
-        <h1 className="text-texto text-4xl font-extrabold tracking-tight">Eventos estudiantiles</h1>
+        <h1 className="text-texto text-3xl font-extrabold tracking-tight sm:text-4xl">
+          Eventos estudiantiles
+        </h1>
         <p className="text-texto-suave mt-3 max-w-2xl leading-relaxed">
           Conferencias, festivales, convocatorias de horas beca y actividades organizadas por AEUVG
           y las asociaciones estudiantiles de la Universidad del Valle de Guatemala.

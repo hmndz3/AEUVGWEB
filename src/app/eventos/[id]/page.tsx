@@ -68,7 +68,7 @@ export default async function PaginaEvento({ params }: Props) {
           <EtiquetaEstado tono={tonoEstado(estado)}>{etiquetaEstado(estado)}</EtiquetaEstado>
         </div>
 
-        <h1 className="text-texto mt-4 text-3xl leading-tight font-extrabold tracking-tight sm:text-4xl">
+        <h1 className="text-texto mt-4 text-2xl leading-tight font-extrabold tracking-tight break-words sm:text-4xl">
           {evento.nombre}
         </h1>
 
