@@ -54,7 +54,9 @@ export function TarjetaEvento({
             )}
           </div>
 
-          <h3 className="text-texto mt-3 text-lg leading-snug font-bold">{evento.nombre}</h3>
+          <h3 className="text-texto mt-3 text-lg leading-snug font-bold break-words">
+            {evento.nombre}
+          </h3>
 
           <dl className="text-texto-suave mt-3 flex flex-col gap-1 text-sm">
             <div>
@@ -65,7 +67,7 @@ export function TarjetaEvento({
             </div>
             <div>
               <dt className="sr-only">Ubicación</dt>
-              <dd>{evento.ubicacion}</dd>
+              <dd className="break-words">{evento.ubicacion}</dd>
             </div>
           </dl>
 
