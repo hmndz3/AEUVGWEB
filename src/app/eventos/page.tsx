@@ -1,3 +1,4 @@
+import { EstadoVacioEventos } from "@/components/eventos/estado-vacio-eventos";
 import { ListaEventos } from "@/components/eventos/lista-eventos";
 import { Paginacion } from "@/components/eventos/paginacion";
 import { MarcoSitio } from "@/components/layout/marco-sitio";
@@ -49,7 +50,15 @@ export default async function PaginaEventos({
         </p>
 
         <div className="mt-6">
-          <ListaEventos eventos={eventos} ahora={ahora} />
+          {eventos.length === 0 ? (
+            <EstadoVacioEventos
+              titulo="Todavía no hay eventos publicados"
+              mensaje="AEUVG y las asociaciones estudiantiles publican aquí sus actividades del ciclo. Vuelve pronto o revisa la página principal."
+              accion={{ href: "/", texto: "Ir a la página principal" }}
+            />
+          ) : (
+            <ListaEventos eventos={eventos} ahora={ahora} />
+          )}
         </div>
 
         <Paginacion pagina={pagina} paginas={paginas} ruta="/eventos" />
