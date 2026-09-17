@@ -1,8 +1,13 @@
 import { EstadoVacioEventos } from "@/components/eventos/estado-vacio-eventos";
+import { FiltrosEventosBarra } from "@/components/eventos/filtros-eventos";
 import { ListaEventos } from "@/components/eventos/lista-eventos";
 import { Paginacion } from "@/components/eventos/paginacion";
 import { MarcoSitio } from "@/components/layout/marco-sitio";
-import { listarEventosPublicados } from "@/lib/eventos/consultas-eventos";
+import {
+  listarCategorias,
+  listarEventosPublicados,
+  listarOrganizadores,
+} from "@/lib/eventos/consultas-eventos";
 import { condicionesDeFiltros } from "@/lib/eventos/filtros-eventos";
 import {
   contarFiltros,
@@ -27,11 +32,15 @@ export default async function PaginaEventos({
 }) {
   const filtros = interpretarFiltrosEventos(await searchParams);
   const ahora = new Date();
-  const { eventos, total, pagina, paginas } = await listarEventosPublicados({
-    pagina: filtros.pagina,
-    condiciones: condicionesDeFiltros(filtros),
-    ahora,
-  });
+  const [{ eventos, total, pagina, paginas }, categorias, organizadores] = await Promise.all([
+    listarEventosPublicados({
+      pagina: filtros.pagina,
+      condiciones: condicionesDeFiltros(filtros),
+      ahora,
+    }),
+    listarCategorias(),
+    listarOrganizadores(),
+  ]);
 
   const conFiltros = contarFiltros(filtros) > 0;
 
@@ -48,7 +57,13 @@ export default async function PaginaEventos({
       </section>
 
       <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6">
-        <p className="text-texto-suave text-sm">
+        <FiltrosEventosBarra
+          filtros={filtros}
+          categorias={categorias}
+          organizadores={organizadores}
+        />
+
+        <p className="text-texto-suave mt-6 text-sm">
           {total === 0
             ? "Sin eventos por mostrar"
             : `Mostrando ${eventos.length} de ${total} ${total === 1 ? "evento" : "eventos"}`}
