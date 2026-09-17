@@ -3,6 +3,12 @@ import { ListaEventos } from "@/components/eventos/lista-eventos";
 import { Paginacion } from "@/components/eventos/paginacion";
 import { MarcoSitio } from "@/components/layout/marco-sitio";
 import { listarEventosPublicados } from "@/lib/eventos/consultas-eventos";
+import { condicionesDeFiltros } from "@/lib/eventos/filtros-eventos";
+import {
+  contarFiltros,
+  interpretarFiltrosEventos,
+  parametrosDeFiltros,
+} from "@/validators/eventos";
 
 // El listado consulta la base en cada petición: los eventos cambian a diario y
 // no tiene sentido servir una versión generada durante el build.
@@ -14,23 +20,20 @@ export const metadata = {
     "Conferencias, festivales, convocatorias de horas beca y actividades organizadas por AEUVG y las asociaciones estudiantiles de la Universidad del Valle de Guatemala.",
 };
 
-function numeroDePagina(valor: string | string[] | undefined): number {
-  const numero = Number(Array.isArray(valor) ? valor[0] : valor);
-
-  return Number.isSafeInteger(numero) && numero > 0 ? numero : 1;
-}
-
 export default async function PaginaEventos({
   searchParams,
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const parametros = await searchParams;
+  const filtros = interpretarFiltrosEventos(await searchParams);
   const ahora = new Date();
   const { eventos, total, pagina, paginas } = await listarEventosPublicados({
-    pagina: numeroDePagina(parametros.pagina),
+    pagina: filtros.pagina,
+    condiciones: condicionesDeFiltros(filtros),
     ahora,
   });
+
+  const conFiltros = contarFiltros(filtros) > 0;
 
   return (
     <MarcoSitio>
@@ -53,17 +56,30 @@ export default async function PaginaEventos({
 
         <div className="mt-6">
           {eventos.length === 0 ? (
-            <EstadoVacioEventos
-              titulo="Todavía no hay eventos publicados"
-              mensaje="AEUVG y las asociaciones estudiantiles publican aquí sus actividades del ciclo. Vuelve pronto o revisa la página principal."
-              accion={{ href: "/", texto: "Ir a la página principal" }}
-            />
+            conFiltros ? (
+              <EstadoVacioEventos
+                titulo="Ningún evento coincide con la búsqueda"
+                mensaje="Prueba con otras fechas, otra categoría o quita algunos filtros para ver más actividades."
+                accion={{ href: "/eventos", texto: "Limpiar los filtros" }}
+              />
+            ) : (
+              <EstadoVacioEventos
+                titulo="Todavía no hay eventos publicados"
+                mensaje="AEUVG y las asociaciones estudiantiles publican aquí sus actividades del ciclo. Vuelve pronto o revisa la página principal."
+                accion={{ href: "/", texto: "Ir a la página principal" }}
+              />
+            )
           ) : (
             <ListaEventos eventos={eventos} ahora={ahora} />
           )}
         </div>
 
-        <Paginacion pagina={pagina} paginas={paginas} ruta="/eventos" />
+        <Paginacion
+          pagina={pagina}
+          paginas={paginas}
+          ruta="/eventos"
+          parametros={parametrosDeFiltros(filtros)}
+        />
       </section>
     </MarcoSitio>
   );
