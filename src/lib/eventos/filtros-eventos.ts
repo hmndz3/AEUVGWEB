@@ -1,5 +1,6 @@
 import type { Prisma } from "@prisma/client";
 
+import { normalizarTexto } from "@/lib/eventos/busqueda";
 import type { FiltrosEventos } from "@/validators/eventos";
 
 /**
@@ -30,6 +31,9 @@ export function condicionesDeFiltros(filtros: FiltrosEventos): Prisma.EventoWher
   const condiciones: Prisma.EventoWhereInput = {};
   const conjunciones: Prisma.EventoWhereInput[] = [];
 
+  // La búsqueda compara contra la copia normalizada del evento, de modo que
+  // ignore mayúsculas y acentos por igual (ver src/lib/eventos/busqueda.ts).
+  if (filtros.q) condiciones.textoBusqueda = { contains: normalizarTexto(filtros.q) };
   if (filtros.desde) condiciones.fechaFin = { gte: inicioDelDiaEnGuatemala(filtros.desde) };
   if (filtros.hasta) condiciones.fechaInicio = { lte: finDelDiaEnGuatemala(filtros.hasta) };
   if (filtros.categoria) condiciones.idCategoriaEvento = filtros.categoria;

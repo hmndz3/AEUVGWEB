@@ -169,6 +169,12 @@ Además de las 29 llaves primarias y 26 restricciones únicas, el esquema declar
 
 El inventario exacto y sus nombres físicos están en `schema.prisma` y `migration.sql`; no se duplican aquí para evitar que la documentación diverja.
 
+## Búsqueda de eventos
+
+`evento.texto_busqueda` guarda una copia en minúsculas y sin acentos de nombre, descripción y ubicación. Se agregó en T-10.3 porque PostgreSQL ignora mayúsculas con `ILIKE`, pero no acentos, y buscar "musica" no encontraría "Semana de la Música". La alternativa era instalar la extensión `unaccent` en la base de Railway; se prefirió una columna derivada para no depender de una extensión y para poder indexarla más adelante si el volumen lo exige.
+
+La columna la recalcula el servicio de eventos en cada creación y edición (`src/lib/eventos/busqueda.ts`), por lo que no puede quedar desfasada. La migración incluye la carga inicial de los eventos ya existentes.
+
 ## Separación entre Estudiante y Usuario
 
 `Estudiante` representa a la persona dentro de la estructura académica y puede existir antes del registro web. Esto permite importar y acreditar horas usando carnet aunque todavía no haya una cuenta. `Usuario` contiene acceso, contraseña hash, estado de autenticación y roles. Su `idEstudiante` es obligatorio y único: todo usuario corresponde a un estudiante, pero no todo estudiante tiene usuario.
