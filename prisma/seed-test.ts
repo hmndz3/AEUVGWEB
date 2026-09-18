@@ -2,6 +2,8 @@ import "dotenv/config";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 
+import { textoDeBusqueda } from "../src/lib/eventos/busqueda";
+
 import {
   CARNETS_PRUEBA,
   CODIGOS_CURSOS_PRUEBA,
@@ -468,6 +470,7 @@ async function cargarDatos(tx: Prisma.TransactionClient): Promise<Resultados> {
       ...valoresEvento,
       idCategoriaEvento: categoria.idCategoriaEvento,
       creadoPor: idAdministrador,
+      textoBusqueda: textoDeBusqueda(evento),
     };
     await sincronizar({
       tabla: "Evento",
