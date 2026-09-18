@@ -1,4 +1,5 @@
 import { EstadoVacioEventos } from "@/components/eventos/estado-vacio-eventos";
+import { FiltrosAplicados } from "@/components/eventos/filtros-aplicados";
 import { FiltrosEventosBarra } from "@/components/eventos/filtros-eventos";
 import { ListaEventos } from "@/components/eventos/lista-eventos";
 import { Paginacion } from "@/components/eventos/paginacion";
@@ -62,6 +63,8 @@ export default async function PaginaEventos({
           categorias={categorias}
           organizadores={organizadores}
         />
+
+        <FiltrosAplicados filtros={filtros} categorias={categorias} organizadores={organizadores} />
 
         <p className="text-texto-suave mt-6 text-sm">
           {total === 0
