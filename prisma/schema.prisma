@@ -329,6 +329,9 @@ model Evento {
   imagenUrl            String?             @map("imagen_url") @db.VarChar(500)
   tipoActividad        TipoActividad       @map("tipo_actividad")
   informacionAdicional String?             @map("informacion_adicional") @db.Text
+  // Copia sin acentos ni mayúsculas de nombre, descripción y ubicación.
+  // La mantiene el servicio de eventos; ver src/lib/eventos/busqueda.ts.
+  textoBusqueda        String              @default("") @map("texto_busqueda") @db.Text
   cupo                 Int?
   estado               EstadoEvento        @default(BORRADOR)
   destacado            Boolean             @default(false)
