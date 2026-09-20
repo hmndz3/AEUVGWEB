@@ -1,7 +1,13 @@
 import { ControlesCalendario } from "@/components/eventos/controles-calendario";
 import { RejillaCalendario } from "@/components/eventos/rejilla-calendario";
 import { MarcoSitio } from "@/components/layout/marco-sitio";
-import { construirCalendario, normalizarAncla, normalizarVista } from "@/lib/eventos/calendario";
+import {
+  agruparEventosPorDia,
+  construirCalendario,
+  normalizarAncla,
+  normalizarVista,
+} from "@/lib/eventos/calendario";
+import { listarEventosEnRango } from "@/lib/eventos/consultas-eventos";
 import { claveDiaLocal } from "@/lib/eventos/formato-fechas";
 
 export const dynamic = "force-dynamic";
@@ -27,6 +33,11 @@ export default async function PaginaCalendario({
   const ancla = normalizarAncla(valor(parametros.fecha), hoy);
   const calendario = construirCalendario(vista, ancla, hoy);
 
+  // Se consulta el rango completo de la grilla, incluidos los días de relleno
+  // de los meses vecinos, para que esas casillas tampoco queden vacías.
+  const eventos = await listarEventosEnRango(calendario.desde, calendario.hasta);
+  const eventosPorDia = agruparEventosPorDia(eventos, calendario.dias);
+
   return (
     <MarcoSitio>
       <section className="mx-auto max-w-7xl px-4 pt-12 pb-6 sm:px-6">
@@ -41,7 +52,7 @@ export default async function PaginaCalendario({
 
       <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6">
         <ControlesCalendario calendario={calendario} claveHoy={claveDiaLocal(hoy)} />
-        <RejillaCalendario calendario={calendario} />
+        <RejillaCalendario calendario={calendario} eventosPorDia={eventosPorDia} />
       </section>
     </MarcoSitio>
   );
