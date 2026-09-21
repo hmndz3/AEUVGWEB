@@ -1,3 +1,5 @@
+import type { EstadoEvento } from "@prisma/client";
+
 import { textoDeBusqueda } from "@/lib/eventos/busqueda";
 import type {
   DatosEventoPersistidos,
@@ -10,6 +12,14 @@ export type ResultadoEvento =
   | { tipo: "guardado"; idEvento: number }
   | { tipo: "no_encontrado" }
   | { tipo: "invalido"; errores: Record<string, string> };
+
+export type ResultadoTransicion =
+  | { tipo: "aplicada"; estado: EstadoEvento }
+  | { tipo: "no_encontrado" }
+  | { tipo: "no_permitida"; mensaje: string };
+
+export type ResultadoEliminacion =
+  { tipo: "eliminada" } | { tipo: "no_encontrado" } | { tipo: "no_permitida"; mensaje: string };
 
 /**
  * Arma la lista de organizadores a partir del formulario.
@@ -113,5 +123,68 @@ export class ServicioEventos {
     );
 
     return actualizado ? { tipo: "guardado", idEvento } : { tipo: "no_encontrado" };
+  }
+
+  /**
+   * Publica un evento. Un evento que ya terminó no vuelve a la cartelera: si
+   * AEUVG quiere repetir la actividad, corresponde crear una nueva con sus
+   * propias fechas, no revivir la anterior.
+   */
+  async publicar(idEvento: number): Promise<ResultadoTransicion> {
+    const evento = await this.repositorio.obtener(idEvento);
+    if (!evento) return { tipo: "no_encontrado" };
+
+    if (evento.estado === "FINALIZADO") {
+      return {
+        tipo: "no_permitida",
+        mensaje: "Un evento finalizado no puede volver a publicarse; crea uno nuevo.",
+      };
+    }
+
+    if (evento.estado === "PUBLICADO") return { tipo: "aplicada", estado: "PUBLICADO" };
+
+    await this.repositorio.cambiarEstado(idEvento, "PUBLICADO");
+
+    return { tipo: "aplicada", estado: "PUBLICADO" };
+  }
+
+  /** Cancela un evento: deja de verse en el listado público y en el calendario. */
+  async cancelar(idEvento: number): Promise<ResultadoTransicion> {
+    const evento = await this.repositorio.obtener(idEvento);
+    if (!evento) return { tipo: "no_encontrado" };
+
+    if (evento.estado === "FINALIZADO") {
+      return { tipo: "no_permitida", mensaje: "Un evento finalizado ya no puede cancelarse." };
+    }
+
+    await this.repositorio.cambiarEstado(idEvento, "CANCELADO");
+
+    return { tipo: "aplicada", estado: "CANCELADO" };
+  }
+
+  /**
+   * Elimina un evento. Solo se permite mientras no haya empezado: una vez que
+   * la actividad ocurrió forma parte del historial de AEUVG y puede estar
+   * referenciada por los eventos guardados de los estudiantes. Para retirarla
+   * de la vista está la cancelación.
+   */
+  async eliminar(idEvento: number, ahora = new Date()): Promise<ResultadoEliminacion> {
+    const evento = await this.repositorio.obtener(idEvento);
+    if (!evento) return { tipo: "no_encontrado" };
+
+    if (evento.estado === "PUBLICADO" && evento.fechaInicio.getTime() <= ahora.getTime()) {
+      return {
+        tipo: "no_permitida",
+        mensaje: "Un evento publicado que ya inició no se elimina; cancélalo para retirarlo.",
+      };
+    }
+
+    const eliminado = await this.repositorio.eliminar(idEvento);
+
+    return eliminado ? { tipo: "eliminada" } : { tipo: "no_encontrado" };
+  }
+
+  async obtener(idEvento: number) {
+    return this.repositorio.obtener(idEvento);
   }
 }
