@@ -195,6 +195,42 @@ export async function listarEventosEnRango(desde: Date, hasta: Date): Promise<Ev
   return eventos.map(mapearResumen);
 }
 
+/**
+ * Listado del panel administrativo. A diferencia del público, incluye los
+ * borradores y los cancelados, y ordena del evento más reciente al más antiguo,
+ * que es el orden en el que AEUVG trabaja sobre ellos.
+ */
+export async function listarEventosAdministracion(
+  opciones: {
+    pagina?: number;
+    porPagina?: number;
+    condiciones?: Prisma.EventoWhereInput;
+  } = {}
+): Promise<PaginaEventos> {
+  const porPagina = opciones.porPagina ?? EVENTOS_POR_PAGINA;
+  const pagina = Math.max(1, Math.trunc(opciones.pagina ?? 1));
+  const where = opciones.condiciones ?? {};
+
+  const prisma = obtenerPrisma();
+  const [total, eventos] = await Promise.all([
+    prisma.evento.count({ where }),
+    prisma.evento.findMany({
+      where,
+      orderBy: [{ fechaInicio: "desc" }, { idEvento: "desc" }],
+      skip: (pagina - 1) * porPagina,
+      take: porPagina,
+      select: seleccionResumen,
+    }),
+  ]);
+
+  return {
+    eventos: eventos.map(mapearResumen),
+    total,
+    pagina,
+    paginas: Math.max(1, Math.ceil(total / porPagina)),
+  };
+}
+
 /** Categorías activas, para las barras de filtros y el formulario del panel. */
 export async function listarCategorias(): Promise<CategoriaResumen[]> {
   return obtenerPrisma().categoriaEvento.findMany({
