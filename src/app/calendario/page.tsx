@@ -1,3 +1,4 @@
+import { AgendaCalendario } from "@/components/eventos/agenda-calendario";
 import { ControlesCalendario } from "@/components/eventos/controles-calendario";
 import { RejillaCalendario } from "@/components/eventos/rejilla-calendario";
 import { MarcoSitio } from "@/components/layout/marco-sitio";
@@ -52,7 +53,13 @@ export default async function PaginaCalendario({
 
       <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6">
         <ControlesCalendario calendario={calendario} claveHoy={claveDiaLocal(hoy)} />
-        <RejillaCalendario calendario={calendario} eventosPorDia={eventosPorDia} />
+        <div className="md:hidden">
+          <AgendaCalendario calendario={calendario} eventosPorDia={eventosPorDia} />
+        </div>
+
+        <div className="hidden md:block">
+          <RejillaCalendario calendario={calendario} eventosPorDia={eventosPorDia} />
+        </div>
       </section>
     </MarcoSitio>
   );
