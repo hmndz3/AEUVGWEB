@@ -8,6 +8,12 @@
  */
 export const ZONA_HORARIA = "America/Guatemala";
 
+/**
+ * Guatemala usa UTC-6 todo el año: no aplica horario de verano desde 2006, por
+ * lo que el desplazamiento puede escribirse fijo.
+ */
+export const DESPLAZAMIENTO_GUATEMALA = "-06:00";
+
 const LOCALE = "es-GT";
 
 const fechaLarga = new Intl.DateTimeFormat(LOCALE, {
@@ -75,4 +81,35 @@ export function formatearRango(inicio: Date, fin: Date): string {
   }
 
   return `${formatearFechaCorta(inicio)}, ${formatearHora(inicio)} a ${formatearFechaCorta(fin)}, ${formatearHora(fin)}`;
+}
+
+const campoFechaHora = new Intl.DateTimeFormat("en-CA", {
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: false,
+  timeZone: ZONA_HORARIA,
+});
+
+/**
+ * Valor para un campo datetime-local, en hora de Guatemala. El navegador
+ * muestra la hora tal cual, sin convertirla a la zona del equipo.
+ */
+export function paraCampoFechaHora(fecha: Date): string {
+  const partes = Object.fromEntries(
+    campoFechaHora.formatToParts(fecha).map((parte) => [parte.type, parte.value])
+  );
+
+  return `${partes.year}-${partes.month}-${partes.day}T${partes.hour}:${partes.minute}`;
+}
+
+/**
+ * Interpreta lo que escribió el administrador como hora de Guatemala. Sin el
+ * desplazamiento explícito, el valor del campo se leería en la zona horaria de
+ * quien lo procese y un evento podría guardarse con seis horas de diferencia.
+ */
+export function desdeCampoFechaHora(valor: string): string {
+  return `${valor}:00${DESPLAZAMIENTO_GUATEMALA}`;
 }

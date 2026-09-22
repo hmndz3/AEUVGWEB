@@ -45,15 +45,20 @@ export async function verificarAcceso(
 }
 
 /**
- * Envuelve un manejador de API para que solo se ejecute con los roles indicados.
- * Responde 401 sin sesión y 404 sin permiso, para no revelar que la ruta existe.
+ * Aplica la política de acceso sobre un manejador de API, tomando el acceso de
+ * quien se le indique. Responde 401 sin sesión y 404 sin permiso, para no
+ * revelar que la ruta existe a quien no puede usarla.
+ *
+ * Recibe el resolvedor como parámetro para poder probar la protección sin
+ * montar una petición ni una base de datos.
  */
-export function protegerRuta<T extends unknown[]>(
+export function protegerConAcceso<T extends unknown[]>(
+  obtenerAcceso: (rolesRequeridos: readonly Rol[]) => Promise<ResultadoGuardia>,
   rolesRequeridos: readonly Rol[],
   manejador: (usuario: UsuarioSesion, ...argumentos: T) => Promise<Response>
 ) {
   return async (...argumentos: T): Promise<Response> => {
-    const acceso = await verificarAcceso(rolesRequeridos);
+    const acceso = await obtenerAcceso(rolesRequeridos);
 
     if (acceso.tipo === "sin_sesion") {
       return Response.json(
@@ -71,4 +76,12 @@ export function protegerRuta<T extends unknown[]>(
 
     return manejador(acceso.usuario, ...argumentos);
   };
+}
+
+/** Envuelve un manejador de API para que solo se ejecute con los roles indicados. */
+export function protegerRuta<T extends unknown[]>(
+  rolesRequeridos: readonly Rol[],
+  manejador: (usuario: UsuarioSesion, ...argumentos: T) => Promise<Response>
+) {
+  return protegerConAcceso(verificarAcceso, rolesRequeridos, manejador);
 }
