@@ -1,22 +1,21 @@
 import type { Prisma } from "@prisma/client";
 
 import { normalizarTexto } from "@/lib/eventos/busqueda";
+import { DESPLAZAMIENTO_GUATEMALA } from "@/lib/eventos/formato-fechas";
 import type { FiltrosEventos } from "@/validators/eventos";
 
-/**
- * Guatemala usa UTC-6 todo el año: no aplica horario de verano desde 2006, por
- * lo que el desplazamiento puede escribirse fijo. Las fechas del filtro llegan
- * como día calendario ("2026-09-20") y hay que convertirlas al instante que
- * corresponde, o un evento de las 7 de la noche quedaría fuera de su propio día.
+/*
+ * Las fechas del filtro llegan como día calendario ("2026-09-20") y hay que
+ * convertirlas al instante que corresponde en Guatemala, o un evento de las 7
+ * de la noche quedaría fuera de su propio día.
  */
-const DESPLAZAMIENTO = "-06:00";
 
 export function inicioDelDiaEnGuatemala(fecha: string): Date {
-  return new Date(`${fecha}T00:00:00.000${DESPLAZAMIENTO}`);
+  return new Date(`${fecha}T00:00:00.000${DESPLAZAMIENTO_GUATEMALA}`);
 }
 
 export function finDelDiaEnGuatemala(fecha: string): Date {
-  return new Date(`${fecha}T23:59:59.999${DESPLAZAMIENTO}`);
+  return new Date(`${fecha}T23:59:59.999${DESPLAZAMIENTO_GUATEMALA}`);
 }
 
 /**
