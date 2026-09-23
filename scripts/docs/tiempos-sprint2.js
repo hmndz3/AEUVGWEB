@@ -1,14 +1,11 @@
-// Genera Documentos/AEUVG - Registro de Tiempos Sprint 2.docx
-// Uso: node scripts/docs/registro-tiempos-sprint2.js
+// Registro de tiempos del Sprint 2.
 //
-// Los deltas, los totales y el resumen por historia se calculan aquí a partir
-// de las sesiones, para que las sumas del documento no dependan de una cuenta
-// hecha a mano. El script aborta si una sesión es inconsistente o si alguien
-// deja pasar más de dos días entre sesiones.
-const { Packer } = require("docx");
-const fs = require("fs");
-const path = require("path");
-const { p, h1, h2, makeTable, spacer, cover, buildDocument } = require("./template");
+// Se mantiene como módulo y no como documento aparte: los bloques que exporta
+// se insertan al final del documento de desarrollo del sprint. Los deltas, los
+// totales y el resumen por historia se calculan aquí a partir de las sesiones,
+// para que las sumas no dependan de una cuenta hecha a mano. El módulo aborta
+// si una sesión es inconsistente o si alguien deja pasar más de dos días.
+const { p, h1, h2, makeTable, spacer } = require("./template");
 
 const MAXIMO_DIAS_SIN_TRABAJAR = 2;
 
@@ -173,7 +170,7 @@ const HARRY = {
     [
       "2026-09-23",
       "00:15",
-      "01:10",
+      "00:50",
       0,
       "Documentación",
       "Documentación",
@@ -182,11 +179,11 @@ const HARRY = {
     [
       "2026-09-23",
       "09:10",
-      "10:25",
+      "10:45",
       10,
       "Documentación",
       "Documentación",
-      "Registro de tiempos del sprint e integración de develop a main.",
+      "Registro de tiempos dentro del documento de desarrollo e integración de develop a main.",
     ],
   ],
 };
@@ -388,6 +385,8 @@ const comoFecha = (iso) => {
   return `${dia}/${mes}/${anio}`;
 };
 
+const enHoras = (minutos) => (Math.round((minutos / 60) * 10) / 10).toFixed(1);
+
 function calcular(persona) {
   let anterior = null;
 
@@ -404,8 +403,7 @@ function calcular(persona) {
       if (anterior) {
         const dias =
           (Date.parse(`${fecha}T00:00:00Z`) - Date.parse(`${anterior}T00:00:00Z`)) / 86400000;
-        if (dias < 0)
-          throw new Error(`${persona.nombre}: las sesiones no están en orden cronológico.`);
+        if (dias < 0) throw new Error(`${persona.nombre}: las sesiones no están en orden.`);
         if (dias > MAXIMO_DIAS_SIN_TRABAJAR) {
           throw new Error(`${persona.nombre}: hay ${dias} días sin trabajar antes del ${fecha}.`);
         }
@@ -462,12 +460,7 @@ const tablaRegistro = (persona) =>
     ])
   );
 
-const harry = calcular(HARRY);
-const juan = calcular(JUAN);
-const totalEquipo = harry.total + juan.total;
-const enHoras = (minutos) => (Math.round((minutos / 60) * 10) / 10).toFixed(1);
-
-const resumen = (persona) =>
+const tablaResumen = (persona) =>
   makeTable(
     [5560, 1900, 1900],
     ["Historia o actividad", "Tiempo", "Horas"],
@@ -481,76 +474,72 @@ const resumen = (persona) =>
     ]
   );
 
-const doc = buildDocument([
-  ...cover({
-    subtitle: "Registro de Tiempos del Sprint 2",
-    date: "Guatemala, 23 de septiembre del 2026",
-  }),
+/**
+ * Bloques del registro de tiempos, listos para insertarse al final del
+ * documento de desarrollo. `seccion` es el número que le corresponde dentro de
+ * ese documento.
+ */
+function bloquesRegistroTiempos(seccion) {
+  const harry = calcular(HARRY);
+  const juan = calcular(JUAN);
+  const totalEquipo = harry.total + juan.total;
 
-  h1("1. Alcance del registro"),
-  p(
-    "Este documento registra el tiempo dedicado por cada integrante del equipo al Sprint 2 - Eventos y calendario, entre el 10 y el 23 de septiembre de 2026. Cada sesión indica la fecha, la hora de inicio y de finalización, el tiempo de interrupción, el tiempo neto trabajado, la fase de la actividad y una descripción del trabajo realizado."
-  ),
-  p(
-    "El delta de tiempo corresponde a la hora de finalización menos la hora de inicio menos el tiempo de interrupción. Las interrupciones son pausas cortas dentro de una misma sesión. Las sesiones de planificación y de revisión conjunta aparecen en ambos registros con el mismo horario, por tratarse de trabajo realizado en conjunto."
-  ),
-  p(
-    `Los tiempos del sprint suman ${enHoras(totalEquipo)} horas de equipo: ${enHoras(harry.total)} horas de Harry Méndez y ${enHoras(juan.total)} horas de Juan Gabriel Gualim. La estimación de la planificación fue de 34 horas, por lo que el trabajo real se ubicó un 8% por debajo de lo estimado, una desviación considerablemente menor a la del Sprint 1.`
-  ),
+  const bloques = [
+    h1(`${seccion}. Registro de tiempos`),
+    p(
+      "Esta sección registra el tiempo dedicado por cada integrante al Sprint 2, entre el 10 y el 23 de septiembre de 2026. Cada sesión indica la fecha, la hora de inicio y de finalización, el tiempo de interrupción, el tiempo neto trabajado, la fase de la actividad y una descripción del trabajo realizado."
+    ),
+    p(
+      "El delta de tiempo corresponde a la hora de finalización menos la hora de inicio menos el tiempo de interrupción. Las interrupciones son pausas cortas dentro de una misma sesión. Las sesiones de planificación y de revisión conjunta aparecen en ambos registros con el mismo horario, por tratarse de trabajo realizado en conjunto."
+    ),
+    p(
+      `El sprint sumó ${enHoras(totalEquipo)} horas de equipo: ${enHoras(harry.total)} horas de Harry Méndez y ${enHoras(juan.total)} horas de Juan Gabriel Gualim, frente a las 34 horas estimadas en la planificación. El trabajo real se ubicó cerca de un 7% por debajo de lo estimado, una desviación considerablemente menor a la del Sprint 1 y que confirma la recalibración hecha al inicio de este sprint.`
+    ),
 
-  h1(`2. ${HARRY.nombre}`),
-  p(`Carné: ${HARRY.carne}`),
-  spacer(),
-  tablaRegistro(harry),
-  spacer(),
-  h2("2.1. Resumen por historia de usuario"),
-  spacer(),
-  resumen(harry),
+    h2(`${seccion}.1. ${HARRY.nombre} - ${HARRY.carne}`),
+    spacer(),
+    tablaRegistro(harry),
+    spacer(),
+    p("Resumen por historia de usuario:"),
+    spacer(),
+    tablaResumen(harry),
 
-  h1(`3. ${JUAN.nombre}`),
-  p(`Carné: ${JUAN.carne}`),
-  spacer(),
-  tablaRegistro(juan),
-  spacer(),
-  h2("3.1. Resumen por historia de usuario"),
-  spacer(),
-  resumen(juan),
+    h2(`${seccion}.2. ${JUAN.nombre} - ${JUAN.carne}`),
+    spacer(),
+    tablaRegistro(juan),
+    spacer(),
+    p("Resumen por historia de usuario:"),
+    spacer(),
+    tablaResumen(juan),
 
-  h1("4. Resumen del equipo"),
-  spacer(),
-  makeTable(
-    [4560, 1600, 1600, 1600],
-    ["Integrante", "Sesiones", "Tiempo", "Horas"],
-    [
-      [HARRY.nombre, String(harry.filas.length), comoHoraMinuto(harry.total), enHoras(harry.total)],
-      [JUAN.nombre, String(juan.filas.length), comoHoraMinuto(juan.total), enHoras(juan.total)],
+    h2(`${seccion}.3. Resumen del equipo`),
+    spacer(),
+    makeTable(
+      [4560, 1600, 1600, 1600],
+      ["Integrante", "Sesiones", "Tiempo", "Horas"],
       [
-        "Total del equipo",
-        String(harry.filas.length + juan.filas.length),
-        comoHoraMinuto(totalEquipo),
-        enHoras(totalEquipo),
-      ],
-    ]
-  ),
-  spacer(),
-  p(
-    "El reparto del trabajo siguió las responsabilidades acordadas: Harry Méndez asumió el modelo de datos, las consultas, los servicios de administración y las pruebas automatizadas; Juan Gabriel Gualim, las pantallas del módulo, el calendario y la integración con el sistema de diseño. Las sesiones en las que participaron ambos corresponden a la planificación del sprint y a la revisión final del código."
-  ),
-]);
+        [
+          HARRY.nombre,
+          String(harry.filas.length),
+          comoHoraMinuto(harry.total),
+          enHoras(harry.total),
+        ],
+        [JUAN.nombre, String(juan.filas.length), comoHoraMinuto(juan.total), enHoras(juan.total)],
+        [
+          "Total del equipo",
+          String(harry.filas.length + juan.filas.length),
+          comoHoraMinuto(totalEquipo),
+          enHoras(totalEquipo),
+        ],
+      ]
+    ),
+    spacer(),
+    p(
+      "El reparto del trabajo siguió las responsabilidades acordadas: Harry Méndez asumió el modelo de datos, las consultas, los servicios de administración y las pruebas automatizadas; Juan Gabriel Gualim, las pantallas del módulo, el calendario y la integración con el sistema de diseño. Las sesiones en las que participaron ambos corresponden a la planificación del sprint y a la revisión final del código. El resumen por historia asigna cada sesión a la historia predominante en ella."
+    ),
+  ];
 
-const out = path.join(
-  __dirname,
-  "..",
-  "..",
-  "Documentos",
-  "AEUVG - Registro de Tiempos Sprint 2.docx"
-);
-Packer.toBuffer(doc).then((buf) => {
-  fs.writeFileSync(out, buf);
-  console.log("Documento generado:", out);
-  console.log(
-    `Harry ${enHoras(harry.total)} h en ${harry.filas.length} sesiones; ` +
-      `Juan Gabriel ${enHoras(juan.total)} h en ${juan.filas.length} sesiones; ` +
-      `equipo ${enHoras(totalEquipo)} h.`
-  );
-});
+  return { bloques, harry, juan, totalEquipo, enHoras };
+}
+
+module.exports = { bloquesRegistroTiempos };
