@@ -4,6 +4,9 @@ const { Packer } = require("docx");
 const fs = require("fs");
 const path = require("path");
 const { p, bullet, h1, h2, makeTable, spacer, cover, buildDocument } = require("./template");
+const { bloquesRegistroTiempos } = require("./tiempos-sprint2");
+
+const tiempos = bloquesRegistroTiempos(10);
 
 const doc = buildDocument([
   ...cover({
@@ -250,7 +253,7 @@ const doc = buildDocument([
   // ---------- 9 ----------
   h1("9. Estado del sprint"),
   p(
-    "Las seis historias comprometidas para el Sprint 2 se encuentran completadas. La plataforma cuenta ahora con:"
+    `Las seis historias comprometidas para el Sprint 2 se encuentran completadas, con ${tiempos.enHoras(tiempos.totalEquipo)} horas de trabajo de equipo frente a las 34 estimadas. El detalle por sesión se encuentra en la sección 10. La plataforma cuenta ahora con:`
   ),
   bullet("El catálogo de categorías completo, con sus colores alineados al sistema de diseño."),
   bullet("La cartelera de eventos con su paginación, sus estados vacíos y su vista de detalle."),
@@ -269,6 +272,9 @@ const doc = buildDocument([
   p(
     "El desarrollo continúa en el Sprint 3 con las secciones de asociaciones y clubes, el perfil de usuario y la función de guardar eventos, que se apoya directamente en el módulo entregado en este sprint."
   ),
+
+  // ---------- 10. Registro de tiempos ----------
+  ...tiempos.bloques,
 ]);
 
 const out = path.join(__dirname, "..", "..", "Documentos", "AEUVG - Desarrollo Sprint 2.docx");
