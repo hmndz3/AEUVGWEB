@@ -1,7 +1,6 @@
 import Image from "next/image";
 
 import { MarcoSitio } from "@/components/layout/marco-sitio";
-import { Tarjeta } from "@/components/ui/tarjeta";
 import {
   inicialesDeNombre,
   obtenerAsociacionGeneral,
@@ -17,13 +16,17 @@ export const metadata = {
     "Misión, visión y junta directiva de la Asociación General de Estudiantes de la Universidad del Valle de Guatemala.",
 };
 
-const COLORES_AVATAR = [
-  "bg-primario",
-  "bg-coral",
-  "bg-turquesa",
-  "bg-magenta",
-  "bg-lima",
-  "bg-cielo",
+// Un acento del logo por tarjeta, para que la cuadrícula no se lea plana pese a
+// que todas las fotografías comparten el mismo fondo de estudio.
+const ACENTOS = [
+  { barra: "bg-primario", inicial: "bg-primario" },
+  { barra: "bg-coral", inicial: "bg-coral" },
+  { barra: "bg-turquesa", inicial: "bg-turquesa" },
+  { barra: "bg-magenta", inicial: "bg-magenta" },
+  { barra: "bg-ambar", inicial: "bg-ambar" },
+  { barra: "bg-cielo", inicial: "bg-cielo" },
+  { barra: "bg-lima", inicial: "bg-lima" },
+  { barra: "bg-lavanda", inicial: "bg-lavanda" },
 ];
 
 function TarjetaIntegrante({
@@ -33,29 +36,43 @@ function TarjetaIntegrante({
   integrante: IntegranteResumen;
   indice: number;
 }) {
-  return (
-    <Tarjeta className="flex flex-col items-center text-center">
-      {integrante.fotoUrl ? (
-        <Image
-          src={integrante.fotoUrl}
-          alt={integrante.nombre}
-          width={112}
-          height={112}
-          className="size-28 rounded-full object-cover"
-        />
-      ) : (
-        <span
-          aria-hidden
-          className={`${COLORES_AVATAR[indice % COLORES_AVATAR.length]} grid size-28 place-items-center rounded-full text-2xl font-extrabold text-white`}
-        >
-          {inicialesDeNombre(integrante.nombre)}
-        </span>
-      )}
+  const acento = ACENTOS[indice % ACENTOS.length];
 
-      <p className="text-texto mt-4 font-bold">{integrante.nombre}</p>
-      <p className="text-primario text-sm font-semibold">{integrante.cargo}</p>
-      <p className="text-texto-suave mt-1 text-xs">{integrante.periodo}</p>
-    </Tarjeta>
+  return (
+    <article className="group border-borde bg-superficie flex flex-col overflow-hidden rounded-[1.25rem] border shadow-sm transition-shadow hover:shadow-lg">
+      <span aria-hidden className={`h-1.5 w-full ${acento.barra}`} />
+
+      <div className="bg-superficie-suave relative aspect-3/4 w-full overflow-hidden">
+        {integrante.fotoUrl ? (
+          <Image
+            src={integrante.fotoUrl}
+            alt={`Fotografía de ${integrante.nombre}`}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+          />
+        ) : (
+          <span
+            aria-hidden
+            className={`${acento.inicial} grid size-full place-items-center text-5xl font-extrabold text-white`}
+          >
+            {inicialesDeNombre(integrante.nombre)}
+          </span>
+        )}
+      </div>
+
+      <div className="flex flex-1 flex-col px-5 py-4">
+        <p className="text-texto text-base leading-snug font-bold break-words">
+          {integrante.nombre}
+        </p>
+        <p className="text-primario mt-1 text-sm leading-snug font-semibold">{integrante.cargo}</p>
+        {integrante.periodo && (
+          <p className="text-texto-suave mt-auto pt-2 text-xs font-medium tracking-wide uppercase">
+            Junta Directiva {integrante.periodo}
+          </p>
+        )}
+      </div>
+    </article>
   );
 }
 
@@ -114,7 +131,11 @@ export default async function PaginaSobreAeuvg() {
 
         <section>
           <h2 className="text-texto text-2xl font-extrabold tracking-tight">Junta Directiva</h2>
-          <div className="mt-6">
+          <p className="text-texto-suave mt-2 max-w-3xl leading-relaxed">
+            Las personas electas por el estudiantado para representarlo y coordinar el trabajo de la
+            asociación durante el periodo vigente.
+          </p>
+          <div className="mt-8">
             {asociacion && asociacion.integrantes.length > 0 ? (
               <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
                 {asociacion.integrantes.map((integrante, indice) => (
