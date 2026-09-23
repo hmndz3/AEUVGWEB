@@ -12,10 +12,14 @@ export function BarraLateralAdmin() {
 
   return (
     <aside className="bg-texto flex w-full shrink-0 flex-col text-white md:sticky md:top-0 md:h-dvh md:w-64">
-      <Link href="/" className="flex items-center gap-3 px-5 py-6">
-        <Image src="/logo-aeuvg.png" alt="AEUVG" width={36} height={36} className="rounded-full" />
+      <Link
+        href="/"
+        aria-label="AEUVG, ir a la página principal"
+        className="flex items-center gap-3 px-5 py-6 transition-opacity hover:opacity-90"
+      >
+        <Image src="/logo-aeuvg.png" alt="" width={44} height={44} className="rounded-full" />
         <span className="flex flex-col leading-tight">
-          <span className="font-extrabold">AEUVG</span>
+          <span className="text-lg font-extrabold">AEUVG</span>
           <span className="text-[11px] text-white/60">Panel administrativo</span>
         </span>
       </Link>
