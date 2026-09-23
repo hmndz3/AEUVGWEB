@@ -45,10 +45,12 @@ export default async function PaginaAdminEventos({
     ESTADOS.some((opcion) => opcion.valor === estadoPedido) ? estadoPedido : ""
   ) as Estado;
   const busqueda = valor(parametros.q).trim();
-  const pagina = Number(valor(parametros.pagina)) || 1;
+  const paginaPedida = Number(valor(parametros.pagina)) || 1;
 
-  const { eventos, total, paginas } = await listarEventosAdministracion({
-    pagina,
+  // La consulta corrige una página fuera de rango; la paginación debe pintar
+  // esa misma, no la que venía en la dirección.
+  const { eventos, total, pagina, paginas } = await listarEventosAdministracion({
+    pagina: paginaPedida,
     condiciones: {
       ...(estado ? { estado } : {}),
       ...(busqueda ? { textoBusqueda: { contains: normalizarTexto(busqueda) } } : {}),

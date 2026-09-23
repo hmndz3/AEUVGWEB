@@ -11,7 +11,12 @@ import type {
   RepositorioEventos,
 } from "../src/lib/eventos/repositorio-eventos";
 import { construirOrganizadores, ServicioEventos } from "../src/lib/eventos/servicio-eventos";
-import { esquemaEventoAdmin, type DatosEventoAdmin } from "../src/validators/evento-admin";
+import {
+  erroresPorCampo,
+  esquemaEventoAdmin,
+  ETIQUETAS_CAMPO_EVENTO,
+  type DatosEventoAdmin,
+} from "../src/validators/evento-admin";
 
 const FORMULARIO = {
   nombre: "Feria de voluntariado estudiantil",
@@ -132,13 +137,14 @@ test("un evento que empieza y termina a la misma hora sí es válido", () => {
   assert.equal(resultado.success, true);
 });
 
-test("no se acepta un evento sin ningún organizador", () => {
+test("un evento sin organizador es válido: AEUVG publica actividades propias", () => {
   const resultado = esquemaEventoAdmin.safeParse({ ...FORMULARIO, idAsociacion: "" });
 
-  assert.equal(resultado.success, false);
+  assert.equal(resultado.success, true);
+  assert.equal(resultado.data?.idAsociacion, null);
 });
 
-test("una unidad de UVG basta como organizador", () => {
+test("una unidad de UVG también sirve como organizador", () => {
   const resultado = esquemaEventoAdmin.safeParse({
     ...FORMULARIO,
     idAsociacion: "",
@@ -146,6 +152,64 @@ test("una unidad de UVG basta como organizador", () => {
   });
 
   assert.equal(resultado.success, true);
+  assert.equal(resultado.data?.unidadUvg, "Vida Estudiantil");
+});
+
+test("sin organizadores no se crea ninguna fila de organizador", () => {
+  const organizadores = construirOrganizadores(datosValidos({ idAsociacion: "" }));
+
+  assert.deepEqual(organizadores, []);
+});
+
+test("todos los mensajes de error del formulario están en español", () => {
+  const resultado = esquemaEventoAdmin.safeParse({
+    nombre: "",
+    descripcion: "",
+    idCategoriaEvento: "",
+    tipoActividad: "",
+    fechaInicio: "",
+    fechaFin: "",
+    ubicacion: "",
+    cupo: "abc",
+    informacionAdicional: "",
+    imagenUrl: "no-es-url",
+    destacado: false,
+    idAsociacion: "x",
+    idClub: "",
+    unidadUvg: "",
+  });
+
+  assert.equal(resultado.success, false);
+  const mensajes = Object.values(erroresPorCampo(resultado.error!));
+
+  assert.ok(mensajes.length >= 8);
+  for (const mensaje of mensajes) {
+    // Los mensajes de Zod en inglés empiezan por "Invalid", "Too small", etc.
+    assert.doesNotMatch(mensaje, /invalid|expected|required|too (small|big)/i, mensaje);
+    assert.match(mensaje, /\.$/, `sin punto final: ${mensaje}`);
+  }
+});
+
+test("cada campo del formulario tiene una etiqueta legible para el resumen de errores", () => {
+  const campos = [
+    "nombre",
+    "descripcion",
+    "idCategoriaEvento",
+    "tipoActividad",
+    "fechaInicio",
+    "fechaFin",
+    "ubicacion",
+    "cupo",
+    "informacionAdicional",
+    "imagenUrl",
+    "idAsociacion",
+    "idClub",
+    "unidadUvg",
+  ];
+
+  for (const campo of campos) {
+    assert.ok(ETIQUETAS_CAMPO_EVENTO[campo], `falta la etiqueta de ${campo}`);
+  }
 });
 
 test("el nombre y la descripción tienen un mínimo exigible", () => {

@@ -156,7 +156,7 @@ const doc = buildDocument([
     "La lógica de creación y edición se implementó siguiendo la misma separación entre servicio y repositorio que usa la autenticación desde el Sprint 1, lo que permite probarla sin base de datos. El formulario se valida con el mismo esquema en el cliente y en el servidor, y se comprueba además contra la base lo que el esquema no puede saber por sí solo: que la categoría exista y esté activa, y que la asociación o el club seleccionados existan."
   ),
   p(
-    "Se exige al menos un organizador, ya sea una asociación, un club o una unidad de UVG, porque sin él el estudiante no sabe a quién corresponde la actividad, que es justamente lo que AEUVG pidió dejar claro en cada evento. El primero que se indica queda como organizador principal y es el que encabeza la tarjeta. Cada organizador guarda una sola referencia, como exige la restricción de la tabla, y al editar un evento se reemplazan en bloque dentro de la misma transacción, de modo que no quede un estado intermedio sin organizador."
+    "Los organizadores son opcionales. Inicialmente se exigía al menos uno, pero durante la revisión del sprint AEUVG señaló que publica actividades propias que no corresponden a ninguna asociación ni club, y la regla obligaba a inventar un organizador solo para poder guardar el evento. Cuando sí se indican, el primero queda como organizador principal y es el que encabeza la tarjeta. Cada organizador guarda una sola referencia, como exige la restricción de la tabla, y al editar un evento se reemplazan en bloque dentro de la misma transacción."
   ),
 
   h2("6.2. Estados de publicación"),
@@ -268,6 +268,9 @@ const doc = buildDocument([
   bullet("La página principal mostrando las actividades destacadas y los próximos eventos reales."),
   p(
     "Queda pendiente de AEUVG la carga de sus eventos reales y la definición del servicio de imágenes que contratará; ninguna de las dos bloquea el sprint, ya que el módulo funciona con la información de prueba y sin proveedor de imágenes. Continúa también en gestión el trámite del dominio institucional iniciado en el Sprint 1."
+  ),
+  p(
+    "Tras la revisión del sprint se incorporaron las observaciones recibidas, sin alcance nuevo: los organizadores del evento pasaron a ser opcionales; el formulario del panel resume arriba los campos que impiden guardar y lleva la vista al primero de ellos, ya que en un formulario largo un error en un campo superior daba la impresión de que el botón no respondía; los servicios de administración responden ahora con un mensaje explicativo cuando la base no está disponible, en lugar del error genérico del framework; se revisaron los mensajes de error de todo el proyecto para que estén en español y describan qué corregir sin revelar información de la cuenta; el registro separa nombres y apellidos en dos campos; el logotipo de AEUVG se presenta con mayor tamaño y enlaza a la página principal desde el encabezado, el pie y el panel; y el panel administrativo unificó las convocatorias de horas dentro de la sección de horas beca, y las postulaciones dentro de la sección de tutorías, quedando en nueve secciones."
   ),
   p(
     "El desarrollo continúa en el Sprint 3 con las secciones de asociaciones y clubes, el perfil de usuario y la función de guardar eventos, que se apoya directamente en el módulo entregado en este sprint."
