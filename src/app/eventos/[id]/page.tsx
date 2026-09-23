@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 
 import { ImagenEvento } from "@/components/eventos/imagen-evento";
 import { MarcoSitio } from "@/components/layout/marco-sitio";
@@ -13,10 +14,17 @@ export const dynamic = "force-dynamic";
 
 type Props = { params: Promise<{ id: string }> };
 
+/**
+ * La página se consulta dos veces por petición, una para los metadatos y otra
+ * para el contenido. La memoria de React comparte el resultado entre ambas, de
+ * modo que la base reciba una sola consulta.
+ */
+const obtenerEvento = cache(async (id: string) => obtenerEventoPublicado(Number(id)));
+
 /** El título de la pestaña es el nombre del evento, no el genérico de la sección. */
 export async function generateMetadata({ params }: Props) {
   const { id } = await params;
-  const evento = await obtenerEventoPublicado(Number(id));
+  const evento = await obtenerEvento(id);
 
   if (!evento) return { title: "Evento no encontrado" };
 
@@ -34,7 +42,7 @@ function Dato({ etiqueta, valor }: { etiqueta: string; valor: string }) {
 
 export default async function PaginaEvento({ params }: Props) {
   const { id } = await params;
-  const evento = await obtenerEventoPublicado(Number(id));
+  const evento = await obtenerEvento(id);
 
   // Un evento inexistente, en borrador o cancelado responde igual: no existe
   // para quien no administra la plataforma.
