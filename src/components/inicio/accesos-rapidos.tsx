@@ -3,10 +3,17 @@ import Link from "next/link";
 const ACCESOS = [
   {
     href: "/eventos",
-    titulo: "Eventos y calendario",
-    descripcion: "Consulta las actividades del ciclo y guarda las que te interesen.",
+    titulo: "Eventos",
+    descripcion: "Consulta las actividades del ciclo, con sus fechas, lugares y organizadores.",
     clase: "bg-primario-suave text-primario",
     ancho: "md:col-span-2",
+  },
+  {
+    href: "/calendario",
+    titulo: "Calendario",
+    descripcion: "Revisa el mes o la semana completa de un vistazo.",
+    clase: "bg-cielo/15 text-[#0b5f8a]",
+    ancho: "",
   },
   {
     href: "/iniciar-sesion",
@@ -27,7 +34,7 @@ const ACCESOS = [
     titulo: "Asociaciones y clubes",
     descripcion: "Conoce las agrupaciones estudiantiles y cómo integrarte.",
     clase: "bg-magenta/12 text-[#a3145f]",
-    ancho: "md:col-span-2",
+    ancho: "",
   },
 ];
 

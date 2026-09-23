@@ -326,54 +326,68 @@ export const CARRERAS_INICIALES: readonly CarreraInicial[] = [
 ];
 
 // Categorías editables y específicas; TipoActividad conserva la clasificación general cerrada.
+// Los colores son variantes oscurecidas de los acentos del logo de AEUVG, de modo que el
+// nombre de la categoría se lea en blanco sobre el color (ver docs/diseno/sistema-diseno.md).
 export const CATEGORIAS_EVENTO_INICIALES: readonly CategoriaEventoInicial[] = [
   {
     nombre: "Venta",
     descripcion:
       "Venta de productos o servicios organizada por AEUVG u otra organización estudiantil.",
-    color: "#2563EB",
+    color: "#0B7FB5",
     activo: true,
   },
   {
     nombre: "Festival",
     descripcion: "Festival o actividad amplia de convivencia para la comunidad universitaria.",
-    color: "#7C3AED",
+    color: "#5A35E8",
     activo: true,
   },
   {
     nombre: "Proyección",
     descripcion: "Proyección audiovisual o presentación abierta a la comunidad universitaria.",
-    color: "#0891B2",
+    color: "#00806B",
     activo: true,
   },
   {
     nombre: "Convocatoria de horas beca",
     descripcion: "Convocatoria para apoyar actividades y obtener horas beca con AEUVG.",
-    color: "#D97706",
+    color: "#A66A00",
     activo: true,
   },
   {
     nombre: "Recaudación de fondos",
     descripcion: "Actividad destinada a recaudar fondos para una iniciativa estudiantil.",
-    color: "#059669",
+    color: "#4A8C22",
     activo: true,
   },
   {
     nombre: "Espíritu universitario",
     descripcion: "Actividad que fortalece la identidad, participación y convivencia universitaria.",
-    color: "#16A34A",
+    color: "#D93F3C",
     activo: true,
   },
   {
     nombre: "Colaboración estudiantil",
     descripcion: "Actividad realizada en colaboración con asociaciones o clubes estudiantiles.",
-    color: "#DB2777",
+    color: "#C4187A",
     activo: true,
   },
   {
     nombre: "Colaboración institucional",
     descripcion: "Actividad realizada junto con una unidad administrativa de UVG.",
-    color: "#4F46E5",
+    color: "#7B4FD1",
+    activo: true,
+  },
+  {
+    nombre: "Torneo deportivo",
+    descripcion: "Competencia o encuentro deportivo entre facultades, asociaciones o clubes.",
+    color: "#0E7490",
+    activo: true,
+  },
+  {
+    nombre: "Conferencia o taller",
+    descripcion: "Charla, conferencia o taller formativo dirigido a la comunidad estudiantil.",
+    color: "#C2410C",
     activo: true,
   },
 ];

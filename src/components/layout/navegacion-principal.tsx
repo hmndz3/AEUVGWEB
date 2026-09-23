@@ -18,6 +18,7 @@ type Enlace = {
 const ENLACES: Enlace[] = [
   { href: "/", texto: "Inicio" },
   { href: "/eventos", texto: "Eventos" },
+  { href: "/calendario", texto: "Calendario" },
   { href: "/asociaciones", texto: "Asociaciones" },
   { href: "/clubes", texto: "Clubes" },
   { href: "/tutorias", texto: "Tutorías" },

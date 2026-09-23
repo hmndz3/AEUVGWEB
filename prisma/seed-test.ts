@@ -2,6 +2,8 @@ import "dotenv/config";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 
+import { textoDeBusqueda } from "../src/lib/eventos/busqueda";
+
 import {
   CARNETS_PRUEBA,
   CODIGOS_CURSOS_PRUEBA,
@@ -401,6 +403,62 @@ async function cargarDatos(tx: Prisma.TransactionClient): Promise<Resultados> {
       estado: "FINALIZADO" as const,
       destacado: false,
     },
+    {
+      nombre: NOMBRES_PRUEBA.eventoVariosDias,
+      categoria: "Venta",
+      descripcion: "Evento ficticio de tres días para revisar el calendario.",
+      fechaInicio: FECHAS_PRUEBA.eventoVariosDiasInicio,
+      fechaFin: FECHAS_PRUEBA.eventoVariosDiasFin,
+      ubicacion: "Corredor ficticio de pruebas",
+      imagenUrl: null,
+      tipoActividad: "OTRO" as const,
+      informacionAdicional: "Debe aparecer en los tres días que abarca.",
+      cupo: null,
+      estado: "PUBLICADO" as const,
+      destacado: true,
+    },
+    {
+      nombre: NOMBRES_PRUEBA.eventoCancelado,
+      categoria: "Torneo deportivo",
+      descripcion: "Evento ficticio cancelado; no debe aparecer en el listado público.",
+      fechaInicio: FECHAS_PRUEBA.eventoCanceladoInicio,
+      fechaFin: FECHAS_PRUEBA.eventoCanceladoFin,
+      ubicacion: "Cancha ficticia TEST-A",
+      imagenUrl: null,
+      tipoActividad: "RECREATIVA" as const,
+      informacionAdicional: null,
+      cupo: 60,
+      estado: "CANCELADO" as const,
+      destacado: false,
+    },
+    {
+      nombre: NOMBRES_PRUEBA.eventoBorrador,
+      categoria: "Conferencia o taller",
+      descripcion: "Borrador ficticio; solo debe verse desde el panel administrativo.",
+      fechaInicio: FECHAS_PRUEBA.eventoBorradorInicio,
+      fechaFin: FECHAS_PRUEBA.eventoBorradorFin,
+      ubicacion: "Auditorio ficticio TEST-B",
+      imagenUrl: null,
+      tipoActividad: "ACADEMICA" as const,
+      informacionAdicional: null,
+      cupo: 30,
+      estado: "BORRADOR" as const,
+      destacado: false,
+    },
+    {
+      nombre: NOMBRES_PRUEBA.eventoLejano,
+      categoria: "Espíritu universitario",
+      descripcion: "Evento publicado y lejano, para revisar el orden del listado.",
+      fechaInicio: FECHAS_PRUEBA.eventoLejanoInicio,
+      fechaFin: FECHAS_PRUEBA.eventoLejanoFin,
+      ubicacion: "Plaza ficticia norte",
+      imagenUrl: null,
+      tipoActividad: "RECREATIVA" as const,
+      informacionAdicional: null,
+      cupo: null,
+      estado: "PUBLICADO" as const,
+      destacado: false,
+    },
   ];
 
   for (const evento of eventos) {
@@ -412,6 +470,7 @@ async function cargarDatos(tx: Prisma.TransactionClient): Promise<Resultados> {
       ...valoresEvento,
       idCategoriaEvento: categoria.idCategoriaEvento,
       creadoPor: idAdministrador,
+      textoBusqueda: textoDeBusqueda(evento),
     };
     await sincronizar({
       tabla: "Evento",
@@ -468,6 +527,38 @@ async function cargarDatos(tx: Prisma.TransactionClient): Promise<Resultados> {
       unidadUvg: null,
       organizadorPrincipal: true,
       clave: "asociacion",
+    },
+    {
+      idEvento: evento(NOMBRES_PRUEBA.eventoVariosDias).idEvento,
+      idAsociacion: asociacion.idAsociacion,
+      idClub: null,
+      unidadUvg: null,
+      organizadorPrincipal: true,
+      clave: "asociacion",
+    },
+    {
+      idEvento: evento(NOMBRES_PRUEBA.eventoCancelado).idEvento,
+      idAsociacion: null,
+      idClub: club.idClub,
+      unidadUvg: null,
+      organizadorPrincipal: true,
+      clave: "club",
+    },
+    {
+      idEvento: evento(NOMBRES_PRUEBA.eventoBorrador).idEvento,
+      idAsociacion: null,
+      idClub: null,
+      unidadUvg: `${MARCADOR_PRUEBA} Unidad de Vida Estudiantil Demo`,
+      organizadorPrincipal: true,
+      clave: "unidad",
+    },
+    {
+      idEvento: evento(NOMBRES_PRUEBA.eventoLejano).idEvento,
+      idAsociacion: null,
+      idClub: club.idClub,
+      unidadUvg: null,
+      organizadorPrincipal: true,
+      clave: "club",
     },
   ];
   for (const organizador of organizadores) {

@@ -14,7 +14,7 @@ Plataforma web centralizada de la **Asociación General de Estudiantes de la Uni
 | Framework     | Next.js 16 (App Router) + TypeScript         |
 | Estilos / UI  | Tailwind CSS 4 + componentes propios         |
 | Base de datos | PostgreSQL 17 (Railway)                      |
-| ORM           | Prisma (a partir de HU-02)                   |
+| ORM           | Prisma                                       |
 | Autenticación | scrypt y jose (implementación propia)        |
 | Contenedores  | Docker + Docker Compose                      |
 | Hosting       | Railway (despliegue automático desde `main`) |
@@ -89,6 +89,9 @@ envía correos reales; consulta ese documento antes de habilitar Resend.
 El funcionamiento del inicio de sesión, sesiones y credenciales ficticias locales se documenta en
 [docs/autenticacion-sesion.md](docs/autenticacion-sesion.md).
 
+El módulo de eventos (cartelera, calendario, filtros, administración e imágenes) se documenta en
+[docs/modulo-eventos.md](docs/modulo-eventos.md).
+
 ## Flujo de trabajo con Git
 
 - **`main`** — rama principal. Cada push genera un despliegue automático en Railway (producción).
@@ -101,7 +104,7 @@ El funcionamiento del inicio de sesión, sesiones y credenciales ficticias local
 ```
 ├── Documentos/          # Documentación formal del proyecto y de los sprints
 ├── docs/                # Documentación técnica (stack, despliegue)
-├── prisma/              # Esquema y migraciones de la base de datos (desde HU-02)
+├── prisma/              # Esquema, migraciones y datos de prueba de la base de datos
 ├── public/              # Archivos estáticos
 ├── src/
 │   ├── app/             # Rutas y páginas (frontend) y endpoints /api (backend)

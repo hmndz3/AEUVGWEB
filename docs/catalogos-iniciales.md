@@ -37,4 +37,8 @@ La página pública presenta algunas carreras en más de una unidad académica; 
 
 Las denominaciones "Bridge Business School", "Design Innovation & Arts School", "Escuela de Arquitectura" y "Colegio Universitario" se almacenan en `Facultad` porque el esquema actual usa ese modelo para toda unidad académica. No se creó una migración ni se amplió el alcance del modelo para distinguir tipos de unidad, campus o modalidades.
 
-Los colores de categorías usan el formato hexadecimal `#RRGGBB` y son valores operativos provisionales; no sustituyen las decisiones del sistema de diseño de HU-03.
+## Categorías de eventos
+
+El catálogo contiene diez categorías administrables. Las ocho iniciales se definieron en T-02.5 y en T-07.1 se agregaron `Torneo deportivo` y `Conferencia o taller`, que aparecían en el calendario de actividades entregado por AEUVG y no tenían dónde clasificarse.
+
+Los colores usan el formato hexadecimal `#RRGGBB` y dejaron de ser provisionales: cada categoría toma una variante oscurecida de un acento del logo, tal como los define el sistema de diseño en `docs/diseno/sistema-diseno.md`. Se oscurecieron porque el nombre de la categoría se muestra en blanco sobre el color, y los acentos en su tono original no alcanzan el contraste necesario para texto pequeño.
