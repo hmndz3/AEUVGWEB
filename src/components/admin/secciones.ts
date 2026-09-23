@@ -22,24 +22,20 @@ export const SECCIONES_ADMIN = [
     descripcion: "Clubes estudiantiles y sus medios de contacto.",
   },
   {
+    // Las convocatorias para realizar horas viven dentro de esta sección: son
+    // el origen de los registros que aquí mismo se acreditan.
     href: "/admin/horas-beca",
     texto: "Horas beca",
-    descripcion: "Registro, acreditación, importación y exportación de horas.",
+    descripcion:
+      "Registro y acreditación de horas, convocatorias para realizarlas, importación y exportación.",
   },
   {
-    href: "/admin/oportunidades",
-    texto: "Oportunidades de horas",
-    descripcion: "Convocatorias para realizar horas beca con AEUVG.",
-  },
-  {
-    href: "/admin/tutores",
-    texto: "Tutores",
-    descripcion: "Tutores activos, cursos que imparten y disponibilidad.",
-  },
-  {
-    href: "/admin/postulaciones",
-    texto: "Postulaciones",
-    descripcion: "Solicitudes de estudiantes para convertirse en tutores.",
+    // Tutores y postulaciones son dos momentos del mismo trámite, así que se
+    // administran juntos en lugar de en dos secciones separadas.
+    href: "/admin/tutorias",
+    texto: "Tutorías",
+    descripcion:
+      "Postulaciones de estudiantes, tutores activos, cursos que imparten y disponibilidad.",
   },
   {
     href: "/admin/estudiantes",
