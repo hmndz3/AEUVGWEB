@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import { CargaImagen } from "@/components/admin/carga-imagen";
 import { Alerta } from "@/components/ui/alerta";
 import { Boton } from "@/components/ui/boton";
 import type { CategoriaResumen, OrganizadoresDisponibles } from "@/lib/eventos/consultas-eventos";
@@ -266,7 +267,7 @@ export function FormularioEvento({
         etiqueta="Imagen del evento"
         nombre="imagenUrl"
         error={errores.imagenUrl}
-        ayuda="Dirección de la imagen. Si el evento no tiene, se muestra el color de su categoría."
+        ayuda="Sube un archivo JPEG, PNG o WebP, o pega la dirección de una imagen. Si el evento no tiene imagen, se muestra el color de su categoría."
       >
         <input
           id="imagenUrl"
@@ -275,6 +276,11 @@ export function FormularioEvento({
           onChange={(evento) => cambiar("imagenUrl", evento.target.value)}
           maxLength={500}
           className={claseCampo}
+        />
+        <CargaImagen
+          valor={valores.imagenUrl}
+          onCambio={(url) => cambiar("imagenUrl", url)}
+          onError={(mensaje) => setErrores((previos) => ({ ...previos, imagenUrl: mensaje ?? "" }))}
         />
       </Campo>
 
