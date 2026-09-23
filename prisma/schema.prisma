@@ -329,6 +329,9 @@ model Evento {
   imagenUrl            String?             @map("imagen_url") @db.VarChar(500)
   tipoActividad        TipoActividad       @map("tipo_actividad")
   informacionAdicional String?             @map("informacion_adicional") @db.Text
+  // Copia sin acentos ni mayúsculas de nombre, descripción y ubicación.
+  // La mantiene el servicio de eventos; ver src/lib/eventos/busqueda.ts.
+  textoBusqueda        String              @default("") @map("texto_busqueda") @db.Text
   cupo                 Int?
   estado               EstadoEvento        @default(BORRADOR)
   destacado            Boolean             @default(false)
@@ -343,6 +346,11 @@ model Evento {
   @@index([estado], map: "evento_estado_idx")
   @@index([idCategoriaEvento], map: "evento_id_categoria_idx")
   @@index([estado, fechaInicio], map: "evento_estado_fecha_inicio_idx")
+  // Rango del calendario: un evento aparece mientras no haya terminado.
+  @@index([estado, fechaFin], map: "evento_estado_fecha_fin_idx")
+  // Actividades destacadas de la portada.
+  @@index([estado, destacado, fechaInicio], map: "evento_estado_destacado_fecha_idx")
+  @@index([tipoActividad], map: "evento_tipo_actividad_idx")
   @@index([creadoPor], map: "evento_creado_por_idx")
   @@map("evento")
 }

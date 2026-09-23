@@ -41,10 +41,8 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# archivos de asistentes de IA (solo locales)
-CLAUDE.md
+# archivos de herramientas locales, no forman parte del proyecto
 AGENTS.md
-.claude/
 
 # credenciales generadas localmente
 credenciales-demo.local.txt
