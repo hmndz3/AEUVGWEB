@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 import { cn } from "@/lib/utils";
 
 const COLOR_PREDETERMINADO = "#6d4aff";
@@ -7,10 +5,13 @@ const COLOR_PREDETERMINADO = "#6d4aff";
 /**
  * Imagen de un evento, con su marcador cuando todavía no tiene ninguna.
  *
- * Se usa `unoptimized` a propósito: las imágenes de los eventos viven en el
- * servicio de imágenes externo, que ya las entrega redimensionadas. Pasarlas
- * otra vez por el optimizador de Next repetiría ese trabajo y consumiría en
- * Railway un procesamiento que el plan contratado no tiene de sobra.
+ * Se usa una etiqueta de imagen normal y no el componente optimizado de Next a
+ * propósito. Las imágenes de los eventos viven en el servicio externo, que ya
+ * las entrega redimensionadas: pasarlas otra vez por el optimizador repetiría
+ * ese trabajo y consumiría en Railway un procesamiento que el plan contratado
+ * no tiene de sobra. Además, el componente optimizado exige declarar de
+ * antemano los dominios permitidos, y aquí la dirección la escribe AEUVG desde
+ * el panel, por lo que un dominio no previsto rompería la pantalla.
  */
 export function ImagenEvento({
   imagenUrl,
@@ -30,13 +31,14 @@ export function ImagenEvento({
   return (
     <div className={cn("bg-superficie-suave relative overflow-hidden", className)}>
       {imagenUrl ? (
-        <Image
+        // eslint-disable-next-line @next/next/no-img-element -- ver el comentario del componente.
+        <img
           src={imagenUrl}
           alt={`Imagen del evento ${nombre}`}
-          fill
           sizes={sizes}
-          unoptimized
-          className="object-cover"
+          loading="lazy"
+          decoding="async"
+          className="absolute inset-0 size-full object-cover"
         />
       ) : (
         <div

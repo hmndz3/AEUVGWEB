@@ -66,7 +66,8 @@ type Facultad = {
 };
 
 const datosIniciales = {
-  nombreCompleto: "",
+  nombres: "",
+  apellidos: "",
   carnet: "",
   correo: "",
   idFacultad: "",
@@ -246,17 +247,30 @@ export default function PaginaCrearCuenta() {
           </div>
         ) : (
           <form className="mt-7 grid max-w-2xl gap-5" onSubmit={enviarFormulario} noValidate>
-            <CampoAcceso
-              id="nombre"
-              name="nombreCompleto"
-              etiqueta="Nombre completo"
-              icono="persona"
-              placeholder="Ej. Sofía Castillo Pineda"
-              autoComplete="name"
-              value={datos.nombreCompleto}
-              onChange={actualizarCampo}
-              error={errores.nombreCompleto?.[0]}
-            />
+            <div className="grid gap-5 sm:grid-cols-2">
+              <CampoAcceso
+                id="nombres"
+                name="nombres"
+                etiqueta="Nombres"
+                icono="persona"
+                placeholder="Ej. Sofía Andrea"
+                autoComplete="given-name"
+                value={datos.nombres}
+                onChange={actualizarCampo}
+                error={errores.nombres?.[0]}
+              />
+              <CampoAcceso
+                id="apellidos"
+                name="apellidos"
+                etiqueta="Apellidos"
+                icono="persona"
+                placeholder="Ej. Castillo Pineda"
+                autoComplete="family-name"
+                value={datos.apellidos}
+                onChange={actualizarCampo}
+                error={errores.apellidos?.[0]}
+              />
+            </div>
             <CampoAcceso
               id="carnet"
               name="carnet"
