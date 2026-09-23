@@ -1,3 +1,4 @@
+import { CambioDeVista } from "@/components/eventos/cambio-de-vista";
 import { EstadoVacioEventos } from "@/components/eventos/estado-vacio-eventos";
 import { FiltrosAplicados } from "@/components/eventos/filtros-aplicados";
 import { FiltrosEventosBarra } from "@/components/eventos/filtros-eventos";
@@ -55,6 +56,10 @@ export default async function PaginaEventos({
           Conferencias, festivales, convocatorias de horas beca y actividades organizadas por AEUVG
           y las asociaciones estudiantiles de la Universidad del Valle de Guatemala.
         </p>
+
+        <div className="mt-6">
+          <CambioDeVista activa="/eventos" />
+        </div>
       </section>
 
       <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6">

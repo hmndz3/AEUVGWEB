@@ -1,4 +1,5 @@
 import { AgendaCalendario } from "@/components/eventos/agenda-calendario";
+import { CambioDeVista } from "@/components/eventos/cambio-de-vista";
 import { ControlesCalendario } from "@/components/eventos/controles-calendario";
 import { RejillaCalendario } from "@/components/eventos/rejilla-calendario";
 import { MarcoSitio } from "@/components/layout/marco-sitio";
@@ -49,6 +50,10 @@ export default async function PaginaCalendario({
           Las actividades del ciclo organizadas por día. Cambia entre la vista mensual y la semanal
           según lo que necesites revisar.
         </p>
+
+        <div className="mt-6">
+          <CambioDeVista activa="/calendario" />
+        </div>
       </section>
 
       <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6">
