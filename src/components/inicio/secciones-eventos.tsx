@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { TarjetaEvento } from "@/components/inicio/tarjeta-evento";
+import { TarjetaEvento } from "@/components/eventos/tarjeta-evento";
 import {
   obtenerEventosDestacados,
   obtenerProximosEventos,
@@ -21,16 +21,23 @@ export async function ActividadesDestacadas() {
   return (
     <section className="bg-superficie-suave">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
-        <h2 className="text-texto text-3xl font-extrabold tracking-tight">
-          Actividades destacadas
-        </h2>
-        <p className="text-texto-suave mt-2 max-w-2xl">
-          Lo que AEUVG quiere que no te pierdas este ciclo.
-        </p>
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h2 className="text-texto text-3xl font-extrabold tracking-tight">
+              Actividades destacadas
+            </h2>
+            <p className="text-texto-suave mt-2 max-w-2xl">
+              Lo que AEUVG quiere que no te pierdas este ciclo.
+            </p>
+          </div>
+          <Link href="/calendario" className="text-primario text-sm font-bold hover:underline">
+            Ver el calendario →
+          </Link>
+        </div>
 
         <div className="mt-8">
           {eventos.length === 0 ? (
-            <EstadoVacio mensaje="Todavía no hay actividades destacadas. Vuelve pronto." />
+            <EstadoVacio mensaje="Todavía no hay actividades destacadas. Revisa la cartelera completa de eventos." />
           ) : (
             <div className="grid gap-4 md:grid-cols-2">
               {eventos.map((evento) => (
