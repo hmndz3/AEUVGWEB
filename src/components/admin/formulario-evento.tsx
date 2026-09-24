@@ -8,6 +8,7 @@ import { Alerta } from "@/components/ui/alerta";
 import { Boton } from "@/components/ui/boton";
 import type { CategoriaResumen, OrganizadoresDisponibles } from "@/lib/eventos/consultas-eventos";
 import { desdeCampoFechaHora } from "@/lib/eventos/formato-fechas";
+import { ETIQUETAS_CAMPO_EVENTO } from "@/validators/evento-admin";
 import { ETIQUETAS_TIPO_ACTIVIDAD, TIPOS_ACTIVIDAD } from "@/validators/eventos";
 
 export type ValoresEvento = {
@@ -76,6 +77,28 @@ function Campo({
   );
 }
 
+/** Resumen de los campos que impiden guardar, para mostrarlo arriba del formulario. */
+function resumenDeErrores(errores: Record<string, string>): string {
+  const campos = Object.keys(errores)
+    .map((campo) => ETIQUETAS_CAMPO_EVENTO[campo] ?? campo)
+    .filter((campo, indice, lista) => lista.indexOf(campo) === indice);
+
+  if (campos.length === 1) return `Revisa el campo ${campos[0]}: ${Object.values(errores)[0]}`;
+
+  return `Revisa los siguientes campos antes de guardar: ${campos.join(", ")}.`;
+}
+
+/** Lleva la vista al primer campo con error y le devuelve el foco. */
+function enfocarPrimerError(errores: Record<string, string>) {
+  const campo = Object.keys(errores)[0];
+  const elemento = campo ? document.getElementById(campo) : null;
+
+  if (elemento) {
+    elemento.scrollIntoView({ behavior: "smooth", block: "center" });
+    if (elemento instanceof HTMLElement) elemento.focus({ preventScroll: true });
+  }
+}
+
 /**
  * Formulario de creación y edición de eventos.
  *
@@ -134,8 +157,16 @@ export function FormularioEvento({
         mensaje?: string;
       };
 
-      if (cuerpo.errores) setErrores(cuerpo.errores);
-      setGeneral(cuerpo.mensaje ?? (cuerpo.errores ? null : "No se pudo guardar el evento."));
+      if (cuerpo.errores && Object.keys(cuerpo.errores).length > 0) {
+        setErrores(cuerpo.errores);
+        // El formulario es largo: sin este resumen, un error en un campo de
+        // arriba deja la impresión de que el botón no hizo nada.
+        setGeneral(resumenDeErrores(cuerpo.errores));
+        enfocarPrimerError(cuerpo.errores);
+        return;
+      }
+
+      setGeneral(cuerpo.mensaje ?? "No se pudo guardar el evento. Intenta de nuevo.");
     } catch {
       setGeneral("No se pudo conectar con el servidor. Revisa tu conexión.");
     } finally {
@@ -146,6 +177,13 @@ export function FormularioEvento({
   return (
     <form onSubmit={enviar} className="flex flex-col gap-5">
       {general && <Alerta tipo="error">{general}</Alerta>}
+
+      {categorias.length === 0 && (
+        <Alerta tipo="advertencia" titulo="No hay categorías cargadas">
+          Un evento necesita una categoría para poder guardarse. Carga el catálogo de la base de
+          datos antes de continuar.
+        </Alerta>
+      )}
 
       <Campo etiqueta="Nombre del evento" nombre="nombre" error={errores.nombre}>
         <input

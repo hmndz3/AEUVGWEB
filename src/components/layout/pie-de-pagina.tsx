@@ -33,16 +33,20 @@ export function PieDePagina() {
     <footer className="bg-texto mt-auto text-white">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-4">
         <div className="flex flex-col gap-3">
-          <div className="flex items-center gap-3">
+          <Link
+            href="/"
+            aria-label="AEUVG, ir a la página principal"
+            className="flex w-fit items-center gap-3 rounded-full transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:outline-none"
+          >
             <Image
               src="/logo-aeuvg.png"
-              alt="AEUVG"
-              width={40}
-              height={40}
-              className="rounded-full"
+              alt=""
+              width={48}
+              height={48}
+              className="size-12 rounded-full"
             />
-            <span className="font-extrabold">AEUVG</span>
-          </div>
+            <span className="text-lg font-extrabold">AEUVG</span>
+          </Link>
           <p className="text-sm leading-relaxed text-white/70">
             Asociación General de Estudiantes de la Universidad del Valle de Guatemala.
           </p>

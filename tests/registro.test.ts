@@ -127,6 +127,8 @@ class RepositorioMemoria implements RepositorioRegistro {
 }
 
 const datosBase = {
+  nombres: "Estudiante",
+  apellidos: "de Prueba",
   nombreCompleto: "Estudiante de Prueba",
   carnet: "24852",
   correo: "gua24852@uvg.edu.gt",

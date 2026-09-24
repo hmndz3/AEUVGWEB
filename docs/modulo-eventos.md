@@ -4,26 +4,26 @@ Implementado durante el Sprint 2 (HU-07 a HU-12). Cubre la cartelera pública, e
 
 ## Pantallas
 
-| Ruta                   | Quién entra    | Qué hace                                                          |
-| ---------------------- | -------------- | ----------------------------------------------------------------- |
-| `/eventos`             | Cualquiera     | Cartelera con filtros, buscador y paginación.                      |
-| `/eventos/[id]`        | Cualquiera     | Detalle de un evento publicado.                                    |
-| `/calendario`          | Cualquiera     | Vista mensual y semanal; agenda en teléfono.                       |
-| `/admin/eventos`       | Administración | Listado con todos los estados, búsqueda y acciones.                |
-| `/admin/eventos/nuevo` | Administración | Creación de un evento.                                             |
-| `/admin/eventos/[id]`  | Administración | Edición de un evento.                                              |
+| Ruta                   | Quién entra    | Qué hace                                            |
+| ---------------------- | -------------- | --------------------------------------------------- |
+| `/eventos`             | Cualquiera     | Cartelera con filtros, buscador y paginación.       |
+| `/eventos/[id]`        | Cualquiera     | Detalle de un evento publicado.                     |
+| `/calendario`          | Cualquiera     | Vista mensual y semanal; agenda en teléfono.        |
+| `/admin/eventos`       | Administración | Listado con todos los estados, búsqueda y acciones. |
+| `/admin/eventos/nuevo` | Administración | Creación de un evento.                              |
+| `/admin/eventos/[id]`  | Administración | Edición de un evento.                               |
 
 ## Servicios
 
-| Endpoint                            | Método | Acceso         |
-| ----------------------------------- | ------ | -------------- |
-| `/api/eventos`                      | GET    | Público        |
-| `/api/eventos/[id]`                 | GET    | Público        |
-| `/api/admin/eventos`                | POST   | Administración |
-| `/api/admin/eventos/[id]`           | PUT    | Administración |
-| `/api/admin/eventos/[id]`           | DELETE | Administración |
-| `/api/admin/eventos/[id]/estado`    | PATCH  | Administración |
-| `/api/admin/eventos/imagen`         | POST   | Administración |
+| Endpoint                         | Método | Acceso         |
+| -------------------------------- | ------ | -------------- |
+| `/api/eventos`                   | GET    | Público        |
+| `/api/eventos/[id]`              | GET    | Público        |
+| `/api/admin/eventos`             | POST   | Administración |
+| `/api/admin/eventos/[id]`        | PUT    | Administración |
+| `/api/admin/eventos/[id]`        | DELETE | Administración |
+| `/api/admin/eventos/[id]/estado` | PATCH  | Administración |
+| `/api/admin/eventos/imagen`      | POST   | Administración |
 
 Las rutas de administración pasan por `protegerRuta`, que responde 401 sin sesión y 404 sin el rol, para no confirmar la existencia de la ruta a quien no puede usarla.
 
@@ -34,6 +34,7 @@ Las rutas de administración pasan por `protegerRuta`, que responde 401 sin sesi
 Reglas de las transiciones (`src/lib/eventos/servicio-eventos.ts`):
 
 - Todo evento nuevo nace como borrador; publicarlo es una decisión aparte.
+- Los organizadores son opcionales: AEUVG publica actividades propias que no corresponden a ninguna asociación ni club. Cuando se indican, el primero (asociación, club, unidad de UVG, en ese orden) queda como organizador principal.
 - Un evento finalizado no vuelve a publicarse ni puede cancelarse.
 - Un evento publicado que ya inició no se elimina, solo se cancela: forma parte del historial de AEUVG y puede estar referenciado por los eventos guardados de los estudiantes.
 - Solo los eventos publicados aparecen en la cartelera, en el calendario, en la portada y en el detalle público.
