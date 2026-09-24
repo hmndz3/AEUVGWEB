@@ -185,6 +185,51 @@ const HARRY = {
       "Documentación",
       "Registro de tiempos dentro del documento de desarrollo e integración de develop a main.",
     ],
+    [
+      "2026-09-23",
+      "11:20",
+      "12:40",
+      10,
+      "Revisión y cierre",
+      "Codificación",
+      "AEUVG-81 Organizadores opcionales del evento. AEUVG-83 Mensaje explícito cuando la base no responde.",
+    ],
+    [
+      "2026-09-23",
+      "14:10",
+      "15:40",
+      10,
+      "Revisión y cierre",
+      "Codificación",
+      "AEUVG-84 Mensajes de error del registro. AEUVG-87 Unificación de secciones del panel. AEUVG-88 Correcciones del listado y del detalle. AEUVG-90 Carga de la información institucional.",
+    ],
+    [
+      "2026-09-23",
+      "19:40",
+      "20:45",
+      10,
+      "Revisión y cierre",
+      "Codificación",
+      "AEUVG-92 Operación de la base por túnel cifrado y migraciones en Railway. AEUVG-93 Envío del formulario de eventos. AEUVG-94 Volumen persistente para las imágenes.",
+    ],
+    [
+      "2026-09-23",
+      "21:30",
+      "21:45",
+      0,
+      "Revisión y cierre",
+      "Integración",
+      "Integración y publicación de los retratos de la Junta Directiva.",
+    ],
+    [
+      "2026-09-23",
+      "22:45",
+      "23:20",
+      0,
+      "Documentación",
+      "Documentación",
+      "Integración de los ajustes de interfaz a main y actualización del documento del sprint.",
+    ],
   ],
 };
 
@@ -345,6 +390,33 @@ const JUAN = {
       "Pruebas",
       "Verificación de las pantallas del módulo en escritorio, tableta y teléfono antes de la publicación.",
     ],
+    [
+      "2026-09-23",
+      "11:30",
+      "12:40",
+      10,
+      "Revisión y cierre",
+      "Codificación",
+      "AEUVG-82 Resumen de los campos que impiden guardar. AEUVG-85 Nombres y apellidos separados. AEUVG-86 Logotipo ampliado y enlazado al inicio.",
+    ],
+    [
+      "2026-09-23",
+      "15:05",
+      "15:45",
+      5,
+      "Revisión y cierre",
+      "Diseño y codificación",
+      "AEUVG-89 Fotografías de la Junta Directiva. AEUVG-91 Presentación de la Junta Directiva en la página institucional.",
+    ],
+    [
+      "2026-09-23",
+      "21:10",
+      "22:40",
+      5,
+      "Revisión y cierre",
+      "Diseño y codificación",
+      "AEUVG-95 Retratos sin fondo de estudio. AEUVG-96 Menú de la cuenta. AEUVG-97 Detalle del evento a dos columnas. AEUVG-98 Filtros plegables.",
+    ],
   ],
 };
 
@@ -386,6 +458,18 @@ const comoFecha = (iso) => {
 };
 
 const enHoras = (minutos) => (Math.round((minutos / 60) * 10) / 10).toFixed(1);
+
+/** Horas de equipo estimadas en la planificación del sprint. */
+const HORAS_ESTIMADAS = 34;
+
+/** Desviación del tiempo real frente al estimado, redactada para el documento. */
+function desviacion(totalMinutos) {
+  const porcentaje = Math.round((totalMinutos / 60 / HORAS_ESTIMADAS - 1) * 100);
+
+  if (porcentaje === 0) return "ajuste exacto";
+
+  return `${Math.abs(porcentaje)}% ${porcentaje > 0 ? "por encima" : "por debajo"}`;
+}
 
 function calcular(persona) {
   let anterior = null;
@@ -493,7 +577,7 @@ function bloquesRegistroTiempos(seccion) {
       "El delta de tiempo corresponde a la hora de finalización menos la hora de inicio menos el tiempo de interrupción. Las interrupciones son pausas cortas dentro de una misma sesión. Las sesiones de planificación y de revisión conjunta aparecen en ambos registros con el mismo horario, por tratarse de trabajo realizado en conjunto."
     ),
     p(
-      `El sprint sumó ${enHoras(totalEquipo)} horas de equipo: ${enHoras(harry.total)} horas de Harry Méndez y ${enHoras(juan.total)} horas de Juan Gabriel Gualim, frente a las 34 horas estimadas en la planificación. El trabajo real se ubicó cerca de un 7% por debajo de lo estimado, una desviación considerablemente menor a la del Sprint 1 y que confirma la recalibración hecha al inicio de este sprint.`
+      `El sprint sumó ${enHoras(totalEquipo)} horas de equipo: ${enHoras(harry.total)} horas de Harry Méndez y ${enHoras(juan.total)} horas de Juan Gabriel Gualim, frente a las ${HORAS_ESTIMADAS} horas estimadas en la planificación, es decir, un ${desviacion(totalEquipo)} de lo previsto. La diferencia corresponde al día de cierre: la revisión con AEUVG dejó observaciones que se resolvieron el mismo 23 de septiembre, antes de publicar la versión del sprint.`
     ),
 
     h2(`${seccion}.1. ${HARRY.nombre} - ${HARRY.carne}`),
