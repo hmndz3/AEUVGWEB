@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { RUTA_IMAGEN_PROPIA } from "@/lib/imagenes/validacion-imagen";
 import { TIPOS_ACTIVIDAD } from "@/validators/eventos";
 
 const MENSAJE_NOMBRE = "El nombre del evento debe tener entre 5 y 200 caracteres.";
@@ -82,10 +83,18 @@ export const esquemaEventoAdmin = z
       .max(500, "El enlace de la imagen es demasiado largo.")
       // Pegar "ejemplo.com/foto.jpg" es lo normal; se completa el esquema en
       // lugar de rechazar el enlace por una razón que no le importa a nadie.
+      // Las imágenes subidas al volumen son rutas del propio sitio y se dejan
+      // intactas: completarlas producía "https:///api/imagenes/…", que el
+      // navegador interpreta como un servidor llamado "api".
       .transform((valor) =>
-        valor && !/^[a-z][a-z0-9+.-]*:/i.test(valor) ? `https://${valor}` : valor
+        valor && !RUTA_IMAGEN_PROPIA.test(valor) && !/^[a-z][a-z0-9+.-]*:/i.test(valor)
+          ? `https://${valor}`
+          : valor
       )
-      .refine((valor) => valor === "" || esEnlaceDeImagen(valor), MENSAJE_IMAGEN)
+      .refine(
+        (valor) => valor === "" || RUTA_IMAGEN_PROPIA.test(valor) || esEnlaceDeImagen(valor),
+        MENSAJE_IMAGEN
+      )
       .transform((valor) => (valor === "" ? null : valor))
       .nullable()
       .default(null),
