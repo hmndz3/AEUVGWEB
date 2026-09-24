@@ -48,7 +48,14 @@ export const POST = protegerRuta([ROLES.administrador], async (_usuario, solicit
     });
 
     return Response.json({ url }, { headers: sinCache });
-  } catch {
+  } catch (error) {
+    // Se registra el motivo: sin esto, un fallo de permisos o de cuota del
+    // almacenamiento solo se veía como un mensaje genérico en el formulario.
+    console.error(
+      "Fallo al subir la imagen de un evento:",
+      error instanceof Error ? error.message : error
+    );
+
     return Response.json(
       { mensaje: "No se pudo subir la imagen. Intenta de nuevo en unos minutos." },
       { status: 502, headers: sinCache }

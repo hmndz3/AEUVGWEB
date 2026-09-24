@@ -1,0 +1,3 @@
+# Los scripts de shell deben conservar fin de linea LF: con CRLF el interprete
+# del contenedor no encuentra /bin/sh y el arranque falla.
+*.sh text eol=lf
