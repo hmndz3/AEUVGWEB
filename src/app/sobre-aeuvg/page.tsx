@@ -16,17 +16,16 @@ export const metadata = {
     "Misión, visión y junta directiva de la Asociación General de Estudiantes de la Universidad del Valle de Guatemala.",
 };
 
-// Un acento del logo por tarjeta, para que la cuadrícula no se lea plana pese a
-// que todas las fotografías comparten el mismo fondo de estudio.
+// Color de respaldo para las iniciales de quien no tenga fotografía cargada.
 const ACENTOS = [
-  { barra: "bg-primario", inicial: "bg-primario" },
-  { barra: "bg-coral", inicial: "bg-coral" },
-  { barra: "bg-turquesa", inicial: "bg-turquesa" },
-  { barra: "bg-magenta", inicial: "bg-magenta" },
-  { barra: "bg-ambar", inicial: "bg-ambar" },
-  { barra: "bg-cielo", inicial: "bg-cielo" },
-  { barra: "bg-lima", inicial: "bg-lima" },
-  { barra: "bg-lavanda", inicial: "bg-lavanda" },
+  "bg-primario",
+  "bg-coral",
+  "bg-turquesa",
+  "bg-magenta",
+  "bg-ambar",
+  "bg-cielo",
+  "bg-lima",
+  "bg-lavanda",
 ];
 
 function TarjetaIntegrante({
@@ -40,9 +39,9 @@ function TarjetaIntegrante({
 
   return (
     <article className="group border-borde bg-superficie flex flex-col overflow-hidden rounded-[1.25rem] border shadow-sm transition-shadow hover:shadow-lg">
-      <span aria-hidden className={`h-1.5 w-full ${acento.barra}`} />
-
-      <div className="bg-superficie-suave relative aspect-3/4 w-full overflow-hidden">
+      {/* El retrato viene recortado sobre blanco, así que se funde con la
+          tarjeta sin costura visible entre la imagen y el texto. */}
+      <div className="bg-superficie relative aspect-3/4 w-full overflow-hidden">
         {integrante.fotoUrl ? (
           <Image
             src={integrante.fotoUrl}
@@ -54,14 +53,14 @@ function TarjetaIntegrante({
         ) : (
           <span
             aria-hidden
-            className={`${acento.inicial} grid size-full place-items-center text-5xl font-extrabold text-white`}
+            className={`${acento} grid size-full place-items-center text-5xl font-extrabold text-white`}
           >
             {inicialesDeNombre(integrante.nombre)}
           </span>
         )}
       </div>
 
-      <div className="flex flex-1 flex-col px-5 py-4">
+      <div className="border-borde flex flex-1 flex-col border-t px-5 py-4">
         <p className="text-texto text-base leading-snug font-bold break-words">
           {integrante.nombre}
         </p>

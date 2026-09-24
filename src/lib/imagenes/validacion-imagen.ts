@@ -1,6 +1,13 @@
 /** Formatos que acepta la plataforma para las imágenes de los eventos. */
 export const TIPOS_PERMITIDOS = ["image/jpeg", "image/png", "image/webp"] as const;
 
+/** Extensión con la que se guarda cada formato admitido. */
+export const EXTENSION_POR_TIPO: Record<string, string> = {
+  "image/jpeg": "jpg",
+  "image/png": "png",
+  "image/webp": "webp",
+};
+
 const MB_PREDETERMINADO = 3;
 const MB_MINIMO = 1;
 const MB_MAXIMO = 10;
