@@ -3,60 +3,90 @@ import { z } from "zod";
 import { TIPOS_ACTIVIDAD } from "@/validators/eventos";
 
 const MENSAJE_NOMBRE = "El nombre del evento debe tener entre 5 y 200 caracteres.";
-const MENSAJE_DESCRIPCION = "La descripción debe tener al menos 20 caracteres.";
+const MENSAJE_DESCRIPCION = "La descripción debe tener entre 20 y 5000 caracteres.";
 
 /** Campo de texto opcional: la cadena vacía del formulario equivale a no tener valor. */
-const textoOpcional = (maximo: number) =>
+const textoOpcional = (maximo: number, mensaje: string) =>
   z
     .string()
     .trim()
-    .max(maximo)
+    .max(maximo, mensaje)
     .transform((valor) => (valor.length > 0 ? valor : null))
     .nullable()
     .default(null);
 
-const identificadorOpcional = z
-  .union([z.literal(""), z.coerce.number().int().positive()])
-  .transform((valor) => (valor === "" ? null : valor))
-  .nullable()
-  .default(null);
+const identificadorOpcional = (mensaje: string) =>
+  z
+    .union([z.literal(""), z.coerce.number(mensaje).int(mensaje).positive(mensaje)], mensaje)
+    .transform((valor) => (valor === "" ? null : valor))
+    .nullable()
+    .default(null);
 
-const fecha = z.coerce.date("Indica una fecha y hora válidas.");
+const fecha = z.coerce.date("Indica una fecha y una hora válidas.");
 
 export const esquemaEventoAdmin = z
   .object({
-    nombre: z.string().trim().min(5, MENSAJE_NOMBRE).max(200, MENSAJE_NOMBRE),
-    descripcion: z.string().trim().min(20, MENSAJE_DESCRIPCION).max(5000),
-    idCategoriaEvento: z.coerce.number("Selecciona una categoría.").int().positive(),
+    nombre: z.string(MENSAJE_NOMBRE).trim().min(5, MENSAJE_NOMBRE).max(200, MENSAJE_NOMBRE),
+    descripcion: z
+      .string(MENSAJE_DESCRIPCION)
+      .trim()
+      .min(20, MENSAJE_DESCRIPCION)
+      .max(5000, MENSAJE_DESCRIPCION),
+    idCategoriaEvento: z.coerce
+      .number("Selecciona una categoría.")
+      .int("Selecciona una categoría.")
+      .positive("Selecciona una categoría."),
     tipoActividad: z.enum(TIPOS_ACTIVIDAD, "Selecciona el tipo de actividad."),
     fechaInicio: fecha,
     fechaFin: fecha,
-    ubicacion: z.string().trim().min(3, "Indica dónde se realiza el evento.").max(255),
+    ubicacion: z
+      .string("Indica dónde se realiza el evento.")
+      .trim()
+      .min(3, "Indica dónde se realiza el evento.")
+      .max(255, "La ubicación no puede exceder 255 caracteres."),
     cupo: z
-      .union([z.literal(""), z.coerce.number().int().positive().max(100000)])
+      .union(
+        [
+          z.literal(""),
+          z.coerce
+            .number("El cupo debe ser un número entero mayor que cero.")
+            .int("El cupo debe ser un número entero mayor que cero.")
+            .positive("El cupo debe ser un número entero mayor que cero.")
+            .max(100000, "El cupo no puede superar las 100,000 personas."),
+        ],
+        "El cupo debe ser un número entero mayor que cero."
+      )
       .transform((valor) => (valor === "" ? null : valor))
       .nullable()
       .default(null),
-    informacionAdicional: textoOpcional(2000),
+    informacionAdicional: textoOpcional(
+      2000,
+      "La información adicional no puede exceder 2000 caracteres."
+    ),
     imagenUrl: z
-      .union([z.literal(""), z.url("La dirección de la imagen no es válida.").max(500)])
+      .union(
+        [
+          z.literal(""),
+          z
+            .url("La dirección de la imagen debe empezar con http:// o https://.")
+            .max(500, "La dirección de la imagen es demasiado larga."),
+        ],
+        "La dirección de la imagen debe empezar con http:// o https://."
+      )
       .transform((valor) => (valor === "" ? null : valor))
       .nullable()
       .default(null),
     destacado: z.coerce.boolean().default(false),
-    idAsociacion: identificadorOpcional,
-    idClub: identificadorOpcional,
-    unidadUvg: textoOpcional(160),
+    // Los organizadores son opcionales: AEUVG publica actividades propias que no
+    // corresponden a ninguna asociación ni club, y exigir uno obligaba a inventar
+    // un organizador solo para poder guardar el evento.
+    idAsociacion: identificadorOpcional("Selecciona una asociación válida."),
+    idClub: identificadorOpcional("Selecciona un club válido."),
+    unidadUvg: textoOpcional(160, "El nombre de la unidad no puede exceder 160 caracteres."),
   })
   .refine((datos) => datos.fechaFin.getTime() >= datos.fechaInicio.getTime(), {
     message: "La fecha de finalización no puede ser anterior a la de inicio.",
     path: ["fechaFin"],
-  })
-  .refine((datos) => Boolean(datos.idAsociacion || datos.idClub || datos.unidadUvg), {
-    // Sin organizador el estudiante no sabe a quién corresponde la actividad,
-    // que es justo lo que AEUVG pidió dejar claro en cada evento.
-    message: "Indica al menos un organizador: una asociación, un club o una unidad de UVG.",
-    path: ["idAsociacion"],
   });
 
 export type DatosEventoAdmin = z.infer<typeof esquemaEventoAdmin>;
@@ -72,3 +102,20 @@ export function erroresPorCampo(error: z.ZodError): Record<string, string> {
 
   return errores;
 }
+
+/** Etiqueta legible de cada campo, para nombrar el primer error en el resumen. */
+export const ETIQUETAS_CAMPO_EVENTO: Record<string, string> = {
+  nombre: "Nombre del evento",
+  descripcion: "Descripción",
+  idCategoriaEvento: "Categoría",
+  tipoActividad: "Tipo de actividad",
+  fechaInicio: "Inicio",
+  fechaFin: "Finalización",
+  ubicacion: "Ubicación",
+  cupo: "Cupo",
+  informacionAdicional: "Información adicional",
+  imagenUrl: "Imagen del evento",
+  idAsociacion: "Asociación",
+  idClub: "Club",
+  unidadUvg: "Unidad de UVG",
+};
