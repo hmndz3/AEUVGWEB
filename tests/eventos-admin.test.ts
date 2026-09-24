@@ -239,6 +239,23 @@ test("un enlace de imagen con esquema se conserva tal cual", () => {
   assert.equal(resultado.data?.imagenUrl, "http://ejemplo.com/afiche.jpg");
 });
 
+test("la ruta de una imagen subida al volumen se conserva tal cual", () => {
+  const ruta = "/api/imagenes/0123456789abcdef0123456789abcdef.jpg";
+  const resultado = esquemaEventoAdmin.safeParse({ ...FORMULARIO, imagenUrl: ruta });
+
+  assert.equal(resultado.success, true);
+  assert.equal(resultado.data?.imagenUrl, ruta);
+});
+
+test("una ruta interna distinta a la de imágenes subidas no se acepta como tal", () => {
+  const resultado = esquemaEventoAdmin.safeParse({
+    ...FORMULARIO,
+    imagenUrl: "/api/imagenes/../../etc/passwd",
+  });
+
+  assert.notEqual(resultado.data?.imagenUrl, "/api/imagenes/../../etc/passwd");
+});
+
 test("solo se aceptan enlaces http y https para la imagen", () => {
   for (const imagenUrl of [
     "javascript:alert(1)",
