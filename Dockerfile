@@ -21,7 +21,8 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs
+# su-exec baja de privilegios en el arranque; ver docker/entrypoint.sh.
+RUN apk add --no-cache su-exec   && addgroup --system --gid 1001 nodejs   && adduser --system --uid 1001 nextjs
 
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
@@ -30,9 +31,14 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 # de dependencias de Next no lo incluye en el build autocontenido.
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.prisma ./node_modules/.prisma
 
-USER nextjs
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
 EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 
+# El contenedor arranca como root únicamente para ceder el volumen montado al
+# usuario de la aplicación; el servidor ya corre como nextjs.
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["node", "server.js"]
