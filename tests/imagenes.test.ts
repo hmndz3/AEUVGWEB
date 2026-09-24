@@ -1,4 +1,7 @@
 import assert from "node:assert/strict";
+import fs from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
 import test from "node:test";
 
 import { ProveedorImagenesMemoria } from "../src/lib/imagenes/proveedor-imagenes";
@@ -44,4 +47,40 @@ test("el proveedor de memoria devuelve una dirección utilizable sin salir a la 
 
   assert.match(url, /^data:image\/png;base64,/);
   assert.equal(proveedor.subidas.length, 1);
+});
+
+test("el proveedor de disco solo acepta los formatos con extensión conocida", async () => {
+  const { ProveedorImagenesDisco } = await import("../src/lib/imagenes/proveedor-imagenes");
+  const proveedor = new ProveedorImagenesDisco(
+    path.join(os.tmpdir(), `aeuvg-imagenes-${Date.now()}`)
+  );
+
+  await assert.rejects(
+    proveedor.subir({
+      nombre: "afiche.gif",
+      tipo: "image/gif",
+      contenido: new Uint8Array([1]).buffer,
+    })
+  );
+});
+
+test("el proveedor de disco guarda el archivo y devuelve una ruta servible", async () => {
+  const { ProveedorImagenesDisco } = await import("../src/lib/imagenes/proveedor-imagenes");
+  const carpeta = path.join(os.tmpdir(), `aeuvg-imagenes-${Date.now()}-ok`);
+  const proveedor = new ProveedorImagenesDisco(carpeta);
+
+  const url = await proveedor.subir({
+    nombre: "afiche.png",
+    tipo: "image/png",
+    contenido: new Uint8Array([137, 80, 78, 71]).buffer,
+  });
+
+  // El nombre lo genera el servidor: nunca se reutiliza el del navegador.
+  assert.match(url, /^\/api\/imagenes\/[0-9a-f]{32}\.png$/);
+  assert.doesNotMatch(url, /afiche/);
+
+  const archivo = path.join(carpeta, url.split("/").pop()!);
+  assert.equal((await fs.stat(archivo)).size, 4);
+
+  await fs.rm(carpeta, { recursive: true, force: true });
 });
