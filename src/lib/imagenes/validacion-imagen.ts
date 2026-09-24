@@ -8,6 +8,12 @@ export const EXTENSION_POR_TIPO: Record<string, string> = {
   "image/webp": "webp",
 };
 
+/**
+ * Dirección que devuelve el almacenamiento en disco al subir una imagen: una
+ * ruta del propio sitio, sin dominio, servida por /api/imagenes/[archivo].
+ */
+export const RUTA_IMAGEN_PROPIA = /^\/api\/imagenes\/[0-9a-f]{32}\.(jpg|png|webp)$/;
+
 const MB_PREDETERMINADO = 3;
 const MB_MINIMO = 1;
 const MB_MAXIMO = 10;
