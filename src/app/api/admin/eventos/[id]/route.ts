@@ -9,6 +9,9 @@ type Contexto = { params: Promise<{ id: string }> };
 
 const sinCache = { "Cache-Control": "no-store" };
 
+const MENSAJE_BASE =
+  "No se pudo guardar el evento. Revisa que la base de datos esté disponible y con las migraciones aplicadas.";
+
 async function identificador(contexto: Contexto): Promise<number | null> {
   const { id } = await contexto.params;
   const numero = Number(id);
@@ -36,14 +39,18 @@ export const PUT = protegerRuta(
       );
     }
 
-    const resultado = await crearServicioEventos().editar(idEvento, validacion.data);
+    try {
+      const resultado = await crearServicioEventos().editar(idEvento, validacion.data);
 
-    if (resultado.tipo === "invalido") {
-      return Response.json({ errores: resultado.errores }, { status: 422, headers: sinCache });
+      if (resultado.tipo === "invalido") {
+        return Response.json({ errores: resultado.errores }, { status: 422, headers: sinCache });
+      }
+      if (resultado.tipo === "no_encontrado") return noEncontrado();
+
+      return Response.json({ idEvento: resultado.idEvento }, { headers: sinCache });
+    } catch {
+      return Response.json({ mensaje: MENSAJE_BASE }, { status: 503, headers: sinCache });
     }
-    if (resultado.tipo === "no_encontrado") return noEncontrado();
-
-    return Response.json({ idEvento: resultado.idEvento }, { headers: sinCache });
   }
 );
 
@@ -54,14 +61,21 @@ export const DELETE = protegerRuta(
     const idEvento = await identificador(contexto);
     if (idEvento === null) return noEncontrado();
 
-    const resultado = await crearServicioEventos().eliminar(idEvento);
+    try {
+      const resultado = await crearServicioEventos().eliminar(idEvento);
 
-    if (resultado.tipo === "no_encontrado") return noEncontrado();
-    if (resultado.tipo === "no_permitida") {
-      // 409: la petición es válida, pero contradice el estado actual del evento.
-      return Response.json({ mensaje: resultado.mensaje }, { status: 409, headers: sinCache });
+      if (resultado.tipo === "no_encontrado") return noEncontrado();
+      if (resultado.tipo === "no_permitida") {
+        // 409: la petición es válida, pero contradice el estado actual del evento.
+        return Response.json({ mensaje: resultado.mensaje }, { status: 409, headers: sinCache });
+      }
+
+      return new Response(null, { status: 204, headers: sinCache });
+    } catch {
+      return Response.json(
+        { mensaje: "No se pudo eliminar el evento. Intenta de nuevo en unos minutos." },
+        { status: 503, headers: sinCache }
+      );
     }
-
-    return new Response(null, { status: 204, headers: sinCache });
   }
 );

@@ -12,7 +12,8 @@ const esquema = crearEsquemaRegistro(DOMINIO);
 
 function datosValidos(cambios: Record<string, unknown> = {}) {
   return {
-    nombreCompleto: "Estudiante Prueba",
+    nombres: "Estudiante",
+    apellidos: "Prueba",
     carnet: "24089",
     correo: "estudiante.prueba@uvg.edu.gt",
     idFacultad: 1,
@@ -87,4 +88,52 @@ test("la confirmación debe coincidir con la contraseña", () => {
 
 test("no se puede registrar sin aceptar los términos", () => {
   assert.equal(esquema.safeParse(datosValidos({ aceptaTerminos: false })).success, false);
+});
+
+test("el nombre y los apellidos se guardan compuestos en un solo campo", () => {
+  const resultado = esquema.safeParse(
+    datosValidos({ nombres: "  María   José ", apellidos: "  Castillo Pineda " })
+  );
+
+  assert.equal(resultado.success, true);
+  if (resultado.success) {
+    assert.equal(resultado.data.nombres, "María José");
+    assert.equal(resultado.data.apellidos, "Castillo Pineda");
+    assert.equal(resultado.data.nombreCompleto, "María José Castillo Pineda");
+  }
+});
+
+test("se aceptan apellidos con tilde, eñe, apóstrofo y guion", () => {
+  for (const apellidos of ["Núñez", "O’Connor", "Pérez-Gómez", "de la Cruz"]) {
+    assert.equal(esquema.safeParse(datosValidos({ apellidos })).success, true, apellidos);
+  }
+});
+
+test("se rechazan nombres con dígitos o símbolos y los demasiado cortos", () => {
+  for (const nombres of ["Ana2", "Ana!", "A", "", "   "]) {
+    assert.equal(esquema.safeParse(datosValidos({ nombres })).success, false, `"${nombres}"`);
+  }
+});
+
+test("los mensajes de error del registro están en español y son descriptivos", () => {
+  const resultado = esquema.safeParse(
+    datosValidos({ nombres: "A", apellidos: "", carnet: "12", idFacultad: 0, idCarrera: 0 })
+  );
+
+  assert.equal(resultado.success, false);
+  const mensajes = resultado.error.issues.map((problema) => problema.message);
+
+  assert.ok(mensajes.length >= 5);
+  for (const mensaje of mensajes) {
+    assert.doesNotMatch(mensaje, /invalid|expected|required|too (small|big)/i, mensaje);
+    assert.match(mensaje, /\.$/, `sin punto final: ${mensaje}`);
+  }
+});
+
+test("el registro no revela si un correo ya existe: el esquema solo valida formato", () => {
+  // La unicidad la resuelve el servicio con una respuesta idéntica para ambos
+  // casos; el esquema no debe adelantar ninguna pista al respecto.
+  const resultado = esquema.safeParse(datosValidos());
+
+  assert.equal(resultado.success, true);
 });

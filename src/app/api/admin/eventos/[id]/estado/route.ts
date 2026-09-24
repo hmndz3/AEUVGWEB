@@ -27,19 +27,29 @@ export const PATCH = protegerRuta(
       );
     }
 
-    const servicio = crearServicioEventos();
-    const resultado =
-      cuerpo.accion === "publicar"
-        ? await servicio.publicar(idEvento)
-        : await servicio.cancelar(idEvento);
+    try {
+      const servicio = crearServicioEventos();
+      const resultado =
+        cuerpo.accion === "publicar"
+          ? await servicio.publicar(idEvento)
+          : await servicio.cancelar(idEvento);
 
-    if (resultado.tipo === "no_encontrado") {
-      return Response.json({ mensaje: "El evento no existe." }, { status: 404, headers: sinCache });
-    }
-    if (resultado.tipo === "no_permitida") {
-      return Response.json({ mensaje: resultado.mensaje }, { status: 409, headers: sinCache });
-    }
+      if (resultado.tipo === "no_encontrado") {
+        return Response.json(
+          { mensaje: "El evento no existe." },
+          { status: 404, headers: sinCache }
+        );
+      }
+      if (resultado.tipo === "no_permitida") {
+        return Response.json({ mensaje: resultado.mensaje }, { status: 409, headers: sinCache });
+      }
 
-    return Response.json({ estado: resultado.estado }, { headers: sinCache });
+      return Response.json({ estado: resultado.estado }, { headers: sinCache });
+    } catch {
+      return Response.json(
+        { mensaje: "No se pudo cambiar el estado del evento. Intenta de nuevo en unos minutos." },
+        { status: 503, headers: sinCache }
+      );
+    }
   }
 );
