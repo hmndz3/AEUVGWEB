@@ -1,4 +1,8 @@
-import { createHash } from "node:crypto";
+import { createHash, randomBytes } from "node:crypto";
+import { mkdir, writeFile } from "node:fs/promises";
+import path from "node:path";
+
+import { EXTENSION_POR_TIPO } from "@/lib/imagenes/validacion-imagen";
 
 export type ImagenSubida = {
   nombre: string;
@@ -85,15 +89,53 @@ export class ProveedorImagenesCloudinary implements ProveedorImagenes {
   }
 }
 
+/**
+ * Almacenamiento en un volumen persistente de Railway.
+ *
+ * Evita depender de un servicio externo y de su cuota: el volumen vive con el
+ * proyecto y sobrevive a los despliegues, a diferencia del sistema de archivos
+ * del contenedor. El nombre del archivo lo genera el servidor, nunca el
+ * navegador, para que nadie pueda escribir fuera de la carpeta ni sobrescribir
+ * la imagen de otro evento.
+ */
+export class ProveedorImagenesDisco implements ProveedorImagenes {
+  constructor(private readonly carpeta: string) {}
+
+  async subir(imagen: ImagenSubida): Promise<string> {
+    const extension = EXTENSION_POR_TIPO[imagen.tipo];
+
+    if (!extension) {
+      throw new Error("El formato de la imagen no es compatible con el almacenamiento.");
+    }
+
+    const archivo = `${randomBytes(16).toString("hex")}.${extension}`;
+
+    // turbopackIgnore: la carpeta es un volumen montado fuera del proyecto, así
+    // que no hay nada que rastrear; sin esto Turbopack incluye todo el código
+    // fuente y la carpeta public en el bundle del servidor.
+    await mkdir(/* turbopackIgnore: true */ this.carpeta, { recursive: true });
+    await writeFile(
+      path.join(/* turbopackIgnore: true */ this.carpeta, archivo),
+      Buffer.from(imagen.contenido)
+    );
+
+    return `/api/imagenes/${archivo}`;
+  }
+}
+
+/** Carpeta del volumen donde se guardan las imágenes de los eventos. */
+export function carpetaDeImagenes(): string {
+  return process.env.IMAGE_STORAGE_DIR?.trim() || "/app/almacen/eventos";
+}
+
 let proveedorMemoria: ProveedorImagenesMemoria | undefined;
 
 /**
  * Devuelve el proveedor configurado, o null cuando no hay ninguno.
  *
  * Sin proveedor la plataforma sigue funcionando: el formulario de eventos
- * acepta la dirección de una imagen externa, y solo se deshabilita la subida
- * de archivos. Esto permite publicar el módulo antes de que AEUVG contrate el
- * servicio.
+ * acepta el enlace de una imagen externa, y solo se deshabilita la subida de
+ * archivos.
  */
 export function obtenerProveedorImagenes(): ProveedorImagenes | null {
   const proveedor = process.env.IMAGE_PROVIDER?.trim().toLocaleLowerCase("en-US");
@@ -107,6 +149,10 @@ export function obtenerProveedorImagenes(): ProveedorImagenes | null {
 
     proveedorMemoria ??= new ProveedorImagenesMemoria();
     return proveedorMemoria;
+  }
+
+  if (proveedor === "disco") {
+    return new ProveedorImagenesDisco(carpetaDeImagenes());
   }
 
   if (proveedor === "cloudinary") {
@@ -128,5 +174,5 @@ export function obtenerProveedorImagenes(): ProveedorImagenes | null {
     );
   }
 
-  throw new Error("IMAGE_PROVIDER debe ser 'ninguno', 'memoria' o 'cloudinary'.");
+  throw new Error("IMAGE_PROVIDER debe ser 'ninguno', 'memoria', 'disco' o 'cloudinary'.");
 }
