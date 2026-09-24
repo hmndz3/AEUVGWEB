@@ -15,9 +15,9 @@ export function EncabezadoAcceso() {
     <header className="border-borde/70 bg-superficie/85 sticky top-0 z-20 border-b backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
         <Link href="/" className="hidden items-center gap-3 sm:flex">
-          <Image src="/logo-aeuvg.png" alt="AEUVG" width={34} height={34} />
+          <Image src="/logo-aeuvg.png" alt="" width={44} height={44} className="rounded-full" />
           <span className="flex flex-col leading-tight">
-            <strong className="text-texto text-sm">AEUVG</strong>
+            <strong className="text-texto text-base">AEUVG</strong>
             <span className="text-texto-suave text-[10px] font-bold tracking-wide uppercase">
               Asociación de Estudiantes UVG
             </span>
@@ -54,7 +54,9 @@ export function EncabezadoAcceso() {
             <Icono nombre="persona" className="size-4" />
           </span>
         </nav>
-        <Image className="sm:hidden" src="/logo-aeuvg.png" alt="AEUVG" width={28} height={28} />
+        <Link href="/" aria-label="AEUVG, ir a la página principal" className="sm:hidden">
+          <Image src="/logo-aeuvg.png" alt="" width={36} height={36} className="rounded-full" />
+        </Link>
       </div>
     </header>
   );
