@@ -3,6 +3,10 @@
 **Tarea:** AEUVG-40 — Solicitar a AEUVG la información institucional y las fotografías de la junta directiva y los integrantes.
 **Historia de usuario:** HU-06 — Landing page y página sobre AEUVG.
 
+> **Estado (24/09/2026):** recibido parcialmente. La Junta Directiva entregó la misión, la visión y las fotografías de sus ocho integrantes, que ya están cargadas. Siguen pendientes el correo institucional y la información de contacto; el párrafo de presentación se redactó de forma provisional a partir de la misión y la visión, y debe validarse con la asociación.
+>
+> La información se carga con `npm run db:aeuvg` (o `npm run db:railway:aeuvg`) y se edita en `prisma/data/informacion-aeuvg.ts`. Las fotografías viven en `public/integrantes/`, recortadas a 600×800 y optimizadas desde los originales.
+
 La página «Sobre AEUVG» está construida y lee su contenido desde la base de datos. Lo que falta es el contenido real: mientras no se reciba, la página muestra estados vacíos en lugar de texto de relleno.
 
 Este documento es la solicitud que se traslada a la Junta Directiva.
