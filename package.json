@@ -24,6 +24,8 @@
     "db:admins": "tsx prisma/revisar-administradores.ts",
     "db:railway:admins": "node scripts/db/railway.js tsx prisma/revisar-administradores.ts",
     "db:demo": "tsx prisma/crear-cuentas-demo.ts",
+    "db:aeuvg": "tsx prisma/cargar-informacion-aeuvg.ts",
+    "db:railway:aeuvg": "node scripts/db/railway.js tsx prisma/cargar-informacion-aeuvg.ts",
     "db:railway:demo": "node scripts/db/railway.js tsx prisma/crear-cuentas-demo.ts"
   },
   "dependencies": {
