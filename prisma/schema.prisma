@@ -249,6 +249,9 @@ model Asociacion {
   informacionContacto String?                @map("informacion_contacto") @db.Text
   correo              String?                @db.VarChar(254)
   imagenUrl           String?                @map("imagen_url") @db.VarChar(500)
+  // Copia sin acentos ni mayusculas de nombre, descripcion y actividad.
+  // La mantiene el servicio de organizaciones; ver src/lib/organizaciones/busqueda-organizaciones.ts.
+  textoBusqueda       String                 @default("") @map("texto_busqueda") @db.Text
   activo              Boolean                @default(true)
   fechaCreacion       DateTime               @default(now()) @map("fecha_creacion") @db.Timestamptz(3)
   fechaActualizacion  DateTime               @updatedAt @map("fecha_actualizacion") @db.Timestamptz(3)
@@ -256,6 +259,8 @@ model Asociacion {
   redesSociales       RedSocial[]
   eventosOrganizados  OrganizadorEvento[]
 
+  // Listado publico: solo las asociaciones activas, en orden alfabetico.
+  @@index([activo, nombre], map: "asociacion_activo_nombre_idx")
   @@map("asociacion")
 }
 
@@ -282,12 +287,15 @@ model Club {
   informacionContacto String?             @map("informacion_contacto") @db.Text
   correo              String?             @db.VarChar(254)
   imagenUrl           String?             @map("imagen_url") @db.VarChar(500)
+  // Copia sin acentos ni mayusculas de nombre, descripcion y actividades.
+  textoBusqueda       String              @default("") @map("texto_busqueda") @db.Text
   activo              Boolean             @default(true)
   fechaCreacion       DateTime            @default(now()) @map("fecha_creacion") @db.Timestamptz(3)
   fechaActualizacion  DateTime            @updatedAt @map("fecha_actualizacion") @db.Timestamptz(3)
   redesSociales       RedSocial[]
   eventosOrganizados  OrganizadorEvento[]
 
+  @@index([activo, nombre], map: "club_activo_nombre_idx")
   @@map("club")
 }
 
