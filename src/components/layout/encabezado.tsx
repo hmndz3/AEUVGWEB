@@ -10,7 +10,7 @@ export function Encabezado() {
     <header className="border-borde bg-superficie/90 sticky top-0 z-50 border-b backdrop-blur">
       {/* Franja con los colores del logo */}
       <div className="from-coral via-ambar to-magenta h-1.5 w-full bg-gradient-to-r" />
-      <div className="relative mx-auto flex h-24 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6">
+      <div className="relative mx-auto flex h-24 max-w-7xl items-center gap-4 px-4 sm:px-6">
         <Link
           href="/"
           aria-label="AEUVG, ir a la página principal"
@@ -29,9 +29,10 @@ export function Encabezado() {
           </span>
         </Link>
 
-        <NavegacionPrincipal />
-
-        <EstadoSesion />
+        <div className="flex flex-1 items-center justify-end gap-4 lg:justify-between">
+          <NavegacionPrincipal />
+          <EstadoSesion />
+        </div>
       </div>
     </header>
   );
