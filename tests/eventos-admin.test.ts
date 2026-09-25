@@ -220,11 +220,38 @@ test("el nombre y la descripción tienen un mínimo exigible", () => {
   );
 });
 
-test("una dirección de imagen inválida se rechaza", () => {
-  assert.equal(
-    esquemaEventoAdmin.safeParse({ ...FORMULARIO, imagenUrl: "no-es-una-direccion" }).success,
-    false
-  );
+test("un enlace de imagen sin esquema se completa con https", () => {
+  const resultado = esquemaEventoAdmin.safeParse({
+    ...FORMULARIO,
+    imagenUrl: "  ejemplo.com/afiche.jpg ",
+  });
+
+  assert.equal(resultado.success, true);
+  assert.equal(resultado.data?.imagenUrl, "https://ejemplo.com/afiche.jpg");
+});
+
+test("un enlace de imagen con esquema se conserva tal cual", () => {
+  const resultado = esquemaEventoAdmin.safeParse({
+    ...FORMULARIO,
+    imagenUrl: "http://ejemplo.com/afiche.jpg",
+  });
+
+  assert.equal(resultado.data?.imagenUrl, "http://ejemplo.com/afiche.jpg");
+});
+
+test("solo se aceptan enlaces http y https para la imagen", () => {
+  for (const imagenUrl of [
+    "javascript:alert(1)",
+    "data:image/png;base64,AAAA",
+    "file:///C:/foto.jpg",
+    "no es un enlace",
+  ]) {
+    assert.equal(
+      esquemaEventoAdmin.safeParse({ ...FORMULARIO, imagenUrl }).success,
+      false,
+      imagenUrl
+    );
+  }
 });
 
 test("el primer organizador indicado queda como principal", () => {
