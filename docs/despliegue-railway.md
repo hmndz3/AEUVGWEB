@@ -57,29 +57,44 @@ completa vive en [.env.example](../.env.example).
 
 Las migraciones **no** se aplican desde el despliegue. La imagen de producción es un build autocontenido de Next: contiene lo necesario para servir la aplicación, pero no el CLI de Prisma, que arrastra decenas de dependencias de desarrollo. Configurar un Pre-Deploy Command con `prisma migrate deploy` falla con `sh: prisma: not found`, e incluirlo agregaría cientos de megabytes a la imagen. El campo **Settings → Deploy → Pre-Deploy Command** debe quedar vacío.
 
-En su lugar se aplican de forma explícita desde una máquina de desarrollo, que sí cuenta con todas las dependencias. El `DATABASE_URL` del proyecto apunta a `postgres.railway.internal`, un nombre que solo resuelve dentro de la red privada de Railway, por lo que `railway run` no basta: hace falta una ruta pública hacia la base.
+En su lugar se aplican de forma explícita desde una máquina de desarrollo, que sí cuenta con todas las dependencias. El `DATABASE_URL` del proyecto apunta a `postgres.railway.internal`, un nombre que solo resuelve dentro de la red privada de Railway, por lo que `railway run` no basta: hace falta una ruta hacia la base.
 
-Para abrirla, en el servicio **Postgres**: **Settings → Public Networking → TCP Proxy**, puerto `5432`. Railway entrega un host y un puerto públicos.
-
-Con el CLI de Railway autenticado y el proyecto enlazado:
+### Preparación, una sola vez por máquina
 
 ```bash
 npm i -g @railway/cli
 railway login
-railway link
+railway link                 # elegir el proyecto AEUVG
+ssh-keygen -t ed25519        # si no existe ~/.ssh/id_ed25519
+railway ssh keys add -n "<nombre-de-la-maquina>"
 ```
 
-El script [`scripts/db/railway.js`](../scripts/db/railway.js) obtiene el endpoint del proxy y las credenciales del servicio, arma la cadena de conexión y se la entrega al comando de Prisma por variable de entorno, sin escribirla en disco. Se usa a través de estos scripts:
+La llave SSH es lo que permite el túnel cifrado. Se registra en la cuenta personal de cada integrante y da acceso de shell a los servicios del proyecto, así que el archivo privado no se comparte ni se versiona.
+
+### Aplicar las migraciones
+
+En una terminal, abrir el túnel y dejarlo corriendo:
+
+```bash
+railway connect Postgres --tunnel-only --port 55432
+```
+
+En otra terminal, con el túnel abierto:
 
 ```bash
 npm run db:railway:status    # revisar qué migraciones están aplicadas
 npm run db:railway:migrate   # aplicar las migraciones pendientes
 npm run db:railway:seed      # cargar los catálogos iniciales
+npm run db:railway:aeuvg     # cargar la información institucional de AEUVG
 ```
 
-Se usa `migrate deploy` porque aplica únicamente las migraciones ya versionadas: no genera archivos nuevos ni reinicia datos. El seed de catálogos es idempotente y se ejecuta una sola vez por ambiente.
+El script [`scripts/db/railway.js`](../scripts/db/railway.js) detecta el túnel en `127.0.0.1:55432`, obtiene las credenciales del servicio mediante el CLI, arma la cadena de conexión y se la entrega al comando de Prisma por variable de entorno, sin escribirla en disco ni mostrarla en pantalla. Con otro puerto, indicarlo en `RAILWAY_DB_TUNNEL`. Al terminar basta con cerrar el túnel con Ctrl+C.
 
-**Al terminar conviene eliminar el TCP Proxy**, para que la base deje de estar accesible desde internet. Se vuelve a habilitar cuando haya una migración nueva. Mantenerlo activo de forma permanente solo se justifica si el equipo necesita conectarse con un cliente gráfico como DBeaver o pgAdmin, y en ese caso la contraseña generada por Railway no debe compartirse ni versionarse.
+Se usa `migrate deploy` porque aplica únicamente las migraciones ya versionadas: no genera archivos nuevos ni reinicia datos. Los seeds son idempotentes y pueden repetirse sin efectos secundarios.
+
+### Sobre el acceso público
+
+El servicio Postgres ofrece además **Settings → Networking → Public Access** (antes TCP Proxy), que expone la base a internet con un host y un puerto públicos. El script lo acepta como alternativa si no encuentra el túnel, pero no es el camino recomendado: mientras esté activo, cualquiera con la cadena de conexión puede conectarse, y el tráfico se factura como egreso. Solo se justifica para un cliente gráfico como DBeaver o pgAdmin que no soporte el túnel, y conviene retirarlo al terminar.
 
 Este paso se repite cada vez que se agrega una migración, después de publicar el cambio en `main`. Que sea explícito es deliberado: un cambio de esquema en producción conviene ejecutarlo de forma consciente y no como efecto secundario de un despliegue.
 
