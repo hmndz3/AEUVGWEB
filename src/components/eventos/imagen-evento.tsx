@@ -19,14 +19,35 @@ export function ImagenEvento({
   color,
   className,
   sizes = "(max-width: 768px) 100vw, 33vw",
+  modo = "recorte",
 }: {
   imagenUrl: string | null;
   nombre: string;
   color: string | null;
   className?: string;
   sizes?: string;
+  /**
+   * "recorte" llena el espacio y recorta lo que sobra: sirve para las tarjetas,
+   * donde todas deben medir igual. "completa" muestra la imagen entera y toma
+   * el alto que necesite: es lo que corresponde en el detalle del evento, donde
+   * recortar el afiche esconde justo la información que la gente busca.
+   */
+  modo?: "recorte" | "completa";
 }) {
   const fondo = color ?? COLOR_PREDETERMINADO;
+
+  if (modo === "completa" && imagenUrl) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element -- ver el comentario del componente.
+      <img
+        src={imagenUrl}
+        alt={`Imagen del evento ${nombre}`}
+        sizes={sizes}
+        decoding="async"
+        className={cn("bg-superficie-suave h-auto w-full object-contain", className)}
+      />
+    );
+  }
 
   return (
     <div className={cn("bg-superficie-suave relative overflow-hidden", className)}>

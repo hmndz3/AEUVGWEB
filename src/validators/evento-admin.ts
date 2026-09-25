@@ -22,7 +22,8 @@ const identificadorOpcional = (mensaje: string) =>
     .nullable()
     .default(null);
 
-const MENSAJE_IMAGEN = "Escribe un enlace de imagen válido, por ejemplo https://ejemplo.com/foto.jpg.";
+const MENSAJE_IMAGEN =
+  "Escribe un enlace de imagen válido, por ejemplo https://ejemplo.com/foto.jpg.";
 
 /** Solo http y https: un enlace data: o javascript: no tiene lugar en un evento. */
 function esEnlaceDeImagen(valor: string): boolean {
@@ -81,7 +82,9 @@ export const esquemaEventoAdmin = z
       .max(500, "El enlace de la imagen es demasiado largo.")
       // Pegar "ejemplo.com/foto.jpg" es lo normal; se completa el esquema en
       // lugar de rechazar el enlace por una razón que no le importa a nadie.
-      .transform((valor) => (valor && !/^[a-z][a-z0-9+.-]*:/i.test(valor) ? `https://${valor}` : valor))
+      .transform((valor) =>
+        valor && !/^[a-z][a-z0-9+.-]*:/i.test(valor) ? `https://${valor}` : valor
+      )
       .refine((valor) => valor === "" || esEnlaceDeImagen(valor), MENSAJE_IMAGEN)
       .transform((valor) => (valor === "" ? null : valor))
       .nullable()
