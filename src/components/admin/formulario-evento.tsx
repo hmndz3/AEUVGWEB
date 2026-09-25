@@ -175,7 +175,10 @@ export function FormularioEvento({
   }
 
   return (
-    <form onSubmit={enviar} className="flex flex-col gap-5">
+    // noValidate: la validación nativa del navegador bloqueaba el envío sin
+    // llegar al servidor y su único aviso era un globo sobre el campo, que en un
+    // formulario largo pasa desapercibido. Valida el esquema, con mensajes propios.
+    <form onSubmit={enviar} noValidate className="flex flex-col gap-5">
       {general && <Alerta tipo="error">{general}</Alerta>}
 
       {categorias.length === 0 && (
@@ -305,11 +308,12 @@ export function FormularioEvento({
         etiqueta="Imagen del evento"
         nombre="imagenUrl"
         error={errores.imagenUrl}
-        ayuda="Sube un archivo JPEG, PNG o WebP, o pega la dirección de una imagen. Si el evento no tiene imagen, se muestra el color de su categoría."
+        ayuda="Sube un archivo JPEG, PNG o WebP, o pega el enlace de una imagen. Si el evento no tiene imagen, se muestra el color de su categoría."
       >
         <input
           id="imagenUrl"
-          type="url"
+          type="text"
+          inputMode="url"
           value={valores.imagenUrl}
           onChange={(evento) => cambiar("imagenUrl", evento.target.value)}
           maxLength={500}
