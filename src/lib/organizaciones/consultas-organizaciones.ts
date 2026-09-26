@@ -38,6 +38,13 @@ export type AsociacionDetalle = OrganizacionResumen & {
   redesSociales: RedSocialOrganizacion[];
 };
 
+export type ClubDetalle = OrganizacionResumen & {
+  actividades: string | null;
+  correo: string | null;
+  informacionContacto: string | null;
+  redesSociales: RedSocialOrganizacion[];
+};
+
 export type PaginaOrganizaciones = {
   organizaciones: OrganizacionResumen[];
   total: number;
@@ -183,4 +190,79 @@ export async function esAsociacionGeneral(idAsociacion: number): Promise<boolean
   });
 
   return asociacion !== null;
+}
+
+/** Clubes activos en orden alfabético, con su buscador y su paginación. */
+export async function listarClubes(opciones: OpcionesListado = {}): Promise<PaginaOrganizaciones> {
+  const { tamano, numero, saltar } = paginar(opciones.pagina, opciones.porPagina);
+  const where: Prisma.ClubWhereInput = {
+    ...soloActivas(),
+    ...condicionBusqueda(opciones.busqueda),
+  };
+
+  const prisma = obtenerPrisma();
+  const [total, clubes] = await Promise.all([
+    prisma.club.count({ where }),
+    prisma.club.findMany({
+      where,
+      orderBy: { nombre: "asc" },
+      skip: saltar,
+      take: tamano,
+      select: { idClub: true, nombre: true, descripcion: true, imagenUrl: true },
+    }),
+  ]);
+
+  return {
+    organizaciones: clubes.map((club) => ({
+      id: club.idClub,
+      nombre: club.nombre,
+      descripcion: club.descripcion,
+      imagenUrl: club.imagenUrl,
+    })),
+    total,
+    pagina: numero,
+    paginas: Math.max(1, Math.ceil(total / tamano)),
+  };
+}
+
+/**
+ * Detalle de un club activo. Devuelve null si no existe o está de baja.
+ *
+ * Un club no tiene junta directiva registrada: el requerimiento de AEUVG
+ * contempla ese dato solo para las asociaciones, por lo que su detalle presenta
+ * las actividades habituales en el lugar que allí ocupan los integrantes.
+ */
+export async function obtenerClub(idClub: number): Promise<ClubDetalle | null> {
+  if (!Number.isSafeInteger(idClub) || idClub <= 0) return null;
+
+  const club = await obtenerPrisma().club.findFirst({
+    where: { idClub, ...soloActivas() },
+    select: {
+      idClub: true,
+      nombre: true,
+      descripcion: true,
+      actividades: true,
+      correo: true,
+      informacionContacto: true,
+      imagenUrl: true,
+      redesSociales: {
+        where: { activo: true },
+        orderBy: { plataforma: "asc" },
+        select: CAMPOS_RED_SOCIAL,
+      },
+    },
+  });
+
+  if (!club) return null;
+
+  return {
+    id: club.idClub,
+    nombre: club.nombre,
+    descripcion: club.descripcion,
+    actividades: club.actividades,
+    correo: club.correo,
+    informacionContacto: club.informacionContacto,
+    imagenUrl: club.imagenUrl,
+    redesSociales: club.redesSociales,
+  };
 }
