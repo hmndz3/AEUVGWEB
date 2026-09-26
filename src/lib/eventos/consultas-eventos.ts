@@ -174,6 +174,28 @@ export async function obtenerEventoPublicado(idEvento: number): Promise<EventoDe
 }
 
 /**
+ * Eventos publicados que cumplen las condiciones indicadas, con su orden y su
+ * tope de resultados. Se usa cuando la ventana predeterminada del listado no
+ * aplica, como en las actividades pasadas de una asociación o de un club, que
+ * se leen de la más reciente a la más antigua.
+ */
+export async function consultarEventosPublicados(opciones: {
+  condiciones?: Prisma.EventoWhereInput;
+  orden?: "asc" | "desc";
+  limite?: number;
+}): Promise<EventoResumen[]> {
+  const orden = opciones.orden ?? "asc";
+  const eventos = await obtenerPrisma().evento.findMany({
+    where: { ...soloPublicados(), ...opciones.condiciones },
+    orderBy: [{ fechaInicio: orden }, { idEvento: orden }],
+    take: Math.min(opciones.limite ?? EVENTOS_POR_PAGINA, MAXIMO_POR_RANGO),
+    select: seleccionResumen,
+  });
+
+  return eventos.map(mapearResumen);
+}
+
+/**
  * Eventos publicados que se cruzan con el rango indicado. Se usa para el
  * calendario, por lo que incluye los que empezaron antes del rango y siguen
  * en curso dentro de él.
