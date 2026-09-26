@@ -92,24 +92,39 @@ async function verificar(): Promise<void> {
       "El estudiante sin cuenta debe tener registros de horas beca."
     );
 
-    const [asociacion, club, redesXorInvalidas, redesPrueba] = await Promise.all([
-      prisma.asociacion.findUnique({
-        where: { nombre: NOMBRES_PRUEBA.asociacion },
-        include: { integrantes: true, redesSociales: true },
-      }),
-      prisma.club.findUnique({
-        where: { nombre: NOMBRES_PRUEBA.club },
-        include: { redesSociales: true },
-      }),
-      prisma.$queryRaw<Conteo[]>`
+    const [asociacion, club, inactivas, sinTextoBusqueda, redesXorInvalidas, redesPrueba] =
+      await Promise.all([
+        prisma.asociacion.findUnique({
+          where: { nombre: NOMBRES_PRUEBA.asociacion },
+          include: { integrantes: true, redesSociales: true },
+        }),
+        prisma.club.findUnique({
+          where: { nombre: NOMBRES_PRUEBA.club },
+          include: { redesSociales: true },
+        }),
+        Promise.all([
+          prisma.asociacion.count({
+            where: { nombre: NOMBRES_PRUEBA.asociacionInactiva, activo: false },
+          }),
+          prisma.club.count({ where: { nombre: NOMBRES_PRUEBA.clubInactivo, activo: false } }),
+        ]),
+        Promise.all([
+          prisma.asociacion.count({
+            where: { nombre: { startsWith: MARCADOR_PRUEBA }, textoBusqueda: "" },
+          }),
+          prisma.club.count({
+            where: { nombre: { startsWith: MARCADOR_PRUEBA }, textoBusqueda: "" },
+          }),
+        ]),
+        prisma.$queryRaw<Conteo[]>`
         SELECT COUNT(*) AS cantidad
         FROM red_social
         WHERE num_nonnulls(id_asociacion, id_club) <> 1
       `,
-      prisma.redSocial.count({
-        where: { url: { startsWith: "https://example.test/" } },
-      }),
-    ]);
+        prisma.redSocial.count({
+          where: { url: { startsWith: "https://example.test/" } },
+        }),
+      ]);
     asegurar(asociacion !== null, "No existe la asociación ficticia.");
     asegurar(
       asociacion.integrantes.length === 2,
@@ -121,6 +136,14 @@ async function verificar(): Promise<void> {
     );
     asegurar(club !== null, "No existe el club ficticio.");
     asegurar(club.redesSociales.length === 1, "El club ficticio debe tener una red social.");
+    asegurar(
+      inactivas.every((cantidad) => cantidad === 1),
+      "Deben existir la asociación y el club ficticios dados de baja."
+    );
+    asegurar(
+      sinTextoBusqueda.every((cantidad) => cantidad === 0),
+      "Toda asociación y club ficticio debe tener su texto de búsqueda cargado."
+    );
     asegurar(redesPrueba === 3, "Deben existir exactamente tres redes sociales ficticias.");
     asegurar(
       cantidad(redesXorInvalidas) === 0,
