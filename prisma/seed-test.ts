@@ -3,6 +3,10 @@ import { Prisma, PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 
 import { textoDeBusqueda } from "../src/lib/eventos/busqueda";
+import {
+  textoDeBusquedaAsociacion,
+  textoDeBusquedaClub,
+} from "../src/lib/organizaciones/busqueda-organizaciones";
 
 import {
   CARNETS_PRUEBA,
@@ -237,53 +241,95 @@ async function cargarDatos(tx: Prisma.TransactionClient): Promise<Resultados> {
     });
   }
 
-  const datosAsociacion = {
-    nombre: NOMBRES_PRUEBA.asociacion,
-    descripcion: "Asociación completamente ficticia para comprobar relaciones del modelo.",
-    mision: "Validar flujos de desarrollo sin representar una organización real.",
-    vision: "Mantener datos de prueba reconocibles, aislados y reproducibles.",
-    informacionContacto: "Contacto ficticio mediante example.test.",
-    correo: "asociacion.demo@example.test",
-    imagenUrl: "https://example.test/imagenes/asociacion-demo.png",
-    activo: true,
-  };
-  await sincronizar({
-    tabla: "Asociacion",
-    datos: datosAsociacion,
-    buscar: () => tx.asociacion.findUnique({ where: { nombre: NOMBRES_PRUEBA.asociacion } }),
-    crear: () =>
-      tx.asociacion.upsert({
-        where: { nombre: NOMBRES_PRUEBA.asociacion },
-        create: datosAsociacion,
-        update: datosAsociacion,
-      }),
-    actualizar: () =>
-      tx.asociacion.update({ where: { nombre: NOMBRES_PRUEBA.asociacion }, data: datosAsociacion }),
-    resultados,
-  });
+  // Casos de asociación que necesitan las pantallas del Sprint 3: una completa,
+  // una sin junta directiva ni redes sociales, y una dada de baja que no debe
+  // aparecer en el listado público.
+  const asociaciones = [
+    {
+      nombre: NOMBRES_PRUEBA.asociacion,
+      descripcion: "Asociación completamente ficticia para comprobar relaciones del modelo.",
+      mision: "Validar flujos de desarrollo sin representar una organización real.",
+      vision: "Mantener datos de prueba reconocibles, aislados y reproducibles.",
+      informacionContacto: "Contacto ficticio mediante example.test.",
+      correo: "asociacion.demo@example.test",
+      imagenUrl: "https://example.test/imagenes/asociacion-demo.png",
+      activo: true,
+    },
+    {
+      nombre: NOMBRES_PRUEBA.asociacionSinJunta,
+      descripcion: "Asociación ficticia sin junta directiva ni redes sociales registradas.",
+      mision: "Comprobar que los bloques sin información se omiten del detalle.",
+      vision: null,
+      informacionContacto: null,
+      correo: null,
+      imagenUrl: null,
+      activo: true,
+    },
+    {
+      nombre: NOMBRES_PRUEBA.asociacionInactiva,
+      descripcion: "Asociación ficticia dada de baja, no debe aparecer en el listado público.",
+      mision: null,
+      vision: null,
+      informacionContacto: null,
+      correo: null,
+      imagenUrl: null,
+      activo: false,
+    },
+  ];
+  for (const base of asociaciones) {
+    const datos = { ...base, textoBusqueda: textoDeBusquedaAsociacion(base) };
+    await sincronizar({
+      tabla: "Asociacion",
+      datos,
+      buscar: () => tx.asociacion.findUnique({ where: { nombre: base.nombre } }),
+      crear: () =>
+        tx.asociacion.upsert({ where: { nombre: base.nombre }, create: datos, update: datos }),
+      actualizar: () => tx.asociacion.update({ where: { nombre: base.nombre }, data: datos }),
+      resultados,
+    });
+  }
 
-  const datosClub = {
-    nombre: NOMBRES_PRUEBA.club,
-    descripcion: "Club ficticio para pruebas de integración.",
-    actividades: "Talleres simulados y eventos de demostración.",
-    informacionContacto: "Contacto ficticio mediante example.test.",
-    correo: "club.demo@example.test",
-    imagenUrl: "https://example.test/imagenes/club-demo.png",
-    activo: true,
-  };
-  await sincronizar({
-    tabla: "Club",
-    datos: datosClub,
-    buscar: () => tx.club.findUnique({ where: { nombre: NOMBRES_PRUEBA.club } }),
-    crear: () =>
-      tx.club.upsert({
-        where: { nombre: NOMBRES_PRUEBA.club },
-        create: datosClub,
-        update: datosClub,
-      }),
-    actualizar: () => tx.club.update({ where: { nombre: NOMBRES_PRUEBA.club }, data: datosClub }),
-    resultados,
-  });
+  // Casos de club: uno completo, uno sin medios de contacto y uno dado de baja.
+  const clubes = [
+    {
+      nombre: NOMBRES_PRUEBA.club,
+      descripcion: "Club ficticio para pruebas de integración.",
+      actividades: "Talleres simulados y eventos de demostración.",
+      informacionContacto: "Contacto ficticio mediante example.test.",
+      correo: "club.demo@example.test",
+      imagenUrl: "https://example.test/imagenes/club-demo.png",
+      activo: true,
+    },
+    {
+      nombre: NOMBRES_PRUEBA.clubSinContacto,
+      descripcion: "Club ficticio sin correo ni información de contacto registrada.",
+      actividades: "Ensayos de prueba los miércoles por la tarde.",
+      informacionContacto: null,
+      correo: null,
+      imagenUrl: null,
+      activo: true,
+    },
+    {
+      nombre: NOMBRES_PRUEBA.clubInactivo,
+      descripcion: "Club ficticio dado de baja, no debe aparecer en el listado público.",
+      actividades: null,
+      informacionContacto: null,
+      correo: null,
+      imagenUrl: null,
+      activo: false,
+    },
+  ];
+  for (const base of clubes) {
+    const datos = { ...base, textoBusqueda: textoDeBusquedaClub(base) };
+    await sincronizar({
+      tabla: "Club",
+      datos,
+      buscar: () => tx.club.findUnique({ where: { nombre: base.nombre } }),
+      crear: () => tx.club.upsert({ where: { nombre: base.nombre }, create: datos, update: datos }),
+      actualizar: () => tx.club.update({ where: { nombre: base.nombre }, data: datos }),
+      resultados,
+    });
+  }
 
   const asociacion = await tx.asociacion.findUniqueOrThrow({
     where: { nombre: NOMBRES_PRUEBA.asociacion },
