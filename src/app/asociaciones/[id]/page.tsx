@@ -67,6 +67,7 @@ export default async function PaginaAsociacion({ params }: Props) {
 
         <JuntaDirectiva
           integrantes={asociacion.integrantes}
+          columnas={3}
           descripcion="Las personas electas por el estudiantado para representarlo y coordinar el trabajo de la asociación durante el periodo vigente."
         />
 

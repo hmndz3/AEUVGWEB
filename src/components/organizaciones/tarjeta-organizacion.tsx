@@ -46,7 +46,9 @@ export function TarjetaOrganizacion({
           "focus-visible:ring-primario transition-shadow hover:shadow-md focus-visible:ring-2 focus-visible:outline-none"
         )}
       >
-        <div className="flex items-center gap-4">
+        {/* min-w-0 en el contenedor: sin él, un nombre largo empuja el logotipo
+            fuera de la tarjeta en lugar de partirse en dos líneas. */}
+        <div className="flex min-w-0 items-center gap-4">
           <div className="border-borde bg-superficie relative size-14 shrink-0 overflow-hidden rounded-2xl border">
             {organizacion.imagenUrl ? (
               <Image

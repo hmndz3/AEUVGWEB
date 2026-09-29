@@ -32,13 +32,15 @@ export function EncabezadoOrganizacion({
       </Link>
 
       <div className="mt-6 flex flex-col gap-6 sm:flex-row sm:items-center">
-        <div className="border-borde bg-superficie relative size-24 shrink-0 overflow-hidden rounded-[1.25rem] border">
+        {/* En teléfono el logotipo cede espacio al nombre, que es lo que hay
+            que leer primero. */}
+        <div className="border-borde bg-superficie relative size-20 shrink-0 overflow-hidden rounded-[1.25rem] border sm:size-24">
           {imagenUrl ? (
             <Image
               src={imagenUrl}
               alt=""
               fill
-              sizes="96px"
+              sizes="(max-width: 640px) 80px, 96px"
               className="object-cover"
               unoptimized={imagenUrl.startsWith("/api/")}
             />

@@ -2,6 +2,7 @@ import Image from "next/image";
 
 import { inicialesDeNombre } from "@/lib/inicio/consultas-asociacion";
 import type { IntegranteJunta } from "@/lib/organizaciones/consultas-organizaciones";
+import { cn } from "@/lib/utils";
 
 // Color de respaldo para las iniciales de quien no tenga fotografía cargada.
 const ACENTOS = [
@@ -75,10 +76,15 @@ export function JuntaDirectiva({
   integrantes,
   titulo = "Junta Directiva",
   descripcion,
+  columnas = 4,
 }: {
   integrantes: IntegranteJunta[];
   titulo?: string;
   descripcion?: string;
+  /** Columnas en escritorio. La página de una asociación es más angosta que la
+   *  institucional, y con cuatro columnas los retratos quedaban demasiado
+   *  estrechos para leer el cargo sin partirlo en tres líneas. */
+  columnas?: 3 | 4;
 }) {
   if (integrantes.length === 0) return null;
 
@@ -89,7 +95,12 @@ export function JuntaDirectiva({
         <p className="text-texto-suave mt-2 max-w-3xl leading-relaxed">{descripcion}</p>
       )}
 
-      <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <div
+        className={cn(
+          "mt-6 grid gap-5 sm:grid-cols-2",
+          columnas === 4 ? "lg:grid-cols-4" : "lg:grid-cols-3"
+        )}
+      >
         {integrantes.map((integrante, indice) => (
           <TarjetaIntegrante
             key={integrante.idIntegrante}
