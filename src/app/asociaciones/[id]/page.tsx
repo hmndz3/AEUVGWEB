@@ -4,6 +4,7 @@ import { cache } from "react";
 import { MarcoSitio } from "@/components/layout/marco-sitio";
 import { BloqueTexto } from "@/components/organizaciones/bloque-texto";
 import { EncabezadoOrganizacion } from "@/components/organizaciones/encabezado-organizacion";
+import { JuntaDirectiva } from "@/components/organizaciones/junta-directiva";
 import {
   esAsociacionGeneral,
   obtenerAsociacion,
@@ -62,6 +63,11 @@ export default async function PaginaAsociacion({ params }: Props) {
             <BloqueTexto titulo="Visión" texto={asociacion.vision} className="bg-coral/12" />
           </div>
         )}
+
+        <JuntaDirectiva
+          integrantes={asociacion.integrantes}
+          descripcion="Las personas electas por el estudiantado para representarlo y coordinar el trabajo de la asociación durante el periodo vigente."
+        />
       </article>
     </MarcoSitio>
   );
