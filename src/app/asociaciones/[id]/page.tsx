@@ -3,6 +3,7 @@ import { cache } from "react";
 
 import { MarcoSitio } from "@/components/layout/marco-sitio";
 import { BloqueTexto } from "@/components/organizaciones/bloque-texto";
+import { ContactoOrganizacion } from "@/components/organizaciones/contacto-organizacion";
 import { EncabezadoOrganizacion } from "@/components/organizaciones/encabezado-organizacion";
 import { JuntaDirectiva } from "@/components/organizaciones/junta-directiva";
 import {
@@ -67,6 +68,12 @@ export default async function PaginaAsociacion({ params }: Props) {
         <JuntaDirectiva
           integrantes={asociacion.integrantes}
           descripcion="Las personas electas por el estudiantado para representarlo y coordinar el trabajo de la asociación durante el periodo vigente."
+        />
+
+        <ContactoOrganizacion
+          correo={asociacion.correo}
+          informacionContacto={asociacion.informacionContacto}
+          redesSociales={asociacion.redesSociales}
         />
       </article>
     </MarcoSitio>
