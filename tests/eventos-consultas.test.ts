@@ -127,7 +127,7 @@ test("el organizador principal encabeza la lista de organizadores", async () => 
         {
           organizadorPrincipal: true,
           unidadUvg: null,
-          asociacion: { nombre: "AEUVG" },
+          asociacion: { idAsociacion: 1, nombre: "AEUVG" },
           club: null,
         },
       ],
@@ -136,7 +136,10 @@ test("el organizador principal encabeza la lista de organizadores", async () => 
 
   const { eventos } = await listarEventosPublicados();
 
-  assert.deepEqual(eventos[0].organizadores, ["AEUVG", "Vida Estudiantil"]);
+  assert.deepEqual(eventos[0].organizadores, [
+    { nombre: "AEUVG", href: "/asociaciones/1" },
+    { nombre: "Vida Estudiantil", href: null },
+  ]);
 });
 
 test("un organizador sin nombre no aparece en la tarjeta", async () => {
@@ -148,7 +151,7 @@ test("un organizador sin nombre no aparece en la tarjeta", async () => {
           organizadorPrincipal: false,
           unidadUvg: null,
           asociacion: null,
-          club: { nombre: "Club" },
+          club: { idClub: 5, nombre: "Club" },
         },
       ],
     }),
@@ -156,7 +159,7 @@ test("un organizador sin nombre no aparece en la tarjeta", async () => {
 
   const { eventos } = await listarEventosPublicados();
 
-  assert.deepEqual(eventos[0].organizadores, ["Club"]);
+  assert.deepEqual(eventos[0].organizadores, [{ nombre: "Club", href: "/clubes/5" }]);
 });
 
 test("el detalle exige que el evento esté publicado", async () => {

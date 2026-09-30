@@ -14,6 +14,16 @@ export type CategoriaResumen = {
   color: string | null;
 };
 
+/**
+ * Organizador de un evento tal como se presenta. El enlace apunta a la página
+ * de la asociación o del club; una unidad de la universidad no tiene página
+ * propia en la plataforma, así que viaja sin enlace y se pinta como texto.
+ */
+export type OrganizadorEnlace = {
+  nombre: string;
+  href: string | null;
+};
+
 export type EventoResumen = {
   idEvento: number;
   nombre: string;
@@ -25,7 +35,7 @@ export type EventoResumen = {
   estado: EstadoEvento;
   tipoActividad: TipoActividad;
   categoria: CategoriaResumen;
-  organizadores: string[];
+  organizadores: OrganizadorEnlace[];
 };
 
 export type EventoDetalle = EventoResumen & {
@@ -56,8 +66,8 @@ const seleccionResumen = {
     select: {
       organizadorPrincipal: true,
       unidadUvg: true,
-      asociacion: { select: { nombre: true } },
-      club: { select: { nombre: true } },
+      asociacion: { select: { idAsociacion: true, nombre: true } },
+      club: { select: { idClub: true, nombre: true } },
     },
   },
 } as const;
@@ -72,18 +82,33 @@ const seleccionDetalle = {
 type EventoConsultado = Prisma.EventoGetPayload<{ select: typeof seleccionResumen }>;
 type EventoDetalleConsultado = Prisma.EventoGetPayload<{ select: typeof seleccionDetalle }>;
 
-function nombresOrganizadores(evento: EventoConsultado): string[] {
+function enlacesOrganizadores(evento: EventoConsultado): OrganizadorEnlace[] {
   return (
     evento.organizadores
       // El organizador principal encabeza la lista; el resto conserva su orden.
       .slice()
       .sort((a, b) => Number(b.organizadorPrincipal) - Number(a.organizadorPrincipal))
-      .flatMap((organizador) => {
-        const nombre =
-          organizador.asociacion?.nombre ?? organizador.club?.nombre ?? organizador.unidadUvg;
-        return nombre ? [nombre] : [];
+      .flatMap((organizador): OrganizadorEnlace[] => {
+        if (organizador.asociacion) {
+          return [
+            {
+              nombre: organizador.asociacion.nombre,
+              href: `/asociaciones/${organizador.asociacion.idAsociacion}`,
+            },
+          ];
+        }
+        if (organizador.club) {
+          return [{ nombre: organizador.club.nombre, href: `/clubes/${organizador.club.idClub}` }];
+        }
+
+        return organizador.unidadUvg ? [{ nombre: organizador.unidadUvg, href: null }] : [];
       })
   );
+}
+
+/** Nombres de los organizadores, para los lugares donde no caben enlaces. */
+export function nombresDeOrganizadores(organizadores: readonly OrganizadorEnlace[]): string[] {
+  return organizadores.map((organizador) => organizador.nombre);
 }
 
 function mapearResumen(evento: EventoConsultado): EventoResumen {
@@ -98,7 +123,7 @@ function mapearResumen(evento: EventoConsultado): EventoResumen {
     estado: evento.estado,
     tipoActividad: evento.tipoActividad,
     categoria: evento.categoria,
-    organizadores: nombresOrganizadores(evento),
+    organizadores: enlacesOrganizadores(evento),
   };
 }
 

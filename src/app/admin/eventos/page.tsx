@@ -13,7 +13,10 @@ import {
   TablaFila,
 } from "@/components/ui/tabla";
 import { normalizarTexto } from "@/lib/eventos/busqueda";
-import { listarEventosAdministracion } from "@/lib/eventos/consultas-eventos";
+import {
+  listarEventosAdministracion,
+  nombresDeOrganizadores,
+} from "@/lib/eventos/consultas-eventos";
 import { estadoVisible, etiquetaEstado, tonoEstado } from "@/lib/eventos/estado-evento";
 import { formatearFechaConAnio, formatearHora } from "@/lib/eventos/formato-fechas";
 import { cn } from "@/lib/utils";
@@ -153,7 +156,8 @@ export default async function PaginaAdminEventos({
                     </Link>
                     <span className="text-texto-suave mt-0.5 block text-xs">
                       {evento.categoria.nombre}
-                      {evento.organizadores.length > 0 && ` · ${evento.organizadores.join(", ")}`}
+                      {evento.organizadores.length > 0 &&
+                        ` · ${nombresDeOrganizadores(evento.organizadores).join(", ")}`}
                     </span>
                   </TablaCelda>
                   <TablaCelda className="text-texto-suave whitespace-nowrap">
