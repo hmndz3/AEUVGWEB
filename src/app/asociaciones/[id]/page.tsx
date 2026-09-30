@@ -2,6 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
 
 import { MarcoSitio } from "@/components/layout/marco-sitio";
+import { ActividadesOrganizador } from "@/components/organizaciones/actividades-organizador";
 import { BloqueTexto } from "@/components/organizaciones/bloque-texto";
 import { ContactoOrganizacion } from "@/components/organizaciones/contacto-organizacion";
 import { EncabezadoOrganizacion } from "@/components/organizaciones/encabezado-organizacion";
@@ -10,6 +11,7 @@ import {
   esAsociacionGeneral,
   obtenerAsociacion,
 } from "@/lib/organizaciones/consultas-organizaciones";
+import { obtenerActividadesDeOrganizador } from "@/lib/organizaciones/eventos-organizador";
 
 export const dynamic = "force-dynamic";
 
@@ -47,6 +49,12 @@ export default async function PaginaAsociacion({ params }: Props) {
   // para quien no administra la plataforma.
   if (!asociacion) notFound();
 
+  const ahora = new Date();
+  const actividades = await obtenerActividadesDeOrganizador(
+    { tipo: "asociacion", id: asociacion.id },
+    { ahora }
+  );
+
   return (
     <MarcoSitio>
       <article className="mx-auto flex max-w-5xl flex-col gap-10 px-4 py-10 sm:px-6">
@@ -69,6 +77,13 @@ export default async function PaginaAsociacion({ params }: Props) {
           integrantes={asociacion.integrantes}
           columnas={3}
           descripcion="Las personas electas por el estudiantado para representarlo y coordinar el trabajo de la asociación durante el periodo vigente."
+        />
+
+        <ActividadesOrganizador
+          actividades={actividades}
+          nombre={asociacion.nombre}
+          filtro={`asociacion=${asociacion.id}`}
+          ahora={ahora}
         />
 
         <ContactoOrganizacion
