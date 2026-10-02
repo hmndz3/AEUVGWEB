@@ -1,6 +1,25 @@
 import { z } from "zod";
 
 import { RUTA_IMAGEN_PROPIA } from "@/lib/imagenes/validacion-imagen";
+import { erroresPorCampo } from "@/validators/errores";
+
+/**
+ * Las dos secciones del panel comparten operaciones, así que comparten también
+ * su grupo de endpoints: el tipo viaja en la dirección y es lo único que cambia
+ * entre administrar una asociación y administrar un club.
+ */
+export const TIPOS_ORGANIZACION = ["asociaciones", "clubes"] as const;
+
+export type TipoOrganizacion = (typeof TIPOS_ORGANIZACION)[number];
+
+export function interpretarTipoOrganizacion(valor: string): TipoOrganizacion | null {
+  return TIPOS_ORGANIZACION.find((tipo) => tipo === valor) ?? null;
+}
+
+export const ETIQUETA_TIPO: Record<TipoOrganizacion, { singular: string; plural: string }> = {
+  asociaciones: { singular: "asociación", plural: "asociaciones" },
+  clubes: { singular: "club", plural: "clubes" },
+};
 
 const MENSAJE_NOMBRE = "El nombre debe tener entre 3 y 160 caracteres.";
 const MENSAJE_CORREO = "Escribe un correo electrónico válido o deja el campo vacío.";
@@ -89,3 +108,63 @@ export const ETIQUETAS_CAMPO_ASOCIACION: Record<string, string> = {
   informacionContacto: "Información de contacto",
   imagenUrl: "Imagen o logotipo",
 };
+
+export const esquemaClubAdmin = z.object({
+  nombre,
+  descripcion: textoOpcional(5000, "La descripción no puede exceder 5000 caracteres."),
+  actividades: textoOpcional(
+    2000,
+    "La descripción de las actividades no puede exceder 2000 caracteres."
+  ),
+  correo: correoOpcional,
+  informacionContacto: textoOpcional(
+    2000,
+    "La información de contacto no puede exceder 2000 caracteres."
+  ),
+  imagenUrl: imagenOpcional,
+});
+
+export type DatosClubAdmin = z.infer<typeof esquemaClubAdmin>;
+
+export const ETIQUETAS_CAMPO_CLUB: Record<string, string> = {
+  nombre: "Nombre",
+  descripcion: "Descripción",
+  actividades: "Actividades",
+  correo: "Correo",
+  informacionContacto: "Información de contacto",
+  imagenUrl: "Imagen o logotipo",
+};
+
+export function etiquetasDeCampo(tipo: TipoOrganizacion): Record<string, string> {
+  return tipo === "asociaciones" ? ETIQUETAS_CAMPO_ASOCIACION : ETIQUETAS_CAMPO_CLUB;
+}
+
+/** Entrada ya validada de una organización, discriminada por su tipo. */
+export type EntradaOrganizacion =
+  { tipo: "asociaciones"; datos: DatosAsociacionAdmin } | { tipo: "clubes"; datos: DatosClubAdmin };
+
+export type LecturaOrganizacion =
+  | { valida: true; entrada: EntradaOrganizacion }
+  | { valida: false; errores: Record<string, string> };
+
+/**
+ * Valida el cuerpo recibido con el esquema que corresponde al tipo. Devuelve la
+ * entrada discriminada para que el servicio sepa, sin suposiciones, qué ficha
+ * está guardando.
+ */
+export function interpretarOrganizacion(
+  tipo: TipoOrganizacion,
+  cuerpo: unknown
+): LecturaOrganizacion {
+  if (tipo === "asociaciones") {
+    const resultado = esquemaAsociacionAdmin.safeParse(cuerpo);
+    return resultado.success
+      ? { valida: true, entrada: { tipo, datos: resultado.data } }
+      : { valida: false, errores: erroresPorCampo(resultado.error) };
+  }
+
+  const resultado = esquemaClubAdmin.safeParse(cuerpo);
+  return resultado.success
+    ? { valida: true, entrada: { tipo, datos: resultado.data } }
+    : { valida: false, errores: erroresPorCampo(resultado.error) };
+}

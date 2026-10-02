@@ -1,6 +1,7 @@
 import type { PrismaClient } from "@prisma/client";
 
 import { obtenerPrisma } from "@/lib/prisma";
+import type { TipoOrganizacion } from "@/validators/organizacion-admin";
 
 export type DatosAsociacionPersistidos = {
   nombre: string;
@@ -13,23 +14,52 @@ export type DatosAsociacionPersistidos = {
   textoBusqueda: string;
 };
 
-export type AsociacionAdministrada = DatosAsociacionPersistidos & {
-  idAsociacion: number;
+export type DatosClubPersistidos = {
+  nombre: string;
+  descripcion: string | null;
+  actividades: string | null;
+  correo: string | null;
+  informacionContacto: string | null;
+  imagenUrl: string | null;
+  textoBusqueda: string;
+};
+
+/**
+ * Ficha administrada tal como la lee el panel. Las dos entidades se presentan
+ * con la misma forma, con sus campos propios opcionales, para que el formulario
+ * y el listado no necesiten dos caminos distintos.
+ */
+export type OrganizacionAdministrada = {
+  id: number;
+  nombre: string;
+  descripcion: string | null;
+  mision: string | null;
+  vision: string | null;
+  actividades: string | null;
+  correo: string | null;
+  informacionContacto: string | null;
+  imagenUrl: string | null;
   activo: boolean;
 };
 
 export interface RepositorioOrganizaciones {
   /** Indica si el nombre está libre, sin contar el registro que se está editando. */
-  nombreAsociacionDisponible(nombre: string, excepto: number | null): Promise<boolean>;
+  nombreDisponible(
+    tipo: TipoOrganizacion,
+    nombre: string,
+    excepto: number | null
+  ): Promise<boolean>;
   crearAsociacion(datos: DatosAsociacionPersistidos): Promise<number>;
+  crearClub(datos: DatosClubPersistidos): Promise<number>;
   actualizarAsociacion(idAsociacion: number, datos: DatosAsociacionPersistidos): Promise<boolean>;
-  obtenerAsociacion(idAsociacion: number): Promise<AsociacionAdministrada | null>;
-  cambiarEstadoAsociacion(idAsociacion: number, activo: boolean): Promise<boolean>;
-  asociacionOrganizaEventos(idAsociacion: number): Promise<boolean>;
-  eliminarAsociacion(idAsociacion: number): Promise<boolean>;
+  actualizarClub(idClub: number, datos: DatosClubPersistidos): Promise<boolean>;
+  obtener(tipo: TipoOrganizacion, id: number): Promise<OrganizacionAdministrada | null>;
+  cambiarEstado(tipo: TipoOrganizacion, id: number, activo: boolean): Promise<boolean>;
+  organizaEventos(tipo: TipoOrganizacion, id: number): Promise<boolean>;
+  eliminar(tipo: TipoOrganizacion, id: number): Promise<boolean>;
 }
 
-const seleccionAsociacion = {
+const SELECCION_ASOCIACION = {
   idAsociacion: true,
   nombre: true,
   descripcion: true,
@@ -38,7 +68,17 @@ const seleccionAsociacion = {
   correo: true,
   informacionContacto: true,
   imagenUrl: true,
-  textoBusqueda: true,
+  activo: true,
+} as const;
+
+const SELECCION_CLUB = {
+  idClub: true,
+  nombre: true,
+  descripcion: true,
+  actividades: true,
+  correo: true,
+  informacionContacto: true,
+  imagenUrl: true,
   activo: true,
 } as const;
 
@@ -50,14 +90,23 @@ export class RepositorioOrganizacionesPrisma implements RepositorioOrganizacione
    * hace sin distinguirlas: "Club de Teatro" y "club de teatro" son el mismo
    * grupo para cualquiera que lea el listado.
    */
-  async nombreAsociacionDisponible(nombre: string, excepto: number | null): Promise<boolean> {
-    const existente = await this.prisma.asociacion.findFirst({
-      where: {
-        nombre: { equals: nombre, mode: "insensitive" },
-        ...(excepto ? { idAsociacion: { not: excepto } } : {}),
-      },
-      select: { idAsociacion: true },
-    });
+  async nombreDisponible(
+    tipo: TipoOrganizacion,
+    nombre: string,
+    excepto: number | null
+  ): Promise<boolean> {
+    const donde = { nombre: { equals: nombre, mode: "insensitive" as const } };
+
+    const existente =
+      tipo === "asociaciones"
+        ? await this.prisma.asociacion.findFirst({
+            where: { ...donde, ...(excepto ? { idAsociacion: { not: excepto } } : {}) },
+            select: { idAsociacion: true },
+          })
+        : await this.prisma.club.findFirst({
+            where: { ...donde, ...(excepto ? { idClub: { not: excepto } } : {}) },
+            select: { idClub: true },
+          });
 
     return existente === null;
   }
@@ -69,6 +118,12 @@ export class RepositorioOrganizacionesPrisma implements RepositorioOrganizacione
     });
 
     return asociacion.idAsociacion;
+  }
+
+  async crearClub(datos: DatosClubPersistidos): Promise<number> {
+    const club = await this.prisma.club.create({ data: datos, select: { idClub: true } });
+
+    return club.idClub;
   }
 
   async actualizarAsociacion(
@@ -83,33 +138,53 @@ export class RepositorioOrganizacionesPrisma implements RepositorioOrganizacione
     return count > 0;
   }
 
-  async obtenerAsociacion(idAsociacion: number): Promise<AsociacionAdministrada | null> {
-    return this.prisma.asociacion.findUnique({
-      where: { idAsociacion },
-      select: seleccionAsociacion,
-    });
-  }
-
-  async cambiarEstadoAsociacion(idAsociacion: number, activo: boolean): Promise<boolean> {
-    const { count } = await this.prisma.asociacion.updateMany({
-      where: { idAsociacion },
-      data: { activo },
-    });
+  async actualizarClub(idClub: number, datos: DatosClubPersistidos): Promise<boolean> {
+    const { count } = await this.prisma.club.updateMany({ where: { idClub }, data: datos });
 
     return count > 0;
   }
 
-  async asociacionOrganizaEventos(idAsociacion: number): Promise<boolean> {
+  async obtener(tipo: TipoOrganizacion, id: number): Promise<OrganizacionAdministrada | null> {
+    if (tipo === "asociaciones") {
+      const asociacion = await this.prisma.asociacion.findUnique({
+        where: { idAsociacion: id },
+        select: SELECCION_ASOCIACION,
+      });
+
+      return asociacion ? { ...asociacion, id: asociacion.idAsociacion, actividades: null } : null;
+    }
+
+    const club = await this.prisma.club.findUnique({
+      where: { idClub: id },
+      select: SELECCION_CLUB,
+    });
+
+    return club ? { ...club, id: club.idClub, mision: null, vision: null } : null;
+  }
+
+  async cambiarEstado(tipo: TipoOrganizacion, id: number, activo: boolean): Promise<boolean> {
+    const { count } =
+      tipo === "asociaciones"
+        ? await this.prisma.asociacion.updateMany({ where: { idAsociacion: id }, data: { activo } })
+        : await this.prisma.club.updateMany({ where: { idClub: id }, data: { activo } });
+
+    return count > 0;
+  }
+
+  async organizaEventos(tipo: TipoOrganizacion, id: number): Promise<boolean> {
     const organizador = await this.prisma.organizadorEvento.findFirst({
-      where: { idAsociacion },
+      where: tipo === "asociaciones" ? { idAsociacion: id } : { idClub: id },
       select: { idOrganizadorEvento: true },
     });
 
     return organizador !== null;
   }
 
-  async eliminarAsociacion(idAsociacion: number): Promise<boolean> {
-    const { count } = await this.prisma.asociacion.deleteMany({ where: { idAsociacion } });
+  async eliminar(tipo: TipoOrganizacion, id: number): Promise<boolean> {
+    const { count } =
+      tipo === "asociaciones"
+        ? await this.prisma.asociacion.deleteMany({ where: { idAsociacion: id } })
+        : await this.prisma.club.deleteMany({ where: { idClub: id } });
 
     return count > 0;
   }
