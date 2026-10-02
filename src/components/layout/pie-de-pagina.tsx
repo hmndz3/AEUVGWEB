@@ -7,6 +7,7 @@ const SECCIONES = [
     enlaces: [
       { href: "/", texto: "Inicio" },
       { href: "/eventos", texto: "Eventos" },
+      { href: "/calendario", texto: "Calendario" },
       { href: "/sobre-aeuvg", texto: "Sobre AEUVG" },
     ],
   },

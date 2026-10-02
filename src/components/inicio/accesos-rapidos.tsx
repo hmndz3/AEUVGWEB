@@ -1,40 +1,44 @@
 import Link from "next/link";
 
+// Seis accesos en dos filas de tres. Asociaciones y clubes se separaron en este
+// sprint: desde que cada sección tiene su propio listado, un acceso compartido
+// obligaba a entrar a una para llegar a la otra.
 const ACCESOS = [
   {
     href: "/eventos",
     titulo: "Eventos",
     descripcion: "Consulta las actividades del ciclo, con sus fechas, lugares y organizadores.",
     clase: "bg-primario-suave text-primario",
-    ancho: "md:col-span-2",
   },
   {
     href: "/calendario",
     titulo: "Calendario",
     descripcion: "Revisa el mes o la semana completa de un vistazo.",
     clase: "bg-cielo/15 text-[#0b5f8a]",
-    ancho: "",
+  },
+  {
+    href: "/asociaciones",
+    titulo: "Asociaciones",
+    descripcion: "Conoce las asociaciones de facultad y de carrera, y a quienes las integran.",
+    clase: "bg-magenta/12 text-[#a3145f]",
+  },
+  {
+    href: "/clubes",
+    titulo: "Clubes",
+    descripcion: "Encuentra el club que va con lo tuyo y cómo integrarte.",
+    clase: "bg-lavanda/20 text-[#5a35e8]",
   },
   {
     href: "/iniciar-sesion",
     titulo: "Horas beca",
     descripcion: "Inicia sesión para revisar tus horas realizadas, acreditadas y pendientes.",
     clase: "bg-turquesa/15 text-[#00695a]",
-    ancho: "",
   },
   {
     href: "/tutorias",
     titulo: "Tutorías",
     descripcion: "Encuentra tutores por curso y horario.",
     clase: "bg-ambar/20 text-[#8a5600]",
-    ancho: "",
-  },
-  {
-    href: "/asociaciones",
-    titulo: "Asociaciones y clubes",
-    descripcion: "Conoce las agrupaciones estudiantiles y cómo integrarte.",
-    clase: "bg-magenta/12 text-[#a3145f]",
-    ancho: "",
   },
 ];
 
@@ -51,7 +55,7 @@ export function AccesosRapidos() {
           <Link
             key={acceso.href}
             href={acceso.href}
-            className={`${acceso.clase} ${acceso.ancho} group flex flex-col justify-between rounded-[1.25rem] p-7 transition-transform hover:scale-[1.01]`}
+            className={`${acceso.clase} group flex flex-col justify-between rounded-[1.25rem] p-7 transition-transform hover:scale-[1.01]`}
           >
             <div>
               <p className="text-xl font-extrabold">{acceso.titulo}</p>

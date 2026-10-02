@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: Props) {
   return { title: evento.nombre, description: evento.descripcion.slice(0, 160) };
 }
 
-function Dato({ etiqueta, valor }: { etiqueta: string; valor: string }) {
+function Dato({ etiqueta, valor }: { etiqueta: string; valor: React.ReactNode }) {
   return (
     <div>
       <dt className="text-texto-suave text-xs font-bold tracking-wide uppercase">{etiqueta}</dt>
@@ -88,7 +88,26 @@ export default async function PaginaEvento({ params }: Props) {
                 <Dato etiqueta="Ubicación" valor={evento.ubicacion} />
                 {evento.cupo !== null && <Dato etiqueta="Cupo" valor={`${evento.cupo} personas`} />}
                 {evento.organizadores.length > 0 && (
-                  <Dato etiqueta="Organiza" valor={evento.organizadores.join(", ")} />
+                  <Dato
+                    etiqueta="Organiza"
+                    valor={evento.organizadores.map((organizador, indice) => (
+                      <span key={`${organizador.nombre}-${indice}`}>
+                        {indice > 0 && ", "}
+                        {/* Una unidad de la universidad no tiene página propia
+                            en la plataforma, así que va como texto. */}
+                        {organizador.href ? (
+                          <Link
+                            href={organizador.href}
+                            className="text-primario font-semibold hover:underline"
+                          >
+                            {organizador.nombre}
+                          </Link>
+                        ) : (
+                          organizador.nombre
+                        )}
+                      </span>
+                    ))}
+                  />
                 )}
               </dl>
             </Tarjeta>
