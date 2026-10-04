@@ -168,3 +168,50 @@ export function interpretarOrganizacion(
     ? { valida: true, entrada: { tipo, datos: resultado.data } }
     : { valida: false, errores: erroresPorCampo(resultado.error) };
 }
+
+const MENSAJE_ENLACE = "Escribe un enlace que empiece con http:// o https://.";
+
+export const esquemaIntegranteAdmin = z.object({
+  nombre: z
+    .string("El nombre del integrante debe tener entre 3 y 200 caracteres.")
+    .trim()
+    .min(3, "El nombre del integrante debe tener entre 3 y 200 caracteres.")
+    .max(200, "El nombre del integrante debe tener entre 3 y 200 caracteres."),
+  cargo: z
+    .string("Indica el cargo del integrante.")
+    .trim()
+    .min(3, "Indica el cargo del integrante.")
+    .max(120, "El cargo no puede exceder 120 caracteres."),
+  periodo: z
+    .string("Indica el periodo, por ejemplo 2026.")
+    .trim()
+    .min(1, "Indica el periodo, por ejemplo 2026.")
+    .max(50, "El periodo no puede exceder 50 caracteres."),
+  fotoUrl: imagenOpcional,
+  // El orden lo decide AEUVG: la junta se lee por jerarquía de cargos y no en
+  // orden alfabético.
+  ordenVisualizacion: z
+    .union(
+      [z.literal(""), z.coerce.number().int().min(0).max(999)],
+      "El orden debe ser un número entre 0 y 999."
+    )
+    .transform((valor) => (valor === "" ? 0 : valor))
+    .default(0),
+});
+
+export type DatosIntegranteAdmin = z.infer<typeof esquemaIntegranteAdmin>;
+
+export const esquemaRedSocialAdmin = z.object({
+  plataforma: z
+    .string("Indica la plataforma, por ejemplo Instagram.")
+    .trim()
+    .min(2, "Indica la plataforma, por ejemplo Instagram.")
+    .max(50, "El nombre de la plataforma no puede exceder 50 caracteres."),
+  url: z
+    .string(MENSAJE_ENLACE)
+    .trim()
+    .max(500, "El enlace es demasiado largo.")
+    .refine((valor) => esEnlaceSeguro(valor), MENSAJE_ENLACE),
+});
+
+export type DatosRedSocialAdmin = z.infer<typeof esquemaRedSocialAdmin>;

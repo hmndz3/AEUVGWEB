@@ -11,6 +11,8 @@ import {
   ETIQUETA_TIPO,
   type DatosAsociacionAdmin,
   type DatosClubAdmin,
+  type DatosIntegranteAdmin,
+  type DatosRedSocialAdmin,
   type EntradaOrganizacion,
   type TipoOrganizacion,
 } from "@/validators/organizacion-admin";
@@ -139,5 +141,86 @@ export class ServicioOrganizaciones {
 
   async obtener(tipo: TipoOrganizacion, id: number) {
     return this.repositorio.obtener(tipo, id);
+  }
+
+  /**
+   * Registra o actualiza un integrante de la junta directiva. La asociación se
+   * comprueba antes para no crear integrantes huérfanos cuando la dirección
+   * apunta a una ficha que ya no existe.
+   */
+  async guardarIntegrante(
+    idAsociacion: number,
+    datos: DatosIntegranteAdmin,
+    idIntegrante: number | null = null
+  ): Promise<ResultadoOrganizacion> {
+    const asociacion = await this.repositorio.obtener("asociaciones", idAsociacion);
+    if (!asociacion) return { tipo: "no_encontrada" };
+
+    if (idIntegrante === null) {
+      const id = await this.repositorio.crearIntegrante(idAsociacion, datos);
+      return { tipo: "guardada", id };
+    }
+
+    const actualizado = await this.repositorio.actualizarIntegrante(
+      idAsociacion,
+      idIntegrante,
+      datos
+    );
+
+    return actualizado ? { tipo: "guardada", id: idIntegrante } : { tipo: "no_encontrada" };
+  }
+
+  /**
+   * Quita un integrante. El borrado sí es definitivo: un integrante no tiene
+   * historial propio que preservar, y la junta anterior se conserva registrando
+   * su periodo en los integrantes que la formaron.
+   */
+  async eliminarIntegrante(
+    idAsociacion: number,
+    idIntegrante: number
+  ): Promise<ResultadoEliminacion> {
+    const eliminado = await this.repositorio.eliminarIntegrante(idAsociacion, idIntegrante);
+
+    return eliminado ? { tipo: "eliminada" } : { tipo: "no_encontrada" };
+  }
+
+  async listarIntegrantes(idAsociacion: number) {
+    return this.repositorio.listarIntegrantes(idAsociacion);
+  }
+
+  /**
+   * Agrega una red social. La tabla tiene una restricción de unicidad por
+   * plataforma y enlace, así que el duplicado se detecta antes de intentar
+   * guardarlo: de otro modo el panel mostraría un error de la base.
+   */
+  async agregarRedSocial(
+    tipo: TipoOrganizacion,
+    id: number,
+    datos: DatosRedSocialAdmin
+  ): Promise<ResultadoOrganizacion> {
+    const organizacion = await this.repositorio.obtener(tipo, id);
+    if (!organizacion) return { tipo: "no_encontrada" };
+
+    if (await this.repositorio.redSocialRegistrada(tipo, id, datos)) {
+      return { tipo: "invalida", errores: { url: "Ese enlace ya está registrado." } };
+    }
+
+    const idRedSocial = await this.repositorio.crearRedSocial(tipo, id, datos);
+
+    return { tipo: "guardada", id: idRedSocial };
+  }
+
+  async eliminarRedSocial(
+    tipo: TipoOrganizacion,
+    id: number,
+    idRedSocial: number
+  ): Promise<ResultadoEliminacion> {
+    const eliminada = await this.repositorio.eliminarRedSocial(tipo, id, idRedSocial);
+
+    return eliminada ? { tipo: "eliminada" } : { tipo: "no_encontrada" };
+  }
+
+  async listarRedesSociales(tipo: TipoOrganizacion, id: number) {
+    return this.repositorio.listarRedesSociales(tipo, id);
   }
 }
