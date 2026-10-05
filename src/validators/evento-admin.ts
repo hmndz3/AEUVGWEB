@@ -1,7 +1,10 @@
 import { z } from "zod";
 
 import { RUTA_IMAGEN_PROPIA } from "@/lib/imagenes/validacion-imagen";
+import { erroresPorCampo } from "@/validators/errores";
 import { TIPOS_ACTIVIDAD } from "@/validators/eventos";
+
+export { erroresPorCampo };
 
 const MENSAJE_NOMBRE = "El nombre del evento debe tener entre 5 y 200 caracteres.";
 const MENSAJE_DESCRIPCION = "La descripción debe tener entre 20 y 5000 caracteres.";
@@ -112,18 +115,6 @@ export const esquemaEventoAdmin = z
   });
 
 export type DatosEventoAdmin = z.infer<typeof esquemaEventoAdmin>;
-
-/** Traduce los errores de Zod a un mapa campo/mensaje para el formulario. */
-export function erroresPorCampo(error: z.ZodError): Record<string, string> {
-  const errores: Record<string, string> = {};
-
-  for (const problema of error.issues) {
-    const campo = problema.path.join(".") || "general";
-    errores[campo] ??= problema.message;
-  }
-
-  return errores;
-}
 
 /** Etiqueta legible de cada campo, para nombrar el primer error en el resumen. */
 export const ETIQUETAS_CAMPO_EVENTO: Record<string, string> = {

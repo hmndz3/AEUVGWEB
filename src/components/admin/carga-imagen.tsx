@@ -6,7 +6,9 @@ import { Boton } from "@/components/ui/boton";
 import { TIPOS_PERMITIDOS } from "@/lib/imagenes/validacion-imagen";
 
 /**
- * Subida de la imagen de un evento.
+ * Subida de una imagen al almacenamiento configurado. La usan el formulario de
+ * eventos y el de asociaciones y clubes: el proveedor y las validaciones son los
+ * mismos, solo cambia el texto alternativo de la vista previa.
  *
  * El campo de dirección sigue siendo la fuente de verdad: la subida solo lo
  * rellena. Así, si el servicio de imágenes no está configurado en el ambiente,
@@ -17,10 +19,12 @@ export function CargaImagen({
   valor,
   onCambio,
   onError,
+  descripcion = "Vista previa de la imagen del evento",
 }: {
   valor: string;
   onCambio: (url: string) => void;
   onError: (mensaje: string | null) => void;
+  descripcion?: string;
 }) {
   const entrada = useRef<HTMLInputElement>(null);
   const [subiendo, setSubiendo] = useState(false);
@@ -83,7 +87,7 @@ export function CargaImagen({
               no pasa por el optimizador porque el host todavía no se conoce. */}
           <img
             src={valor}
-            alt="Vista previa de la imagen del evento"
+            alt={descripcion}
             className="border-borde h-16 w-24 rounded-xl border object-cover"
           />
           <Boton type="button" variante="texto" tamano="sm" onClick={() => onCambio("")}>

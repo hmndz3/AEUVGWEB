@@ -3,6 +3,7 @@ import type { Prisma } from "@prisma/client";
 import { normalizarTexto } from "@/lib/busqueda-texto";
 import { NOMBRE_ASOCIACION_GENERAL } from "@/lib/inicio/consultas-inicio";
 import { obtenerPrisma } from "@/lib/prisma";
+import type { TipoOrganizacion } from "@/validators/organizacion-admin";
 
 /** Organizaciones por página del listado público. Cuatro filas de tres en escritorio. */
 export const ORGANIZACIONES_POR_PAGINA = 12;
@@ -47,6 +48,19 @@ export type ClubDetalle = OrganizacionResumen & {
 
 export type PaginaOrganizaciones = {
   organizaciones: OrganizacionResumen[];
+  total: number;
+  pagina: number;
+  paginas: number;
+};
+
+/** Fila del listado del panel. A diferencia del público incluye el estado. */
+export type OrganizacionAdministrativa = OrganizacionResumen & {
+  activo: boolean;
+  eventosOrganizados: number;
+};
+
+export type PaginaOrganizacionesAdmin = {
+  organizaciones: OrganizacionAdministrativa[];
   total: number;
   pagina: number;
   paginas: number;
@@ -264,5 +278,92 @@ export async function obtenerClub(idClub: number): Promise<ClubDetalle | null> {
     informacionContacto: club.informacionContacto,
     imagenUrl: club.imagenUrl,
     redesSociales: club.redesSociales,
+  };
+}
+
+/** Filas por página del listado del panel. */
+export const ORGANIZACIONES_POR_PAGINA_ADMIN = 15;
+
+/**
+ * Listado del panel administrativo. A diferencia del público incluye los
+ * registros dados de baja y la propia asociación general, porque AEUVG también
+ * administra su ficha desde aquí, y reporta cuántos eventos organiza cada uno:
+ * es el dato que decide si puede eliminarse o solo darse de baja.
+ */
+export async function listarOrganizacionesAdministracion(
+  tipo: TipoOrganizacion,
+  opciones: OpcionesListado = {}
+): Promise<PaginaOrganizacionesAdmin> {
+  const { tamano, numero, saltar } = paginar(
+    opciones.pagina,
+    opciones.porPagina ?? ORGANIZACIONES_POR_PAGINA_ADMIN
+  );
+  const where = condicionBusqueda(opciones.busqueda);
+  const prisma = obtenerPrisma();
+
+  if (tipo === "asociaciones") {
+    const [total, filas] = await Promise.all([
+      prisma.asociacion.count({ where }),
+      prisma.asociacion.findMany({
+        where,
+        orderBy: { nombre: "asc" },
+        skip: saltar,
+        take: tamano,
+        select: {
+          idAsociacion: true,
+          nombre: true,
+          descripcion: true,
+          imagenUrl: true,
+          activo: true,
+          _count: { select: { eventosOrganizados: true } },
+        },
+      }),
+    ]);
+
+    return {
+      organizaciones: filas.map((fila) => ({
+        id: fila.idAsociacion,
+        nombre: fila.nombre,
+        descripcion: fila.descripcion,
+        imagenUrl: fila.imagenUrl,
+        activo: fila.activo,
+        eventosOrganizados: fila._count.eventosOrganizados,
+      })),
+      total,
+      pagina: numero,
+      paginas: Math.max(1, Math.ceil(total / tamano)),
+    };
+  }
+
+  const [total, filas] = await Promise.all([
+    prisma.club.count({ where }),
+    prisma.club.findMany({
+      where,
+      orderBy: { nombre: "asc" },
+      skip: saltar,
+      take: tamano,
+      select: {
+        idClub: true,
+        nombre: true,
+        descripcion: true,
+        imagenUrl: true,
+        activo: true,
+        _count: { select: { eventosOrganizados: true } },
+      },
+    }),
+  ]);
+
+  return {
+    organizaciones: filas.map((fila) => ({
+      id: fila.idClub,
+      nombre: fila.nombre,
+      descripcion: fila.descripcion,
+      imagenUrl: fila.imagenUrl,
+      activo: fila.activo,
+      eventosOrganizados: fila._count.eventosOrganizados,
+    })),
+    total,
+    pagina: numero,
+    paginas: Math.max(1, Math.ceil(total / tamano)),
   };
 }
