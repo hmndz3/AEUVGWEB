@@ -127,6 +127,15 @@ export function EstadoSesion() {
           <p className="text-texto-suave truncate text-xs">{usuario.correo}</p>
         </div>
 
+        <Link
+          href="/perfil"
+          role="menuitem"
+          onClick={() => setAbierto(false)}
+          className="text-texto-suave hover:bg-superficie-suave hover:text-texto border-borde block border-b px-4 py-3 text-sm font-semibold transition-colors"
+        >
+          Mi perfil
+        </Link>
+
         <button
           type="button"
           role="menuitem"
