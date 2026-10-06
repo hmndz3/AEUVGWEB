@@ -1,6 +1,8 @@
 import { MarcoSitio } from "@/components/layout/marco-sitio";
 import { TarjetaIntegrante } from "@/components/organizaciones/junta-directiva";
+import { RedesSociales } from "@/components/organizaciones/redes-sociales";
 import { obtenerAsociacionGeneral } from "@/lib/inicio/consultas-asociacion";
+import { obtenerRedesAeuvg } from "@/lib/inicio/consultas-inicio";
 
 // Lee la información institucional desde la base en cada petición.
 export const dynamic = "force-dynamic";
@@ -24,7 +26,7 @@ function BloqueVacio({ titulo }: { titulo: string }) {
 }
 
 export default async function PaginaSobreAeuvg() {
-  const asociacion = await obtenerAsociacionGeneral();
+  const [asociacion, redes] = await Promise.all([obtenerAsociacionGeneral(), obtenerRedesAeuvg()]);
 
   return (
     <MarcoSitio>
@@ -87,21 +89,23 @@ export default async function PaginaSobreAeuvg() {
           </div>
         </section>
 
-        {(asociacion?.correo || asociacion?.informacionContacto) && (
+        {(asociacion?.correo || asociacion?.informacionContacto || redes.length > 0) && (
           <section className="bg-superficie-suave rounded-[1.25rem] p-8">
             <h2 className="text-texto text-2xl font-extrabold tracking-tight">Contacto</h2>
-            {asociacion.correo && (
+            {asociacion?.correo && (
               <p className="text-texto-suave mt-3">
                 <a href={`mailto:${asociacion.correo}`} className="text-primario font-semibold">
                   {asociacion.correo}
                 </a>
               </p>
             )}
-            {asociacion.informacionContacto && (
+            {asociacion?.informacionContacto && (
               <p className="text-texto-suave mt-2 leading-relaxed">
                 {asociacion.informacionContacto}
               </p>
             )}
+
+            <RedesSociales redes={redes} className="mt-5" />
           </section>
         )}
       </div>

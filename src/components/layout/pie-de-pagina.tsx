@@ -1,6 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { RedesSociales } from "@/components/organizaciones/redes-sociales";
+import { obtenerRedesAeuvg } from "@/lib/inicio/consultas-inicio";
+
 const SECCIONES = [
   {
     titulo: "Navegación",
@@ -29,7 +32,11 @@ const SECCIONES = [
   },
 ];
 
-export function PieDePagina() {
+export async function PieDePagina() {
+  // Las redes oficiales se leen de la base y no se escriben aquí: AEUVG las
+  // administra desde el panel y el pie debe seguirlas sin tocar el código.
+  const redes = await obtenerRedesAeuvg();
+
   return (
     <footer className="bg-texto mt-auto text-white">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-4">
@@ -51,6 +58,7 @@ export function PieDePagina() {
           <p className="text-sm leading-relaxed text-white/70">
             Asociación General de Estudiantes de la Universidad del Valle de Guatemala.
           </p>
+          <RedesSociales redes={redes} tono="oscuro" className="mt-1" />
         </div>
 
         {SECCIONES.map((seccion) => (
