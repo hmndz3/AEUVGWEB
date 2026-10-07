@@ -26,14 +26,24 @@ export function AccionesOrganizacion({
   tipo,
   id,
   activo,
+  eventosOrganizados,
 }: {
   tipo: TipoOrganizacion;
   id: number;
   activo: boolean;
+  eventosOrganizados: number;
 }) {
   const router = useRouter();
   const [trabajando, setTrabajando] = useState<Accion | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // El servicio ya rechaza la eliminación de un registro con eventos, pero
+  // durante la revisión del sprint AEUVG señaló que el botón invitaba a
+  // intentarlo para enterarse. Se deshabilita con la razón a la vista.
+  const motivoNoEliminar =
+    eventosOrganizados > 0
+      ? `Organiza ${eventosOrganizados} ${eventosOrganizados === 1 ? "evento" : "eventos"}: dala de baja en lugar de eliminarla, para no borrar su historial.`
+      : null;
 
   async function ejecutar(accion: Accion) {
     if (!window.confirm(CONFIRMACIONES[accion])) return;
@@ -93,11 +103,17 @@ export function AccionesOrganizacion({
           tamano="sm"
           variante="destructivo"
           cargando={trabajando === "eliminar"}
+          disabled={motivoNoEliminar !== null}
+          title={motivoNoEliminar ?? undefined}
           onClick={() => ejecutar("eliminar")}
         >
           Eliminar
         </Boton>
       </div>
+
+      {motivoNoEliminar && !error && (
+        <p className="text-texto-suave max-w-xs text-right text-xs">{motivoNoEliminar}</p>
+      )}
 
       {error && (
         <p role="alert" className="text-error max-w-xs text-right text-xs">

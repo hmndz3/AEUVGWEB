@@ -117,6 +117,7 @@ export function ListadoOrganizaciones({
                     tipo={tipo}
                     id={organizacion.id}
                     activo={organizacion.activo}
+                    eventosOrganizados={organizacion.eventosOrganizados}
                   />
                 </TablaCelda>
               </TablaFila>
