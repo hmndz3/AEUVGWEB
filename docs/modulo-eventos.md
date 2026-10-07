@@ -61,8 +61,13 @@ Se aceptan JPEG, PNG y WebP hasta el tamaño de `IMAGE_MAX_MB` (3 MB de forma pr
 
 Un evento sin imagen se muestra con un marcador del color de su categoría, no con un espacio roto.
 
+## Agregado en el Sprint 3
+
+- Los organizadores de un evento viajan con su enlace (`OrganizadorEnlace`) y la vista de detalle los lleva a su página de asociación o de club. Una unidad de la universidad no tiene página propia y se pinta como texto.
+- La cartelera y el detalle presentan el control de guardar el evento en el perfil; el detalle está en [docs/perfil-y-eventos-guardados.md](perfil-y-eventos-guardados.md).
+- `consultarEventosPublicados` permite pedir eventos publicados con otro orden y otra ventana de fechas; la usan las actividades de un organizador y los eventos guardados del perfil.
+
 ## Pendientes para sprints posteriores
 
-- Guardar eventos en el perfil del usuario (Sprint 3).
-- Páginas de asociaciones y clubes enlazadas desde los organizadores de cada evento (Sprint 3).
-- Recordatorios de eventos próximos (Sprint 6).
+- Convocatorias de horas beca vinculadas a los eventos (Sprint 5).
+- Recordatorios de eventos próximos y de eventos guardados (Sprint 6).

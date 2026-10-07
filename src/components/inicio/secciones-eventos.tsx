@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { TarjetaEvento } from "@/components/eventos/tarjeta-evento";
+import { RedesSociales } from "@/components/organizaciones/redes-sociales";
 import {
   obtenerEventosDestacados,
   obtenerProximosEventos,
@@ -83,7 +84,7 @@ export async function ProximosEventos() {
   );
 }
 
-export async function RedesSociales() {
+export async function SeccionRedesAeuvg() {
   const redes = await obtenerRedesAeuvg();
 
   if (redes.length === 0) return null;
@@ -96,20 +97,7 @@ export async function RedesSociales() {
           Enterate de las convocatorias y actividades también por nuestras redes.
         </p>
 
-        <ul className="mt-6 flex flex-wrap gap-3">
-          {redes.map((red) => (
-            <li key={`${red.plataforma}-${red.url}`}>
-              <a
-                href={red.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="border-borde bg-superficie text-texto hover:border-primario hover:text-primario inline-flex h-11 items-center rounded-full border px-5 text-sm font-semibold transition-colors"
-              >
-                {red.plataforma}
-              </a>
-            </li>
-          ))}
-        </ul>
+        <RedesSociales redes={redes} className="mt-6" />
       </div>
     </section>
   );

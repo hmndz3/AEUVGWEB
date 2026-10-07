@@ -2,13 +2,16 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { cache } from "react";
 
+import { BotonGuardarEvento } from "@/components/eventos/boton-guardar-evento";
 import { ImagenEvento } from "@/components/eventos/imagen-evento";
 import { MarcoSitio } from "@/components/layout/marco-sitio";
 import { EtiquetaEstado } from "@/components/ui/etiqueta-estado";
 import { Tarjeta } from "@/components/ui/tarjeta";
+import { verificarAcceso } from "@/lib/auth/guardias";
 import { obtenerEventoPublicado } from "@/lib/eventos/consultas-eventos";
 import { estadoVisible, etiquetaEstado, tonoEstado } from "@/lib/eventos/estado-evento";
 import { formatearRango } from "@/lib/eventos/formato-fechas";
+import { obtenerIdsGuardados } from "@/lib/perfil/consultas-eventos-guardados";
 
 export const dynamic = "force-dynamic";
 
@@ -49,6 +52,11 @@ export default async function PaginaEvento({ params }: Props) {
   if (!evento) notFound();
 
   const estado = estadoVisible(evento);
+  const acceso = await verificarAcceso();
+  const conSesion = acceso.tipo === "autorizado";
+  const guardados = conSesion
+    ? await obtenerIdsGuardados(acceso.usuario.idUsuario, [evento.idEvento])
+    : new Set<number>();
 
   return (
     <MarcoSitio>
@@ -111,6 +119,15 @@ export default async function PaginaEvento({ params }: Props) {
                 )}
               </dl>
             </Tarjeta>
+
+            <div className="mt-6">
+              <BotonGuardarEvento
+                idEvento={evento.idEvento}
+                guardado={guardados.has(evento.idEvento)}
+                conSesion={conSesion}
+                presentacion="boton"
+              />
+            </div>
 
             <h2 className="text-texto mt-8 text-xl font-bold">Acerca del evento</h2>
             <p className="text-texto-suave mt-3 leading-relaxed whitespace-pre-line">

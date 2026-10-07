@@ -169,11 +169,13 @@ Además de las 29 llaves primarias y 26 restricciones únicas, el esquema declar
 
 El inventario exacto y sus nombres físicos están en `schema.prisma` y `migration.sql`; no se duplican aquí para evitar que la documentación diverja.
 
-## Búsqueda de eventos
+## Búsqueda por texto
 
 `evento.texto_busqueda` guarda una copia en minúsculas y sin acentos de nombre, descripción y ubicación. Se agregó en T-10.3 porque PostgreSQL ignora mayúsculas con `ILIKE`, pero no acentos, y buscar "musica" no encontraría "Semana de la Música". La alternativa era instalar la extensión `unaccent` en la base de Railway; se prefirió una columna derivada para no depender de una extensión y para poder indexarla más adelante si el volumen lo exige.
 
 La columna la recalcula el servicio de eventos en cada creación y edición (`src/lib/eventos/busqueda.ts`), por lo que no puede quedar desfasada. La migración incluye la carga inicial de los eventos ya existentes.
+
+En el Sprint 3 se agregaron `asociacion.texto_busqueda` y `club.texto_busqueda` con el mismo criterio: la primera reúne nombre, descripción y misión; la segunda, nombre, descripción y actividades. La normalización se trasladó a `src/lib/busqueda-texto.ts` para que los dos módulos generen la copia con la misma regla. En la misma migración se crearon los índices `(activo, nombre)` de ambas tablas, que son el orden exacto del listado público.
 
 ## Separación entre Estudiante y Usuario
 
