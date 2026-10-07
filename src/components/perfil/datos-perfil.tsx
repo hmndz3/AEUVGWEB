@@ -58,6 +58,9 @@ export function DatosPerfil({ perfil }: { perfil: PerfilEstudiante }) {
           <Dato etiqueta="Correo institucional" valor={perfil.correoUvg} />
           <Dato etiqueta="Carrera" valor={perfil.carrera} />
           <Dato etiqueta="Facultad" valor={perfil.facultad} />
+          {/* El teléfono solo se veía dentro del formulario, así que quien
+              entraba a revisar sus datos no sabía si lo tenía registrado. */}
+          <Dato etiqueta="Teléfono" valor={perfil.telefono ?? "Sin registrar"} />
         </dl>
         <p className="text-texto-suave mt-5 text-xs leading-relaxed">
           El nombre, el carnet y el correo institucional identifican tu cuenta y con ellos se
