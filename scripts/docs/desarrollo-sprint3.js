@@ -298,6 +298,9 @@ const doc = buildDocument([
     "Queda pendiente de AEUVG la carga de la información real de las asociaciones y clubes del campus, incluidas las fotografías de sus juntas directivas. No bloquea el sprint: la administración quedó lista y el módulo funciona con la información de prueba. Continúa también en gestión el trámite del dominio institucional iniciado en el Sprint 1."
   ),
   p(
+    "Tras la revisión del sprint se incorporaron las observaciones recibidas, sin alcance nuevo: el listado del panel deshabilita la eliminación de una organización que organiza eventos y explica en la misma fila por qué, ya que el botón invitaba a intentarlo solo para enterarse; cada fila del panel enlaza además a la ficha pública, para comprobar cómo quedó sin tener que buscarla en el listado del sitio; el perfil presenta el teléfono entre sus datos visibles, que antes solo aparecía dentro del formulario, de modo que quien entraba a revisar sus datos no sabía si lo tenía registrado; y la sección de eventos guardados muestra su total, porque con varias tarjetas repartidas en dos bloques no quedaba claro cuántos había."
+  ),
+  p(
     "El desarrollo continúa en el Sprint 4 con el módulo de horas beca, que sustituye el control que AEUVG realiza actualmente mediante hojas de cálculo y que se apoya en el perfil entregado en este sprint para la sección “Mis horas beca”."
   ),
 

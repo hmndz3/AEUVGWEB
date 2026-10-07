@@ -20,11 +20,21 @@ export function EventosGuardadosPerfil({
 }) {
   const { proximos, pasados } = eventos;
   const todosLosIds = new Set([...proximos, ...pasados].map((evento) => evento.idEvento));
+  const total = todosLosIds.size;
 
   return (
     <section className="flex flex-col gap-6">
       <div>
-        <h2 className="text-texto text-lg font-bold">Mis eventos guardados</h2>
+        {/* El conteo lo pidió AEUVG en la revisión: con varias tarjetas en dos
+            bloques no quedaba claro cuántos eventos había guardados en total. */}
+        <h2 className="text-texto text-lg font-bold">
+          Mis eventos guardados
+          {total > 0 && (
+            <span className="text-texto-suave ml-2 text-sm font-semibold">
+              ({total} {total === 1 ? "evento" : "eventos"})
+            </span>
+          )}
+        </h2>
         <p className="text-texto-suave mt-1 text-sm leading-relaxed">
           Las actividades que marcaste desde la cartelera. Puedes quitarlas con la estrella de cada
           tarjeta.
