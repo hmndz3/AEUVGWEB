@@ -167,6 +167,15 @@ const HARRY = {
       "Integración",
       "Registro de tiempos dentro del documento de desarrollo e integración de develop a main.",
     ],
+    [
+      "2026-10-07",
+      "15:40",
+      "17:10",
+      15,
+      "Revisión y cierre",
+      "Codificación",
+      "AEUVG-136 Eliminación deshabilitada con su explicación. AEUVG-138 Teléfono entre los datos del perfil. Integración de los ajustes a main.",
+    ],
   ],
 };
 
@@ -281,6 +290,15 @@ const JUAN = {
       "Revisión y cierre",
       "Revisión",
       "Revisión conjunta del código del sprint con Harry y verificación final del incremento.",
+    ],
+    [
+      "2026-10-07",
+      "15:50",
+      "16:45",
+      5,
+      "Revisión y cierre",
+      "Diseño y codificación",
+      "AEUVG-135 Enlace a la ficha pública desde el panel. AEUVG-137 Total de eventos guardados en el perfil.",
     ],
   ],
 };
@@ -442,7 +460,7 @@ function bloquesRegistroTiempos(seccion) {
       "El delta de tiempo corresponde a la hora de finalización menos la hora de inicio menos el tiempo de interrupción. Las interrupciones son pausas cortas dentro de una misma sesión. Las sesiones de planificación y de revisión conjunta aparecen en ambos registros con el mismo horario, por tratarse de trabajo realizado en conjunto."
     ),
     p(
-      `El sprint sumó ${enHoras(totalEquipo)} horas de equipo: ${enHoras(harry.total)} horas de Harry Méndez y ${enHoras(juan.total)} horas de Juan Gabriel Gualim, frente a las ${HORAS_ESTIMADAS} horas estimadas en la planificación, es decir, un ${desviacion(totalEquipo)} de lo previsto. La estimación se calculó con la velocidad medida en el Sprint 2 y este sprint reutilizó los componentes de listado, paginación, estado vacío y carga de imágenes construidos en aquel, lo que mantuvo el tiempo real cerca de lo previsto.`
+      `El sprint sumó ${enHoras(totalEquipo)} horas de equipo: ${enHoras(harry.total)} horas de Harry Méndez y ${enHoras(juan.total)} horas de Juan Gabriel Gualim, frente a las ${HORAS_ESTIMADAS} horas estimadas en la planificación, es decir, un ${desviacion(totalEquipo)} de lo previsto. La estimación se calculó con la velocidad medida en el Sprint 2 y este sprint reutilizó los componentes de listado, paginación, estado vacío y carga de imágenes construidos en aquel, lo que mantuvo el tiempo real cerca de lo previsto. La diferencia corresponde al día de cierre: la revisión con AEUVG dejó observaciones que se resolvieron el mismo 7 de octubre, antes de publicar la versión final del sprint.`
     ),
 
     h2(`${seccion}.1. ${HARRY.nombre} - ${HARRY.carne}`),
