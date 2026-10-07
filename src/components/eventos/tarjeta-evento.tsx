@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { ImagenEvento } from "@/components/eventos/imagen-evento";
 import { EtiquetaEstado } from "@/components/ui/etiqueta-estado";
-import type { EventoResumen } from "@/lib/eventos/consultas-eventos";
+import { nombresDeOrganizadores, type EventoResumen } from "@/lib/eventos/consultas-eventos";
 import { estadoVisible, etiquetaEstado, tonoEstado } from "@/lib/eventos/estado-evento";
 import { formatearFechaLarga, formatearHora } from "@/lib/eventos/formato-fechas";
 import { cn } from "@/lib/utils";
@@ -15,16 +15,21 @@ import { cn } from "@/lib/utils";
 export function TarjetaEvento({
   evento,
   ahora,
+  accion,
   className,
 }: {
   evento: EventoResumen;
   ahora?: Date;
+  /** Control propio de la tarjeta, por ejemplo el de guardar el evento. */
+  accion?: React.ReactNode;
   className?: string;
 }) {
   const estado = estadoVisible(evento, ahora);
 
   return (
-    <article className={cn("h-full", className)}>
+    // La acción se coloca sobre la tarjeta y no dentro del enlace: un botón
+    // dentro de un enlace no es HTML válido y el clic activaría los dos.
+    <article className={cn("relative h-full", className)}>
       <Link
         href={`/eventos/${evento.idEvento}`}
         className={cn(
@@ -73,12 +78,17 @@ export function TarjetaEvento({
 
           {evento.organizadores.length > 0 && (
             <p className="border-borde text-texto-suave mt-auto border-t pt-3 text-xs">
+              {/* La tarjeta entera es un enlace al evento, así que los
+                  organizadores van como texto: un enlace dentro de otro no es
+                  HTML válido. Sus páginas se alcanzan desde el detalle. */}
               <span className="font-bold uppercase">Organiza</span> ·{" "}
-              {evento.organizadores.join(", ")}
+              {nombresDeOrganizadores(evento.organizadores).join(", ")}
             </p>
           )}
         </div>
       </Link>
+
+      {accion && <div className="absolute top-3 right-3 z-10">{accion}</div>}
     </article>
   );
 }

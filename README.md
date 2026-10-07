@@ -92,6 +92,12 @@ El funcionamiento del inicio de sesión, sesiones y credenciales ficticias local
 El módulo de eventos (cartelera, calendario, filtros, administración e imágenes) se documenta en
 [docs/modulo-eventos.md](docs/modulo-eventos.md).
 
+Las secciones de asociaciones y clubes, con su administración y su vinculación con los eventos, se
+documentan en [docs/asociaciones-y-clubes.md](docs/asociaciones-y-clubes.md).
+
+El perfil del estudiante y los eventos guardados se documentan en
+[docs/perfil-y-eventos-guardados.md](docs/perfil-y-eventos-guardados.md).
+
 ## Flujo de trabajo con Git
 
 - **`main`** — rama principal. Cada push genera un despliegue automático en Railway (producción).

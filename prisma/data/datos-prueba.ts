@@ -22,7 +22,11 @@ export const CREDENCIALES_PRUEBA = {
 
 export const NOMBRES_PRUEBA = {
   asociacion: `${MARCADOR_PRUEBA} Asociación Estudiantil Demo`,
+  asociacionSinJunta: `${MARCADOR_PRUEBA} Asociación de Ingeniería Demo`,
+  asociacionInactiva: `${MARCADOR_PRUEBA} Asociación Histórica Demo`,
   club: `${MARCADOR_PRUEBA} Club de Tecnología Demo`,
+  clubSinContacto: `${MARCADOR_PRUEBA} Club de Música Demo`,
+  clubInactivo: `${MARCADOR_PRUEBA} Club de Ajedrez Demo`,
   eventoProximo: `${MARCADOR_PRUEBA} Feria de Voluntariado 2027`,
   eventoDestacado: `${MARCADOR_PRUEBA} Festival Estudiantil 2027`,
   eventoFinalizado: `${MARCADOR_PRUEBA} Jornada Académica Finalizada`,

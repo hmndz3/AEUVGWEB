@@ -5,12 +5,14 @@ import { FiltrosEventosBarra } from "@/components/eventos/filtros-eventos";
 import { ListaEventos } from "@/components/eventos/lista-eventos";
 import { Paginacion } from "@/components/eventos/paginacion";
 import { MarcoSitio } from "@/components/layout/marco-sitio";
+import { verificarAcceso } from "@/lib/auth/guardias";
 import {
   listarCategorias,
   listarEventosPublicados,
   listarOrganizadores,
 } from "@/lib/eventos/consultas-eventos";
 import { condicionesDeFiltros } from "@/lib/eventos/filtros-eventos";
+import { obtenerIdsGuardados } from "@/lib/perfil/consultas-eventos-guardados";
 import {
   contarFiltros,
   interpretarFiltrosEventos,
@@ -45,6 +47,17 @@ export default async function PaginaEventos({
   ]);
 
   const conFiltros = contarFiltros(filtros) > 0;
+
+  // El control de guardar se pinta marcado desde el servidor, así que la sesión
+  // y los eventos ya guardados se resuelven aquí y no en cada tarjeta.
+  const acceso = await verificarAcceso();
+  const conSesion = acceso.tipo === "autorizado";
+  const guardados = conSesion
+    ? await obtenerIdsGuardados(
+        acceso.usuario.idUsuario,
+        eventos.map((evento) => evento.idEvento)
+      )
+    : new Set<number>();
 
   return (
     <MarcoSitio>
@@ -93,7 +106,13 @@ export default async function PaginaEventos({
               />
             )
           ) : (
-            <ListaEventos eventos={eventos} ahora={ahora} />
+            <ListaEventos
+              eventos={eventos}
+              ahora={ahora}
+              guardables
+              conSesion={conSesion}
+              guardados={guardados}
+            />
           )}
         </div>
 
