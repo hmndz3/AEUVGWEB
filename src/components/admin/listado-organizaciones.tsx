@@ -103,6 +103,19 @@ export function ListadoOrganizaciones({
                       {organizacion.descripcion}
                     </span>
                   )}
+                  {/* AEUVG pidió durante la revisión poder comprobar cómo quedó
+                      la ficha sin tener que buscarla en el listado público. Solo
+                      aparece cuando está activa: de baja no tiene página. */}
+                  {organizacion.activo && (
+                    <a
+                      href={`/${tipo}/${organizacion.id}`}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="text-primario mt-1 inline-block text-xs font-bold hover:underline"
+                    >
+                      Ver en el sitio ↗
+                    </a>
+                  )}
                 </TablaCelda>
                 <TablaCelda className="text-texto-suave">
                   {organizacion.eventosOrganizados}
