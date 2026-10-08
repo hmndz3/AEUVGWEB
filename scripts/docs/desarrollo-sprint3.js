@@ -232,7 +232,7 @@ const doc = buildDocument([
   // ---------- 8 ----------
   h1("8. Pruebas y verificación"),
   p(
-    "Las pruebas automatizadas del proyecto pasaron de 147 a 223. Las 76 nuevas corresponden a este sprint y se ejecutan sin base de datos, sustituyendo el acceso a datos por dobles de prueba, para que puedan correrse en cualquier momento del desarrollo."
+    "Las pruebas automatizadas del proyecto pasaron de 147 a 225. Las 78 nuevas corresponden a este sprint y se ejecutan sin base de datos, sustituyendo el acceso a datos por dobles de prueba, para que puedan correrse en cualquier momento del desarrollo."
   ),
   spacer(),
   makeTable(
@@ -264,11 +264,22 @@ const doc = buildDocument([
         "12",
         "Que solo se guarden eventos publicados, que guardar dos veces no falle y que el listado del perfil exija evento publicado.",
       ],
+      [
+        "Migraciones de búsqueda",
+        "2",
+        "Que ninguna migración nueva desalinee los juegos de caracteres de su translate() y que el último mapeo coincida con el de la aplicación.",
+      ],
     ]
   ),
   spacer(),
   p(
     "Las pruebas del módulo de eventos se actualizaron al nuevo formato de los organizadores, que ahora incluye el enlace de cada uno. Además de las pruebas automatizadas se verificó que el proyecto compile sin errores de tipos, que el análisis estático no reporte problemas y que la compilación de producción se complete, incluyendo las trece rutas nuevas del sprint. Las pantallas se revisaron en anchos de teléfono, tableta y escritorio."
+  ),
+  p(
+    "La migración del sprint se aplicó en Railway al cierre y la verificación contra la base real dejó al descubierto un defecto heredado del Sprint 2. El translate() con el que las migraciones cargan por primera vez el texto de búsqueda tenía veinticuatro caracteres de entrada y solo veintidós de salida; PostgreSQL alinea los dos juegos por posición y descarta los que quedan sin pareja, así que a partir de la «ü» el reemplazo se desplazaba y la «ñ» terminaba convertida en «a». El efecto era que un registro cargado antes de la migración y nunca vuelto a guardar quedaba fuera del buscador para cualquier palabra con «ñ»: buscar «diseno» no encontraba «Diseño»."
+  ),
+  p(
+    "La normalización de la aplicación, que es la que se ejecuta en cada creación y edición, siempre fue correcta, por lo que el problema solo alcanzaba a las filas previas a cada migración: de las seis filas afectadas en el ambiente, cinco eventos ya estaban correctos por haberse editado después y solo la ficha de AEUVG conservaba el valor mal calculado. Se corrigió con una migración que vuelve a calcular las tres columnas con el juego alineado, sin tocar las migraciones ya aplicadas, cuya suma de verificación Prisma conserva. La verificación posterior confirmó que ninguna fila difiere de lo que calcula la aplicación."
   ),
 
   // ---------- 9 ----------
