@@ -50,6 +50,25 @@ const claveDia = new Intl.DateTimeFormat("en-CA", {
   timeZone: ZONA_HORARIA,
 });
 
+const diaDelMes = new Intl.DateTimeFormat(LOCALE, { day: "2-digit", timeZone: ZONA_HORARIA });
+const mesCorto = new Intl.DateTimeFormat(LOCALE, { month: "short", timeZone: ZONA_HORARIA });
+const diaSemanaCorto = new Intl.DateTimeFormat(LOCALE, {
+  weekday: "short",
+  timeZone: ZONA_HORARIA,
+});
+
+/**
+ * Partes sueltas de una fecha, para composiciones que las muestran por
+ * separado, como el talón de fecha de los boletos de la portada.
+ */
+export function partesDeFecha(fecha: Date): { dia: string; mes: string; diaSemana: string } {
+  return {
+    dia: diaDelMes.format(fecha),
+    mes: mesCorto.format(fecha).replace(".", ""),
+    diaSemana: diaSemanaCorto.format(fecha).replace(".", ""),
+  };
+}
+
 export function formatearFechaLarga(fecha: Date): string {
   return fechaLarga.format(fecha);
 }

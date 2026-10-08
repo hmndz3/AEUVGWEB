@@ -41,6 +41,32 @@
 
   --radius-campo: 1rem;
   --radius-tarjeta: 1.25rem;
+
+  /* Animaciones de la portada (src/components/inicio). Todas se desactivan con
+     motion-reduce en el componente que las usa. */
+  --animate-revelar: revelar-palabra 0.9s cubic-bezier(0.2, 0.75, 0.25, 1) both;
+  --animate-aparecer: aparecer 0.8s ease-out both;
+
+  /* Cada palabra del titular sube desde debajo de su propia máscara. */
+  @keyframes revelar-palabra {
+    from {
+      transform: translateY(110%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes aparecer {
+    from {
+      opacity: 0;
+      transform: translateY(0.75rem);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
 }
 
 body {
