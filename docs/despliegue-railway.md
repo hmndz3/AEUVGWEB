@@ -98,6 +98,19 @@ El servicio Postgres ofrece además **Settings → Networking → Public Access*
 
 Este paso se repite cada vez que se agrega una migración, después de publicar el cambio en `main`. Que sea explícito es deliberado: un cambio de esquema en producción conviene ejecutarlo de forma consciente y no como efecto secundario de un despliegue.
 
+### Contenido de demostración
+
+Mientras AEUVG carga su información real, la plataforma puede mostrarse con cinco asociaciones y doce eventos próximos ficticios, con logotipos e ilustraciones propias. Las imágenes son SVG versionados en `public/demo` (los genera `scripts/demo/generar-imagenes.js`) y se sirven desde el propio sitio, así que no dependen del volumen de imágenes subidas.
+
+Con el túnel abierto, y después de que el despliegue que incluye `public/demo` esté activo:
+
+```bash
+ALLOW_DEMO_CONTENT=true npm run db:railway:contenido-demo   # cargar o refrescar
+npm run db:railway:contenido-demo -- --retirar              # retirarlo
+```
+
+La carga es idempotente y fecha los eventos a partir del día en que se ejecuta, así que repetirla los vuelve a mover al futuro. Nunca modifica contenido real: reconoce lo suyo por el nombre y por la imagen bajo `/demo/`, y omite cualquier asociación real con el mismo nombre o las mismas siglas. Al retirarlo se conserva una asociación de demostración si alguien la asignó como organizadora de un evento real. Igual que `ALLOW_TEST_SEED`, `ALLOW_DEMO_CONTENT` se indica solo en el comando y no se configura en Railway.
+
 ## 5. Verificación
 
 - [ ] El dominio público responde y muestra la aplicación.

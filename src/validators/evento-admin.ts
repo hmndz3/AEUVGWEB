@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { RUTA_IMAGEN_PROPIA } from "@/lib/imagenes/validacion-imagen";
+import { esImagenDelSitio } from "@/lib/imagenes/validacion-imagen";
 import { erroresPorCampo } from "@/validators/errores";
 import { TIPOS_ACTIVIDAD } from "@/validators/eventos";
 
@@ -90,12 +90,12 @@ export const esquemaEventoAdmin = z
       // intactas: completarlas producía "https:///api/imagenes/…", que el
       // navegador interpreta como un servidor llamado "api".
       .transform((valor) =>
-        valor && !RUTA_IMAGEN_PROPIA.test(valor) && !/^[a-z][a-z0-9+.-]*:/i.test(valor)
+        valor && !esImagenDelSitio(valor) && !/^[a-z][a-z0-9+.-]*:/i.test(valor)
           ? `https://${valor}`
           : valor
       )
       .refine(
-        (valor) => valor === "" || RUTA_IMAGEN_PROPIA.test(valor) || esEnlaceDeImagen(valor),
+        (valor) => valor === "" || esImagenDelSitio(valor) || esEnlaceDeImagen(valor),
         MENSAJE_IMAGEN
       )
       .transform((valor) => (valor === "" ? null : valor))

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="aeind-fondo" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0B7FB5"/>
+      <stop offset="1" stop-color="#0E7490"/>
+    </linearGradient>
+  </defs>
+  <circle cx="256" cy="256" r="248" fill="url(#aeind-fondo)"/>
+  <circle cx="256" cy="256" r="222" fill="none" stroke="#ffffff" stroke-opacity="0.45" stroke-width="6"/>
+  <rect x="242.88" y="114.96000000000001" width="26.240000000000002" height="32.800000000000004" rx="4.92" fill="#ffffff" transform="rotate(0 256 215)"/><rect x="242.88" y="114.96000000000001" width="26.240000000000002" height="32.800000000000004" rx="4.92" fill="#ffffff" transform="rotate(36 256 215)"/><rect x="242.88" y="114.96000000000001" width="26.240000000000002" height="32.800000000000004" rx="4.92" fill="#ffffff" transform="rotate(72 256 215)"/><rect x="242.88" y="114.96000000000001" width="26.240000000000002" height="32.800000000000004" rx="4.92" fill="#ffffff" transform="rotate(108 256 215)"/><rect x="242.88" y="114.96000000000001" width="26.240000000000002" height="32.800000000000004" rx="4.92" fill="#ffffff" transform="rotate(144 256 215)"/><rect x="242.88" y="114.96000000000001" width="26.240000000000002" height="32.800000000000004" rx="4.92" fill="#ffffff" transform="rotate(180 256 215)"/><rect x="242.88" y="114.96000000000001" width="26.240000000000002" height="32.800000000000004" rx="4.92" fill="#ffffff" transform="rotate(216 256 215)"/><rect x="242.88" y="114.96000000000001" width="26.240000000000002" height="32.800000000000004" rx="4.92" fill="#ffffff" transform="rotate(252 256 215)"/><rect x="242.88" y="114.96000000000001" width="26.240000000000002" height="32.800000000000004" rx="4.92" fill="#ffffff" transform="rotate(288 256 215)"/><rect x="242.88" y="114.96000000000001" width="26.240000000000002" height="32.800000000000004" rx="4.92" fill="#ffffff" transform="rotate(324 256 215)"/><circle cx="256" cy="215" r="82" fill="#ffffff"/><circle cx="256" cy="215" r="34.44" fill="#0B7FB5"/>
+  <text x="256" y="400" text-anchor="middle" font-family="'Plus Jakarta Sans', 'Segoe UI', Arial, sans-serif" font-size="70" font-weight="800" letter-spacing="2" fill="#ffffff">AEIND</text>
+</svg>

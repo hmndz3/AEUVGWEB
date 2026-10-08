@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { RUTA_IMAGEN_PROPIA } from "@/lib/imagenes/validacion-imagen";
+import { esImagenDelSitio } from "@/lib/imagenes/validacion-imagen";
 import { erroresPorCampo } from "@/validators/errores";
 
 /**
@@ -87,12 +87,12 @@ const imagenOpcional = z
   .trim()
   .max(500, "El enlace de la imagen es demasiado largo.")
   .transform((valor) =>
-    valor && !RUTA_IMAGEN_PROPIA.test(valor) && !/^[a-z][a-z0-9+.-]*:/i.test(valor)
+    valor && !esImagenDelSitio(valor) && !/^[a-z][a-z0-9+.-]*:/i.test(valor)
       ? `https://${valor}`
       : valor
   )
   .refine(
-    (valor) => valor === "" || RUTA_IMAGEN_PROPIA.test(valor) || esEnlaceSeguro(valor),
+    (valor) => valor === "" || esImagenDelSitio(valor) || esEnlaceSeguro(valor),
     MENSAJE_IMAGEN
   )
   .transform((valor) => (valor === "" ? null : valor))

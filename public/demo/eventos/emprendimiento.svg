@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <defs>
+    <linearGradient id="emprendimiento-fondo" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0B7FB5"/>
+      <stop offset="1" stop-color="#00C9A7"/>
+    </linearGradient>
+    <radialGradient id="emprendimiento-brillo" cx="0.5" cy="0.35" r="0.55">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="emprendimiento-puntos" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="2" fill="#ffffff" fill-opacity="0.14"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="800" fill="url(#emprendimiento-fondo)"/>
+  <rect width="1200" height="800" fill="url(#emprendimiento-puntos)"/>
+  <circle cx="1080" cy="120" r="220" fill="#ffffff" fill-opacity="0.08"/>
+  <circle cx="110" cy="700" r="260" fill="#000000" fill-opacity="0.10"/>
+  <rect width="1200" height="800" fill="url(#emprendimiento-brillo)"/>
+  <path d="M220 140 Q600 230 980 140" fill="none" stroke="#ffffff" stroke-width="5" stroke-opacity="0.8"/>
+    <path d="M252 156 L308 156 L280 208 Z" fill="#FFB627"/><path d="M352 178 L408 178 L380 230 Z" fill="#FF5E5B"/><path d="M452 192 L508 192 L480 244 Z" fill="#ffffff"/><path d="M552 198 L608 198 L580 250 Z" fill="#FF4FA3"/><path d="M652 194 L708 194 L680 246 Z" fill="#FFB627"/><path d="M752 182 L808 182 L780 234 Z" fill="#7BC950"/><path d="M852 162 L908 162 L880 214 Z" fill="#ffffff"/>
+    <g>
+      <path d="M330 300 L460 250 L590 300 Z" fill="#FF5E5B"/>
+      <rect x="345" y="300" width="230" height="170" fill="#ffffff"/>
+      <rect x="345" y="300" width="230" height="34" fill="#FF5E5B"/>
+      <rect x="380" y="370" width="70" height="100" fill="#0B7FB5" fill-opacity="0.25"/>
+      <path d="M610 300 L740 250 L870 300 Z" fill="#FFB627"/>
+      <rect x="625" y="300" width="230" height="170" fill="#ffffff"/>
+      <rect x="625" y="300" width="230" height="34" fill="#FFB627"/>
+      <circle cx="700" cy="400" r="26" fill="#00C9A7"/>
+      <circle cx="780" cy="410" r="20" fill="#FF4FA3"/>
+    </g>
+</svg>
