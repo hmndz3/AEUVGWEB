@@ -13,6 +13,7 @@ import {
   TablaFila,
 } from "@/components/ui/tabla";
 import type { PaginaOrganizacionesAdmin } from "@/lib/organizaciones/consultas-organizaciones";
+import { nombreConSiglas } from "@/lib/organizaciones/nombre-organizacion";
 import type { TipoOrganizacion } from "@/validators/organizacion-admin";
 
 /**
@@ -61,7 +62,9 @@ export function ListadoOrganizaciones({
             name="q"
             type="search"
             defaultValue={busqueda}
-            placeholder="Nombre o descripción"
+            placeholder={
+              tipo === "asociaciones" ? "Nombre, siglas o descripción" : "Nombre o descripción"
+            }
             className="border-borde bg-superficie text-texto focus:border-primario focus:ring-primario/30 h-11 rounded-2xl border px-4 text-sm focus:ring-2 focus:outline-none"
           />
         </div>
@@ -96,7 +99,7 @@ export function ListadoOrganizaciones({
                     href={`${ruta}/${organizacion.id}`}
                     className="text-texto font-semibold hover:underline"
                   >
-                    {organizacion.nombre}
+                    {nombreConSiglas(organizacion)}
                   </Link>
                   {organizacion.descripcion && (
                     <span className="text-texto-suave mt-0.5 block max-w-md truncate text-xs">

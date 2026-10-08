@@ -48,6 +48,22 @@ function esEnlaceSeguro(valor: string): boolean {
 
 const nombre = z.string(MENSAJE_NOMBRE).trim().min(3, MENSAJE_NOMBRE).max(160, MENSAJE_NOMBRE);
 
+const MENSAJE_SIGLAS = "Las siglas deben tener entre 2 y 30 caracteres, o deja el campo vacío.";
+
+/**
+ * Siglas o nombre corto de una asociación, por ejemplo AECCTIUVG. Es opcional
+ * y se guarda tal como se escribe: puede ser un acrónimo o un nombre abreviado
+ * ("Química UVG"), así que no se fuerzan mayúsculas.
+ */
+const siglasOpcionales = z
+  .string(MENSAJE_SIGLAS)
+  .trim()
+  .transform((valor) => valor.replace(/\s+/g, " "))
+  .refine((valor) => valor === "" || (valor.length >= 2 && valor.length <= 30), MENSAJE_SIGLAS)
+  .transform((valor) => (valor === "" ? null : valor))
+  .nullable()
+  .default(null);
+
 const correoOpcional = z
   .string(MENSAJE_CORREO)
   .trim()
@@ -85,6 +101,7 @@ const imagenOpcional = z
 
 export const esquemaAsociacionAdmin = z.object({
   nombre,
+  siglas: siglasOpcionales,
   descripcion: textoOpcional(5000, "La descripción no puede exceder 5000 caracteres."),
   mision: textoOpcional(2000, "La misión no puede exceder 2000 caracteres."),
   vision: textoOpcional(2000, "La visión no puede exceder 2000 caracteres."),
@@ -100,7 +117,8 @@ export type DatosAsociacionAdmin = z.infer<typeof esquemaAsociacionAdmin>;
 
 /** Etiqueta legible de cada campo, para nombrar el primer error en el resumen. */
 export const ETIQUETAS_CAMPO_ASOCIACION: Record<string, string> = {
-  nombre: "Nombre",
+  nombre: "Nombre completo",
+  siglas: "Siglas o nombre corto",
   descripcion: "Descripción",
   mision: "Misión",
   vision: "Visión",

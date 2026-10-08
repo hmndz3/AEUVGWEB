@@ -66,6 +66,7 @@ function asociacion(cambios: Record<string, unknown> = {}) {
   return {
     idAsociacion: 3,
     nombre: "Asociación de Estudiantes de Ingeniería",
+    siglas: "AEI",
     descripcion: "Representa al estudiantado de la facultad.",
     mision: "Acompañar al estudiantado de ingeniería.",
     vision: "Una facultad con participación activa.",
@@ -184,6 +185,7 @@ test("el listado devuelve el resumen que necesita la tarjeta", async () => {
     {
       id: 3,
       nombre: "Asociación de Estudiantes de Ingeniería",
+      siglas: "AEI",
       descripcion: "Representa al estudiantado de la facultad.",
       imagenUrl: null,
     },
@@ -302,14 +304,16 @@ test("un organizador con identificador inválido no consulta actividades", async
   assert.equal(llamadas.length, 0);
 });
 
-test("el texto de búsqueda de una asociación une nombre, descripción y misión", () => {
+test("el texto de búsqueda de una asociación une nombre, siglas, descripción y misión", () => {
   const texto = textoDeBusquedaAsociacion({
     nombre: "Asociación de Ingeniería",
+    siglas: "AEIUVG",
     descripcion: "Comité de Innovación",
     mision: "Impulsar el voluntariado",
   });
 
   assert.ok(texto.includes("ingenieria"));
+  assert.ok(texto.includes("aeiuvg"));
   assert.ok(texto.includes("innovacion"));
   assert.ok(texto.includes("voluntariado"));
 });

@@ -9,6 +9,7 @@ import {
   type ValoresOrganizacion,
 } from "@/components/admin/formulario-organizacion";
 import { crearServicioOrganizaciones } from "@/lib/organizaciones/crear-servicio-organizaciones";
+import { nombreConSiglas } from "@/lib/organizaciones/nombre-organizacion";
 import { ETIQUETA_TIPO, type TipoOrganizacion } from "@/validators/organizacion-admin";
 
 function Encabezado({
@@ -75,6 +76,7 @@ export async function PantallaEdicionOrganizacion({
 
   const valores: ValoresOrganizacion = {
     nombre: organizacion.nombre,
+    siglas: organizacion.siglas ?? "",
     descripcion: organizacion.descripcion ?? "",
     mision: organizacion.mision ?? "",
     vision: organizacion.vision ?? "",
@@ -88,7 +90,7 @@ export async function PantallaEdicionOrganizacion({
     <div className="flex flex-col gap-8">
       <Encabezado
         tipo={tipo}
-        titulo={organizacion.nombre}
+        titulo={nombreConSiglas(organizacion)}
         descripcion={
           organizacion.activo
             ? "Los cambios se reflejan de inmediato en el sitio."

@@ -243,13 +243,16 @@ model UsuarioRol {
 model Asociacion {
   idAsociacion        Int                    @id @default(autoincrement()) @map("id_asociacion")
   nombre              String                 @unique(map: "asociacion_nombre_key") @db.VarChar(160)
+  // Siglas o nombre corto con el que el estudiantado conoce a la asociacion
+  // (por ejemplo AECCTIUVG). Opcional: no todas tienen uno.
+  siglas              String?                @unique(map: "asociacion_siglas_key") @db.VarChar(30)
   descripcion         String?                @db.Text
   mision              String?                @db.Text
   vision              String?                @db.Text
   informacionContacto String?                @map("informacion_contacto") @db.Text
   correo              String?                @db.VarChar(254)
   imagenUrl           String?                @map("imagen_url") @db.VarChar(500)
-  // Copia sin acentos ni mayusculas de nombre, descripcion y actividad.
+  // Copia sin acentos ni mayusculas de nombre, siglas, descripcion y mision.
   // La mantiene el servicio de organizaciones; ver src/lib/organizaciones/busqueda-organizaciones.ts.
   textoBusqueda       String                 @default("") @map("texto_busqueda") @db.Text
   activo              Boolean                @default(true)
