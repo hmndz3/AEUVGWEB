@@ -176,6 +176,15 @@ const HARRY = {
       "Codificación",
       "AEUVG-136 Eliminación deshabilitada con su explicación. AEUVG-138 Teléfono entre los datos del perfil. Integración de los ajustes a main.",
     ],
+    [
+      "2026-10-07",
+      "18:00",
+      "18:35",
+      5,
+      "Revisión y cierre",
+      "Codificación y pruebas",
+      "AEUVG-139 Corrección de la carga inicial del texto de búsqueda al aplicar las migraciones en Railway, con su prueba de regresión.",
+    ],
   ],
 };
 
