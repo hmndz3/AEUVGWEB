@@ -82,6 +82,10 @@ Las horas beca acreditadas se representan en turquesa y las pendientes en ámbar
 - Botones y etiquetas de estado: radio completo.
 - Sombras suaves y teñidas del color del elemento, nunca sombras grises neutras.
 
+### Campos obligatorios
+
+Todo campo obligatorio de cualquier formulario lleva un asterisco rojo (`text-error`) después de su etiqueta, y los formularios con más de un campo abren con la nota "Los campos marcados con \* son obligatorios.". Se usan `EtiquetaCampo`, `MarcaObligatorio` y `NotaCamposObligatorios` de `src/components/ui/etiqueta-campo.tsx`; `Campo` y `CampoAcceso` muestran el asterisco solos cuando reciben `required`. El control debe llevar `required` para que los lectores de pantalla lo anuncien; el asterisco se oculta a ellos. Los formularios conservan `noValidate`: la validación la hace el esquema Zod, con mensajes propios.
+
 ## 5. Puntos de corte
 
 Se usan los de Tailwind sin modificar, priorizando la vista móvil:

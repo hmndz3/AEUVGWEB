@@ -6,6 +6,7 @@ import { useState } from "react";
 import { CargaImagen } from "@/components/admin/carga-imagen";
 import { Alerta } from "@/components/ui/alerta";
 import { Boton } from "@/components/ui/boton";
+import { EtiquetaCampo, NotaCamposObligatorios } from "@/components/ui/etiqueta-campo";
 import type { CategoriaResumen, OrganizadoresDisponibles } from "@/lib/eventos/consultas-eventos";
 import { desdeCampoFechaHora } from "@/lib/eventos/formato-fechas";
 import { ETIQUETAS_CAMPO_EVENTO } from "@/validators/evento-admin";
@@ -48,24 +49,31 @@ export const VALORES_VACIOS: ValoresEvento = {
 const claseCampo =
   "border-borde bg-superficie text-texto focus:border-primario focus:ring-primario/30 w-full rounded-2xl border px-4 py-3 text-sm focus:ring-2 focus:outline-none";
 
+/**
+ * Envoltura de cada control. Con obligatorio, la etiqueta lleva el asterisco;
+ * el control debe llevar además required para que los lectores de pantalla lo
+ * anuncien como requerido.
+ */
 function Campo({
   etiqueta,
   nombre,
   error,
   ayuda,
+  obligatorio = false,
   children,
 }: {
   etiqueta: string;
   nombre: string;
   error?: string;
   ayuda?: string;
+  obligatorio?: boolean;
   children: React.ReactNode;
 }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={nombre} className="text-texto text-sm font-semibold">
+      <EtiquetaCampo htmlFor={nombre} obligatorio={obligatorio}>
         {etiqueta}
-      </label>
+      </EtiquetaCampo>
       {children}
       {ayuda && !error && <p className="text-texto-suave text-xs">{ayuda}</p>}
       {error && (
@@ -179,6 +187,7 @@ export function FormularioEvento({
     // llegar al servidor y su único aviso era un globo sobre el campo, que en un
     // formulario largo pasa desapercibido. Valida el esquema, con mensajes propios.
     <form onSubmit={enviar} noValidate className="flex flex-col gap-5">
+      <NotaCamposObligatorios />
       {general && <Alerta tipo="error">{general}</Alerta>}
 
       {categorias.length === 0 && (
@@ -188,9 +197,10 @@ export function FormularioEvento({
         </Alerta>
       )}
 
-      <Campo etiqueta="Nombre del evento" nombre="nombre" error={errores.nombre}>
+      <Campo etiqueta="Nombre del evento" nombre="nombre" error={errores.nombre} obligatorio>
         <input
           id="nombre"
+          required
           value={valores.nombre}
           onChange={(evento) => cambiar("nombre", evento.target.value)}
           maxLength={200}
@@ -198,9 +208,10 @@ export function FormularioEvento({
         />
       </Campo>
 
-      <Campo etiqueta="Descripción" nombre="descripcion" error={errores.descripcion}>
+      <Campo etiqueta="Descripción" nombre="descripcion" error={errores.descripcion} obligatorio>
         <textarea
           id="descripcion"
+          required
           value={valores.descripcion}
           onChange={(evento) => cambiar("descripcion", evento.target.value)}
           rows={5}
@@ -210,9 +221,15 @@ export function FormularioEvento({
       </Campo>
 
       <div className="grid gap-5 md:grid-cols-2">
-        <Campo etiqueta="Categoría" nombre="idCategoriaEvento" error={errores.idCategoriaEvento}>
+        <Campo
+          etiqueta="Categoría"
+          nombre="idCategoriaEvento"
+          error={errores.idCategoriaEvento}
+          obligatorio
+        >
           <select
             id="idCategoriaEvento"
+            required
             value={valores.idCategoriaEvento}
             onChange={(evento) => cambiar("idCategoriaEvento", evento.target.value)}
             className={claseCampo}
@@ -226,9 +243,15 @@ export function FormularioEvento({
           </select>
         </Campo>
 
-        <Campo etiqueta="Tipo de actividad" nombre="tipoActividad" error={errores.tipoActividad}>
+        <Campo
+          etiqueta="Tipo de actividad"
+          nombre="tipoActividad"
+          error={errores.tipoActividad}
+          obligatorio
+        >
           <select
             id="tipoActividad"
+            required
             value={valores.tipoActividad}
             onChange={(evento) => cambiar("tipoActividad", evento.target.value)}
             className={claseCampo}
@@ -241,9 +264,10 @@ export function FormularioEvento({
           </select>
         </Campo>
 
-        <Campo etiqueta="Inicio" nombre="fechaInicio" error={errores.fechaInicio}>
+        <Campo etiqueta="Inicio" nombre="fechaInicio" error={errores.fechaInicio} obligatorio>
           <input
             id="fechaInicio"
+            required
             type="datetime-local"
             value={valores.fechaInicio}
             onChange={(evento) => cambiar("fechaInicio", evento.target.value)}
@@ -251,9 +275,10 @@ export function FormularioEvento({
           />
         </Campo>
 
-        <Campo etiqueta="Finalización" nombre="fechaFin" error={errores.fechaFin}>
+        <Campo etiqueta="Finalización" nombre="fechaFin" error={errores.fechaFin} obligatorio>
           <input
             id="fechaFin"
+            required
             type="datetime-local"
             value={valores.fechaFin}
             onChange={(evento) => cambiar("fechaFin", evento.target.value)}
@@ -261,9 +286,10 @@ export function FormularioEvento({
           />
         </Campo>
 
-        <Campo etiqueta="Ubicación" nombre="ubicacion" error={errores.ubicacion}>
+        <Campo etiqueta="Ubicación" nombre="ubicacion" error={errores.ubicacion} obligatorio>
           <input
             id="ubicacion"
+            required
             value={valores.ubicacion}
             onChange={(evento) => cambiar("ubicacion", evento.target.value)}
             maxLength={255}

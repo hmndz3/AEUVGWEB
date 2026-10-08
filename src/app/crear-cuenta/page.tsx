@@ -8,6 +8,11 @@ import { CampoAcceso } from "@/components/autenticacion/campo-acceso";
 import { IndicadorSeguridadContrasena } from "@/components/autenticacion/indicador-seguridad-contrasena";
 import { Icono } from "@/components/autenticacion/icono";
 import { MarcoAcceso } from "@/components/autenticacion/marco-acceso";
+import {
+  EtiquetaCampo,
+  MarcaObligatorio,
+  NotaCamposObligatorios,
+} from "@/components/ui/etiqueta-campo";
 
 function Selector({
   etiqueta,
@@ -30,9 +35,9 @@ function Selector({
 }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="text-texto text-sm font-semibold">
+      <EtiquetaCampo htmlFor={id} obligatorio>
         {etiqueta}
-      </label>
+      </EtiquetaCampo>
       <div className="relative">
         <Icono
           nombre={icono}
@@ -45,6 +50,7 @@ function Selector({
           onChange={onChange}
           disabled={disabled}
           aria-invalid={Boolean(error)}
+          required
           className="border-borde bg-superficie text-texto focus:border-primario focus:ring-primario/20 disabled:bg-superficie-suave h-12 w-full appearance-none rounded-xl border py-3 pr-10 pl-11 text-sm shadow-sm outline-none focus:ring-4 disabled:cursor-not-allowed"
         >
           {children}
@@ -247,6 +253,7 @@ export default function PaginaCrearCuenta() {
           </div>
         ) : (
           <form className="mt-7 grid max-w-2xl gap-5" onSubmit={enviarFormulario} noValidate>
+            <NotaCamposObligatorios />
             <div className="grid gap-5 sm:grid-cols-2">
               <CampoAcceso
                 id="nombres"
@@ -258,6 +265,7 @@ export default function PaginaCrearCuenta() {
                 value={datos.nombres}
                 onChange={actualizarCampo}
                 error={errores.nombres?.[0]}
+                required
               />
               <CampoAcceso
                 id="apellidos"
@@ -269,6 +277,7 @@ export default function PaginaCrearCuenta() {
                 value={datos.apellidos}
                 onChange={actualizarCampo}
                 error={errores.apellidos?.[0]}
+                required
               />
             </div>
             <CampoAcceso
@@ -282,19 +291,21 @@ export default function PaginaCrearCuenta() {
               value={datos.carnet}
               onChange={actualizarCampo}
               error={errores.carnet?.[0]}
+              required
             />
             <CampoAcceso
               id="correo"
               name="correo"
               etiqueta="Correo institucional UVG"
               icono="at"
-              textoLateral={`Obligatorio @${dominio}`}
+              textoLateral={`Terminación @${dominio}`}
               type="email"
               placeholder={`usuario@${dominio}`}
               autoComplete="email"
               value={datos.correo}
               onChange={actualizarCampo}
               error={errores.correo?.[0]}
+              required
             />
             <div className="grid gap-5 sm:grid-cols-2">
               <Selector
@@ -341,6 +352,7 @@ export default function PaginaCrearCuenta() {
               value={datos.contrasena}
               onChange={actualizarCampo}
               error={errores.contrasena?.[0]}
+              required
             />
             <IndicadorSeguridadContrasena contrasena={datos.contrasena} />
             <CampoAcceso
@@ -355,12 +367,14 @@ export default function PaginaCrearCuenta() {
               value={datos.confirmarContrasena}
               onChange={actualizarCampo}
               error={errores.confirmarContrasena?.[0]}
+              required
             />
             <label className="bg-superficie-suave text-texto flex items-start gap-3 rounded-xl p-3.5 text-sm leading-relaxed">
               <input
                 className="accent-primario mt-0.5 size-4 shrink-0"
                 type="checkbox"
                 name="aceptaTerminos"
+                required
                 checked={datos.aceptaTerminos}
                 onChange={(evento) =>
                   setDatos((actuales) => ({ ...actuales, aceptaTerminos: evento.target.checked }))
@@ -368,6 +382,7 @@ export default function PaginaCrearCuenta() {
               />
               Acepto los <span className="text-turquesa font-semibold">Términos y Condiciones</span>{" "}
               y la Política de Privacidad de AEUVG.
+              <MarcaObligatorio />
             </label>
             {errores.aceptaTerminos?.[0] && (
               <p className="text-error text-xs font-semibold">{errores.aceptaTerminos[0]}</p>

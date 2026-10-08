@@ -8,6 +8,7 @@ import { FormEvent, Suspense, useState } from "react";
 import { CampoAcceso } from "@/components/autenticacion/campo-acceso";
 import { Icono } from "@/components/autenticacion/icono";
 import { MarcoAcceso } from "@/components/autenticacion/marco-acceso";
+import { NotaCamposObligatorios } from "@/components/ui/etiqueta-campo";
 import { destinoSeguro } from "@/lib/auth/destino-seguro";
 
 function PanelInicioSesion() {
@@ -134,6 +135,7 @@ function FormularioInicioSesion() {
           </p>
 
           <form className="mt-8 flex max-w-xl flex-col gap-5" onSubmit={iniciarSesion} noValidate>
+            <NotaCamposObligatorios />
             <CampoAcceso
               id="correo"
               name="correo"
@@ -144,6 +146,7 @@ function FormularioInicioSesion() {
               placeholder="ejemplo@uvg.edu.gt"
               autoComplete="email"
               ayuda="Ingresa tu usuario institucional asignado."
+              required
               value={correo}
               onChange={(evento) => setCorreo(evento.target.value)}
             />
@@ -152,8 +155,8 @@ function FormularioInicioSesion() {
               name="contrasena"
               etiqueta="Contraseña"
               icono="candado"
-              textoLateral="Requerido"
               type="password"
+              required
               placeholder="••••••••••"
               autoComplete="current-password"
               botonFinal

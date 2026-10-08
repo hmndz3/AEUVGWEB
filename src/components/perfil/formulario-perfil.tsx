@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import { Alerta } from "@/components/ui/alerta";
 import { Boton } from "@/components/ui/boton";
+import { EtiquetaCampo, NotaCamposObligatorios } from "@/components/ui/etiqueta-campo";
 import type { CarreraDisponible } from "@/lib/perfil/consultas-perfil";
 import { ETIQUETAS_CAMPO_PERFIL } from "@/validators/perfil";
 
@@ -96,10 +97,10 @@ export function FormularioPerfil({
         noValidate
         className="border-borde bg-superficie flex flex-col gap-5 rounded-[1.25rem] border p-6"
       >
+        <NotaCamposObligatorios />
+
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="telefono" className="text-texto text-sm font-semibold">
-            Teléfono
-          </label>
+          <EtiquetaCampo htmlFor="telefono">Teléfono</EtiquetaCampo>
           <input
             id="telefono"
             value={telefono}
@@ -120,11 +121,12 @@ export function FormularioPerfil({
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="idCarrera" className="text-texto text-sm font-semibold">
+          <EtiquetaCampo htmlFor="idCarrera" obligatorio>
             Carrera
-          </label>
+          </EtiquetaCampo>
           <select
             id="idCarrera"
+            required
             value={idCarrera}
             onChange={(evento) => setIdCarrera(evento.target.value)}
             className={claseCampo}
