@@ -158,24 +158,24 @@ model Estudiante {
 }
 
 model Usuario {
-  idUsuario              Int                       @id @default(autoincrement()) @map("id_usuario")
-  idEstudiante           Int                       @unique(map: "usuario_id_estudiante_key") @map("id_estudiante")
-  correo                 String                    @unique(map: "usuario_correo_key") @db.VarChar(254)
-  contrasenaHash         String                    @map("contrasena_hash") @db.VarChar(255)
-  estado                 EstadoUsuario             @default(PENDIENTE)
-  correoVerificado       Boolean                   @default(false) @map("correo_verificado")
-  ultimoAcceso           DateTime?                 @map("ultimo_acceso") @db.Timestamptz(3)
-  fechaCreacion          DateTime                  @default(now()) @map("fecha_creacion") @db.Timestamptz(3)
-  fechaActualizacion     DateTime                  @updatedAt @map("fecha_actualizacion") @db.Timestamptz(3)
-  estudiante             Estudiante                @relation(fields: [idEstudiante], references: [idEstudiante], onDelete: Restrict, onUpdate: Cascade)
+  idUsuario              Int                           @id @default(autoincrement()) @map("id_usuario")
+  idEstudiante           Int                           @unique(map: "usuario_id_estudiante_key") @map("id_estudiante")
+  correo                 String                        @unique(map: "usuario_correo_key") @db.VarChar(254)
+  contrasenaHash         String                        @map("contrasena_hash") @db.VarChar(255)
+  estado                 EstadoUsuario                 @default(PENDIENTE)
+  correoVerificado       Boolean                       @default(false) @map("correo_verificado")
+  ultimoAcceso           DateTime?                     @map("ultimo_acceso") @db.Timestamptz(3)
+  fechaCreacion          DateTime                      @default(now()) @map("fecha_creacion") @db.Timestamptz(3)
+  fechaActualizacion     DateTime                      @updatedAt @map("fecha_actualizacion") @db.Timestamptz(3)
+  estudiante             Estudiante                    @relation(fields: [idEstudiante], references: [idEstudiante], onDelete: Restrict, onUpdate: Cascade)
   roles                  UsuarioRol[]
-  eventosCreados         Evento[]                  @relation("EventoCreadoPor")
+  eventosCreados         Evento[]                      @relation("EventoCreadoPor")
   eventosGuardados       EventoGuardado[]
-  oportunidadesCreadas   OportunidadHoraBeca[]     @relation("OportunidadCreadaPor")
-  importacionesHoras     ImportacionHoras[]        @relation("ImportacionRealizadaPor")
-  registrosCreados       RegistroHoraBeca[]        @relation("RegistroCreadoPor")
-  registrosAcreditados   RegistroHoraBeca[]        @relation("RegistroAcreditadoPor")
-  postulacionesRevisadas PostulacionTutor[]        @relation("PostulacionRevisadaPor")
+  oportunidadesCreadas   OportunidadHoraBeca[]         @relation("OportunidadCreadaPor")
+  importacionesHoras     ImportacionHoras[]            @relation("ImportacionRealizadaPor")
+  registrosCreados       RegistroHoraBeca[]            @relation("RegistroCreadoPor")
+  registrosAcreditados   RegistroHoraBeca[]            @relation("RegistroAcreditadoPor")
+  postulacionesRevisadas PostulacionTutor[]            @relation("PostulacionRevisadaPor")
   intereses              InteresUsuario[]
   interacciones          InteraccionUsuario[]
   notificaciones         Notificacion[]
@@ -456,11 +456,15 @@ model ImportacionHoras {
 
 model RegistroHoraBeca {
   idRegistroHora       Int                  @id @default(autoincrement()) @map("id_registro_hora")
-  idEstudiante         Int                  @map("id_estudiante")
+  // El vínculo con el estudiante es opcional: AEUVG carga horas por carnet y el
+  // carnet puede no tener cuenta todavía. Ver docs/horas-beca.md.
+  idEstudiante         Int?                 @map("id_estudiante")
   idOportunidad        Int?                 @map("id_oportunidad")
   idImportacion        Int?                 @map("id_importacion")
   creadoPor            Int                  @map("creado_por")
   acreditadoPor        Int?                 @map("acreditado_por")
+  carnet               String               @db.VarChar(20)
+  nombreEstudiante     String               @map("nombre_estudiante") @db.VarChar(200)
   fechaActividad       DateTime             @map("fecha_actividad") @db.Date
   horarioApoyo         String               @map("horario_apoyo") @db.VarChar(120)
   descripcionActividad String               @map("descripcion_actividad") @db.Text
@@ -468,9 +472,10 @@ model RegistroHoraBeca {
   estado               EstadoHoraBeca       @default(PENDIENTE)
   fechaAcreditacion    DateTime?            @map("fecha_acreditacion") @db.Timestamptz(3)
   observaciones        String?              @db.Text
+  textoBusqueda        String               @default("") @map("texto_busqueda") @db.Text
   fechaCreacion        DateTime             @default(now()) @map("fecha_creacion") @db.Timestamptz(3)
   fechaActualizacion   DateTime             @updatedAt @map("fecha_actualizacion") @db.Timestamptz(3)
-  estudiante           Estudiante           @relation(fields: [idEstudiante], references: [idEstudiante], onDelete: Restrict, onUpdate: Cascade)
+  estudiante           Estudiante?          @relation(fields: [idEstudiante], references: [idEstudiante], onDelete: Restrict, onUpdate: Cascade)
   oportunidad          OportunidadHoraBeca? @relation(fields: [idOportunidad], references: [idOportunidad], onDelete: Restrict, onUpdate: Cascade)
   importacion          ImportacionHoras?    @relation(fields: [idImportacion], references: [idImportacion], onDelete: Restrict, onUpdate: Cascade)
   creador              Usuario              @relation("RegistroCreadoPor", fields: [creadoPor], references: [idUsuario], onDelete: Restrict, onUpdate: Cascade)
@@ -480,6 +485,9 @@ model RegistroHoraBeca {
   @@index([estado], map: "registro_hora_beca_estado_idx")
   @@index([fechaActividad], map: "registro_hora_beca_fecha_actividad_idx")
   @@index([idEstudiante, estado], map: "registro_hora_beca_estudiante_estado_idx")
+  @@index([carnet], map: "registro_hora_beca_carnet_idx")
+  @@index([carnet, estado], map: "registro_hora_beca_carnet_estado_idx")
+  @@index([estado, fechaActividad], map: "registro_hora_beca_estado_fecha_actividad_idx")
   @@index([idOportunidad], map: "registro_hora_beca_id_oportunidad_idx")
   @@index([idImportacion], map: "registro_hora_beca_id_importacion_idx")
   @@index([creadoPor], map: "registro_hora_beca_creado_por_idx")

@@ -156,13 +156,13 @@ Prisma no expresa todos los `CHECK`; están versionados manualmente en la migrac
 
 ## Índices de búsqueda
 
-Además de las 29 llaves primarias y 26 restricciones únicas, el esquema declara 52 índices no únicos. Cubren principalmente:
+Además de las 29 llaves primarias y 26 restricciones únicas, el esquema declara 55 índices no únicos. Cubren principalmente:
 
 - Relaciones académicas: carrera de estudiante y rol de una asignación.
 - Usuarios: estado.
 - Tokens de verificación: usuario con fecha de creación y fecha de expiración.
 - Eventos: fecha, estado, categoría, tipo de actividad, creador y los compuestos estado-fecha de inicio, estado-fecha de fin y estado-destacado-fecha, agregados en T-07.2 para el calendario, la portada y los filtros.
-- Horas beca: fecha/estado de oportunidades, estudiantes inscritos, importaciones y registros por estudiante, estado, fecha, origen, creador y acreditador.
+- Horas beca: fecha/estado de oportunidades, estudiantes inscritos, importaciones y registros por estudiante, estado, fecha, origen, creador y acreditador. En el Sprint 4 se agregaron los compuestos `carnet`, `(carnet, estado)` y `(estado, fecha_actividad)`, que son las tres formas en que el panel consulta los registros.
 - Tutorías: postulaciones, cursos, tutores, disponibilidades, estado y fecha de sesiones.
 - Personalización: usuario, tipo de entidad y fecha de interacción.
 - Notificaciones: lectura, envío y compuesto usuario-lectura-fecha.
@@ -175,11 +175,15 @@ El inventario exacto y sus nombres físicos están en `schema.prisma` y `migrati
 
 La columna la recalcula el servicio de eventos en cada creación y edición (`src/lib/eventos/busqueda.ts`), por lo que no puede quedar desfasada. La migración incluye la carga inicial de los eventos ya existentes.
 
+En el Sprint 4 se agregó `registro_hora_beca.texto_busqueda`, que reúne el carnet, el nombre del estudiante y la descripción de la actividad: el buscador del panel tiene que encontrar un registro tanto por quién lo realizó como por en qué apoyó.
+
 En el Sprint 3 se agregaron `asociacion.texto_busqueda` y `club.texto_busqueda` con el mismo criterio: la primera reúne nombre, descripción y misión; la segunda, nombre, descripción y actividades. La normalización se trasladó a `src/lib/busqueda-texto.ts` para que los dos módulos generen la copia con la misma regla. En la misma migración se crearon los índices `(activo, nombre)` de ambas tablas, que son el orden exacto del listado público.
 
 ## Separación entre Estudiante y Usuario
 
-`Estudiante` representa a la persona dentro de la estructura académica y puede existir antes del registro web. Esto permite importar y acreditar horas usando carnet aunque todavía no haya una cuenta. `Usuario` contiene acceso, contraseña hash, estado de autenticación y roles. Su `idEstudiante` es obligatorio y único: todo usuario corresponde a un estudiante, pero no todo estudiante tiene usuario.
+`Estudiante` representa a la persona dentro de la estructura académica y puede existir antes del registro web. `Usuario` contiene acceso, contraseña hash, estado de autenticación y roles. Su `idEstudiante` es obligatorio y único: todo usuario corresponde a un estudiante, pero no todo estudiante tiene usuario.
+
+Un registro de horas beca va más allá: desde el Sprint 4 su `idEstudiante` es opcional y el dato obligatorio es el `carnet`. AEUVG carga las horas de una hoja de cálculo en la que buena parte de los carnets todavía no tiene cuenta ni fila en `Estudiante`, y exigir el vínculo habría dejado esas filas fuera del sistema. El vínculo se resuelve por carnet al guardar el registro y, cuando el carnet no existe, en el momento en que su dueño crea la cuenta (`src/lib/horas-beca/vinculacion-horas.ts`). El `nombre_estudiante` del registro conserva el nombre con el que AEUVG lo cargó, y las pantallas presentan el de la cuenta cuando el vínculo existe, porque es el verificado.
 
 ## Referencias polimórficas
 
@@ -189,6 +193,8 @@ En el Sprint 3 se agregaron `asociacion.texto_busqueda` y `club.texto_busqueda` 
 
 - `PENDIENTE`: `fechaAcreditacion` y `acreditadoPor` permanecen nulos.
 - `ACREDITADA`: ambos campos son obligatorios por un `CHECK` de PostgreSQL.
+
+Un registro nuevo nace `PENDIENTE`: la acreditación es una operación aparte, individual o en lote, y revertirla devuelve el registro a `PENDIENTE` borrando ambos campos, que es lo que el `CHECK` exige.
 
 Los registros manuales no requieren oportunidad ni importación. Los registros históricos pueden vincularse a una importación y los generados por convocatoria pueden vincularse a una oportunidad. Las relaciones históricas usan `Restrict`; eliminar un usuario acreditador usa `SetNull`, aunque el `CHECK` impide dejar inconsistente un registro acreditado y debe considerarse al diseñar ese flujo administrativo.
 

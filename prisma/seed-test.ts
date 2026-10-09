@@ -769,6 +769,8 @@ async function cargarDatos(tx: Prisma.TransactionClient): Promise<Resultados> {
   const horas = [
     {
       idEstudiante: estudiante(CARNETS_PRUEBA.ana).idEstudiante,
+      carnet: estudiante(CARNETS_PRUEBA.ana).carnet,
+      nombreEstudiante: estudiante(CARNETS_PRUEBA.ana).nombreCompleto,
       idOportunidad: null,
       idImportacion: null,
       fechaActividad: FECHAS_PRUEBA.actividadPendiente,
@@ -782,6 +784,8 @@ async function cargarDatos(tx: Prisma.TransactionClient): Promise<Resultados> {
     },
     {
       idEstudiante: estudiante(CARNETS_PRUEBA.ana).idEstudiante,
+      carnet: estudiante(CARNETS_PRUEBA.ana).carnet,
+      nombreEstudiante: estudiante(CARNETS_PRUEBA.ana).nombreCompleto,
       idOportunidad: oportunidad.idOportunidad,
       idImportacion: null,
       fechaActividad: FECHAS_PRUEBA.actividadAcreditada,
@@ -795,6 +799,8 @@ async function cargarDatos(tx: Prisma.TransactionClient): Promise<Resultados> {
     },
     {
       idEstudiante: estudiante(CARNETS_PRUEBA.carlos).idEstudiante,
+      carnet: estudiante(CARNETS_PRUEBA.carlos).carnet,
+      nombreEstudiante: estudiante(CARNETS_PRUEBA.carlos).nombreCompleto,
       idOportunidad: null,
       idImportacion: importacion.idImportacion,
       fechaActividad: FECHAS_PRUEBA.actividadImportada,
@@ -808,6 +814,8 @@ async function cargarDatos(tx: Prisma.TransactionClient): Promise<Resultados> {
     },
     {
       idEstudiante: estudiante(CARNETS_PRUEBA.carlos).idEstudiante,
+      carnet: estudiante(CARNETS_PRUEBA.carlos).carnet,
+      nombreEstudiante: estudiante(CARNETS_PRUEBA.carlos).nombreCompleto,
       idOportunidad: null,
       idImportacion: null,
       fechaActividad: FECHAS_PRUEBA.actividadSinCuenta,
