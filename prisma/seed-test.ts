@@ -3,6 +3,7 @@ import { Prisma, PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 
 import { textoDeBusqueda } from "../src/lib/eventos/busqueda";
+import { textoDeBusquedaRegistroHora } from "../src/lib/horas-beca/busqueda-horas";
 import {
   textoDeBusquedaAsociacion,
   textoDeBusquedaClub,
@@ -829,7 +830,11 @@ async function cargarDatos(tx: Prisma.TransactionClient): Promise<Resultados> {
     },
   ];
   for (const registro of horas) {
-    const datos = { ...registro, creadoPor: idAdministrador };
+    const datos = {
+      ...registro,
+      creadoPor: idAdministrador,
+      textoBusqueda: textoDeBusquedaRegistroHora(registro),
+    };
     const where = { descripcionActividad: registro.descripcionActividad };
     await sincronizar({
       tabla: "RegistroHoraBeca",

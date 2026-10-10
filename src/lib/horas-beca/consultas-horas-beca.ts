@@ -1,6 +1,6 @@
 import type { EstadoHoraBeca, Prisma } from "@prisma/client";
 
-import { normalizarTexto } from "@/lib/busqueda-texto";
+import { normalizarTexto } from "@/lib/horas-beca/busqueda-horas";
 import { obtenerPrisma } from "@/lib/prisma";
 
 /**
