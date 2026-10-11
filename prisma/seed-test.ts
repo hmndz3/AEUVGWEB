@@ -17,6 +17,7 @@ import {
   FECHAS_PRUEBA,
   HASH_DESARROLLO,
   MARCADOR_PRUEBA,
+  NOMBRE_ESTUDIANTE_NO_REGISTRADO,
   NOMBRES_PRUEBA,
   TITULOS_NOTIFICACIONES_PRUEBA,
 } from "./data/datos-prueba";
@@ -827,6 +828,39 @@ async function cargarDatos(tx: Prisma.TransactionClient): Promise<Resultados> {
       acreditadoPor: null,
       fechaAcreditacion: null,
       observaciones: "Registro manual ficticio para estudiante sin cuenta.",
+    },
+    // Los dos siguientes son el caso que el Sprint 4 habilitó: un carnet que no
+    // tiene cuenta ni ficha de estudiante. Quedan sin vínculo y conservan el
+    // nombre con el que AEUVG los cargó, hasta que su dueño se registre.
+    {
+      idEstudiante: null,
+      carnet: CARNETS_PRUEBA.noRegistrado,
+      nombreEstudiante: NOMBRE_ESTUDIANTE_NO_REGISTRADO,
+      idOportunidad: null,
+      idImportacion: null,
+      fechaActividad: FECHAS_PRUEBA.actividadNoRegistrada,
+      horarioApoyo: "07:30-09:30",
+      descripcionActividad: DESCRIPCIONES_HORAS_PRUEBA.pendienteNoRegistrado,
+      cantidadHoras: new Prisma.Decimal("2.00"),
+      estado: "PENDIENTE" as const,
+      acreditadoPor: null,
+      fechaAcreditacion: null,
+      observaciones: "Registro ficticio de un carnet sin cuenta en la plataforma.",
+    },
+    {
+      idEstudiante: null,
+      carnet: CARNETS_PRUEBA.noRegistrado,
+      nombreEstudiante: NOMBRE_ESTUDIANTE_NO_REGISTRADO,
+      idOportunidad: null,
+      idImportacion: null,
+      fechaActividad: FECHAS_PRUEBA.actividadNoRegistradaAcreditada,
+      horarioApoyo: "13:00-16:00",
+      descripcionActividad: DESCRIPCIONES_HORAS_PRUEBA.acreditadaNoRegistrado,
+      cantidadHoras: new Prisma.Decimal("3.00"),
+      estado: "ACREDITADA" as const,
+      acreditadoPor: idAdministrador,
+      fechaAcreditacion: FECHAS_PRUEBA.acreditacion,
+      observaciones: "Registro ficticio acreditado antes de que el carnet tuviera cuenta.",
     },
   ];
   for (const registro of horas) {
