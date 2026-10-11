@@ -96,7 +96,9 @@ Se usa `migrate deploy` porque aplica únicamente las migraciones ya versionadas
 
 El servicio Postgres ofrece además **Settings → Networking → Public Access** (antes TCP Proxy), que expone la base a internet con un host y un puerto públicos. El script lo acepta como alternativa si no encuentra el túnel, pero no es el camino recomendado: mientras esté activo, cualquiera con la cadena de conexión puede conectarse, y el tráfico se factura como egreso. Solo se justifica para un cliente gráfico como DBeaver o pgAdmin que no soporte el túnel, y conviene retirarlo al terminar.
 
-Este paso se repite cada vez que se agrega una migración, después de publicar el cambio en `main`. Que sea explícito es deliberado: un cambio de esquema en producción conviene ejecutarlo de forma consciente y no como efecto secundario de un despliegue.
+Este paso se repite cada vez que se agrega una migración. Que sea explícito es deliberado: un cambio de esquema en producción conviene ejecutarlo de forma consciente y no como efecto secundario de un despliegue.
+
+**El orden importa.** Una migración que solo agrega columnas, tablas o índices se aplica **antes** de publicar el código en `main`: el código anterior la ignora, y así no existe un intervalo en el que el sitio consulte algo que todavía no existe. En el Sprint 3 la columna `asociacion.siglas` se publicó primero y, hasta aplicar la migración, las páginas de asociaciones, eventos y calendario respondieron con error. Una migración que elimina o renombra algo que el código actual usa necesita el orden inverso, o un paso intermedio en dos despliegues.
 
 ### Contenido de demostración
 
