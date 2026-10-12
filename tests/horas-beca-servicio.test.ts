@@ -1,7 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { condicionBusquedaHoras } from "../src/lib/horas-beca/consultas-horas-beca";
 import {
   normalizarCarnet,
   textoDeBusquedaRegistroHora,
@@ -91,16 +90,6 @@ test("el texto de búsqueda colapsa los espacios repetidos", () => {
   });
 
   assert.equal(texto, "24089 ana prueba apoyo");
-});
-
-test("el buscador compara contra la copia normalizada del registro", () => {
-  assert.deepEqual(condicionBusquedaHoras("Música"), { textoBusqueda: { contains: "musica" } });
-  assert.deepEqual(condicionBusquedaHoras("24089"), { textoBusqueda: { contains: "24089" } });
-});
-
-test("sin texto de búsqueda el listado no agrega ninguna condición", () => {
-  assert.deepEqual(condicionBusquedaHoras(undefined), {});
-  assert.deepEqual(condicionBusquedaHoras("   "), {});
 });
 
 test("un registro de un carnet con cuenta queda vinculado a ella", async () => {

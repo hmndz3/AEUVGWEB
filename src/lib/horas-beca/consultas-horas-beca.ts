@@ -1,7 +1,8 @@
 import type { EstadoHoraBeca, Prisma } from "@prisma/client";
 
-import { normalizarTexto } from "@/lib/horas-beca/busqueda-horas";
+import { condicionesDeFiltrosHoras } from "@/lib/horas-beca/filtros-horas";
 import { obtenerPrisma } from "@/lib/prisma";
+import type { FiltrosHorasBeca } from "@/validators/horas-beca";
 
 /**
  * Registros por página del panel. Es una cifra alta a propósito: la sección
@@ -35,9 +36,8 @@ export type PaginaRegistrosHoraBeca = {
 };
 
 export type OpcionesListadoHoras = {
-  pagina?: number;
+  filtros?: FiltrosHorasBeca;
   porPagina?: number;
-  busqueda?: string;
 };
 
 const CAMPOS_REGISTRO = {
@@ -77,17 +77,6 @@ function aRegistro(fila: FilaRegistro): RegistroHoraBecaAdmin {
   };
 }
 
-/**
- * Traduce el buscador del panel a la condición sobre la copia normalizada, que
- * reúne el carnet, el nombre del estudiante y la descripción de la actividad.
- */
-export function condicionBusquedaHoras(
-  busqueda: string | undefined
-): Prisma.RegistroHoraBecaWhereInput {
-  const texto = normalizarTexto(busqueda ?? "");
-  return texto ? { textoBusqueda: { contains: texto } } : {};
-}
-
 function paginar(pagina: number | undefined, porPagina: number | undefined) {
   const tamano = porPagina ?? REGISTROS_HORA_POR_PAGINA;
   const numero = Math.max(1, Math.trunc(pagina ?? 1));
@@ -106,8 +95,9 @@ function paginar(pagina: number | undefined, porPagina: number | undefined) {
 export async function listarRegistrosHoraBeca(
   opciones: OpcionesListadoHoras = {}
 ): Promise<PaginaRegistrosHoraBeca> {
-  const { tamano, numero, saltar } = paginar(opciones.pagina, opciones.porPagina);
-  const where = condicionBusquedaHoras(opciones.busqueda);
+  const filtros = opciones.filtros ?? {};
+  const { tamano, numero, saltar } = paginar(filtros.pagina, opciones.porPagina);
+  const where = condicionesDeFiltrosHoras(filtros);
   const prisma = obtenerPrisma();
 
   const [total, filas] = await Promise.all([
