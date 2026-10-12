@@ -130,3 +130,52 @@ export async function obtenerRegistroHoraBeca(id: number): Promise<RegistroHoraB
 
   return fila ? aRegistro(fila) : null;
 }
+
+/** Totales del periodo consultado, no de la página en pantalla. */
+export type ResumenHorasBeca = {
+  registros: number;
+  horasTotales: number;
+  horasAcreditadas: number;
+  horasPendientes: number;
+  registrosSinCuenta: number;
+};
+
+/**
+ * Resumen de horas del mismo conjunto de registros que presenta el listado.
+ *
+ * Se calcula en la base y sobre la condición completa, no sumando las filas de
+ * la página: AEUVG cierra periodos de cientos de registros y el dato que
+ * necesita es el total del periodo, que es justamente el que no cabe en
+ * pantalla. La agrupación por estado devuelve las dos sumas en una sola
+ * consulta, en lugar de una por estado.
+ */
+export async function obtenerResumenHorasBeca(
+  filtros: FiltrosHorasBeca = {}
+): Promise<ResumenHorasBeca> {
+  const where = condicionesDeFiltrosHoras(filtros);
+  const prisma = obtenerPrisma();
+
+  const [porEstado, registrosSinCuenta] = await Promise.all([
+    prisma.registroHoraBeca.groupBy({
+      by: ["estado"],
+      where,
+      _sum: { cantidadHoras: true },
+      _count: { _all: true },
+    }),
+    prisma.registroHoraBeca.count({ where: { ...where, idEstudiante: null } }),
+  ]);
+
+  const horasDe = (estado: EstadoHoraBeca) =>
+    Number(porEstado.find((grupo) => grupo.estado === estado)?._sum.cantidadHoras ?? 0);
+
+  const horasAcreditadas = horasDe("ACREDITADA");
+  const horasPendientes = horasDe("PENDIENTE");
+
+  return {
+    registros: porEstado.reduce((total, grupo) => total + grupo._count._all, 0),
+    horasTotales: horasAcreditadas + horasPendientes,
+    horasAcreditadas,
+    horasPendientes,
+    registrosSinCuenta,
+  };
+}
