@@ -6,7 +6,11 @@ import {
   listarRegistrosHoraBeca,
   obtenerResumenHorasBeca,
 } from "@/lib/horas-beca/consultas-horas-beca";
-import { interpretarFiltrosHorasBeca, parametrosDeFiltrosHoras } from "@/validators/horas-beca";
+import {
+  contarFiltrosHoras,
+  interpretarFiltrosHorasBeca,
+  parametrosDeFiltrosHoras,
+} from "@/validators/horas-beca";
 
 export const dynamic = "force-dynamic";
 
@@ -17,6 +21,8 @@ export default async function PaginaAdminHorasBeca({
 }) {
   const parametros = await searchParams;
   const filtros = interpretarFiltrosHorasBeca(parametros);
+
+  const filtrosActivos = contarFiltrosHoras(filtros);
 
   const [pagina, resumen] = await Promise.all([
     listarRegistrosHoraBeca({ filtros }),
@@ -46,8 +52,8 @@ export default async function PaginaAdminHorasBeca({
 
       {pagina.registros.length === 0 ? (
         <div className="border-borde bg-superficie-suave text-texto-suave rounded-[1.25rem] border border-dashed px-6 py-14 text-center text-sm">
-          {filtros.q
-            ? "Ningún registro coincide con la búsqueda. Revisa el carnet o el nombre."
+          {filtrosActivos > 0
+            ? "Ningún registro coincide con la búsqueda o los filtros aplicados. Prueba con un periodo más amplio o límpialos para ver todos."
             : "Todavía no hay horas beca registradas."}
         </div>
       ) : (
