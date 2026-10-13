@@ -1,3 +1,4 @@
+import { FiltrosHorasBecaPanel } from "@/components/admin/filtros-horas-beca";
 import { ResumenHorasBecaPanel } from "@/components/admin/resumen-horas-beca";
 import { TablaHorasBeca } from "@/components/admin/tabla-horas-beca";
 import { Paginacion } from "@/components/eventos/paginacion";
@@ -5,7 +6,7 @@ import {
   listarRegistrosHoraBeca,
   obtenerResumenHorasBeca,
 } from "@/lib/horas-beca/consultas-horas-beca";
-import { interpretarFiltrosHorasBeca } from "@/validators/horas-beca";
+import { interpretarFiltrosHorasBeca, parametrosDeFiltrosHoras } from "@/validators/horas-beca";
 
 export const dynamic = "force-dynamic";
 
@@ -35,6 +36,8 @@ export default async function PaginaAdminHorasBeca({
 
       <ResumenHorasBecaPanel resumen={resumen} />
 
+      <FiltrosHorasBecaPanel filtros={filtros} />
+
       <p className="text-texto-suave text-sm">
         {pagina.total === 0
           ? "Sin registros"
@@ -43,13 +46,20 @@ export default async function PaginaAdminHorasBeca({
 
       {pagina.registros.length === 0 ? (
         <div className="border-borde bg-superficie-suave text-texto-suave rounded-[1.25rem] border border-dashed px-6 py-14 text-center text-sm">
-          Todavía no hay horas beca registradas.
+          {filtros.q
+            ? "Ningún registro coincide con la búsqueda. Revisa el carnet o el nombre."
+            : "Todavía no hay horas beca registradas."}
         </div>
       ) : (
         <TablaHorasBeca registros={pagina.registros} />
       )}
 
-      <Paginacion pagina={pagina.pagina} paginas={pagina.paginas} ruta="/admin/horas-beca" />
+      <Paginacion
+        pagina={pagina.pagina}
+        paginas={pagina.paginas}
+        ruta="/admin/horas-beca"
+        parametros={parametrosDeFiltrosHoras(filtros)}
+      />
     </div>
   );
 }
