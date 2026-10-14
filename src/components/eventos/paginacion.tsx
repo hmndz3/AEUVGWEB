@@ -22,11 +22,17 @@ export function Paginacion({
   paginas,
   ruta,
   parametros = {},
+  // La paginación la reutilizan la cartelera, las organizaciones y el panel de
+  // horas beca, así que la etiqueta no puede nombrar eventos: al revisar el
+  // panel en el lector de pantalla anunciaba "páginas de eventos" sobre una
+  // tabla de horas.
+  etiqueta = "Páginas de resultados",
 }: {
   pagina: number;
   paginas: number;
   ruta: string;
   parametros?: Record<string, string>;
+  etiqueta?: string;
 }) {
   if (paginas <= 1) return null;
 
@@ -43,7 +49,7 @@ export function Paginacion({
     "inline-flex h-10 min-w-10 items-center justify-center rounded-full border px-3 text-sm font-semibold transition-colors";
 
   return (
-    <nav aria-label="Páginas de eventos" className="mt-10 flex flex-wrap items-center gap-2">
+    <nav aria-label={etiqueta} className="mt-10 flex flex-wrap items-center gap-2">
       {pagina > 1 && (
         <Link
           href={enlace(pagina - 1)}

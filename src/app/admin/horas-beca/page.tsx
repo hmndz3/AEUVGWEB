@@ -65,6 +65,7 @@ export default async function PaginaAdminHorasBeca({
         paginas={pagina.paginas}
         ruta="/admin/horas-beca"
         parametros={parametrosDeFiltrosHoras(filtros)}
+        etiqueta="Páginas de registros de horas beca"
       />
     </div>
   );
