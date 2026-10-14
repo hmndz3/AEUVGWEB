@@ -1,7 +1,8 @@
 import type { EstadoHoraBeca, Prisma } from "@prisma/client";
 
-import { normalizarTexto } from "@/lib/horas-beca/busqueda-horas";
+import { condicionesDeFiltrosHoras } from "@/lib/horas-beca/filtros-horas";
 import { obtenerPrisma } from "@/lib/prisma";
+import type { FiltrosHorasBeca } from "@/validators/horas-beca";
 
 /**
  * Registros por página del panel. Es una cifra alta a propósito: la sección
@@ -35,9 +36,8 @@ export type PaginaRegistrosHoraBeca = {
 };
 
 export type OpcionesListadoHoras = {
-  pagina?: number;
+  filtros?: FiltrosHorasBeca;
   porPagina?: number;
-  busqueda?: string;
 };
 
 const CAMPOS_REGISTRO = {
@@ -77,17 +77,6 @@ function aRegistro(fila: FilaRegistro): RegistroHoraBecaAdmin {
   };
 }
 
-/**
- * Traduce el buscador del panel a la condición sobre la copia normalizada, que
- * reúne el carnet, el nombre del estudiante y la descripción de la actividad.
- */
-export function condicionBusquedaHoras(
-  busqueda: string | undefined
-): Prisma.RegistroHoraBecaWhereInput {
-  const texto = normalizarTexto(busqueda ?? "");
-  return texto ? { textoBusqueda: { contains: texto } } : {};
-}
-
 function paginar(pagina: number | undefined, porPagina: number | undefined) {
   const tamano = porPagina ?? REGISTROS_HORA_POR_PAGINA;
   const numero = Math.max(1, Math.trunc(pagina ?? 1));
@@ -106,8 +95,9 @@ function paginar(pagina: number | undefined, porPagina: number | undefined) {
 export async function listarRegistrosHoraBeca(
   opciones: OpcionesListadoHoras = {}
 ): Promise<PaginaRegistrosHoraBeca> {
-  const { tamano, numero, saltar } = paginar(opciones.pagina, opciones.porPagina);
-  const where = condicionBusquedaHoras(opciones.busqueda);
+  const filtros = opciones.filtros ?? {};
+  const { tamano, numero, saltar } = paginar(filtros.pagina, opciones.porPagina);
+  const where = condicionesDeFiltrosHoras(filtros);
   const prisma = obtenerPrisma();
 
   const [total, filas] = await Promise.all([
@@ -139,4 +129,53 @@ export async function obtenerRegistroHoraBeca(id: number): Promise<RegistroHoraB
   });
 
   return fila ? aRegistro(fila) : null;
+}
+
+/** Totales del periodo consultado, no de la página en pantalla. */
+export type ResumenHorasBeca = {
+  registros: number;
+  horasTotales: number;
+  horasAcreditadas: number;
+  horasPendientes: number;
+  registrosSinCuenta: number;
+};
+
+/**
+ * Resumen de horas del mismo conjunto de registros que presenta el listado.
+ *
+ * Se calcula en la base y sobre la condición completa, no sumando las filas de
+ * la página: AEUVG cierra periodos de cientos de registros y el dato que
+ * necesita es el total del periodo, que es justamente el que no cabe en
+ * pantalla. La agrupación por estado devuelve las dos sumas en una sola
+ * consulta, en lugar de una por estado.
+ */
+export async function obtenerResumenHorasBeca(
+  filtros: FiltrosHorasBeca = {}
+): Promise<ResumenHorasBeca> {
+  const where = condicionesDeFiltrosHoras(filtros);
+  const prisma = obtenerPrisma();
+
+  const [porEstado, registrosSinCuenta] = await Promise.all([
+    prisma.registroHoraBeca.groupBy({
+      by: ["estado"],
+      where,
+      _sum: { cantidadHoras: true },
+      _count: { _all: true },
+    }),
+    prisma.registroHoraBeca.count({ where: { ...where, idEstudiante: null } }),
+  ]);
+
+  const horasDe = (estado: EstadoHoraBeca) =>
+    Number(porEstado.find((grupo) => grupo.estado === estado)?._sum.cantidadHoras ?? 0);
+
+  const horasAcreditadas = horasDe("ACREDITADA");
+  const horasPendientes = horasDe("PENDIENTE");
+
+  return {
+    registros: porEstado.reduce((total, grupo) => total + grupo._count._all, 0),
+    horasTotales: horasAcreditadas + horasPendientes,
+    horasAcreditadas,
+    horasPendientes,
+    registrosSinCuenta,
+  };
 }
