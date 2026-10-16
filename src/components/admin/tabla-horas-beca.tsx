@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { EtiquetaEstado } from "@/components/ui/etiqueta-estado";
 import {
   Tabla,
@@ -32,6 +34,7 @@ export function TablaHorasBeca({ registros }: { registros: RegistroHoraBecaAdmin
           <TablaCeldaEncabezado>Actividad</TablaCeldaEncabezado>
           <TablaCeldaEncabezado className="text-right">Horas</TablaCeldaEncabezado>
           <TablaCeldaEncabezado>Estado</TablaCeldaEncabezado>
+          <TablaCeldaEncabezado className="text-right">Acciones</TablaCeldaEncabezado>
         </tr>
       </TablaEncabezado>
       <TablaCuerpo>
@@ -61,6 +64,16 @@ export function TablaHorasBeca({ registros }: { registros: RegistroHoraBecaAdmin
               <EtiquetaEstado tono={registro.estado === "ACREDITADA" ? "acreditada" : "pendiente"}>
                 {ETIQUETAS_ESTADO_HORA_BECA[registro.estado]}
               </EtiquetaEstado>
+            </TablaCelda>
+            <TablaCelda className="text-right whitespace-nowrap">
+              {/* La corrección se abre desde la fila, que es donde AEUVG detecta
+                  el dato equivocado al comparar un periodo completo. */}
+              <Link
+                href={`/admin/horas-beca/${registro.idRegistroHora}`}
+                className="text-primario text-sm font-bold hover:underline"
+              >
+                Editar
+              </Link>
             </TablaCelda>
           </TablaFila>
         ))}
