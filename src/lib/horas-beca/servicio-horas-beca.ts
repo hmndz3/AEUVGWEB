@@ -7,6 +7,22 @@ import type {
 /** Horas que puede sumar un solo registro. Más de un día no es un apoyo, es un error de captura. */
 export const MAXIMO_HORAS_POR_REGISTRO = 24;
 
+/**
+ * Registros que admite una operación en lote. El límite es el tamaño de la
+ * selección que cabe en pantalla con holgura: una petición con miles de
+ * identificadores no viene de alguien revisando filas.
+ */
+export const MAXIMO_REGISTROS_EN_LOTE = 200;
+
+/**
+ * Identificadores de una operación en lote, sin repetidos y sin valores que no
+ * puedan ser un registro. La selección llega de una petición, así que no se
+ * confía en que venga limpia.
+ */
+function normalizarSeleccion(ids: readonly number[]): number[] {
+  return [...new Set(ids)].filter((id) => Number.isSafeInteger(id) && id > 0);
+}
+
 /** Registro de horas tal como lo envía el panel, antes de resolver el vínculo. */
 export type DatosRegistroHora = {
   carnet: string;
@@ -24,6 +40,10 @@ export type ResultadoRegistroHora =
   | { tipo: "invalido"; errores: Record<string, string> };
 
 export type ResultadoEliminacionHora = { tipo: "eliminado" } | { tipo: "no_encontrado" };
+
+export type ResultadoAcreditacion =
+  | { tipo: "aplicada"; solicitados: number; afectados: number }
+  | { tipo: "invalida"; mensaje: string };
 
 /**
  * Registro de las horas beca del estudiantado.
@@ -68,6 +88,37 @@ export class ServicioHorasBeca {
     const eliminado = await this.repositorio.eliminar(id);
 
     return eliminado ? { tipo: "eliminado" } : { tipo: "no_encontrado" };
+  }
+
+  /**
+   * Acredita los registros indicados.
+   *
+   * La operación es en lote incluso cuando se aplica sobre uno: AEUVG cierra
+   * periodos completos y acreditar fila por fila era justamente el trabajo que
+   * la hoja de cálculo imponía. Devuelve cuántos registros cambiaron además de
+   * cuántos se pidieron, porque una selección mixta deja los ya acreditados sin
+   * tocar y el panel tiene que poder decirlo.
+   */
+  async acreditar(
+    ids: readonly number[],
+    acreditadoPor: number,
+    fecha: Date
+  ): Promise<ResultadoAcreditacion> {
+    const seleccion = normalizarSeleccion(ids);
+
+    if (seleccion.length === 0) {
+      return { tipo: "invalida", mensaje: "Selecciona al menos un registro." };
+    }
+    if (seleccion.length > MAXIMO_REGISTROS_EN_LOTE) {
+      return {
+        tipo: "invalida",
+        mensaje: `No se pueden acreditar más de ${MAXIMO_REGISTROS_EN_LOTE} registros a la vez.`,
+      };
+    }
+
+    const afectados = await this.repositorio.acreditar(seleccion, acreditadoPor, fecha);
+
+    return { tipo: "aplicada", solicitados: seleccion.length, afectados };
   }
 
   /**

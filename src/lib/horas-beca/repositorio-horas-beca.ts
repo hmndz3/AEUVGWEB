@@ -27,6 +27,8 @@ export interface RepositorioHorasBeca {
   crear(datos: DatosRegistroHoraPersistidos, creadoPor: number): Promise<number>;
   actualizar(id: number, datos: DatosRegistroHoraPersistidos): Promise<boolean>;
   eliminar(id: number): Promise<boolean>;
+  /** Acredita los registros pendientes indicados y devuelve cuántos cambiaron. */
+  acreditar(ids: readonly number[], acreditadoPor: number, fecha: Date): Promise<number>;
 }
 
 /**
@@ -101,5 +103,20 @@ export class RepositorioHorasBecaPrisma implements RepositorioHorasBeca {
     });
 
     return count > 0;
+  }
+
+  /**
+   * La condición exige que el registro siga pendiente, no solo que exista: así
+   * una acreditación repetida no reescribe la fecha ni el responsable de lo que
+   * ya estaba acreditado, y el conteo que devuelve es el de los registros que
+   * realmente cambiaron.
+   */
+  async acreditar(ids: readonly number[], acreditadoPor: number, fecha: Date): Promise<number> {
+    const { count } = await this.prisma.registroHoraBeca.updateMany({
+      where: { idRegistroHora: { in: [...ids] }, estado: "PENDIENTE" },
+      data: { estado: "ACREDITADA", fechaAcreditacion: fecha, acreditadoPor },
+    });
+
+    return count;
   }
 }
