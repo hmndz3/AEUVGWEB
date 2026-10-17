@@ -21,6 +21,7 @@ class RepositorioFalso implements RepositorioHorasBeca {
   actualizados: { id: number; datos: DatosRegistroHoraPersistidos }[] = [];
   eliminados: number[] = [];
   acreditaciones: { ids: number[]; acreditadoPor: number; fecha: Date }[] = [];
+  reversiones: number[][] = [];
   carnetsConsultados: string[] = [];
 
   constructor(
@@ -54,6 +55,11 @@ class RepositorioFalso implements RepositorioHorasBeca {
 
   async acreditar(ids: readonly number[], acreditadoPor: number, fecha: Date): Promise<number> {
     this.acreditaciones.push({ ids: [...ids], acreditadoPor, fecha });
+    return this.opciones.afectados ?? ids.length;
+  }
+
+  async revertirAcreditacion(ids: readonly number[]): Promise<number> {
+    this.reversiones.push([...ids]);
     return this.opciones.afectados ?? ids.length;
   }
 }

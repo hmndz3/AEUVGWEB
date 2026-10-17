@@ -122,6 +122,31 @@ export class ServicioHorasBeca {
   }
 
   /**
+   * Devuelve a pendiente una acreditación aplicada por error.
+   *
+   * Existe porque la acreditación en lote se aplica sobre una selección y una
+   * selección se puede equivocar: sin reversión, corregirla exigiría borrar los
+   * registros y volver a capturarlos.
+   */
+  async revertir(ids: readonly number[]): Promise<ResultadoAcreditacion> {
+    const seleccion = normalizarSeleccion(ids);
+
+    if (seleccion.length === 0) {
+      return { tipo: "invalida", mensaje: "Selecciona al menos un registro." };
+    }
+    if (seleccion.length > MAXIMO_REGISTROS_EN_LOTE) {
+      return {
+        tipo: "invalida",
+        mensaje: `No se pueden revertir más de ${MAXIMO_REGISTROS_EN_LOTE} registros a la vez.`,
+      };
+    }
+
+    const afectados = await this.repositorio.revertirAcreditacion(seleccion);
+
+    return { tipo: "aplicada", solicitados: seleccion.length, afectados };
+  }
+
+  /**
    * Comprueba las reglas y resuelve el vínculo con la cuenta del carnet.
    *
    * Las comprobaciones se repiten aquí aunque el esquema del endpoint ya haya
