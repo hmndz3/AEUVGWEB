@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { AccionesHoraBeca } from "@/components/admin/acciones-hora-beca";
+import { BarraAcreditacion } from "@/components/admin/barra-acreditacion";
 import { EtiquetaEstado } from "@/components/ui/etiqueta-estado";
 import {
   Tabla,
@@ -54,11 +55,13 @@ export function TablaHorasBeca({ registros }: { registros: RegistroHoraBecaAdmin
 
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-texto-suave text-sm" aria-live="polite">
-        {seleccion.size === 0
-          ? "Marca los registros sobre los que quieras aplicar una operación."
-          : `${seleccion.size} ${seleccion.size === 1 ? "registro seleccionado" : "registros seleccionados"}.`}
-      </p>
+      <BarraAcreditacion
+        seleccionados={[...seleccion]}
+        horasSeleccionadas={registros
+          .filter((fila) => seleccion.has(fila.idRegistroHora))
+          .reduce((total, fila) => total + fila.cantidadHoras, 0)}
+        alLimpiar={() => setSeleccion(new Set())}
+      />
 
       <Tabla className="min-w-[60rem]">
         <TablaEncabezado>
