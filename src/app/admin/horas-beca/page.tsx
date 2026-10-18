@@ -66,7 +66,16 @@ export default async function PaginaAdminHorasBeca({
             : "Todavía no hay horas beca registradas. Crea el primero con el botón de arriba."}
         </div>
       ) : (
-        <TablaHorasBeca registros={pagina.registros} />
+        /* La clave incluye los filtros y la página: al cambiar cualquiera, la
+           tabla se vuelve a montar y la selección queda descartada, de modo que
+           no se acredite en lote lo que ya no está en pantalla. */
+        <TablaHorasBeca
+          key={new URLSearchParams({
+            ...parametrosDeFiltrosHoras(filtros),
+            pagina: String(pagina.pagina),
+          }).toString()}
+          registros={pagina.registros}
+        />
       )}
 
       <Paginacion
