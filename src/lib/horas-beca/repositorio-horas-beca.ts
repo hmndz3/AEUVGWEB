@@ -27,6 +27,10 @@ export interface RepositorioHorasBeca {
   crear(datos: DatosRegistroHoraPersistidos, creadoPor: number): Promise<number>;
   actualizar(id: number, datos: DatosRegistroHoraPersistidos): Promise<boolean>;
   eliminar(id: number): Promise<boolean>;
+  /** Acredita los registros pendientes indicados y devuelve cuántos cambiaron. */
+  acreditar(ids: readonly number[], acreditadoPor: number, fecha: Date): Promise<number>;
+  /** Devuelve a pendiente los registros acreditados indicados. */
+  revertirAcreditacion(ids: readonly number[]): Promise<number>;
 }
 
 /**
@@ -101,5 +105,34 @@ export class RepositorioHorasBecaPrisma implements RepositorioHorasBeca {
     });
 
     return count > 0;
+  }
+
+  /**
+   * La condición exige que el registro siga pendiente, no solo que exista: así
+   * una acreditación repetida no reescribe la fecha ni el responsable de lo que
+   * ya estaba acreditado, y el conteo que devuelve es el de los registros que
+   * realmente cambiaron.
+   */
+  async acreditar(ids: readonly number[], acreditadoPor: number, fecha: Date): Promise<number> {
+    const { count } = await this.prisma.registroHoraBeca.updateMany({
+      where: { idRegistroHora: { in: [...ids] }, estado: "PENDIENTE" },
+      data: { estado: "ACREDITADA", fechaAcreditacion: fecha, acreditadoPor },
+    });
+
+    return count;
+  }
+
+  /**
+   * La reversión borra la fecha y el responsable junto con el estado: el `CHECK`
+   * de la tabla exige que un registro pendiente no los tenga, y dejarlos puestos
+   * también haría creer que esas horas siguen acreditadas por alguien.
+   */
+  async revertirAcreditacion(ids: readonly number[]): Promise<number> {
+    const { count } = await this.prisma.registroHoraBeca.updateMany({
+      where: { idRegistroHora: { in: [...ids] }, estado: "ACREDITADA" },
+      data: { estado: "PENDIENTE", fechaAcreditacion: null, acreditadoPor: null },
+    });
+
+    return count;
   }
 }

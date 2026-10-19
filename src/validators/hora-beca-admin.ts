@@ -2,7 +2,10 @@ import { z } from "zod";
 
 import { normalizarCarnet } from "@/lib/horas-beca/busqueda-horas";
 import { diaCalendario } from "@/lib/horas-beca/filtros-horas";
-import { MAXIMO_HORAS_POR_REGISTRO } from "@/lib/horas-beca/servicio-horas-beca";
+import {
+  MAXIMO_HORAS_POR_REGISTRO,
+  MAXIMO_REGISTROS_EN_LOTE,
+} from "@/lib/horas-beca/servicio-horas-beca";
 
 const MENSAJE_CARNET = "El carnet debe tener entre 3 y 20 caracteres, sin espacios ni símbolos.";
 const MENSAJE_NOMBRE = "El nombre del estudiante debe tener entre 3 y 200 caracteres.";
@@ -83,3 +86,28 @@ export const ETIQUETAS_CAMPO_HORA_BECA: Record<string, string> = {
   cantidadHoras: "Cantidad de horas",
   observaciones: "Observaciones",
 };
+
+/** Acciones de la acreditación en lote. */
+export const ACCIONES_ACREDITACION = ["acreditar", "revertir"] as const;
+
+export type AccionAcreditacion = (typeof ACCIONES_ACREDITACION)[number];
+
+/**
+ * Cuerpo de una operación en lote.
+ *
+ * Los identificadores llegan como lista y no como rango o filtro: el panel
+ * acredita exactamente lo que el administrador marcó, y traducir un filtro a
+ * registros en el servidor podría alcanzar filas que ya no estaban en pantalla.
+ */
+export const esquemaAcreditacionLote = z.object({
+  accion: z.enum(ACCIONES_ACREDITACION, "La acción debe ser acreditar o revertir."),
+  ids: z
+    .array(z.coerce.number().int().positive(), "Selecciona al menos un registro.")
+    .min(1, "Selecciona al menos un registro.")
+    .max(
+      MAXIMO_REGISTROS_EN_LOTE,
+      `No se pueden procesar más de ${MAXIMO_REGISTROS_EN_LOTE} registros a la vez.`
+    ),
+});
+
+export type DatosAcreditacionLote = z.infer<typeof esquemaAcreditacionLote>;
