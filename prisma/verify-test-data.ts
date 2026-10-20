@@ -247,8 +247,8 @@ async function verificar(): Promise<void> {
       `,
     ]);
     asegurar(
-      registrosHoras.length === 6,
-      "Deben existir exactamente seis registros ficticios de horas."
+      registrosHoras.length === 7,
+      "Deben existir exactamente siete registros ficticios de horas."
     );
     asegurar(
       registrosHoras.every(
@@ -265,8 +265,8 @@ async function verificar(): Promise<void> {
       "Hay registros ficticios de horas cuyo texto de búsqueda no coincide con el calculado."
     );
     asegurar(
-      registrosHoras.filter(({ idEstudiante }) => idEstudiante === null).length === 2,
-      "Deben existir dos registros ficticios de horas sin cuenta vinculada."
+      registrosHoras.filter(({ idEstudiante }) => idEstudiante === null).length === 3,
+      "Deben existir tres registros ficticios de horas sin cuenta vinculada."
     );
     asegurar(
       registrosHoras
@@ -298,8 +298,25 @@ async function verificar(): Promise<void> {
     const totalAcreditado = registrosHoras
       .filter(({ estado }) => estado === "ACREDITADA")
       .reduce((total, item) => total + item.cantidadHoras.toNumber(), 0);
-    asegurar(totalPendiente === 6.5, `El total pendiente esperado es 6.5, no ${totalPendiente}.`);
+    asegurar(totalPendiente === 8, `El total pendiente esperado es 8, no ${totalPendiente}.`);
     asegurar(totalAcreditado === 10, `El total acreditado esperado es 10, no ${totalAcreditado}.`);
+    // La vinculación por carnet corre al crear la cuenta y al guardar el
+    // registro. Si un registro quedó sin vínculo pese a existir la ficha de ese
+    // carnet, alguna de las dos mitades dejó de aplicarse.
+    const sinVincularConFicha = await prisma.registroHoraBeca.count({
+      where: {
+        idEstudiante: null,
+        carnet: {
+          in: (await prisma.estudiante.findMany({ select: { carnet: true } })).map(
+            ({ carnet }) => carnet
+          ),
+        },
+      },
+    });
+    asegurar(
+      sinVincularConFicha === 0,
+      "Hay registros de horas sin vincular cuyo carnet sí tiene ficha de estudiante."
+    );
     asegurar(importacion !== null, "No existe la importación ficticia.");
     asegurar(
       importacion.totalFilas >= 0 &&
