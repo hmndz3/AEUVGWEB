@@ -27,6 +27,9 @@ export default async function Pagina({ params }: { params: Promise<{ id: string 
         </h1>
         <p className="text-texto-suave mt-2 max-w-2xl text-sm leading-relaxed">
           Carnet {registro.carnet}.{" "}
+          {registro.nombreCuenta === null
+            ? "Este carnet todavía no tiene cuenta en la plataforma: el registro se vinculará solo cuando la cree. "
+            : ""}
           {registro.estado === "ACREDITADA" && registro.fechaAcreditacion
             ? `Horas acreditadas el ${formatearFechaAcreditacion(registro.fechaAcreditacion)}. Corregir los datos no cambia su estado.`
             : "Horas pendientes de acreditación."}

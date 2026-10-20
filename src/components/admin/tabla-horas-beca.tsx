@@ -107,6 +107,14 @@ export function TablaHorasBeca({ registros }: { registros: RegistroHoraBecaAdmin
               </TablaCelda>
               <TablaCelda className="text-texto">
                 {registro.nombreCuenta ?? registro.nombreEstudiante}
+                {/* El carnet sin cuenta es información que AEUVG necesita: son
+                    las horas que todavía no llegan a ningún perfil, y el
+                    filtro de la barra superior permite listarlas todas. */}
+                {registro.nombreCuenta === null && (
+                  <EtiquetaEstado tono="neutro" className="ml-2 align-middle">
+                    Sin cuenta
+                  </EtiquetaEstado>
+                )}
               </TablaCelda>
               <TablaCelda className="text-texto-suave whitespace-nowrap">
                 {formatearFechaActividad(registro.fechaActividad)}
