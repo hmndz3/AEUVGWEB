@@ -18,6 +18,7 @@ import {
   HASH_DESARROLLO,
   MARCADOR_PRUEBA,
   NOMBRE_ESTUDIANTE_NO_REGISTRADO,
+  NOMBRE_ESTUDIANTE_NO_REGISTRADO_SEGUNDO,
   NOMBRES_PRUEBA,
   TITULOS_NOTIFICACIONES_PRUEBA,
 } from "./data/datos-prueba";
@@ -861,6 +862,21 @@ async function cargarDatos(tx: Prisma.TransactionClient): Promise<Resultados> {
       acreditadoPor: idAdministrador,
       fechaAcreditacion: FECHAS_PRUEBA.acreditacion,
       observaciones: "Registro ficticio acreditado antes de que el carnet tuviera cuenta.",
+    },
+    {
+      idEstudiante: null,
+      carnet: CARNETS_PRUEBA.noRegistradoSegundo,
+      nombreEstudiante: NOMBRE_ESTUDIANTE_NO_REGISTRADO_SEGUNDO,
+      idOportunidad: null,
+      idImportacion: null,
+      fechaActividad: FECHAS_PRUEBA.actividadSegundoNoRegistrado,
+      horarioApoyo: "16:00-17:30",
+      descripcionActividad: DESCRIPCIONES_HORAS_PRUEBA.pendienteSegundoNoRegistrado,
+      cantidadHoras: new Prisma.Decimal("1.50"),
+      estado: "PENDIENTE" as const,
+      acreditadoPor: null,
+      fechaAcreditacion: null,
+      observaciones: "Segundo carnet ficticio sin cuenta, con una sola actividad pendiente.",
     },
   ];
   for (const registro of horas) {

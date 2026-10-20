@@ -46,9 +46,16 @@ function aDecimal(horas: number): Prisma.Decimal {
 export class RepositorioHorasBecaPrisma implements RepositorioHorasBeca {
   constructor(private readonly prisma: PrismaClient = obtenerPrisma()) {}
 
+  /**
+   * La comparación ignora mayúsculas porque los dos lados del vínculo se
+   * escribieron en momentos distintos: el registro guarda el carnet
+   * normalizado, pero la ficha del estudiante conserva el que se capturó al
+   * crear la cuenta. Un carnet con letras en minúscula dejaría el registro sin
+   * vincular para siempre, y nadie podría darse cuenta desde el panel.
+   */
   async estudianteDeCarnet(carnet: string): Promise<EstudianteDeCarnet | null> {
-    const estudiante = await this.prisma.estudiante.findUnique({
-      where: { carnet },
+    const estudiante = await this.prisma.estudiante.findFirst({
+      where: { carnet: { equals: carnet, mode: "insensitive" } },
       select: { idEstudiante: true, nombreCompleto: true },
     });
 

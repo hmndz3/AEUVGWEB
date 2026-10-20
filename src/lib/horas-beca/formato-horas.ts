@@ -49,3 +49,34 @@ export function formatearHoras(horas: number): string {
     .replace(/\.00$/, "")
     .replace(/(\.\d)0$/, "$1");
 }
+
+/**
+ * Nombre con el que se presenta un registro.
+ *
+ * Cuando el carnet ya tiene cuenta se usa el nombre de la cuenta, que es el
+ * verificado contra el correo institucional; si no, el que AEUVG escribió en su
+ * hoja, que es el único que existe para ese carnet.
+ */
+export function nombreVisibleDelRegistro(registro: {
+  nombreEstudiante: string;
+  nombreCuenta: string | null;
+}): string {
+  return registro.nombreCuenta ?? registro.nombreEstudiante;
+}
+
+/**
+ * Nombre con el que se cargó el registro, solo cuando difiere del de la cuenta.
+ * Sirve para que AEUVG detecte una fila capturada con el carnet de otra persona:
+ * el nombre de la hoja y el de la cuenta no coincidirían.
+ */
+export function nombreCargadoDistinto(registro: {
+  nombreEstudiante: string;
+  nombreCuenta: string | null;
+}): string | null {
+  if (registro.nombreCuenta === null) return null;
+
+  return registro.nombreCuenta.trim().toLocaleLowerCase("es") ===
+    registro.nombreEstudiante.trim().toLocaleLowerCase("es")
+    ? null
+    : registro.nombreEstudiante;
+}

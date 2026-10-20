@@ -15,7 +15,12 @@ import {
   TablaFila,
 } from "@/components/ui/tabla";
 import type { RegistroHoraBecaAdmin } from "@/lib/horas-beca/consultas-horas-beca";
-import { formatearFechaActividad, formatearHoras } from "@/lib/horas-beca/formato-horas";
+import {
+  formatearFechaActividad,
+  formatearHoras,
+  nombreCargadoDistinto,
+  nombreVisibleDelRegistro,
+} from "@/lib/horas-beca/formato-horas";
 import { ETIQUETAS_ESTADO_HORA_BECA } from "@/validators/horas-beca";
 
 const claseCasilla =
@@ -106,7 +111,23 @@ export function TablaHorasBeca({ registros }: { registros: RegistroHoraBecaAdmin
                 {registro.carnet}
               </TablaCelda>
               <TablaCelda className="text-texto">
-                {registro.nombreCuenta ?? registro.nombreEstudiante}
+                {nombreVisibleDelRegistro(registro)}
+                {/* El carnet sin cuenta es información que AEUVG necesita: son
+                    las horas que todavía no llegan a ningún perfil, y el
+                    filtro de la barra superior permite listarlas todas. */}
+                {registro.nombreCuenta === null && (
+                  <EtiquetaEstado tono="neutro" className="ml-2 align-middle">
+                    Sin cuenta
+                  </EtiquetaEstado>
+                )}
+                {/* Si el nombre de la hoja no coincide con el de la cuenta, lo
+                    más probable es que la fila se capturó con el carnet
+                    equivocado: se deja a la vista en lugar de ocultarlo. */}
+                {nombreCargadoDistinto(registro) && (
+                  <span className="text-texto-suave mt-0.5 block text-xs">
+                    Cargado como {nombreCargadoDistinto(registro)}
+                  </span>
+                )}
               </TablaCelda>
               <TablaCelda className="text-texto-suave whitespace-nowrap">
                 {formatearFechaActividad(registro.fechaActividad)}

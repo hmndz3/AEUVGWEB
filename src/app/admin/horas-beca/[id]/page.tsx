@@ -3,7 +3,11 @@ import { notFound } from "next/navigation";
 
 import { FormularioHoraBeca } from "@/components/admin/formulario-hora-beca";
 import { obtenerRegistroHoraBeca } from "@/lib/horas-beca/consultas-horas-beca";
-import { diaParaFormulario, formatearFechaAcreditacion } from "@/lib/horas-beca/formato-horas";
+import {
+  diaParaFormulario,
+  formatearFechaAcreditacion,
+  nombreVisibleDelRegistro,
+} from "@/lib/horas-beca/formato-horas";
 
 export const dynamic = "force-dynamic";
 
@@ -23,10 +27,13 @@ export default async function Pagina({ params }: { params: Promise<{ id: string 
           ← Volver al listado
         </Link>
         <h1 className="text-texto mt-3 text-3xl font-extrabold tracking-tight">
-          {registro.nombreCuenta ?? registro.nombreEstudiante}
+          {nombreVisibleDelRegistro(registro)}
         </h1>
         <p className="text-texto-suave mt-2 max-w-2xl text-sm leading-relaxed">
           Carnet {registro.carnet}.{" "}
+          {registro.nombreCuenta === null
+            ? "Este carnet todavía no tiene cuenta en la plataforma: el registro se vinculará solo cuando la cree. "
+            : ""}
           {registro.estado === "ACREDITADA" && registro.fechaAcreditacion
             ? `Horas acreditadas el ${formatearFechaAcreditacion(registro.fechaAcreditacion)}. Corregir los datos no cambia su estado.`
             : "Horas pendientes de acreditación."}

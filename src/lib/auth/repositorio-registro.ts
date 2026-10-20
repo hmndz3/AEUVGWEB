@@ -1,5 +1,6 @@
 import { EstadoUsuario, Prisma, type PrismaClient } from "@prisma/client";
 
+import { vincularRegistrosDeCarnet } from "@/lib/horas-beca/vinculacion-horas";
 import { obtenerPrisma } from "@/lib/prisma";
 
 export type CuentaCreada = {
@@ -82,6 +83,11 @@ export class RepositorioRegistroPrisma implements RepositorioRegistro {
               correoUvg: datos.correo,
             },
           });
+          // Las horas beca que AEUVG ya había cargado a este carnet quedan
+          // vinculadas a la cuenta en la misma transacción: si la creación
+          // falla, tampoco deben quedar vinculadas a un estudiante inexistente.
+          await vincularRegistrosDeCarnet(tx, datos.carnet, estudiante.idEstudiante);
+
           const usuario = await tx.usuario.create({
             data: {
               idEstudiante: estudiante.idEstudiante,
