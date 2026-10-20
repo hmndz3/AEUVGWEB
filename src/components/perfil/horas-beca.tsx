@@ -1,5 +1,15 @@
-import { formatearHoras } from "@/lib/horas-beca/formato-horas";
+import { EtiquetaEstado } from "@/components/ui/etiqueta-estado";
+import {
+  Tabla,
+  TablaCelda,
+  TablaCeldaEncabezado,
+  TablaCuerpo,
+  TablaEncabezado,
+  TablaFila,
+} from "@/components/ui/tabla";
+import { formatearFechaActividad, formatearHoras } from "@/lib/horas-beca/formato-horas";
 import type { HorasBecaEstudiante } from "@/lib/perfil/consultas-horas-beca";
+import { ETIQUETAS_ESTADO_HORA_BECA } from "@/validators/horas-beca";
 
 function Total({ titulo, valor, detalle }: { titulo: string; valor: string; detalle: string }) {
   return (
@@ -42,23 +52,78 @@ export function HorasBecaPerfil({ horas }: { horas: HorasBecaEstudiante }) {
           </p>
         </div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-3">
-          <Total
-            titulo="Horas realizadas"
-            valor={formatearHoras(totales.realizadas)}
-            detalle={`${totales.actividades} ${totales.actividades === 1 ? "actividad registrada" : "actividades registradas"}`}
-          />
-          <Total
-            titulo="Horas acreditadas"
-            valor={formatearHoras(totales.acreditadas)}
-            detalle="Ya reconocidas por AEUVG"
-          />
-          <Total
-            titulo="Horas pendientes"
-            valor={formatearHoras(totales.pendientes)}
-            detalle="A la espera de acreditación"
-          />
-        </div>
+        <>
+          <div className="grid gap-4 sm:grid-cols-3">
+            <Total
+              titulo="Horas realizadas"
+              valor={formatearHoras(totales.realizadas)}
+              detalle={`${totales.actividades} ${totales.actividades === 1 ? "actividad registrada" : "actividades registradas"}`}
+            />
+            <Total
+              titulo="Horas acreditadas"
+              valor={formatearHoras(totales.acreditadas)}
+              detalle="Ya reconocidas por AEUVG"
+            />
+            <Total
+              titulo="Horas pendientes"
+              valor={formatearHoras(totales.pendientes)}
+              detalle="A la espera de acreditación"
+            />
+          </div>
+
+          <div>
+            <h3 className="text-texto-suave text-xs font-bold tracking-wide uppercase">
+              Historial de actividades
+            </h3>
+
+            {/* El historial va de lo más reciente a lo más antiguo: lo que el
+                estudiante viene a comprobar es si ya le acreditaron lo último
+                que hizo. */}
+            <div className="mt-4">
+              <Tabla className="min-w-[36rem]">
+                <TablaEncabezado>
+                  <tr>
+                    <TablaCeldaEncabezado>Fecha</TablaCeldaEncabezado>
+                    <TablaCeldaEncabezado>Horario</TablaCeldaEncabezado>
+                    <TablaCeldaEncabezado>Actividad</TablaCeldaEncabezado>
+                    <TablaCeldaEncabezado className="text-right">Horas</TablaCeldaEncabezado>
+                    <TablaCeldaEncabezado>Estado</TablaCeldaEncabezado>
+                  </tr>
+                </TablaEncabezado>
+                <TablaCuerpo>
+                  {horas.actividades.map((actividad) => (
+                    <TablaFila key={actividad.idRegistroHora}>
+                      <TablaCelda className="text-texto-suave whitespace-nowrap">
+                        {formatearFechaActividad(actividad.fechaActividad)}
+                      </TablaCelda>
+                      <TablaCelda className="text-texto-suave whitespace-nowrap">
+                        {actividad.horarioApoyo}
+                      </TablaCelda>
+                      <TablaCelda className="text-texto">
+                        {actividad.descripcionActividad}
+                      </TablaCelda>
+                      <TablaCelda className="text-texto text-right font-semibold whitespace-nowrap">
+                        {formatearHoras(actividad.cantidadHoras)}
+                      </TablaCelda>
+                      <TablaCelda>
+                        <EtiquetaEstado
+                          tono={actividad.estado === "ACREDITADA" ? "acreditada" : "pendiente"}
+                        >
+                          {ETIQUETAS_ESTADO_HORA_BECA[actividad.estado]}
+                        </EtiquetaEstado>
+                      </TablaCelda>
+                    </TablaFila>
+                  ))}
+                </TablaCuerpo>
+              </Tabla>
+            </div>
+
+            <p className="text-texto-suave mt-3 text-xs leading-relaxed">
+              Si falta una actividad o un dato no corresponde, escribe a AEUVG: el registro lo
+              administra la asociación.
+            </p>
+          </div>
+        </>
       )}
     </section>
   );
