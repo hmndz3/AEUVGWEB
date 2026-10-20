@@ -1,5 +1,6 @@
 import type { EstadoHoraBeca } from "@prisma/client";
 
+import { calcularTotalesHoras, type TotalesHorasBeca } from "@/lib/horas-beca/totales-horas";
 import { obtenerPrisma } from "@/lib/prisma";
 
 /** Una actividad del historial de horas beca del estudiante. */
@@ -11,6 +12,12 @@ export type ActividadHoraBeca = {
   cantidadHoras: number;
   estado: EstadoHoraBeca;
   fechaAcreditacion: Date | null;
+};
+
+/** Lo que presenta la sección "Mis horas beca" del perfil. */
+export type HorasBecaEstudiante = {
+  totales: TotalesHorasBeca;
+  actividades: ActividadHoraBeca[];
 };
 
 /**
@@ -49,4 +56,17 @@ export async function obtenerActividadesHoraBeca(idUsuario: number): Promise<Act
     ...registro,
     cantidadHoras: Number(registro.cantidadHoras),
   }));
+}
+
+/**
+ * Horas beca del perfil, con sus totales ya calculados.
+ *
+ * Los totales se derivan del mismo historial que se presenta debajo, en lugar de
+ * consultarse por separado: así no puede ocurrir que la suma y la lista digan
+ * cosas distintas.
+ */
+export async function obtenerHorasBecaEstudiante(idUsuario: number): Promise<HorasBecaEstudiante> {
+  const actividades = await obtenerActividadesHoraBeca(idUsuario);
+
+  return { totales: calcularTotalesHoras(actividades), actividades };
 }
