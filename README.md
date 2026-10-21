@@ -98,6 +98,9 @@ documentan en [docs/asociaciones-y-clubes.md](docs/asociaciones-y-clubes.md).
 El perfil del estudiante y los eventos guardados se documentan en
 [docs/perfil-y-eventos-guardados.md](docs/perfil-y-eventos-guardados.md).
 
+El módulo de horas beca (registro, acreditación, asociación por carnet y consulta desde el perfil)
+se documenta en [docs/horas-beca.md](docs/horas-beca.md).
+
 ## Flujo de trabajo con Git
 
 - **`main`** — rama principal. Cada push genera un despliegue automático en Railway (producción).

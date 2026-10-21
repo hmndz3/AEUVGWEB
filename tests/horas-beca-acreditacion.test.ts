@@ -2,7 +2,6 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import type {
-  DatosRegistroHoraPersistidos,
   EstudianteDeCarnet,
   RepositorioHorasBeca,
 } from "../src/lib/horas-beca/repositorio-horas-beca";
@@ -26,7 +25,7 @@ class RepositorioFalso implements RepositorioHorasBeca {
     return 1;
   }
 
-  async actualizar(_id: number, _datos: DatosRegistroHoraPersistidos): Promise<boolean> {
+  async actualizar(): Promise<boolean> {
     return true;
   }
 
