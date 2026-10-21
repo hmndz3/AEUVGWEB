@@ -2,6 +2,7 @@ import "dotenv/config";
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 
+import { textoDeBusquedaRegistroHora } from "../src/lib/horas-beca/busqueda-horas";
 import {
   CARRERAS_INICIALES,
   CATEGORIAS_EVENTO_INICIALES,
@@ -246,8 +247,32 @@ async function verificar(): Promise<void> {
       `,
     ]);
     asegurar(
-      registrosHoras.length === 4,
-      "Deben existir exactamente cuatro registros ficticios de horas."
+      registrosHoras.length === 7,
+      "Deben existir exactamente siete registros ficticios de horas."
+    );
+    asegurar(
+      registrosHoras.every(
+        ({ carnet, nombreEstudiante }) => carnet !== "" && nombreEstudiante !== ""
+      ),
+      "Todo registro ficticio de horas debe conservar su carnet y el nombre del estudiante."
+    );
+    asegurar(
+      registrosHoras.every(
+        ({ carnet, nombreEstudiante, descripcionActividad, textoBusqueda }) =>
+          textoBusqueda ===
+          textoDeBusquedaRegistroHora({ carnet, nombreEstudiante, descripcionActividad })
+      ),
+      "Hay registros ficticios de horas cuyo texto de búsqueda no coincide con el calculado."
+    );
+    asegurar(
+      registrosHoras.filter(({ idEstudiante }) => idEstudiante === null).length === 3,
+      "Deben existir tres registros ficticios de horas sin cuenta vinculada."
+    );
+    asegurar(
+      registrosHoras
+        .filter(({ carnet }) => carnet === CARNETS_PRUEBA.noRegistrado)
+        .every(({ idEstudiante }) => idEstudiante === null),
+      "El carnet ficticio sin registro no debe tener ningún vínculo con una cuenta."
     );
     asegurar(
       registrosHoras
@@ -273,8 +298,25 @@ async function verificar(): Promise<void> {
     const totalAcreditado = registrosHoras
       .filter(({ estado }) => estado === "ACREDITADA")
       .reduce((total, item) => total + item.cantidadHoras.toNumber(), 0);
-    asegurar(totalPendiente === 4.5, `El total pendiente esperado es 4.5, no ${totalPendiente}.`);
-    asegurar(totalAcreditado === 7, `El total acreditado esperado es 7, no ${totalAcreditado}.`);
+    asegurar(totalPendiente === 8, `El total pendiente esperado es 8, no ${totalPendiente}.`);
+    asegurar(totalAcreditado === 10, `El total acreditado esperado es 10, no ${totalAcreditado}.`);
+    // La vinculación por carnet corre al crear la cuenta y al guardar el
+    // registro. Si un registro quedó sin vínculo pese a existir la ficha de ese
+    // carnet, alguna de las dos mitades dejó de aplicarse.
+    const sinVincularConFicha = await prisma.registroHoraBeca.count({
+      where: {
+        idEstudiante: null,
+        carnet: {
+          in: (await prisma.estudiante.findMany({ select: { carnet: true } })).map(
+            ({ carnet }) => carnet
+          ),
+        },
+      },
+    });
+    asegurar(
+      sinVincularConFicha === 0,
+      "Hay registros de horas sin vincular cuyo carnet sí tiene ficha de estudiante."
+    );
     asegurar(importacion !== null, "No existe la importación ficticia.");
     asegurar(
       importacion.totalFilas >= 0 &&

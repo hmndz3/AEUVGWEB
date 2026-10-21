@@ -3,6 +3,7 @@ import { Prisma, PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 
 import { textoDeBusqueda } from "../src/lib/eventos/busqueda";
+import { textoDeBusquedaRegistroHora } from "../src/lib/horas-beca/busqueda-horas";
 import {
   textoDeBusquedaAsociacion,
   textoDeBusquedaClub,
@@ -16,6 +17,8 @@ import {
   FECHAS_PRUEBA,
   HASH_DESARROLLO,
   MARCADOR_PRUEBA,
+  NOMBRE_ESTUDIANTE_NO_REGISTRADO,
+  NOMBRE_ESTUDIANTE_NO_REGISTRADO_SEGUNDO,
   NOMBRES_PRUEBA,
   TITULOS_NOTIFICACIONES_PRUEBA,
 } from "./data/datos-prueba";
@@ -769,6 +772,8 @@ async function cargarDatos(tx: Prisma.TransactionClient): Promise<Resultados> {
   const horas = [
     {
       idEstudiante: estudiante(CARNETS_PRUEBA.ana).idEstudiante,
+      carnet: estudiante(CARNETS_PRUEBA.ana).carnet,
+      nombreEstudiante: estudiante(CARNETS_PRUEBA.ana).nombreCompleto,
       idOportunidad: null,
       idImportacion: null,
       fechaActividad: FECHAS_PRUEBA.actividadPendiente,
@@ -782,6 +787,8 @@ async function cargarDatos(tx: Prisma.TransactionClient): Promise<Resultados> {
     },
     {
       idEstudiante: estudiante(CARNETS_PRUEBA.ana).idEstudiante,
+      carnet: estudiante(CARNETS_PRUEBA.ana).carnet,
+      nombreEstudiante: estudiante(CARNETS_PRUEBA.ana).nombreCompleto,
       idOportunidad: oportunidad.idOportunidad,
       idImportacion: null,
       fechaActividad: FECHAS_PRUEBA.actividadAcreditada,
@@ -795,6 +802,8 @@ async function cargarDatos(tx: Prisma.TransactionClient): Promise<Resultados> {
     },
     {
       idEstudiante: estudiante(CARNETS_PRUEBA.carlos).idEstudiante,
+      carnet: estudiante(CARNETS_PRUEBA.carlos).carnet,
+      nombreEstudiante: estudiante(CARNETS_PRUEBA.carlos).nombreCompleto,
       idOportunidad: null,
       idImportacion: importacion.idImportacion,
       fechaActividad: FECHAS_PRUEBA.actividadImportada,
@@ -808,6 +817,8 @@ async function cargarDatos(tx: Prisma.TransactionClient): Promise<Resultados> {
     },
     {
       idEstudiante: estudiante(CARNETS_PRUEBA.carlos).idEstudiante,
+      carnet: estudiante(CARNETS_PRUEBA.carlos).carnet,
+      nombreEstudiante: estudiante(CARNETS_PRUEBA.carlos).nombreCompleto,
       idOportunidad: null,
       idImportacion: null,
       fechaActividad: FECHAS_PRUEBA.actividadSinCuenta,
@@ -819,9 +830,61 @@ async function cargarDatos(tx: Prisma.TransactionClient): Promise<Resultados> {
       fechaAcreditacion: null,
       observaciones: "Registro manual ficticio para estudiante sin cuenta.",
     },
+    // Los dos siguientes son el caso que el Sprint 4 habilitó: un carnet que no
+    // tiene cuenta ni ficha de estudiante. Quedan sin vínculo y conservan el
+    // nombre con el que AEUVG los cargó, hasta que su dueño se registre.
+    {
+      idEstudiante: null,
+      carnet: CARNETS_PRUEBA.noRegistrado,
+      nombreEstudiante: NOMBRE_ESTUDIANTE_NO_REGISTRADO,
+      idOportunidad: null,
+      idImportacion: null,
+      fechaActividad: FECHAS_PRUEBA.actividadNoRegistrada,
+      horarioApoyo: "07:30-09:30",
+      descripcionActividad: DESCRIPCIONES_HORAS_PRUEBA.pendienteNoRegistrado,
+      cantidadHoras: new Prisma.Decimal("2.00"),
+      estado: "PENDIENTE" as const,
+      acreditadoPor: null,
+      fechaAcreditacion: null,
+      observaciones: "Registro ficticio de un carnet sin cuenta en la plataforma.",
+    },
+    {
+      idEstudiante: null,
+      carnet: CARNETS_PRUEBA.noRegistrado,
+      nombreEstudiante: NOMBRE_ESTUDIANTE_NO_REGISTRADO,
+      idOportunidad: null,
+      idImportacion: null,
+      fechaActividad: FECHAS_PRUEBA.actividadNoRegistradaAcreditada,
+      horarioApoyo: "13:00-16:00",
+      descripcionActividad: DESCRIPCIONES_HORAS_PRUEBA.acreditadaNoRegistrado,
+      cantidadHoras: new Prisma.Decimal("3.00"),
+      estado: "ACREDITADA" as const,
+      acreditadoPor: idAdministrador,
+      fechaAcreditacion: FECHAS_PRUEBA.acreditacion,
+      observaciones: "Registro ficticio acreditado antes de que el carnet tuviera cuenta.",
+    },
+    {
+      idEstudiante: null,
+      carnet: CARNETS_PRUEBA.noRegistradoSegundo,
+      nombreEstudiante: NOMBRE_ESTUDIANTE_NO_REGISTRADO_SEGUNDO,
+      idOportunidad: null,
+      idImportacion: null,
+      fechaActividad: FECHAS_PRUEBA.actividadSegundoNoRegistrado,
+      horarioApoyo: "16:00-17:30",
+      descripcionActividad: DESCRIPCIONES_HORAS_PRUEBA.pendienteSegundoNoRegistrado,
+      cantidadHoras: new Prisma.Decimal("1.50"),
+      estado: "PENDIENTE" as const,
+      acreditadoPor: null,
+      fechaAcreditacion: null,
+      observaciones: "Segundo carnet ficticio sin cuenta, con una sola actividad pendiente.",
+    },
   ];
   for (const registro of horas) {
-    const datos = { ...registro, creadoPor: idAdministrador };
+    const datos = {
+      ...registro,
+      creadoPor: idAdministrador,
+      textoBusqueda: textoDeBusquedaRegistroHora(registro),
+    };
     const where = { descripcionActividad: registro.descripcionActividad };
     await sincronizar({
       tabla: "RegistroHoraBeca",

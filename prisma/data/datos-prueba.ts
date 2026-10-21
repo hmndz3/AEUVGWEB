@@ -5,6 +5,12 @@ export const CARNETS_PRUEBA = {
   ana: "TEST-0002",
   carlos: "TEST-0003",
   maria: "TEST-0004",
+  // Carnet que no tiene cuenta ni ficha de estudiante: representa a quien
+  // AEUVG le registró horas antes de que se registrara en la plataforma.
+  noRegistrado: "TEST-0005",
+  // Un segundo carnet sin cuenta, para que el filtro de registros sin vincular
+  // tenga más de un caso y no pueda pasar por casualidad.
+  noRegistradoSegundo: "TEST-0006",
 } as const;
 
 export const CORREOS_PRUEBA = {
@@ -39,6 +45,11 @@ export const NOMBRES_PRUEBA = {
   postulacion: `${MARCADOR_PRUEBA} Postulación de tutoría de María`,
 } as const;
 
+/** Nombre con el que AEUVG cargó las horas de un carnet todavía sin cuenta. */
+export const NOMBRE_ESTUDIANTE_NO_REGISTRADO = `${MARCADOR_PRUEBA} Lucía Estudiante No Registrada`;
+
+export const NOMBRE_ESTUDIANTE_NO_REGISTRADO_SEGUNDO = `${MARCADOR_PRUEBA} Diego Estudiante No Registrado`;
+
 export const CODIGOS_CURSOS_PRUEBA = ["TEST-MAT-01", "TEST-PROG-01"] as const;
 
 export const DESCRIPCIONES_HORAS_PRUEBA = {
@@ -46,6 +57,9 @@ export const DESCRIPCIONES_HORAS_PRUEBA = {
   acreditadaOportunidad: `${MARCADOR_PRUEBA} Apoyo acreditado en biblioteca`,
   acreditadaImportacion: `${MARCADOR_PRUEBA} Registro histórico importado sin cuenta`,
   pendienteSinCuenta: `${MARCADOR_PRUEBA} Apoyo manual pendiente sin cuenta`,
+  pendienteNoRegistrado: `${MARCADOR_PRUEBA} Apoyo pendiente de carnet no registrado`,
+  acreditadaNoRegistrado: `${MARCADOR_PRUEBA} Apoyo acreditado de carnet no registrado`,
+  pendienteSegundoNoRegistrado: `${MARCADOR_PRUEBA} Apoyo pendiente de un segundo carnet no registrado`,
 } as const;
 
 export const TITULOS_NOTIFICACIONES_PRUEBA = {
@@ -76,6 +90,9 @@ export const FECHAS_PRUEBA = {
   actividadAcreditada: new Date("2026-09-12T00:00:00.000Z"),
   actividadImportada: new Date("2026-08-20T00:00:00.000Z"),
   actividadSinCuenta: new Date("2026-09-15T00:00:00.000Z"),
+  actividadNoRegistrada: new Date("2026-09-18T00:00:00.000Z"),
+  actividadNoRegistradaAcreditada: new Date("2026-09-19T00:00:00.000Z"),
+  actividadSegundoNoRegistrado: new Date("2026-09-22T00:00:00.000Z"),
   acreditacion: new Date("2026-09-16T16:00:00.000Z"),
   tutoriaProgramadaInicio: new Date("2027-02-12T16:00:00.000Z"),
   tutoriaProgramadaFin: new Date("2027-02-12T17:00:00.000Z"),
