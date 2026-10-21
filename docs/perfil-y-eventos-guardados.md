@@ -11,6 +11,9 @@ Implementado durante el Sprint 3 (HU-17 y HU-18). Es la primera funcionalidad de
 | `/api/eventos/[id]/guardar` | POST   | Con sesión | Guarda el evento en el perfil.                   |
 | `/api/eventos/[id]/guardar` | DELETE | Con sesión | Quita el evento del perfil.                      |
 
+La sección "Mis horas beca" se agregó al perfil en el Sprint 4 y se documenta en
+[docs/horas-beca.md](./horas-beca.md).
+
 Las tres rutas usan `protegerRuta([])`: exigen sesión pero ningún rol, porque cualquier cuenta administra lo propio. `/perfil` está además en el `matcher` del middleware, que redirige al inicio de sesión cuando la cookie no es válida.
 
 ## Quién puede escribir sobre qué
