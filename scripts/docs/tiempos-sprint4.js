@@ -152,7 +152,7 @@ const HARRY = {
     [
       "2026-10-20",
       "22:40",
-      "23:35",
+      "23:30",
       5,
       "Documentación",
       "Documentación",
@@ -170,11 +170,11 @@ const HARRY = {
     [
       "2026-10-22",
       "15:30",
-      "16:55",
+      "17:00",
       15,
       "Revisión y cierre",
       "Codificación",
-      "AEUVG-176 Fecha de actividad futura rechazada al registrar. AEUVG-178 Filtros del panel conservados al volver de guardar. Integración de los ajustes a main.",
+      "AEUVG-176 Fecha de actividad futura rechazada al registrar. AEUVG-178 Filtros del panel conservados al volver de guardar. Actualización del documento e integración de los ajustes a main.",
     ],
     [
       "2026-10-22",
@@ -183,7 +183,7 @@ const HARRY = {
       5,
       "Revisión y cierre",
       "Documentación",
-      "Actualización del registro de tiempos con el cierre completo y publicación de la versión final del sprint.",
+      "Actualización del registro de tiempos con el cierre completo, verificación de la migración pendiente y publicación de la versión final del sprint.",
     ],
   ],
 };
