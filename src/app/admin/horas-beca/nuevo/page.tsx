@@ -4,14 +4,22 @@ import {
   FormularioHoraBeca,
   VALORES_HORA_BECA_VACIOS,
 } from "@/components/admin/formulario-hora-beca";
+import { destinoPanelHoras } from "@/lib/horas-beca/formato-horas";
 
 export const dynamic = "force-dynamic";
 
-export default function Pagina() {
+export default async function Pagina({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  // El listado del que se viene, con sus filtros, para volver a él al guardar.
+  const destino = destinoPanelHoras((await searchParams).volver);
+
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <Link href="/admin/horas-beca" className="text-primario text-sm font-bold hover:underline">
+        <Link href={destino} className="text-primario text-sm font-bold hover:underline">
           ← Volver al listado
         </Link>
         <h1 className="text-texto mt-3 text-3xl font-extrabold tracking-tight">Registrar horas</h1>
@@ -21,7 +29,7 @@ export default function Pagina() {
         </p>
       </div>
 
-      <FormularioHoraBeca valoresIniciales={VALORES_HORA_BECA_VACIOS} />
+      <FormularioHoraBeca valoresIniciales={VALORES_HORA_BECA_VACIOS} destino={destino} />
     </div>
   );
 }

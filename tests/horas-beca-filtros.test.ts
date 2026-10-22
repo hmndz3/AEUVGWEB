@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { condicionesDeFiltrosHoras, diaCalendario } from "../src/lib/horas-beca/filtros-horas";
+import { destinoPanelHoras } from "../src/lib/horas-beca/formato-horas";
 import {
   contarFiltrosHoras,
   interpretarFiltrosHorasBeca,
@@ -133,5 +134,40 @@ test("los filtros se combinan en una sola condición", () => {
       estado: "ACREDITADA",
       idEstudiante: { not: null },
     }
+  );
+});
+
+/*
+ * Observación de la revisión del sprint: al guardar un registro, el panel
+ * volvía al listado sin filtros y había que escribir otra vez el periodo que se
+ * estaba revisando. El destino viaja en la dirección, así que se comprueba que
+ * sea una ruta interna de esta misma sección.
+ */
+test("el destino de regreso admite el listado con sus filtros", () => {
+  assert.equal(destinoPanelHoras(undefined), "/admin/horas-beca");
+  assert.equal(destinoPanelHoras("/admin/horas-beca"), "/admin/horas-beca");
+  assert.equal(
+    destinoPanelHoras("/admin/horas-beca?estado=PENDIENTE&pagina=3"),
+    "/admin/horas-beca?estado=PENDIENTE&pagina=3"
+  );
+});
+
+test("el destino de regreso rechaza cualquier ruta ajena a la sección", () => {
+  for (const valor of [
+    "https://ejemplo.com",
+    "//ejemplo.com",
+    "/admin/eventos",
+    "/admin/horas-becas-falsas",
+    "/admin/horas-beca//ejemplo.com",
+    "",
+  ]) {
+    assert.equal(destinoPanelHoras(valor), "/admin/horas-beca", valor);
+  }
+});
+
+test("un destino repetido en la dirección se resuelve con el primero", () => {
+  assert.equal(
+    destinoPanelHoras(["/admin/horas-beca?estado=ACREDITADA", "/admin/eventos"]),
+    "/admin/horas-beca?estado=ACREDITADA"
   );
 });

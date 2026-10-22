@@ -293,3 +293,68 @@ test("los campos de texto se guardan sin espacios sobrantes", async () => {
   assert.equal(repositorio.creados[0].datos.horarioApoyo, "08:00-10:00");
   assert.equal(repositorio.creados[0].datos.descripcionActividad, "Apoyo en Biblioteca");
 });
+
+/*
+ * Observación de la revisión del sprint: una fecha de actividad futura solo
+ * puede ser un error de captura, porque las horas se registran por el apoyo ya
+ * prestado. El reloj se inyecta para no depender del día en que corran las
+ * pruebas.
+ */
+const reloj = () => new Date("2026-10-22T18:00:00.000Z");
+
+test("una actividad con fecha posterior a hoy no se guarda", async () => {
+  const repositorio = new RepositorioFalso({ cuenta: null });
+  const servicio = new ServicioHorasBeca(repositorio, reloj);
+
+  const resultado = await servicio.crear(
+    datosValidos({ fechaActividad: new Date("2026-10-23T00:00:00.000Z") }),
+    7
+  );
+
+  assert.equal(resultado.tipo, "invalido");
+  assert.ok(resultado.tipo === "invalido" && resultado.errores.fechaActividad);
+  assert.equal(repositorio.creados.length, 0);
+});
+
+test("una actividad del mismo día se guarda", async () => {
+  const servicio = new ServicioHorasBeca(new RepositorioFalso({ cuenta: null }), reloj);
+
+  const resultado = await servicio.crear(
+    datosValidos({ fechaActividad: new Date("2026-10-22T00:00:00.000Z") }),
+    7
+  );
+
+  assert.equal(resultado.tipo, "guardado");
+});
+
+/*
+ * Entre las 18:00 y la medianoche de Guatemala, en UTC ya es el día siguiente.
+ * Si el día de referencia se tomara en UTC, un registro capturado esa noche con
+ * la fecha del día siguiente se aceptaría por error.
+ */
+test("el día de referencia se toma en la zona de Guatemala", async () => {
+  const servicio = new ServicioHorasBeca(
+    new RepositorioFalso({ cuenta: null }),
+    () => new Date("2026-10-22T23:30:00.000Z")
+  );
+
+  const resultado = await servicio.crear(
+    datosValidos({ fechaActividad: new Date("2026-10-23T00:00:00.000Z") }),
+    7
+  );
+
+  assert.equal(resultado.tipo, "invalido");
+});
+
+test("al editar también se rechaza una fecha futura", async () => {
+  const repositorio = new RepositorioFalso({ cuenta: null });
+  const servicio = new ServicioHorasBeca(repositorio, reloj);
+
+  const resultado = await servicio.editar(
+    88,
+    datosValidos({ fechaActividad: new Date("2026-11-01T00:00:00.000Z") })
+  );
+
+  assert.equal(resultado.tipo, "invalido");
+  assert.equal(repositorio.actualizados.length, 0);
+});

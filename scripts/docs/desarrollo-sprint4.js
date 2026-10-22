@@ -204,7 +204,7 @@ const doc = buildDocument([
   // ---------- 8 ----------
   h1("8. Pruebas y verificación"),
   p(
-    "Las pruebas automatizadas del proyecto pasaron de 225 a 312. Las 87 nuevas corresponden a este sprint y se ejecutan sin base de datos, sustituyendo el acceso a datos por dobles de prueba, para que puedan correrse en cualquier momento del desarrollo."
+    "Las pruebas automatizadas del proyecto pasaron de 225 a 319. Las 94 nuevas corresponden a este sprint y se ejecutan sin base de datos, sustituyendo el acceso a datos por dobles de prueba, para que puedan correrse en cualquier momento del desarrollo."
   ),
   spacer(),
   makeTable(
@@ -213,13 +213,13 @@ const doc = buildDocument([
     [
       [
         "Servicio de registro de horas",
-        "22",
+        "26",
         "La normalización del carnet, el texto de búsqueda, la resolución del vínculo con la cuenta y las validaciones de horas, fecha y campos obligatorios.",
       ],
       [
         "Filtros y parámetros del panel",
-        "14",
-        "Que un parámetro inválido se descarte, el rango invertido, el filtro de vínculo y que las fechas se comparen como día de calendario en UTC.",
+        "17",
+        "Que un parámetro inválido se descarte, el rango invertido, el filtro de vínculo, que las fechas se comparen como día de calendario en UTC y que el destino de regreso sea una ruta interna de la sección.",
       ],
       [
         "Validaciones y permisos del registro",
@@ -274,6 +274,9 @@ const doc = buildDocument([
   ),
   p(
     "Queda pendiente aplicar la migración del sprint en el ambiente de pruebas de Railway, por la razón explicada en la sección 8, y la carga de los registros históricos que AEUVG administra hoy en sus hojas, que corresponde al Sprint 5 junto con la importación desde Excel. Continúa también en gestión el trámite del dominio institucional iniciado en el Sprint 1."
+  ),
+  p(
+    "Tras la revisión del sprint se incorporaron las observaciones recibidas, sin alcance nuevo: el registro rechaza una fecha de actividad posterior a hoy, que solo puede ser un error de captura y dejaba el registro fuera del periodo que se estuviera cerrando; el panel presenta quién acreditó cada registro y cuándo, dato que la tabla ya guardaba pero no mostraba y que con varios administradores era el único modo de rastrear una acreditación aplicada por error; el formulario vuelve al listado con los filtros que traía, porque guardar obligaba a escribir otra vez el periodo que se estaba revisando; y el historial del perfil indica desde cuándo está acreditada cada actividad, ya que saber que lo está no le servía al estudiante para reclamar lo que falta."
   ),
   p(
     "El desarrollo continúa en el Sprint 5 con la importación y la exportación de los registros de horas beca, los reportes para AEUVG y la publicación de oportunidades para realizar horas, que se apoyan en el modelo y los servicios entregados en este sprint."

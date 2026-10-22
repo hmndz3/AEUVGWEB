@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/tabla";
 import type { RegistroHoraBecaAdmin } from "@/lib/horas-beca/consultas-horas-beca";
 import {
+  formatearFechaAcreditacion,
   formatearFechaActividad,
   formatearHoras,
   nombreCargadoDistinto,
@@ -41,7 +42,14 @@ const claseCasilla =
  * filtros, de modo que cambiar de página o de filtro descarte la selección en
  * lugar de acreditar a ciegas registros que ya no están en pantalla.
  */
-export function TablaHorasBeca({ registros }: { registros: RegistroHoraBecaAdmin[] }) {
+export function TablaHorasBeca({
+  registros,
+  volver,
+}: {
+  registros: RegistroHoraBecaAdmin[];
+  /** Dirección del listado actual, para regresar a él con sus filtros al guardar. */
+  volver: string;
+}) {
   const [seleccion, setSeleccion] = useState<ReadonlySet<number>>(new Set());
 
   const todos =
@@ -149,13 +157,22 @@ export function TablaHorasBeca({ registros }: { registros: RegistroHoraBecaAdmin
                 >
                   {ETIQUETAS_ESTADO_HORA_BECA[registro.estado]}
                 </EtiquetaEstado>
+                {/* Quién acreditó y cuándo: con varios administradores usando
+                    el panel, el estado por sí solo no permitía rastrear una
+                    acreditación aplicada por error. */}
+                {registro.estado === "ACREDITADA" && registro.fechaAcreditacion && (
+                  <span className="text-texto-suave mt-1 block text-xs">
+                    {formatearFechaAcreditacion(registro.fechaAcreditacion)}
+                    {registro.acreditadoPor ? ` · ${registro.acreditadoPor}` : ""}
+                  </span>
+                )}
               </TablaCelda>
               <TablaCelda className="whitespace-nowrap">
                 <div className="flex items-start justify-end gap-3">
                   {/* La corrección se abre desde la fila, que es donde AEUVG
                       detecta el dato equivocado al comparar un periodo completo. */}
                   <Link
-                    href={`/admin/horas-beca/${registro.idRegistroHora}`}
+                    href={`/admin/horas-beca/${registro.idRegistroHora}?volver=${encodeURIComponent(volver)}`}
                     className="text-primario text-sm font-bold hover:underline"
                   >
                     Editar

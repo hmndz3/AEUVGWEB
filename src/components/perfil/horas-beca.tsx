@@ -7,7 +7,11 @@ import {
   TablaEncabezado,
   TablaFila,
 } from "@/components/ui/tabla";
-import { formatearFechaActividad, formatearHoras } from "@/lib/horas-beca/formato-horas";
+import {
+  formatearFechaAcreditacion,
+  formatearFechaActividad,
+  formatearHoras,
+} from "@/lib/horas-beca/formato-horas";
 import type { HorasBecaEstudiante } from "@/lib/perfil/consultas-horas-beca";
 import { ETIQUETAS_ESTADO_HORA_BECA } from "@/validators/horas-beca";
 
@@ -111,6 +115,14 @@ export function HorasBecaPerfil({ horas }: { horas: HorasBecaEstudiante }) {
                         >
                           {ETIQUETAS_ESTADO_HORA_BECA[actividad.estado]}
                         </EtiquetaEstado>
+                        {/* AEUVG lo pidió en la revisión: saber que una
+                            actividad está acreditada no basta, el estudiante
+                            necesita desde cuándo para reclamar lo que falta. */}
+                        {actividad.fechaAcreditacion && (
+                          <span className="text-texto-suave mt-1 block text-xs">
+                            desde el {formatearFechaAcreditacion(actividad.fechaAcreditacion)}
+                          </span>
+                        )}
                       </TablaCelda>
                     </TablaFila>
                   ))}
