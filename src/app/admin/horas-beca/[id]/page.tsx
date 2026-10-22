@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { FormularioHoraBeca } from "@/components/admin/formulario-hora-beca";
 import { obtenerRegistroHoraBeca } from "@/lib/horas-beca/consultas-horas-beca";
 import {
+  destinoPanelHoras,
   diaParaFormulario,
   formatearFechaAcreditacion,
   nombreVisibleDelRegistro,
@@ -11,19 +12,28 @@ import {
 
 export const dynamic = "force-dynamic";
 
-export default async function Pagina({ params }: { params: Promise<{ id: string }> }) {
+export default async function Pagina({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
   const id = Number((await params).id);
 
   if (!Number.isSafeInteger(id) || id <= 0) notFound();
 
-  const registro = await obtenerRegistroHoraBeca(id);
+  const [registro, parametros] = await Promise.all([obtenerRegistroHoraBeca(id), searchParams]);
 
   if (!registro) notFound();
+
+  // El listado del que se viene, con sus filtros, para volver a él al guardar.
+  const destino = destinoPanelHoras(parametros.volver);
 
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <Link href="/admin/horas-beca" className="text-primario text-sm font-bold hover:underline">
+        <Link href={destino} className="text-primario text-sm font-bold hover:underline">
           ← Volver al listado
         </Link>
         <h1 className="text-texto mt-3 text-3xl font-extrabold tracking-tight">
@@ -42,6 +52,7 @@ export default async function Pagina({ params }: { params: Promise<{ id: string 
 
       <FormularioHoraBeca
         id={id}
+        destino={destino}
         valoresIniciales={{
           carnet: registro.carnet,
           // Se presenta el nombre con el que está guardado el registro: si la

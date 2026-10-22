@@ -26,6 +26,11 @@ export default async function PaginaAdminHorasBeca({
   const filtros = interpretarFiltrosHorasBeca(parametros);
 
   const filtrosActivos = contarFiltrosHoras(filtros);
+  // Las pantallas de registro vuelven a este mismo listado, con sus filtros.
+  const consulta = new URLSearchParams(parametrosDeFiltrosHoras(filtros));
+  if (filtros.pagina && filtros.pagina > 1) consulta.set("pagina", String(filtros.pagina));
+  const textoConsulta = consulta.toString();
+  const rutaActual = textoConsulta ? `/admin/horas-beca?${textoConsulta}` : "/admin/horas-beca";
 
   const [pagina, resumen] = await Promise.all([
     listarRegistrosHoraBeca({ filtros }),
@@ -44,7 +49,7 @@ export default async function PaginaAdminHorasBeca({
           </p>
         </div>
 
-        <Link href="/admin/horas-beca/nuevo">
+        <Link href={`/admin/horas-beca/nuevo?volver=${encodeURIComponent(rutaActual)}`}>
           <Boton>Registrar horas</Boton>
         </Link>
       </div>
@@ -75,6 +80,7 @@ export default async function PaginaAdminHorasBeca({
             pagina: String(pagina.pagina),
           }).toString()}
           registros={pagina.registros}
+          volver={rutaActual}
         />
       )}
 

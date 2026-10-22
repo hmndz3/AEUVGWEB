@@ -38,7 +38,7 @@ Un registro nace `PENDIENTE`. La acreditación es una operación aparte, en su p
 
 - **Acreditar** alcanza solo los registros que siguen pendientes, así que aplicarlo dos veces no reescribe la fecha ni el responsable del que ya estaba acreditado.
 - **Revertir** devuelve a `PENDIENTE` y borra la fecha y el responsable, que es lo que exige el `CHECK` de la tabla. Existe porque una selección en lote se puede equivocar: sin reversión, corregirla obligaría a borrar los registros y volver a capturarlos.
-- La respuesta informa cuántos registros se pidieron y cuántos cambiaron, porque una selección puede mezclar estados y el panel tiene que poder explicarlo.
+- La respuesta informa cuántos registros se pidieron y cuántos cambiaron, porque una selección puede mezclar estados y el panel tiene que poder explicarlo. El listado presenta además quién acreditó cada registro y cuándo: con varios administradores usando el panel, es el único modo de rastrear una acreditación aplicada por error.
 
 La fecha la pone el servidor y el responsable sale de la sesión: el cuerpo de la petición no puede falsear ninguno de los dos.
 
@@ -56,6 +56,8 @@ Los filtros son estado, periodo de actividad y vínculo con la cuenta. Cada par�
 
 El filtro de registros sin cuenta vinculada es el que le dice a AEUVG a qué carnets les falta registrarse en la plataforma.
 
+Las pantallas de registro reciben en la dirección el listado del que vienen (`volver`) y regresan a él al guardar, con sus filtros intactos. El valor se comprueba con `destinoPanelHoras`: solo se acepta una ruta interna de esta misma sección, porque de otro modo el formulario serviría para enviar a alguien a un sitio ajeno.
+
 El resumen de horas se calcula en la base y sobre la condición completa, no sumando las filas de la página: AEUVG cierra periodos de cientos de registros y el dato que necesita es justamente el que no cabe en pantalla.
 
 ## Fechas: día de calendario frente a instante
@@ -68,7 +70,7 @@ El resumen de horas se calcula en la base y sobre la condición completa, no sum
 
 Las horas se guardan en `Decimal(6,2)` y el esquema rechaza más de dos decimales, para que un 1.333 no se redondee en silencio y descuadre el total del estudiante. Los totales del perfil se suman en centésimas y se dividen al final: sumar treinta registros de 0.1 en coma flotante da 2.9999999999999996, que en pantalla se leería como 3 pero no coincidiría con lo que reporta el panel, que suma en la base.
 
-Un registro admite hasta 24 horas (`MAXIMO_HORAS_POR_REGISTRO`): más de un día no es un apoyo, es un error de captura.
+Un registro admite hasta 24 horas (`MAXIMO_HORAS_POR_REGISTRO`): más de un día no es un apoyo, es un error de captura. Por la misma razón, el servicio rechaza una fecha de actividad posterior al día de hoy; el día de referencia se calcula en la zona de Guatemala, porque entre las 18:00 y la medianoche del país en UTC ya es el día siguiente y una captura nocturna habría quedado rechazada por futura.
 
 ## Eliminación
 

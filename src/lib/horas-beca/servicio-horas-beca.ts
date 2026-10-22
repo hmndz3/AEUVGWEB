@@ -23,6 +23,24 @@ function normalizarSeleccion(ids: readonly number[]): number[] {
   return [...new Set(ids)].filter((id) => Number.isSafeInteger(id) && id > 0);
 }
 
+/**
+ * Día de calendario de hoy en Guatemala, como la medianoche en UTC con la que se
+ * guarda la fecha de la actividad. Se calcula en la zona del país y no en la del
+ * servidor: entre las 18:00 y la medianoche de Guatemala, en UTC ya es el día
+ * siguiente, y una actividad registrada esa noche habría quedado rechazada por
+ * futura.
+ */
+function hoyEnGuatemala(ahora: Date): Date {
+  const clave = new Intl.DateTimeFormat("en-CA", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    timeZone: "America/Guatemala",
+  }).format(ahora);
+
+  return new Date(`${clave}T00:00:00.000Z`);
+}
+
 /** Registro de horas tal como lo envía el panel, antes de resolver el vínculo. */
 export type DatosRegistroHora = {
   carnet: string;
@@ -58,7 +76,14 @@ export type ResultadoAcreditacion =
  * no, en lugar de impedir el registro.
  */
 export class ServicioHorasBeca {
-  constructor(private readonly repositorio: RepositorioHorasBeca) {}
+  /**
+   * El reloj se recibe como dependencia para poder probar el rechazo de una
+   * fecha futura sin depender del día en que se ejecuten las pruebas.
+   */
+  constructor(
+    private readonly repositorio: RepositorioHorasBeca,
+    private readonly ahora: () => Date = () => new Date()
+  ) {}
 
   async crear(datos: DatosRegistroHora, creadoPor: number): Promise<ResultadoRegistroHora> {
     const preparado = await this.preparar(datos);
@@ -172,6 +197,12 @@ export class ServicioHorasBeca {
     }
     if (Number.isNaN(datos.fechaActividad.getTime())) {
       errores.fechaActividad = "Indica la fecha de la actividad.";
+    } else if (datos.fechaActividad.getTime() > hoyEnGuatemala(this.ahora()).getTime()) {
+      // AEUVG lo señaló en la revisión del sprint: una fecha futura solo puede
+      // ser un error de captura, porque las horas se registran por el apoyo ya
+      // prestado, y además dejaba el registro fuera de cualquier periodo que se
+      // estuviera cerrando.
+      errores.fechaActividad = "La actividad no puede tener una fecha posterior a hoy.";
     }
     if (
       !Number.isFinite(datos.cantidadHoras) ||
