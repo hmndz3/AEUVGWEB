@@ -25,6 +25,8 @@ export type RegistroHoraBecaAdmin = {
   cantidadHoras: number;
   estado: EstadoHoraBeca;
   fechaAcreditacion: Date | null;
+  /** Nombre del administrador que aplicó la acreditación, cuando la hubo. */
+  acreditadoPor: string | null;
   observaciones: string | null;
 };
 
@@ -52,6 +54,9 @@ const CAMPOS_REGISTRO = {
   fechaAcreditacion: true,
   observaciones: true,
   estudiante: { select: { nombreCompleto: true } },
+  // AEUVG pidió en la revisión saber quién acreditó cada registro: la columna
+  // ya guardaba el usuario, pero el panel no lo mostraba.
+  acreditador: { select: { estudiante: { select: { nombreCompleto: true } } } },
 } as const;
 
 type FilaRegistro = Prisma.RegistroHoraBecaGetPayload<{ select: typeof CAMPOS_REGISTRO }>;
@@ -73,6 +78,7 @@ function aRegistro(fila: FilaRegistro): RegistroHoraBecaAdmin {
     cantidadHoras: Number(fila.cantidadHoras),
     estado: fila.estado,
     fechaAcreditacion: fila.fechaAcreditacion,
+    acreditadoPor: fila.acreditador?.estudiante.nombreCompleto ?? null,
     observaciones: fila.observaciones,
   };
 }

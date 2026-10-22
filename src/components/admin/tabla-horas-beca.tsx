@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/tabla";
 import type { RegistroHoraBecaAdmin } from "@/lib/horas-beca/consultas-horas-beca";
 import {
+  formatearFechaAcreditacion,
   formatearFechaActividad,
   formatearHoras,
   nombreCargadoDistinto,
@@ -149,6 +150,15 @@ export function TablaHorasBeca({ registros }: { registros: RegistroHoraBecaAdmin
                 >
                   {ETIQUETAS_ESTADO_HORA_BECA[registro.estado]}
                 </EtiquetaEstado>
+                {/* Quién acreditó y cuándo: con varios administradores usando
+                    el panel, el estado por sí solo no permitía rastrear una
+                    acreditación aplicada por error. */}
+                {registro.estado === "ACREDITADA" && registro.fechaAcreditacion && (
+                  <span className="text-texto-suave mt-1 block text-xs">
+                    {formatearFechaAcreditacion(registro.fechaAcreditacion)}
+                    {registro.acreditadoPor ? ` · ${registro.acreditadoPor}` : ""}
+                  </span>
+                )}
               </TablaCelda>
               <TablaCelda className="whitespace-nowrap">
                 <div className="flex items-start justify-end gap-3">
