@@ -42,7 +42,14 @@ const claseCasilla =
  * filtros, de modo que cambiar de página o de filtro descarte la selección en
  * lugar de acreditar a ciegas registros que ya no están en pantalla.
  */
-export function TablaHorasBeca({ registros }: { registros: RegistroHoraBecaAdmin[] }) {
+export function TablaHorasBeca({
+  registros,
+  volver,
+}: {
+  registros: RegistroHoraBecaAdmin[];
+  /** Dirección del listado actual, para regresar a él con sus filtros al guardar. */
+  volver: string;
+}) {
   const [seleccion, setSeleccion] = useState<ReadonlySet<number>>(new Set());
 
   const todos =
@@ -165,7 +172,7 @@ export function TablaHorasBeca({ registros }: { registros: RegistroHoraBecaAdmin
                   {/* La corrección se abre desde la fila, que es donde AEUVG
                       detecta el dato equivocado al comparar un periodo completo. */}
                   <Link
-                    href={`/admin/horas-beca/${registro.idRegistroHora}`}
+                    href={`/admin/horas-beca/${registro.idRegistroHora}?volver=${encodeURIComponent(volver)}`}
                     className="text-primario text-sm font-bold hover:underline"
                   >
                     Editar

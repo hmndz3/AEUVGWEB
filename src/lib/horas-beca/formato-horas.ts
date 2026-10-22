@@ -80,3 +80,26 @@ export function nombreCargadoDistinto(registro: {
     ? null
     : registro.nombreEstudiante;
 }
+
+/** Ruta base de la sección de horas beca del panel. */
+export const RUTA_PANEL_HORAS = "/admin/horas-beca";
+
+/**
+ * Destino al que vuelve el formulario después de guardar.
+ *
+ * AEUVG lo pidió en la revisión: al guardar un registro, el panel volvía al
+ * listado sin filtros y había que escribir otra vez el periodo que se estaba
+ * revisando. El destino viaja en la dirección, así que se comprueba que sea una
+ * ruta interna de esta misma sección: cualquier otro valor permitiría usar el
+ * formulario para enviar a alguien a un sitio ajeno.
+ */
+export function destinoPanelHoras(valor: string | string[] | undefined): string {
+  const ruta = Array.isArray(valor) ? valor[0] : valor;
+
+  if (!ruta || !ruta.startsWith(RUTA_PANEL_HORAS)) return RUTA_PANEL_HORAS;
+  if (ruta.startsWith(`${RUTA_PANEL_HORAS}//`)) return RUTA_PANEL_HORAS;
+
+  const siguiente = ruta.slice(RUTA_PANEL_HORAS.length);
+
+  return siguiente === "" || siguiente.startsWith("?") ? ruta : RUTA_PANEL_HORAS;
+}

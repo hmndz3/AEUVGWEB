@@ -94,9 +94,12 @@ function enfocarPrimerError(errores: Record<string, string>) {
 export function FormularioHoraBeca({
   id,
   valoresIniciales,
+  destino,
 }: {
   id?: number;
   valoresIniciales: ValoresHoraBeca;
+  /** Listado al que se vuelve tras guardar, con los filtros que traía. */
+  destino: string;
 }) {
   const router = useRouter();
   const [valores, setValores] = useState(valoresIniciales);
@@ -122,7 +125,7 @@ export function FormularioHoraBeca({
       });
 
       if (respuesta.ok) {
-        router.push("/admin/horas-beca");
+        router.push(destino);
         router.refresh();
         return;
       }
