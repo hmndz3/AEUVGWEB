@@ -29,9 +29,13 @@ const ACCESOS = [
     clase: "bg-lavanda/20 text-[#5a35e8]",
   },
   {
-    href: "/iniciar-sesion",
+    // Apuntaba a /iniciar-sesion, y con la sesión ya iniciada el middleware
+    // devuelve esa ruta al inicio: la tarjeta parecía no hacer nada. Ahora
+    // lleva a la sección del perfil, y a quien no tenga sesión el middleware lo
+    // manda a iniciarla y lo trae de vuelta aquí.
+    href: "/perfil#mis-horas-beca",
     titulo: "Horas beca",
-    descripcion: "Inicia sesión para revisar tus horas realizadas, acreditadas y pendientes.",
+    descripcion: "Revisa tus horas realizadas, acreditadas y pendientes.",
     clase: "bg-turquesa/15 text-[#00695a]",
   },
   {

@@ -136,18 +136,6 @@ export function EstadoSesion() {
           Mi perfil
         </Link>
 
-        {/* Las horas beca viven dentro del perfil, pero son la consulta por la
-            que el estudiantado escribía a AEUVG: se alcanzan en un clic desde
-            el menú en lugar de obligar a buscarlas en la pantalla. */}
-        <Link
-          href="/perfil#mis-horas-beca"
-          role="menuitem"
-          onClick={() => setAbierto(false)}
-          className="text-texto-suave hover:bg-superficie-suave hover:text-texto border-borde block border-b px-4 py-3 text-sm font-semibold transition-colors"
-        >
-          Mis horas beca
-        </Link>
-
         <button
           type="button"
           role="menuitem"

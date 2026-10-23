@@ -2,11 +2,7 @@ import Link from "next/link";
 
 import { TarjetaEvento } from "@/components/eventos/tarjeta-evento";
 import { RedesSociales } from "@/components/organizaciones/redes-sociales";
-import {
-  obtenerEventosDestacados,
-  obtenerProximosEventos,
-  obtenerRedesAeuvg,
-} from "@/lib/inicio/consultas-inicio";
+import { obtenerEventosDestacados, obtenerRedesAeuvg } from "@/lib/inicio/consultas-inicio";
 
 function EstadoVacio({ mensaje }: { mensaje: string }) {
   return (
@@ -47,38 +43,6 @@ export async function ActividadesDestacadas() {
             </div>
           )}
         </div>
-      </div>
-    </section>
-  );
-}
-
-export async function ProximosEventos() {
-  const eventos = await obtenerProximosEventos();
-
-  return (
-    <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h2 className="text-texto text-3xl font-extrabold tracking-tight">Próximos eventos</h2>
-          <p className="text-texto-suave mt-2 max-w-2xl">
-            Actividades académicas, culturales y de voluntariado organizadas por las asociaciones.
-          </p>
-        </div>
-        <Link href="/eventos" className="text-primario text-sm font-bold hover:underline">
-          Ver todos los eventos →
-        </Link>
-      </div>
-
-      <div className="mt-8">
-        {eventos.length === 0 ? (
-          <EstadoVacio mensaje="Aún no hay eventos publicados para las próximas fechas." />
-        ) : (
-          <div className="grid gap-4 md:grid-cols-3">
-            {eventos.map((evento) => (
-              <TarjetaEvento key={evento.idEvento} evento={evento} />
-            ))}
-          </div>
-        )}
       </div>
     </section>
   );
