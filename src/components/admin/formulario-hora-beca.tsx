@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 import { Alerta } from "@/components/ui/alerta";
 import { Boton } from "@/components/ui/boton";
+import { EtiquetaCampo, NotaCamposObligatorios } from "@/components/ui/etiqueta-campo";
 import type { EstudianteSugerido } from "@/lib/horas-beca/consultas-estudiantes";
 import { componerHorario } from "@/lib/horas-beca/formato-horas";
 import { MAXIMO_HORAS_POR_REGISTRO } from "@/lib/horas-beca/servicio-horas-beca";
@@ -49,6 +50,7 @@ function Campo({
   error,
   ayuda,
   clase,
+  obligatorio = false,
   children,
 }: {
   etiqueta: string;
@@ -57,13 +59,14 @@ function Campo({
   ayuda?: string;
   /** Reparto de columnas cuando el campo necesita más de una. */
   clase?: string;
+  obligatorio?: boolean;
   children: React.ReactNode;
 }) {
   return (
     <div className={`flex flex-col gap-1.5 ${clase ?? ""}`}>
-      <label htmlFor={nombre} className="text-texto text-sm font-semibold">
+      <EtiquetaCampo htmlFor={nombre} obligatorio={obligatorio}>
         {etiqueta}
-      </label>
+      </EtiquetaCampo>
       {children}
       {ayuda && !error && <p className="text-texto-suave text-xs">{ayuda}</p>}
       {error && (
@@ -235,9 +238,12 @@ export function FormularioHoraBeca({
     <form onSubmit={enviar} noValidate className="flex max-w-3xl flex-col gap-5">
       {general && <Alerta tipo="error">{general}</Alerta>}
 
+      <NotaCamposObligatorios />
+
       <div className="grid gap-5 md:grid-cols-2">
         <Campo
           etiqueta="Carnet"
+          obligatorio
           nombre="carnet"
           error={errores.carnet}
           ayuda={
@@ -274,6 +280,7 @@ export function FormularioHoraBeca({
 
         <Campo
           etiqueta="Nombre del estudiante"
+          obligatorio
           nombre="nombreEstudiante"
           error={errores.nombreEstudiante}
           ayuda="Si el carnet ya tiene cuenta, se conserva el nombre registrado en ella."
@@ -295,6 +302,7 @@ export function FormularioHoraBeca({
       <div className="grid items-start gap-5 md:grid-cols-4">
         <Campo
           etiqueta="Fecha de la actividad"
+          obligatorio
           nombre="fechaActividad"
           error={errores.fechaActividad}
         >
@@ -313,6 +321,7 @@ export function FormularioHoraBeca({
             el resumen del formulario lo enfoque. */}
         <Campo
           etiqueta="Horario de apoyo"
+          obligatorio
           nombre="horarioApoyo"
           error={errores.horarioApoyo}
           ayuda="De qué hora a qué hora apoyó."
@@ -343,6 +352,7 @@ export function FormularioHoraBeca({
 
         <Campo
           etiqueta="Cantidad de horas"
+          obligatorio
           nombre="cantidadHoras"
           error={errores.cantidadHoras}
           ayuda={`Hasta ${MAXIMO_HORAS_POR_REGISTRO} horas, con dos decimales.`}
@@ -363,6 +373,7 @@ export function FormularioHoraBeca({
 
       <Campo
         etiqueta="Actividad"
+        obligatorio
         nombre="descripcionActividad"
         error={errores.descripcionActividad}
         ayuda="En qué apoyó el estudiante. Es lo que verá en su historial de horas."
