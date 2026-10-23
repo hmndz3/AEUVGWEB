@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { normalizarCarnet } from "@/lib/horas-beca/busqueda-horas";
 import { diaCalendario } from "@/lib/horas-beca/filtros-horas";
+import { PATRON_HORARIO } from "@/lib/horas-beca/formato-horas";
 import {
   MAXIMO_HORAS_POR_REGISTRO,
   MAXIMO_REGISTROS_EN_LOTE,
@@ -10,7 +11,8 @@ import {
 const MENSAJE_CARNET = "El carnet debe tener entre 3 y 20 caracteres, sin espacios ni símbolos.";
 const MENSAJE_NOMBRE = "El nombre del estudiante debe tener entre 3 y 200 caracteres.";
 const MENSAJE_FECHA = "Indica la fecha en la que se realizó la actividad.";
-const MENSAJE_HORARIO = "Indica el horario de apoyo, por ejemplo 14:00-16:00.";
+const MENSAJE_HORARIO = "Indica la hora de inicio y la de fin del apoyo.";
+const MENSAJE_HORARIO_INVERTIDO = "La hora de fin debe ser posterior a la de inicio.";
 const MENSAJE_ACTIVIDAD = "Describe la actividad en la que se apoyó.";
 const MENSAJE_HORAS = `La cantidad de horas debe ser mayor que cero, no exceder ${MAXIMO_HORAS_POR_REGISTRO} y tener como máximo dos decimales.`;
 
@@ -64,7 +66,20 @@ export const esquemaRegistroHoraAdmin = z.object({
     .string(MENSAJE_FECHA)
     .regex(/^\d{4}-\d{2}-\d{2}$/, MENSAJE_FECHA)
     .transform(diaCalendario),
-  horarioApoyo: z.string(MENSAJE_HORARIO).trim().min(3, MENSAJE_HORARIO).max(120, MENSAJE_HORARIO),
+  /*
+   * El horario dejó de escribirse a mano: el formulario lo arma con dos
+   * selectores de hora y lo envía como "HH:MM-HH:MM". Validarlo aquí evita que
+   * un cuerpo armado a mano reintroduzca el texto libre que hacía imposible
+   * comparar o sumar horarios.
+   */
+  horarioApoyo: z
+    .string(MENSAJE_HORARIO)
+    .trim()
+    .regex(PATRON_HORARIO, MENSAJE_HORARIO)
+    .refine((valor) => {
+      const [inicio, fin] = valor.split("-");
+      return fin > inicio;
+    }, MENSAJE_HORARIO_INVERTIDO),
   descripcionActividad: z
     .string(MENSAJE_ACTIVIDAD)
     .trim()

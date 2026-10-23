@@ -75,10 +75,27 @@ test("la fecha se convierte a la medianoche en UTC, que es la que compara la bas
   assert.equal(resultado.data.fechaActividad.toISOString(), "2026-01-31T00:00:00.000Z");
 });
 
-test("el horario de apoyo es obligatorio", () => {
-  assert.equal(interpretar({ horarioApoyo: "" }).success, false);
-  assert.equal(interpretar({ horarioApoyo: "14" }).success, false);
-  assert.equal(interpretar({ horarioApoyo: "7-9" }).success, true);
+/*
+ * El horario dejó de escribirse a mano y ahora lo arman dos selectores de hora.
+ * El esquema exige esa forma para que un cuerpo armado a mano no reintroduzca
+ * el texto libre que hacía imposible comparar turnos.
+ */
+test("el horario de apoyo exige dos horas de reloj", () => {
+  for (const horarioApoyo of ["08:00-11:00", "00:00-23:59", "14:30-16:45"]) {
+    assert.equal(interpretar({ horarioApoyo }).success, true, horarioApoyo);
+  }
+});
+
+test("un horario escrito a mano se rechaza", () => {
+  for (const horarioApoyo of ["", "14", "7-9", "de 2 a 4", "14:00 a 16:00", "25:00-26:00"]) {
+    assert.equal(interpretar({ horarioApoyo }).success, false, horarioApoyo);
+  }
+});
+
+test("la hora de fin debe ser posterior a la de inicio", () => {
+  assert.equal(interpretar({ horarioApoyo: "16:00-14:00" }).success, false);
+  assert.equal(interpretar({ horarioApoyo: "14:00-14:00" }).success, false);
+  assert.equal(interpretar({ horarioApoyo: "14:00-14:05" }).success, true);
 });
 
 test("la descripción de la actividad es obligatoria", () => {

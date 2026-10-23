@@ -1,7 +1,12 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { formatearFechaActividad, formatearHoras } from "../src/lib/horas-beca/formato-horas";
+import {
+  componerHorario,
+  formatearFechaActividad,
+  formatearHoras,
+  partesDelHorario,
+} from "../src/lib/horas-beca/formato-horas";
 import { calcularTotalesHoras } from "../src/lib/horas-beca/totales-horas";
 
 const registro = (cantidadHoras: number, estado: "PENDIENTE" | "ACREDITADA") => ({
@@ -90,4 +95,25 @@ test("el primer día del mes no se corre al mes anterior", () => {
 
   assert.match(texto, /1/);
   assert.equal(texto.toLowerCase().includes("oct"), false);
+});
+
+test("el horario guardado se separa en sus dos horas para el formulario", () => {
+  assert.deepEqual(partesDelHorario("14:00-16:30"), { inicio: "14:00", fin: "16:30" });
+  assert.deepEqual(partesDelHorario("08:00-11:00"), { inicio: "08:00", fin: "11:00" });
+});
+
+/*
+ * Los registros anteriores al selector podían llevar texto libre. El formulario
+ * prefiere dejar los campos vacíos a mostrar una hora inventada.
+ */
+test("un horario que no tiene la forma esperada no se separa", () => {
+  for (const valor of ["de 2 a 4", "14:00", "", "7-9", "25:00-26:00"]) {
+    assert.equal(partesDelHorario(valor), null, valor);
+  }
+});
+
+test("las dos horas del formulario se unen en el valor que se guarda", () => {
+  assert.equal(componerHorario("14:00", "16:30"), "14:00-16:30");
+  assert.equal(componerHorario("", "16:30"), "");
+  assert.equal(componerHorario("14:00", ""), "");
 });
