@@ -1,10 +1,11 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Alerta } from "@/components/ui/alerta";
 import { Boton } from "@/components/ui/boton";
+import type { EstudianteSugerido } from "@/lib/horas-beca/consultas-estudiantes";
 import { componerHorario } from "@/lib/horas-beca/formato-horas";
 import { MAXIMO_HORAS_POR_REGISTRO } from "@/lib/horas-beca/servicio-horas-beca";
 import { ETIQUETAS_CAMPO_HORA_BECA } from "@/validators/hora-beca-admin";
@@ -32,6 +33,13 @@ export const VALORES_HORA_BECA_VACIOS: ValoresHoraBeca = {
   observaciones: "",
 };
 
+/**
+ * Letras mínimas para pedir sugerencias. Coincide con el mínimo del servidor
+ * (MINIMO_BUSQUEDA_ESTUDIANTE), que no se importa aquí porque ese módulo
+ * arrastra el cliente de la base y esto corre en el navegador.
+ */
+const MINIMO_PARA_SUGERIR = 2;
+
 const claseCampo =
   "border-borde bg-superficie text-texto focus:border-primario focus:ring-primario/30 w-full rounded-2xl border px-4 py-3 text-sm focus:ring-2 focus:outline-none";
 
@@ -40,16 +48,19 @@ function Campo({
   nombre,
   error,
   ayuda,
+  clase,
   children,
 }: {
   etiqueta: string;
   nombre: string;
   error?: string;
   ayuda?: string;
+  /** Reparto de columnas cuando el campo necesita más de una. */
+  clase?: string;
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className={`flex flex-col gap-1.5 ${clase ?? ""}`}>
       <label htmlFor={nombre} className="text-texto text-sm font-semibold">
         {etiqueta}
       </label>
@@ -110,9 +121,70 @@ export function FormularioHoraBeca({
   const [errores, setErrores] = useState<Record<string, string>>({});
   const [general, setGeneral] = useState<string | null>(null);
   const [guardando, setGuardando] = useState(false);
+  const [sugerencias, setSugerencias] = useState<EstudianteSugerido[]>([]);
 
   const cambiar = <Clave extends keyof ValoresHoraBeca>(clave: Clave, valor: string) =>
     setValores((previos) => ({ ...previos, [clave]: valor }));
+
+  /**
+   * Estudiantes ya registrados que coinciden con el carnet que se escribe.
+   *
+   * La consulta se retrasa un cuarto de segundo para no lanzar una petición por
+   * tecla, y se cancela si el texto cambia antes de que responda. El buscador es
+   * una ayuda: si falla, el carnet se sigue pudiendo escribir a mano, que es lo
+   * que hay que hacer con quien todavía no tiene cuenta.
+   */
+  useEffect(() => {
+    const texto = valores.carnet.trim();
+    const controlador = new AbortController();
+
+    // Todo ocurre dentro del temporizador, incluido el vaciado: cambiar el
+    // estado en el cuerpo del efecto encadena un render de más por cada tecla.
+    const temporizador = setTimeout(() => {
+      if (texto.length < MINIMO_PARA_SUGERIR) {
+        setSugerencias([]);
+        return;
+      }
+
+      fetch(`/api/admin/estudiantes?q=${encodeURIComponent(texto)}`, {
+        signal: controlador.signal,
+      })
+        .then((respuesta) => (respuesta.ok ? respuesta.json() : { estudiantes: [] }))
+        .then((cuerpo: { estudiantes?: EstudianteSugerido[] }) =>
+          setSugerencias(cuerpo.estudiantes ?? [])
+        )
+        .catch(() => {
+          if (!controlador.signal.aborted) setSugerencias([]);
+        });
+    }, 250);
+
+    return () => {
+      clearTimeout(temporizador);
+      controlador.abort();
+    };
+  }, [valores.carnet]);
+
+  // Cuenta cuyo carnet coincide exactamente con lo escrito.
+  const cuenta = sugerencias.find(
+    (estudiante) => estudiante.carnet.toUpperCase() === valores.carnet.trim().toUpperCase()
+  );
+
+  /**
+   * Al elegir un carnet existente se completa el nombre, que es el único dato
+   * que el formulario puede deducir. Se escribe el de la cuenta porque es el
+   * verificado, y es además el que el servicio acabará guardando.
+   */
+  const elegirCarnet = (carnet: string) => {
+    const elegido = sugerencias.find(
+      (estudiante) => estudiante.carnet.toUpperCase() === carnet.trim().toUpperCase()
+    );
+
+    setValores((previos) => ({
+      ...previos,
+      carnet,
+      nombreEstudiante: elegido ? elegido.nombreCompleto : previos.nombreEstudiante,
+    }));
+  };
 
   async function enviar(evento: React.FormEvent<HTMLFormElement>) {
     evento.preventDefault();
@@ -168,16 +240,36 @@ export function FormularioHoraBeca({
           etiqueta="Carnet"
           nombre="carnet"
           error={errores.carnet}
-          ayuda="Con este dato el registro llega al perfil del estudiante cuando crea su cuenta."
+          ayuda={
+            cuenta
+              ? undefined
+              : "Escribe el carnet y elige de la lista si ya tiene cuenta. Si no aparece, escríbelo igual."
+          }
         >
           <input
             id="carnet"
+            list="carnets-registrados"
             value={valores.carnet}
-            onChange={(evento) => cambiar("carnet", evento.target.value)}
+            onChange={(evento) => elegirCarnet(evento.target.value)}
             maxLength={20}
             autoComplete="off"
             className={claseCampo}
           />
+          {/* Lista nativa del navegador: sugiere sin impedir escribir un carnet
+              que todavía no existe, que es el caso que este módulo tiene que
+              permitir. */}
+          <datalist id="carnets-registrados">
+            {sugerencias.map((estudiante) => (
+              <option key={estudiante.carnet} value={estudiante.carnet}>
+                {estudiante.nombreCompleto}
+              </option>
+            ))}
+          </datalist>
+          {cuenta && (
+            <p className="text-xs font-semibold text-[#00695a]">
+              Cuenta encontrada: {cuenta.nombreCompleto}
+            </p>
+          )}
         </Campo>
 
         <Campo
@@ -196,7 +288,11 @@ export function FormularioHoraBeca({
         </Campo>
       </div>
 
-      <div className="grid gap-5 md:grid-cols-3">
+      {/* Cuatro columnas y no tres: el horario lleva dos relojes y, con el mismo
+          ancho que un campo simple, se apretaban hasta montarse sobre la
+          cantidad de horas. Las ayudas se alinean arriba para que una de dos
+          líneas no empuje a sus vecinas. */}
+      <div className="grid items-start gap-5 md:grid-cols-4">
         <Campo
           etiqueta="Fecha de la actividad"
           nombre="fechaActividad"
@@ -219,7 +315,8 @@ export function FormularioHoraBeca({
           etiqueta="Horario de apoyo"
           nombre="horarioApoyo"
           error={errores.horarioApoyo}
-          ayuda="De qué hora a qué hora apoyó el estudiante."
+          ayuda="De qué hora a qué hora apoyó."
+          clase="md:col-span-2"
         >
           <div className="flex items-center gap-2">
             <input
@@ -229,7 +326,7 @@ export function FormularioHoraBeca({
               aria-label="Hora de inicio del apoyo"
               value={valores.horaInicio}
               onChange={(evento) => cambiar("horaInicio", evento.target.value)}
-              className={claseCampo}
+              className={`${claseCampo} min-w-0 flex-1`}
             />
             <span className="text-texto-suave shrink-0 text-sm">a</span>
             <input
@@ -239,7 +336,7 @@ export function FormularioHoraBeca({
               aria-label="Hora de fin del apoyo"
               value={valores.horaFin}
               onChange={(evento) => cambiar("horaFin", evento.target.value)}
-              className={claseCampo}
+              className={`${claseCampo} min-w-0 flex-1`}
             />
           </div>
         </Campo>
