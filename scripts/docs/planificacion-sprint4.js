@@ -464,7 +464,7 @@ const doc = buildDocument([
     [
       [
         "Semana 1",
-        "08/10 - 13/10",
+        "07/10 - 13/10",
         "HU-19 completa. HU-20 completa: tabla, buscador, filtros y resumen de horas.",
         "Panel de horas beca consultando los registros en el ambiente de pruebas.",
       ],
