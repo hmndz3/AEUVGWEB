@@ -479,7 +479,7 @@ const doc = buildDocument([
 
   h2("6.4. Carga de trabajo estimada"),
   p(
-    "El Sprint 4 comprende 30 horas de trabajo de equipo, equivalentes a aproximadamente 15 horas por integrante durante las dos semanas. La carga es algo mayor que la del Sprint 3 porque el panel de horas beca no reutiliza los listados ya construidos: necesita una tabla densa, selección múltiple y operaciones en lote que ninguna pantalla anterior tenía. A cambio, el módulo reutiliza la protección de servicios por rol, la paginación por enlaces, la validación de parámetros de los filtros y la búsqueda sin acentos de los sprints anteriores."
+    "El Sprint 4 comprende 30 horas de trabajo de equipo, equivalentes a aproximadamente 15 horas por integrante durante las dos semanas. La carga es algo mayor que las 28 horas comprometidas en el Sprint 3 porque el panel de horas beca no reutiliza los listados ya construidos: necesita una tabla densa, selección múltiple y operaciones en lote que ninguna pantalla anterior tenía. A cambio, el módulo reutiliza la protección de servicios por rol, la paginación por enlaces, la validación de parámetros de los filtros y la búsqueda sin acentos de los sprints anteriores."
   ),
   p(
     "El orden de ejecución sigue la numeración de las historias. La ampliación del modelo de datos va primero porque de ella dependen todas las demás, y la asociación por carnet se trabaja después del registro de horas, cuando ya existe el servicio en el que se aplica. En caso de que la carga académica no permita alcanzar las horas estimadas, la historia HU-24 es la de menor prioridad y puede trasladarse al Sprint 5, dado que la información del perfil se deriva de los mismos registros y no condiciona la administración."
