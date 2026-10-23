@@ -8,14 +8,16 @@ import type { RedSocialOrganizacion } from "@/lib/organizaciones/consultas-organ
  */
 export function ContactoOrganizacion({
   correo,
+  telefono,
   informacionContacto,
   redesSociales,
 }: {
   correo: string | null;
+  telefono: string | null;
   informacionContacto: string | null;
   redesSociales: RedSocialOrganizacion[];
 }) {
-  if (!correo && !informacionContacto && redesSociales.length === 0) return null;
+  if (!correo && !telefono && !informacionContacto && redesSociales.length === 0) return null;
 
   return (
     <section className="bg-superficie-suave rounded-[1.25rem] p-8">
@@ -25,6 +27,18 @@ export function ContactoOrganizacion({
         <p className="mt-3">
           <a href={`mailto:${correo}`} className="text-primario font-semibold hover:underline">
             {correo}
+          </a>
+        </p>
+      )}
+
+      {telefono && (
+        <p>
+          {/* Enlace tel: para poder llamar desde el teléfono sin copiar el número. */}
+          <a
+            href={`tel:${telefono.replace(/\s+/g, "")}`}
+            className="text-primario font-semibold hover:underline"
+          >
+            {telefono}
           </a>
         </p>
       )}
