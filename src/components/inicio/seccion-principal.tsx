@@ -82,12 +82,15 @@ export async function SeccionPrincipal() {
     // Mismo fondo crema que el resto del sitio: la portada no es una página
     // aparte, y lo que llama la atención son las imágenes de los eventos.
     <section className="text-texto overflow-hidden">
-      <div className="py-14 lg:py-20">
+      {/* El espaciado es más ajustado de lo que pediría un titular de este
+          tamaño: la portada tiene que caber entera en la primera pantalla, con
+          el carrusel completo y sin obligar a desplazarse para descubrirlo. */}
+      <div className="py-8 lg:py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <Titular />
 
           <p
-            className="animate-aparecer text-texto-suave mt-6 max-w-2xl text-lg leading-relaxed motion-reduce:animate-none"
+            className="animate-aparecer text-texto-suave mt-5 max-w-2xl text-lg leading-relaxed motion-reduce:animate-none"
             style={{ animationDelay: `${FIN_TITULAR}ms` }}
           >
             La plataforma de la Asociación General de Estudiantes para descubrir eventos, conocer
@@ -97,7 +100,7 @@ export async function SeccionPrincipal() {
 
         {eventos.length > 0 && (
           <div
-            className="animate-aparecer mt-10 motion-reduce:animate-none"
+            className="animate-aparecer mt-7 motion-reduce:animate-none"
             style={{ animationDelay: `${FIN_TITULAR + 200}ms` }}
           >
             <TrenEventos vagones={eventos.map(aVagon)} />
@@ -105,18 +108,24 @@ export async function SeccionPrincipal() {
         )}
 
         <div
-          className="animate-aparecer mx-auto mt-10 flex max-w-7xl flex-wrap gap-3 px-4 motion-reduce:animate-none sm:px-6"
+          className="animate-aparecer mx-auto mt-8 flex max-w-7xl flex-wrap gap-3 px-4 motion-reduce:animate-none sm:px-6"
           style={{ animationDelay: `${FIN_TITULAR + 400}ms` }}
         >
+          {/* Son la salida principal de la portada, así que pesan más que un
+              botón corriente: más altos, con sombra de color y un leve impulso
+              al pasar el cursor. El impulso se anula con movimiento reducido. */}
           <Link
             href="/eventos"
-            className="bg-primario hover:bg-primario-fuerte inline-flex h-12 items-center rounded-full px-7 text-sm font-bold text-white shadow-lg transition-colors"
+            className="bg-primario hover:bg-primario-fuerte shadow-primario/35 group inline-flex h-14 items-center gap-2 rounded-full px-8 text-base font-extrabold text-white shadow-xl transition-all hover:-translate-y-0.5 motion-reduce:transform-none"
           >
             Ver próximos eventos
+            <span aria-hidden className="transition-transform group-hover:translate-x-1">
+              →
+            </span>
           </Link>
           <Link
             href="/sobre-aeuvg"
-            className="text-texto ring-borde hover:bg-superficie inline-flex h-12 items-center rounded-full px-7 text-sm font-bold ring-1 transition-colors"
+            className="text-texto bg-superficie ring-texto/15 hover:ring-texto/35 inline-flex h-14 items-center rounded-full px-8 text-base font-extrabold shadow-sm ring-2 transition-all hover:-translate-y-0.5 hover:shadow-md motion-reduce:transform-none"
           >
             Conocer AEUVG
           </Link>
