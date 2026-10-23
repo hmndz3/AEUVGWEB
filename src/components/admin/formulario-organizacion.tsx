@@ -17,6 +17,7 @@ export type ValoresOrganizacion = {
   vision: string;
   actividades: string;
   correo: string;
+  telefono: string;
   informacionContacto: string;
   imagenUrl: string;
 };
@@ -29,6 +30,7 @@ export const VALORES_ORGANIZACION_VACIOS: ValoresOrganizacion = {
   vision: "",
   actividades: "",
   correo: "",
+  telefono: "",
   informacionContacto: "",
   imagenUrl: "",
 };
@@ -118,6 +120,8 @@ export function FormularioOrganizacion({
   const [guardando, setGuardando] = useState(false);
 
   const esAsociacion = tipo === "asociaciones";
+  // Mientras no haya ni correo ni teléfono, los dos se marcan como obligatorios.
+  const faltaContacto = valores.correo.trim() === "" && valores.telefono.trim() === "";
   const singular = esAsociacion ? "asociación" : "club";
 
   const cambiar = <Clave extends keyof ValoresOrganizacion>(
@@ -182,10 +186,12 @@ export function FormularioOrganizacion({
             etiqueta="Siglas o nombre corto"
             nombre="siglas"
             error={errores.siglas}
-            ayuda="Opcional. Por ejemplo AECCTIUVG."
+            ayuda="Por ejemplo AECCTIUVG. Es el nombre con el que se conoce a la asociación."
+            obligatorio
           >
             <input
               id="siglas"
+              required
               value={valores.siglas}
               onChange={(evento) => cambiar("siglas", evento.target.value)}
               maxLength={30}
@@ -284,11 +290,16 @@ export function FormularioOrganizacion({
       )}
 
       <div className="grid gap-5 md:grid-cols-2">
+        {/* Correo y teléfono: hace falta al menos uno, no los dos. En cuanto
+            se llena cualquiera, el otro deja de ser obligatorio, porque no
+            sabemos cuál usará más cada organización. El asterisco aparece
+            mientras los dos estén vacíos. */}
         <Campo
           etiqueta="Correo"
           nombre="correo"
           error={errores.correo}
-          ayuda="Opcional. Se muestra como enlace en el bloque de contacto."
+          obligatorio={faltaContacto}
+          ayuda="Se muestra como enlace en el bloque de contacto."
         >
           <input
             id="correo"
@@ -296,6 +307,25 @@ export function FormularioOrganizacion({
             value={valores.correo}
             onChange={(evento) => cambiar("correo", evento.target.value)}
             maxLength={254}
+            aria-required={faltaContacto}
+            className={claseCampo}
+          />
+        </Campo>
+
+        <Campo
+          etiqueta="Teléfono"
+          nombre="telefono"
+          error={errores.telefono}
+          obligatorio={faltaContacto}
+          ayuda="Ocho dígitos. Basta con el correo o el teléfono, no hacen falta los dos."
+        >
+          <input
+            id="telefono"
+            type="tel"
+            value={valores.telefono}
+            onChange={(evento) => cambiar("telefono", evento.target.value)}
+            maxLength={30}
+            aria-required={faltaContacto}
             className={claseCampo}
           />
         </Campo>

@@ -90,6 +90,7 @@ export default async function PaginaAsociacion({ params }: Props) {
 
         <ContactoOrganizacion
           correo={asociacion.correo}
+          telefono={asociacion.telefono}
           informacionContacto={asociacion.informacionContacto}
           redesSociales={asociacion.redesSociales}
         />

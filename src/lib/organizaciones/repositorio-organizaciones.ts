@@ -14,6 +14,7 @@ export type DatosAsociacionPersistidos = {
   mision: string | null;
   vision: string | null;
   correo: string | null;
+  telefono: string | null;
   informacionContacto: string | null;
   imagenUrl: string | null;
   textoBusqueda: string;
@@ -24,6 +25,7 @@ export type DatosClubPersistidos = {
   descripcion: string | null;
   actividades: string | null;
   correo: string | null;
+  telefono: string | null;
   informacionContacto: string | null;
   imagenUrl: string | null;
   textoBusqueda: string;
@@ -60,6 +62,7 @@ export type OrganizacionAdministrada = {
   vision: string | null;
   actividades: string | null;
   correo: string | null;
+  telefono: string | null;
   informacionContacto: string | null;
   imagenUrl: string | null;
   activo: boolean;
@@ -110,6 +113,7 @@ const SELECCION_ASOCIACION = {
   mision: true,
   vision: true,
   correo: true,
+  telefono: true,
   informacionContacto: true,
   imagenUrl: true,
   activo: true,
@@ -121,6 +125,7 @@ const SELECCION_CLUB = {
   descripcion: true,
   actividades: true,
   correo: true,
+  telefono: true,
   informacionContacto: true,
   imagenUrl: true,
   activo: true,

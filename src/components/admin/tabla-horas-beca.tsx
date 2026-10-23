@@ -115,8 +115,14 @@ export function TablaHorasBeca({
                   className={claseCasilla}
                 />
               </TablaCelda>
-              <TablaCelda className="text-texto font-semibold whitespace-nowrap">
-                {registro.carnet}
+              {/* El carnet es el identificador de la fila: es el dato con el
+                  que AEUVG localiza un registro y el que lo une con la cuenta.
+                  Se presenta en una ficha monoespaciada para poder recorrer la
+                  columna de un vistazo y comparar dígito a dígito. */}
+              <TablaCelda className="whitespace-nowrap">
+                <span className="bg-superficie-suave text-texto rounded-lg px-2 py-1 font-mono text-sm font-bold tracking-tight">
+                  {registro.carnet}
+                </span>
               </TablaCelda>
               <TablaCelda className="text-texto">
                 {nombreVisibleDelRegistro(registro)}

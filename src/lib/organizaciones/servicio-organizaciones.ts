@@ -38,6 +38,7 @@ function aDatosAsociacion(datos: DatosAsociacionAdmin): DatosAsociacionPersistid
     mision: datos.mision,
     vision: datos.vision,
     correo: datos.correo,
+    telefono: datos.telefono,
     informacionContacto: datos.informacionContacto,
     imagenUrl: datos.imagenUrl,
     // Se recalcula en cada guardado para que el buscador nunca quede desfasado.
@@ -51,6 +52,7 @@ function aDatosClub(datos: DatosClubAdmin): DatosClubPersistidos {
     descripcion: datos.descripcion,
     actividades: datos.actividades,
     correo: datos.correo,
+    telefono: datos.telefono,
     informacionContacto: datos.informacionContacto,
     imagenUrl: datos.imagenUrl,
     textoBusqueda: textoDeBusquedaClub(datos),
@@ -118,7 +120,9 @@ export class ServicioOrganizaciones {
     entrada: EntradaOrganizacion,
     excepto: number | null
   ): Promise<ResultadoOrganizacion | null> {
-    if (entrada.tipo !== "asociaciones" || entrada.datos.siglas === null) return null;
+    // Los clubes no tienen siglas; las asociaciones siempre, desde que AEUVG
+    // las pidió obligatorias.
+    if (entrada.tipo !== "asociaciones") return null;
 
     const disponibles = await this.repositorio.siglasDisponibles(entrada.datos.siglas, excepto);
 

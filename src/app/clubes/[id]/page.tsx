@@ -66,6 +66,7 @@ export default async function PaginaClub({ params }: Props) {
 
         <ContactoOrganizacion
           correo={club.correo}
+          telefono={club.telefono}
           informacionContacto={club.informacionContacto}
           redesSociales={club.redesSociales}
         />
