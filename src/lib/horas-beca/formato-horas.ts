@@ -103,3 +103,25 @@ export function destinoPanelHoras(valor: string | string[] | undefined): string 
 
   return siguiente === "" || siguiente.startsWith("?") ? ruta : RUTA_PANEL_HORAS;
 }
+
+/** Horario de apoyo tal como se guarda: dos horas de reloj separadas por guion. */
+export const PATRON_HORARIO = /^([01]\d|2[0-3]):[0-5]\d-([01]\d|2[0-3]):[0-5]\d$/;
+
+/**
+ * Separa un horario guardado en sus dos horas, para rellenar los campos del
+ * formulario. Devuelve null si el valor no tiene la forma esperada: los
+ * registros anteriores al selector podían llevar texto libre, y en ese caso el
+ * formulario prefiere dejar los campos vacíos a mostrar una hora inventada.
+ */
+export function partesDelHorario(valor: string): { inicio: string; fin: string } | null {
+  if (!PATRON_HORARIO.test(valor)) return null;
+
+  const [inicio, fin] = valor.split("-");
+
+  return { inicio, fin };
+}
+
+/** Une las dos horas del formulario en el valor que se guarda. */
+export function componerHorario(inicio: string, fin: string): string {
+  return inicio && fin ? `${inicio}-${fin}` : "";
+}

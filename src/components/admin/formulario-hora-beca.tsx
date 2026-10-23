@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import { Alerta } from "@/components/ui/alerta";
 import { Boton } from "@/components/ui/boton";
+import { componerHorario } from "@/lib/horas-beca/formato-horas";
 import { MAXIMO_HORAS_POR_REGISTRO } from "@/lib/horas-beca/servicio-horas-beca";
 import { ETIQUETAS_CAMPO_HORA_BECA } from "@/validators/hora-beca-admin";
 
@@ -12,7 +13,9 @@ export type ValoresHoraBeca = {
   carnet: string;
   nombreEstudiante: string;
   fechaActividad: string;
-  horarioApoyo: string;
+  /** El horario se captura en dos selectores y se envía como "HH:MM-HH:MM". */
+  horaInicio: string;
+  horaFin: string;
   descripcionActividad: string;
   cantidadHoras: string;
   observaciones: string;
@@ -22,7 +25,8 @@ export const VALORES_HORA_BECA_VACIOS: ValoresHoraBeca = {
   carnet: "",
   nombreEstudiante: "",
   fechaActividad: "",
-  horarioApoyo: "",
+  horaInicio: "",
+  horaFin: "",
   descripcionActividad: "",
   cantidadHoras: "",
   observaciones: "",
@@ -121,7 +125,10 @@ export function FormularioHoraBeca({
       const respuesta = await fetch(id ? `${base}/${id}` : base, {
         method: id ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(valores),
+        body: JSON.stringify({
+          ...valores,
+          horarioApoyo: componerHorario(valores.horaInicio, valores.horaFin),
+        }),
       });
 
       if (respuesta.ok) {
@@ -204,19 +211,37 @@ export function FormularioHoraBeca({
           />
         </Campo>
 
+        {/* Dos selectores de hora en vez de texto libre: AEUVG capturaba el
+            horario a mano y cada quien lo escribía distinto, lo que impedía
+            comparar turnos. El campo de inicio lleva el id del error para que
+            el resumen del formulario lo enfoque. */}
         <Campo
           etiqueta="Horario de apoyo"
           nombre="horarioApoyo"
           error={errores.horarioApoyo}
-          ayuda="Por ejemplo 14:00-16:00."
+          ayuda="De qué hora a qué hora apoyó el estudiante."
         >
-          <input
-            id="horarioApoyo"
-            value={valores.horarioApoyo}
-            onChange={(evento) => cambiar("horarioApoyo", evento.target.value)}
-            maxLength={120}
-            className={claseCampo}
-          />
+          <div className="flex items-center gap-2">
+            <input
+              id="horarioApoyo"
+              type="time"
+              step={300}
+              aria-label="Hora de inicio del apoyo"
+              value={valores.horaInicio}
+              onChange={(evento) => cambiar("horaInicio", evento.target.value)}
+              className={claseCampo}
+            />
+            <span className="text-texto-suave shrink-0 text-sm">a</span>
+            <input
+              id="horaFin"
+              type="time"
+              step={300}
+              aria-label="Hora de fin del apoyo"
+              value={valores.horaFin}
+              onChange={(evento) => cambiar("horaFin", evento.target.value)}
+              className={claseCampo}
+            />
+          </div>
         </Campo>
 
         <Campo
