@@ -221,7 +221,7 @@ export function TrenEventos({ vagones }: { vagones: VagonTren[] }) {
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
         <h2
           id="titulo-tren"
-          className="text-texto-suave flex items-center gap-2.5 text-xs font-bold tracking-[0.14em] uppercase sm:tracking-[0.2em]"
+          className="text-texto flex items-center gap-2.5 text-sm font-extrabold tracking-[0.14em] uppercase sm:text-base sm:tracking-[0.2em]"
         >
           <span aria-hidden className="bg-coral size-2 rounded-full motion-safe:animate-pulse" />
           Próximamente en el campus

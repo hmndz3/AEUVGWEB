@@ -60,12 +60,19 @@ Consideraciones:
 
 ## 5. Cuentas de demostración
 
-Para revisar la plataforma sin usar una cuenta personal existen dos cuentas de demostración:
+Para revisar la plataforma sin usar una cuenta personal existen cinco cuentas de demostración:
 
-| Cuenta                       | Roles                      |
-| ---------------------------- | -------------------------- |
-| `demo.estudiante@uvg.edu.gt` | Estudiante                 |
-| `demo.admin@uvg.edu.gt`      | Estudiante y administrador |
+| Cuenta                       | Carnet      | Nombre                        | Roles                      |
+| ---------------------------- | ----------- | ----------------------------- | -------------------------- |
+| `demo.estudiante@uvg.edu.gt` | `DEMO-0001` | [DEMO] Estudiante             | Estudiante                 |
+| `demo.admin@uvg.edu.gt`      | `DEMO-0002` | [DEMO] Administrador          | Estudiante y administrador |
+| `mor24117@uvg.edu.gt`        | `24117`     | Ana Lucía Morales Castillo    | Estudiante                 |
+| `rui24263@uvg.edu.gt`        | `24263`     | Diego Alejandro Ruiz Herrera  | Estudiante                 |
+| `ort24518@uvg.edu.gt`        | `24518`     | Gabriela Fernanda Ortiz López | Estudiante                 |
+
+Las tres últimas se agregaron en el Sprint 4 para mostrar el módulo de horas beca con varias personas. A diferencia de las dos primeras, **no llevan el marcador `[DEMO]`**: usan nombre, carnet de cinco dígitos y correo institucional con el formato real, para que la demostración ante AEUVG no se vea poblada de datos evidentemente falsos.
+
+Esa decisión tiene una contrapartida: no se distinguen a simple vista de una cuenta real. Por eso la base se reinicia antes de la puesta en producción definitiva, y mientras tanto se identifican por los carnets de esta tabla. Se indica el carnet porque es el dato con el que se les registran las horas desde el panel.
 
 Se crean o se rotan con:
 

@@ -1,9 +1,5 @@
 import { AccesosRapidos } from "@/components/inicio/accesos-rapidos";
-import {
-  ActividadesDestacadas,
-  ProximosEventos,
-  SeccionRedesAeuvg,
-} from "@/components/inicio/secciones-eventos";
+import { ActividadesDestacadas, SeccionRedesAeuvg } from "@/components/inicio/secciones-eventos";
 import { SeccionPrincipal } from "@/components/inicio/seccion-principal";
 import { MarcoSitio } from "@/components/layout/marco-sitio";
 
@@ -17,7 +13,6 @@ export default function PaginaInicio() {
       <SeccionPrincipal />
       <AccesosRapidos />
       <ActividadesDestacadas />
-      <ProximosEventos />
       <SeccionRedesAeuvg />
     </MarcoSitio>
   );
