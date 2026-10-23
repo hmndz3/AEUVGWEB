@@ -1,11 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { Alerta } from "@/components/ui/alerta";
 import { Boton } from "@/components/ui/boton";
 import { EtiquetaCampo, NotaCamposObligatorios } from "@/components/ui/etiqueta-campo";
+import { BuscadorEstudiante } from "@/components/admin/buscador-estudiante";
 import type { EstudianteSugerido } from "@/lib/horas-beca/consultas-estudiantes";
 import { componerHorario } from "@/lib/horas-beca/formato-horas";
 import { MAXIMO_HORAS_POR_REGISTRO } from "@/lib/horas-beca/servicio-horas-beca";
@@ -33,13 +34,6 @@ export const VALORES_HORA_BECA_VACIOS: ValoresHoraBeca = {
   cantidadHoras: "",
   observaciones: "",
 };
-
-/**
- * Letras mínimas para pedir sugerencias. Coincide con el mínimo del servidor
- * (MINIMO_BUSQUEDA_ESTUDIANTE), que no se importa aquí porque ese módulo
- * arrastra el cliente de la base y esto corre en el navegador.
- */
-const MINIMO_PARA_SUGERIR = 2;
 
 const claseCampo =
   "border-borde bg-superficie text-texto focus:border-primario focus:ring-primario/30 w-full rounded-2xl border px-4 py-3 text-sm focus:ring-2 focus:outline-none";
@@ -124,70 +118,20 @@ export function FormularioHoraBeca({
   const [errores, setErrores] = useState<Record<string, string>>({});
   const [general, setGeneral] = useState<string | null>(null);
   const [guardando, setGuardando] = useState(false);
-  const [sugerencias, setSugerencias] = useState<EstudianteSugerido[]>([]);
-
   const cambiar = <Clave extends keyof ValoresHoraBeca>(clave: Clave, valor: string) =>
     setValores((previos) => ({ ...previos, [clave]: valor }));
 
   /**
-   * Estudiantes ya registrados que coinciden con el carnet que se escribe.
-   *
-   * La consulta se retrasa un cuarto de segundo para no lanzar una petición por
-   * tecla, y se cancela si el texto cambia antes de que responda. El buscador es
-   * una ayuda: si falla, el carnet se sigue pudiendo escribir a mano, que es lo
-   * que hay que hacer con quien todavía no tiene cuenta.
+   * Al elegir un estudiante del buscador se completa el nombre, que es el único
+   * dato que el formulario puede deducir. Se escribe el de la cuenta porque es
+   * el verificado, y es además el que el servicio acabará guardando.
    */
-  useEffect(() => {
-    const texto = valores.carnet.trim();
-    const controlador = new AbortController();
-
-    // Todo ocurre dentro del temporizador, incluido el vaciado: cambiar el
-    // estado en el cuerpo del efecto encadena un render de más por cada tecla.
-    const temporizador = setTimeout(() => {
-      if (texto.length < MINIMO_PARA_SUGERIR) {
-        setSugerencias([]);
-        return;
-      }
-
-      fetch(`/api/admin/estudiantes?q=${encodeURIComponent(texto)}`, {
-        signal: controlador.signal,
-      })
-        .then((respuesta) => (respuesta.ok ? respuesta.json() : { estudiantes: [] }))
-        .then((cuerpo: { estudiantes?: EstudianteSugerido[] }) =>
-          setSugerencias(cuerpo.estudiantes ?? [])
-        )
-        .catch(() => {
-          if (!controlador.signal.aborted) setSugerencias([]);
-        });
-    }, 250);
-
-    return () => {
-      clearTimeout(temporizador);
-      controlador.abort();
-    };
-  }, [valores.carnet]);
-
-  // Cuenta cuyo carnet coincide exactamente con lo escrito.
-  const cuenta = sugerencias.find(
-    (estudiante) => estudiante.carnet.toUpperCase() === valores.carnet.trim().toUpperCase()
-  );
-
-  /**
-   * Al elegir un carnet existente se completa el nombre, que es el único dato
-   * que el formulario puede deducir. Se escribe el de la cuenta porque es el
-   * verificado, y es además el que el servicio acabará guardando.
-   */
-  const elegirCarnet = (carnet: string) => {
-    const elegido = sugerencias.find(
-      (estudiante) => estudiante.carnet.toUpperCase() === carnet.trim().toUpperCase()
-    );
-
+  const elegirEstudiante = (estudiante: EstudianteSugerido) =>
     setValores((previos) => ({
       ...previos,
-      carnet,
-      nombreEstudiante: elegido ? elegido.nombreCompleto : previos.nombreEstudiante,
+      carnet: estudiante.carnet,
+      nombreEstudiante: estudiante.nombreCompleto,
     }));
-  };
 
   async function enviar(evento: React.FormEvent<HTMLFormElement>) {
     evento.preventDefault();
@@ -246,36 +190,14 @@ export function FormularioHoraBeca({
           obligatorio
           nombre="carnet"
           error={errores.carnet}
-          ayuda={
-            cuenta
-              ? undefined
-              : "Escribe el carnet y elige de la lista si ya tiene cuenta. Si no aparece, escríbelo igual."
-          }
+          ayuda="Escribe el carnet y elige de la lista si ya tiene cuenta. Si no aparece, escríbelo igual."
         >
-          <input
+          <BuscadorEstudiante
             id="carnet"
-            list="carnets-registrados"
-            value={valores.carnet}
-            onChange={(evento) => elegirCarnet(evento.target.value)}
-            maxLength={20}
-            autoComplete="off"
-            className={claseCampo}
+            valor={valores.carnet}
+            onCambiar={(carnet) => cambiar("carnet", carnet)}
+            onElegir={elegirEstudiante}
           />
-          {/* Lista nativa del navegador: sugiere sin impedir escribir un carnet
-              que todavía no existe, que es el caso que este módulo tiene que
-              permitir. */}
-          <datalist id="carnets-registrados">
-            {sugerencias.map((estudiante) => (
-              <option key={estudiante.carnet} value={estudiante.carnet}>
-                {estudiante.nombreCompleto}
-              </option>
-            ))}
-          </datalist>
-          {cuenta && (
-            <p className="text-xs font-semibold text-[#00695a]">
-              Cuenta encontrada: {cuenta.nombreCompleto}
-            </p>
-          )}
         </Campo>
 
         <Campo
