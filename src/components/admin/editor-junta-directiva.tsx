@@ -6,6 +6,7 @@ import { useState } from "react";
 import { CargaImagen } from "@/components/admin/carga-imagen";
 import { Alerta } from "@/components/ui/alerta";
 import { Boton } from "@/components/ui/boton";
+import { EtiquetaCampo, NotaCamposObligatorios } from "@/components/ui/etiqueta-campo";
 import {
   Tabla,
   TablaCelda,
@@ -197,14 +198,16 @@ export function EditorJuntaDirectiva({
         <p className="text-texto text-sm font-bold">
           {editando ? "Editar integrante" : "Agregar integrante"}
         </p>
+        <NotaCamposObligatorios />
 
         <div className="grid gap-4 md:grid-cols-2">
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="integrante-nombre" className="text-texto text-sm font-semibold">
+            <EtiquetaCampo htmlFor="integrante-nombre" obligatorio>
               Nombre
-            </label>
+            </EtiquetaCampo>
             <input
               id="integrante-nombre"
+              required
               value={valores.nombre}
               onChange={(evento) => cambiar("nombre", evento.target.value)}
               maxLength={200}
@@ -218,11 +221,12 @@ export function EditorJuntaDirectiva({
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="integrante-cargo" className="text-texto text-sm font-semibold">
+            <EtiquetaCampo htmlFor="integrante-cargo" obligatorio>
               Cargo
-            </label>
+            </EtiquetaCampo>
             <input
               id="integrante-cargo"
+              required
               value={valores.cargo}
               onChange={(evento) => cambiar("cargo", evento.target.value)}
               maxLength={120}
@@ -236,11 +240,12 @@ export function EditorJuntaDirectiva({
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="integrante-periodo" className="text-texto text-sm font-semibold">
+            <EtiquetaCampo htmlFor="integrante-periodo" obligatorio>
               Periodo
-            </label>
+            </EtiquetaCampo>
             <input
               id="integrante-periodo"
+              required
               value={valores.periodo}
               onChange={(evento) => cambiar("periodo", evento.target.value)}
               maxLength={50}
@@ -255,12 +260,7 @@ export function EditorJuntaDirectiva({
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label
-              htmlFor="integrante-ordenVisualizacion"
-              className="text-texto text-sm font-semibold"
-            >
-              Orden
-            </label>
+            <EtiquetaCampo htmlFor="integrante-ordenVisualizacion">Orden</EtiquetaCampo>
             <input
               id="integrante-ordenVisualizacion"
               type="number"
@@ -279,9 +279,7 @@ export function EditorJuntaDirectiva({
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="integrante-fotoUrl" className="text-texto text-sm font-semibold">
-            Fotografía
-          </label>
+          <EtiquetaCampo htmlFor="integrante-fotoUrl">Fotografía</EtiquetaCampo>
           <input
             id="integrante-fotoUrl"
             value={valores.fotoUrl}

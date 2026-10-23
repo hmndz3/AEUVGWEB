@@ -47,6 +47,41 @@ export async function obtenerEventosDestacados(limite = 2, ahora = new Date()) {
   return pagina?.eventos ?? [];
 }
 
+/** Vagones del tren de la portada: suficientes para que la pista se vea llena. */
+export const EVENTOS_EN_TREN = 10;
+
+/**
+ * Elige los eventos del tren de la portada. Los destacados por AEUVG tienen
+ * prioridad y el resto de los lugares se completa con los más próximos; el tren
+ * los presenta en orden de fecha, que es como se lee una cartelera.
+ */
+export function elegirEventosTren(
+  destacados: readonly EventoResumen[],
+  proximos: readonly EventoResumen[],
+  limite = EVENTOS_EN_TREN
+): EventoResumen[] {
+  const vistos = new Set<number>();
+
+  return [...destacados, ...proximos]
+    .filter((evento) => {
+      if (vistos.has(evento.idEvento)) return false;
+      vistos.add(evento.idEvento);
+      return true;
+    })
+    .slice(0, limite)
+    .sort((a, b) => a.fechaInicio.getTime() - b.fechaInicio.getTime() || a.idEvento - b.idEvento);
+}
+
+/** Eventos del tren de la portada, ya elegidos y ordenados. */
+export async function obtenerEventosTren(limite = EVENTOS_EN_TREN, ahora = new Date()) {
+  const [destacados, proximos] = await Promise.all([
+    obtenerEventosDestacados(limite, ahora),
+    obtenerProximosEventos(limite, ahora),
+  ]);
+
+  return elegirEventosTren(destacados, proximos, limite);
+}
+
 /** Redes sociales de la asociación general, para el bloque de contacto. */
 export async function obtenerRedesAeuvg(): Promise<RedSocialResumen[]> {
   return consultarOVacio(() =>

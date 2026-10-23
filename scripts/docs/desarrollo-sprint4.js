@@ -204,7 +204,7 @@ const doc = buildDocument([
   // ---------- 8 ----------
   h1("8. Pruebas y verificación"),
   p(
-    "Las pruebas automatizadas del proyecto pasaron de 225 a 319. Las 94 nuevas corresponden a este sprint y se ejecutan sin base de datos, sustituyendo el acceso a datos por dobles de prueba, para que puedan correrse en cualquier momento del desarrollo."
+    "Las pruebas automatizadas del proyecto pasaron de 236 a 330. Las 94 nuevas corresponden a este sprint y se ejecutan sin base de datos, sustituyendo el acceso a datos por dobles de prueba, para que puedan correrse en cualquier momento del desarrollo."
   ),
   spacer(),
   makeTable(
@@ -246,6 +246,9 @@ const doc = buildDocument([
   spacer(),
   p(
     "Además de las pruebas automatizadas se verificó que el proyecto compile sin errores de tipos, que el análisis estático no reporte problemas y que la compilación de producción se complete, incluyendo las seis rutas nuevas del sprint: tres pantallas del panel y tres grupos de servicios. Las pantallas se revisaron en anchos de teléfono, tableta y escritorio."
+  ),
+  p(
+    "Los ajustes finales del Sprint 3 —el asterisco de los campos obligatorios, las siglas de las asociaciones, las tarjetas de asociaciones y clubes, la portada con su carrusel y el contenido de demostración— se publicaron en la rama principal mientras este sprint estaba en curso, así que su integración se verificó al cierre. La fusión no produjo conflictos: los dos incrementos coinciden únicamente en el esquema de datos, en los datos de prueba y en la documentación del modelo, y en los tres casos agregan partes distintas. La migración de las siglas, del 8 de octubre, se aplica antes que la de este sprint, del 9. Con los dos incrementos juntos, las 330 pruebas se ejecutan sin fallos y la compilación de producción se completa."
   ),
   p(
     "La migración del sprint quedó lista para aplicarse en el ambiente de pruebas de Railway con el procedimiento por túnel cifrado del Sprint 2. Al cierre de este documento la aplicación quedó pendiente, porque la sesión del CLI de Railway caducó y su renovación requiere iniciar sesión desde el navegador. No afecta al incremento ya construido: la migración no modifica ninguna columna existente, agrega tres y relaja la obligatoriedad del vínculo con el estudiante, y su carga inicial recalcula el carnet, el nombre y el texto de búsqueda de los registros que ya estaban cargados."

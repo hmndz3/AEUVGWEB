@@ -250,6 +250,7 @@ async function cargarDatos(tx: Prisma.TransactionClient): Promise<Resultados> {
   const asociaciones = [
     {
       nombre: NOMBRES_PRUEBA.asociacion,
+      siglas: "AEDEMO",
       descripcion: "Asociación completamente ficticia para comprobar relaciones del modelo.",
       mision: "Validar flujos de desarrollo sin representar una organización real.",
       vision: "Mantener datos de prueba reconocibles, aislados y reproducibles.",
@@ -260,6 +261,7 @@ async function cargarDatos(tx: Prisma.TransactionClient): Promise<Resultados> {
     },
     {
       nombre: NOMBRES_PRUEBA.asociacionSinJunta,
+      siglas: null,
       descripcion: "Asociación ficticia sin junta directiva ni redes sociales registradas.",
       mision: "Comprobar que los bloques sin información se omiten del detalle.",
       vision: null,
@@ -270,6 +272,7 @@ async function cargarDatos(tx: Prisma.TransactionClient): Promise<Resultados> {
     },
     {
       nombre: NOMBRES_PRUEBA.asociacionInactiva,
+      siglas: null,
       descripcion: "Asociación ficticia dada de baja, no debe aparecer en el listado público.",
       mision: null,
       vision: null,

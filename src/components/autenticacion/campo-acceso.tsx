@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { Icono } from "@/components/autenticacion/icono";
+import { EtiquetaCampo } from "@/components/ui/etiqueta-campo";
 import { cn } from "@/lib/utils";
 
 type CampoAccesoProps = React.ComponentProps<"input"> & {
@@ -33,9 +34,9 @@ export function CampoAcceso({
   return (
     <div className="flex flex-col gap-1.5">
       <div className="flex items-center justify-between gap-3">
-        <label htmlFor={idCampo} className="text-texto text-sm font-semibold">
+        <EtiquetaCampo htmlFor={idCampo} obligatorio={props.required}>
           {etiqueta}
-        </label>
+        </EtiquetaCampo>
         {textoLateral && (
           <span className={cn("text-xs font-bold", error ? "text-error" : "text-turquesa")}>
             {textoLateral}

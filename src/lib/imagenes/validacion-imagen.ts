@@ -14,6 +14,20 @@ export const EXTENSION_POR_TIPO: Record<string, string> = {
  */
 export const RUTA_IMAGEN_PROPIA = /^\/api\/imagenes\/[0-9a-f]{32}\.(jpg|png|webp)$/;
 
+/**
+ * Ilustraciones del contenido de demostración (prisma/seed-demo.ts): archivos
+ * estáticos versionados en public/demo, servidos por el propio sitio.
+ */
+export const RUTA_IMAGEN_DEMOSTRACION = /^\/demo\/(eventos|asociaciones)\/[a-z0-9-]+\.svg$/;
+
+/**
+ * Indica si el valor es una imagen servida por el propio sitio, sin dominio.
+ * Esas rutas se guardan tal cual: completarlas con https:// las rompería.
+ */
+export function esImagenDelSitio(valor: string): boolean {
+  return RUTA_IMAGEN_PROPIA.test(valor) || RUTA_IMAGEN_DEMOSTRACION.test(valor);
+}
+
 const MB_PREDETERMINADO = 3;
 const MB_MINIMO = 1;
 const MB_MAXIMO = 10;

@@ -185,6 +185,60 @@ const HARRY = {
       "Codificación y pruebas",
       "AEUVG-139 Corrección de la carga inicial del texto de búsqueda al aplicar las migraciones en Railway, con su prueba de regresión.",
     ],
+    [
+      "2026-10-08",
+      "00:20",
+      "01:35",
+      10,
+      "Ajustes finales",
+      "Codificación y pruebas",
+      "Migración de las siglas de las asociaciones, con su validación, la comprobación de siglas repetidas en el servicio, su inclusión en el texto de búsqueda y sus pruebas.",
+    ],
+    [
+      "2026-10-08",
+      "09:30",
+      "10:20",
+      5,
+      "Ajustes finales",
+      "Despliegue",
+      "Diagnóstico de los errores en producción tras publicar las siglas: la migración no se había aplicado en Railway. Acceso al proyecto para Juan Gabriel y verificación del sitio.",
+    ],
+    [
+      "2026-10-08",
+      "13:40",
+      "14:55",
+      10,
+      "Ajustes finales",
+      "Codificación y pruebas",
+      "Selección de los eventos del carrusel de la portada, con los destacados primero y en orden de fecha, y partes de la fecha en hora de Guatemala, con sus pruebas.",
+    ],
+    [
+      "2026-10-08",
+      "15:30",
+      "16:50",
+      10,
+      "Ajustes finales",
+      "Codificación",
+      "Carga idempotente y reversible del contenido de demostración, y aceptación de las imágenes propias del sitio en los validadores.",
+    ],
+    [
+      "2026-10-08",
+      "18:10",
+      "18:55",
+      5,
+      "Ajustes finales",
+      "Despliegue",
+      "Carga del contenido de demostración en Railway y verificación de la portada, los listados y el calendario en producción.",
+    ],
+    [
+      "2026-10-10",
+      "10:00",
+      "11:35",
+      10,
+      "Documentación",
+      "Documentación",
+      "Actualización del documento de desarrollo y del registro de tiempos del Sprint 3 con los ajustes finales.",
+    ],
   ],
 };
 
@@ -309,6 +363,60 @@ const JUAN = {
       "Diseño y codificación",
       "AEUVG-135 Enlace a la ficha pública desde el panel. AEUVG-137 Total de eventos guardados en el perfil.",
     ],
+    [
+      "2026-10-07",
+      "22:10",
+      "23:35",
+      10,
+      "Ajustes finales",
+      "Diseño y codificación",
+      "Asterisco rojo en los campos obligatorios de todos los formularios del sitio, con un componente de etiqueta compartido.",
+    ],
+    [
+      "2026-10-08",
+      "01:00",
+      "02:20",
+      10,
+      "Ajustes finales",
+      "Diseño y codificación",
+      "Campos de siglas y nombre completo en el formulario de asociaciones. Tarjetas de asociaciones y clubes con la estructura de las de eventos.",
+    ],
+    [
+      "2026-10-08",
+      "10:30",
+      "11:05",
+      5,
+      "Ajustes finales",
+      "Despliegue",
+      "Aplicación de la migración de las siglas en Railway mediante el túnel, tras recibir acceso al proyecto, y comprobación de las páginas afectadas.",
+    ],
+    [
+      "2026-10-08",
+      "11:40",
+      "13:00",
+      10,
+      "Ajustes finales",
+      "Diseño y codificación",
+      "Portada con el titular revelado palabra por palabra y el carrusel de próximos eventos entre el texto y los botones.",
+    ],
+    [
+      "2026-10-08",
+      "14:20",
+      "15:20",
+      10,
+      "Ajustes finales",
+      "Diseño y codificación",
+      "Rediseño del carrusel con la imagen de cada evento, flechas y pausa al pasar el cursor. Estudiantes como segunda sección del panel.",
+    ],
+    [
+      "2026-10-08",
+      "16:00",
+      "16:55",
+      5,
+      "Ajustes finales",
+      "Diseño",
+      "Logotipos e ilustraciones del contenido de demostración, generados por script. Integración de los ajustes a main.",
+    ],
   ],
 };
 
@@ -321,6 +429,7 @@ const ORDEN_CATEGORIAS = [
   "HU-17",
   "HU-18",
   "Revisión y cierre",
+  "Ajustes finales",
   "Documentación",
 ];
 
@@ -333,6 +442,7 @@ const NOMBRE_CATEGORIA = {
   "HU-17": "HU-17 - Perfil del estudiante",
   "HU-18": "HU-18 - Eventos guardados y redes de AEUVG",
   "Revisión y cierre": "Revisión y verificación final",
+  "Ajustes finales": "Ajustes finales del sprint",
   Documentación: "Documentación del sprint",
 };
 
@@ -463,13 +573,13 @@ function bloquesRegistroTiempos(seccion) {
   const bloques = [
     h1(`${seccion}. Registro de tiempos`),
     p(
-      "Esta sección registra el tiempo dedicado por cada integrante al Sprint 3, entre el 24 de septiembre y el 7 de octubre de 2026. Cada sesión indica la fecha, la hora de inicio y de finalización, el tiempo de interrupción, el tiempo neto trabajado, la fase de la actividad y una descripción del trabajo realizado."
+      "Esta sección registra el tiempo dedicado por cada integrante al Sprint 3, entre el 24 de septiembre y el 10 de octubre de 2026, incluidos los ajustes finales realizados después de la revisión. Cada sesión indica la fecha, la hora de inicio y de finalización, el tiempo de interrupción, el tiempo neto trabajado, la fase de la actividad y una descripción del trabajo realizado."
     ),
     p(
       "El delta de tiempo corresponde a la hora de finalización menos la hora de inicio menos el tiempo de interrupción. Las interrupciones son pausas cortas dentro de una misma sesión. Las sesiones de planificación y de revisión conjunta aparecen en ambos registros con el mismo horario, por tratarse de trabajo realizado en conjunto."
     ),
     p(
-      `El sprint sumó ${enHoras(totalEquipo)} horas de equipo: ${enHoras(harry.total)} horas de Harry Méndez y ${enHoras(juan.total)} horas de Juan Gabriel Gualim, frente a las ${HORAS_ESTIMADAS} horas estimadas en la planificación, es decir, un ${desviacion(totalEquipo)} de lo previsto. La estimación se calculó con la velocidad medida en el Sprint 2 y este sprint reutilizó los componentes de listado, paginación, estado vacío y carga de imágenes construidos en aquel, lo que mantuvo el tiempo real cerca de lo previsto. La diferencia corresponde al día de cierre: la revisión con AEUVG dejó observaciones que se resolvieron el mismo 7 de octubre, antes de publicar la versión final del sprint.`
+      `El sprint sumó ${enHoras(totalEquipo)} horas de equipo: ${enHoras(harry.total)} horas de Harry Méndez y ${enHoras(juan.total)} horas de Juan Gabriel Gualim, frente a las ${HORAS_ESTIMADAS} horas estimadas en la planificación, es decir, un ${desviacion(totalEquipo)} de lo previsto. Hasta la revisión del 7 de octubre el sprint se mantuvo cerca de lo previsto: la estimación se calculó con la velocidad medida en el Sprint 2 y se reutilizaron los componentes de listado, paginación, estado vacío y carga de imágenes construidos en aquel. La desviación corresponde casi por completo a los ajustes finales del 7 al 10 de octubre (las siglas de las asociaciones, el rediseño de las tarjetas, la nueva portada con el carrusel de eventos, los campos obligatorios y el contenido de demostración), que no formaban parte de la estimación original y se incorporaron para cerrar el sprint con la plataforma lista para presentarse a AEUVG.`
     ),
 
     h2(`${seccion}.1. ${HARRY.nombre} - ${HARRY.carne}`),
@@ -511,7 +621,7 @@ function bloquesRegistroTiempos(seccion) {
     ),
     spacer(),
     p(
-      "El reparto del trabajo siguió las responsabilidades acordadas: Harry Méndez asumió la migración, las consultas, los servicios de administración, el perfil y las pruebas automatizadas; Juan Gabriel Gualim, las pantallas públicas, los componentes compartidos de las dos secciones y los formularios del panel. Las sesiones en las que participaron ambos corresponden a la planificación del sprint y a la revisión final del código. El resumen por historia asigna cada sesión a la historia predominante en ella."
+      "El reparto del trabajo siguió las responsabilidades acordadas: Harry Méndez asumió la migración, las consultas, los servicios de administración, el perfil y las pruebas automatizadas; Juan Gabriel Gualim, las pantallas públicas, los componentes compartidos de las dos secciones y los formularios del panel. En los ajustes finales se mantuvo el mismo criterio: Harry Méndez se encargó de la migración de las siglas, la selección de eventos del carrusel, la carga del contenido de demostración y la operación de Railway, y Juan Gabriel Gualim de los campos obligatorios, las tarjetas, la nueva portada y las ilustraciones. Las sesiones en las que participaron ambos corresponden a la planificación del sprint y a la revisión final del código. El resumen por historia asigna cada sesión a la historia predominante en ella."
     ),
   ];
 

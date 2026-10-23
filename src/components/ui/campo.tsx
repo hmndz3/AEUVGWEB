@@ -1,3 +1,4 @@
+import { EtiquetaCampo } from "@/components/ui/etiqueta-campo";
 import { cn } from "@/lib/utils";
 
 type PropsCampo = React.ComponentProps<"input"> & {
@@ -6,7 +7,10 @@ type PropsCampo = React.ComponentProps<"input"> & {
   error?: string;
 };
 
-/** Campo de formulario con etiqueta, texto de ayuda y estado de error. */
+/**
+ * Campo de formulario con etiqueta, texto de ayuda y estado de error. Con
+ * required, la etiqueta muestra el asterisco de campo obligatorio.
+ */
 export function Campo({ etiqueta, ayuda, error, id, className, ...props }: PropsCampo) {
   const idCampo = id ?? props.name;
   const idAyuda = ayuda ? `${idCampo}-ayuda` : undefined;
@@ -14,9 +18,9 @@ export function Campo({ etiqueta, ayuda, error, id, className, ...props }: Props
 
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={idCampo} className="text-texto text-sm font-semibold">
+      <EtiquetaCampo htmlFor={idCampo} obligatorio={props.required}>
         {etiqueta}
-      </label>
+      </EtiquetaCampo>
       <input
         id={idCampo}
         aria-invalid={Boolean(error)}

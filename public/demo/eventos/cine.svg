@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <defs>
+    <linearGradient id="cine-fondo" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#00806B"/>
+      <stop offset="1" stop-color="#1c162b"/>
+    </linearGradient>
+    <radialGradient id="cine-brillo" cx="0.5" cy="0.35" r="0.55">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="cine-puntos" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="2" fill="#ffffff" fill-opacity="0.14"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="800" fill="url(#cine-fondo)"/>
+  <rect width="1200" height="800" fill="url(#cine-puntos)"/>
+  <circle cx="1080" cy="120" r="220" fill="#ffffff" fill-opacity="0.08"/>
+  <circle cx="110" cy="700" r="260" fill="#000000" fill-opacity="0.10"/>
+  <rect width="1200" height="800" fill="url(#cine-brillo)"/>
+  <rect x="340" y="120" width="520" height="290" rx="14" fill="#ffffff" fill-opacity="0.92"/>
+    <rect x="365" y="145" width="470" height="240" rx="8" fill="#0E7490"/>
+    <path d="M570 220 L660 265 L570 310 Z" fill="#ffffff"/>
+    <g fill="#ffffff" fill-opacity="0.9">
+      <circle cx="270" cy="250" r="80"/>
+    </g>
+    <g fill="#1c162b">
+      <circle cx="270" cy="200" r="20"/><circle cx="220" cy="250" r="20"/>
+      <circle cx="320" cy="250" r="20"/><circle cx="270" cy="300" r="20"/>
+      <circle cx="270" cy="250" r="10"/>
+    </g>
+    <g>
+      <path d="M860 330 L960 330 L940 470 L880 470 Z" fill="#ffffff"/>
+      <path d="M880 330 L895 470 L905 470 L895 330 Z M920 330 L925 470 L935 470 L940 330 Z" fill="#FF5E5B"/>
+      <circle cx="880" cy="320" r="22" fill="#FFF3D6"/><circle cx="912" cy="306" r="24" fill="#FFF3D6"/>
+      <circle cx="945" cy="320" r="22" fill="#FFF3D6"/>
+    </g>
+</svg>

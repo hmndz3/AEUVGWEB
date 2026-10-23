@@ -26,7 +26,9 @@
     "db:demo": "tsx prisma/crear-cuentas-demo.ts",
     "db:aeuvg": "tsx prisma/cargar-informacion-aeuvg.ts",
     "db:railway:aeuvg": "node scripts/db/railway.js tsx prisma/cargar-informacion-aeuvg.ts",
-    "db:railway:demo": "node scripts/db/railway.js tsx prisma/crear-cuentas-demo.ts"
+    "db:railway:demo": "node scripts/db/railway.js tsx prisma/crear-cuentas-demo.ts",
+    "db:contenido-demo": "tsx prisma/seed-demo.ts",
+    "db:railway:contenido-demo": "node scripts/db/railway.js tsx prisma/seed-demo.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.10.0",

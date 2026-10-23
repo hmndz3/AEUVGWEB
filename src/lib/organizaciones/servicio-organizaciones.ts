@@ -28,10 +28,12 @@ export type ResultadoEliminacion =
   { tipo: "eliminada" } | { tipo: "no_encontrada" } | { tipo: "no_permitida"; mensaje: string };
 
 const MENSAJE_NOMBRE_REPETIDO = "Ya existe un registro con ese nombre.";
+const MENSAJE_SIGLAS_REPETIDAS = "Ya existe una asociación con esas siglas.";
 
 function aDatosAsociacion(datos: DatosAsociacionAdmin): DatosAsociacionPersistidos {
   return {
     nombre: datos.nombre,
+    siglas: datos.siglas,
     descripcion: datos.descripcion,
     mision: datos.mision,
     vision: datos.vision,
@@ -77,6 +79,9 @@ export class ServicioOrganizaciones {
     );
     if (!disponible) return { tipo: "invalida", errores: { nombre: MENSAJE_NOMBRE_REPETIDO } };
 
+    const siglasRepetidas = await this.siglasRepetidas(entrada, null);
+    if (siglasRepetidas) return siglasRepetidas;
+
     const id =
       entrada.tipo === "asociaciones"
         ? await this.repositorio.crearAsociacion(aDatosAsociacion(entrada.datos))
@@ -93,12 +98,31 @@ export class ServicioOrganizaciones {
     );
     if (!disponible) return { tipo: "invalida", errores: { nombre: MENSAJE_NOMBRE_REPETIDO } };
 
+    const siglasRepetidas = await this.siglasRepetidas(entrada, id);
+    if (siglasRepetidas) return siglasRepetidas;
+
     const actualizada =
       entrada.tipo === "asociaciones"
         ? await this.repositorio.actualizarAsociacion(id, aDatosAsociacion(entrada.datos))
         : await this.repositorio.actualizarClub(id, aDatosClub(entrada.datos));
 
     return actualizada ? { tipo: "guardada", id } : { tipo: "no_encontrada" };
+  }
+
+  /**
+   * Las siglas también identifican a la asociación, así que dos no pueden
+   * compartirlas. Se comprueba antes de guardar para responder con el error en
+   * el campo, en lugar de con el de la restricción de la tabla.
+   */
+  private async siglasRepetidas(
+    entrada: EntradaOrganizacion,
+    excepto: number | null
+  ): Promise<ResultadoOrganizacion | null> {
+    if (entrada.tipo !== "asociaciones" || entrada.datos.siglas === null) return null;
+
+    const disponibles = await this.repositorio.siglasDisponibles(entrada.datos.siglas, excepto);
+
+    return disponibles ? null : { tipo: "invalida", errores: { siglas: MENSAJE_SIGLAS_REPETIDAS } };
   }
 
   /**

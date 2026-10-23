@@ -1,5 +1,6 @@
 import type { EstadoEvento, Prisma, TipoActividad } from "@prisma/client";
 
+import { nombreConSiglas, nombreCorto } from "@/lib/organizaciones/nombre-organizacion";
 import { obtenerPrisma } from "@/lib/prisma";
 
 /** Eventos por página del listado público. Tres filas de tres en escritorio. */
@@ -66,7 +67,7 @@ const seleccionResumen = {
     select: {
       organizadorPrincipal: true,
       unidadUvg: true,
-      asociacion: { select: { idAsociacion: true, nombre: true } },
+      asociacion: { select: { idAsociacion: true, nombre: true, siglas: true } },
       club: { select: { idClub: true, nombre: true } },
     },
   },
@@ -92,7 +93,9 @@ function enlacesOrganizadores(evento: EventoConsultado): OrganizadorEnlace[] {
         if (organizador.asociacion) {
           return [
             {
-              nombre: organizador.asociacion.nombre,
+              // Las siglas, cuando existen, son como el estudiantado reconoce a
+              // la asociación y caben en la tarjeta del evento.
+              nombre: nombreCorto(organizador.asociacion),
               href: `/asociaciones/${organizador.asociacion.idAsociacion}`,
             },
           ];
@@ -299,7 +302,7 @@ export async function listarOrganizadores(): Promise<OrganizadoresDisponibles> {
     prisma.asociacion.findMany({
       where: { activo: true },
       orderBy: { nombre: "asc" },
-      select: { idAsociacion: true, nombre: true },
+      select: { idAsociacion: true, nombre: true, siglas: true },
     }),
     prisma.club.findMany({
       where: { activo: true },
@@ -309,7 +312,12 @@ export async function listarOrganizadores(): Promise<OrganizadoresDisponibles> {
   ]);
 
   return {
-    asociaciones: asociaciones.map((a) => ({ id: a.idAsociacion, nombre: a.nombre })),
+    // En las listas de selección van las siglas junto al nombre completo: así
+    // se encuentra la asociación tanto por una forma como por la otra. Se
+    // reordena por esa etiqueta, que es la que se lee en la lista.
+    asociaciones: asociaciones
+      .map((a) => ({ id: a.idAsociacion, nombre: nombreConSiglas(a) }))
+      .sort((a, b) => a.nombre.localeCompare(b.nombre, "es")),
     clubes: clubes.map((c) => ({ id: c.idClub, nombre: c.nombre })),
   };
 }

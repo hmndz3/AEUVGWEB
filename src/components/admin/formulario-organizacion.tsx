@@ -6,10 +6,12 @@ import { useState } from "react";
 import { CargaImagen } from "@/components/admin/carga-imagen";
 import { Alerta } from "@/components/ui/alerta";
 import { Boton } from "@/components/ui/boton";
+import { EtiquetaCampo, NotaCamposObligatorios } from "@/components/ui/etiqueta-campo";
 import { etiquetasDeCampo, type TipoOrganizacion } from "@/validators/organizacion-admin";
 
 export type ValoresOrganizacion = {
   nombre: string;
+  siglas: string;
   descripcion: string;
   mision: string;
   vision: string;
@@ -21,6 +23,7 @@ export type ValoresOrganizacion = {
 
 export const VALORES_ORGANIZACION_VACIOS: ValoresOrganizacion = {
   nombre: "",
+  siglas: "",
   descripcion: "",
   mision: "",
   vision: "",
@@ -33,24 +36,31 @@ export const VALORES_ORGANIZACION_VACIOS: ValoresOrganizacion = {
 const claseCampo =
   "border-borde bg-superficie text-texto focus:border-primario focus:ring-primario/30 w-full rounded-2xl border px-4 py-3 text-sm focus:ring-2 focus:outline-none";
 
+/**
+ * Envoltura de cada control. Con obligatorio, la etiqueta lleva el asterisco;
+ * el control debe llevar además required para que los lectores de pantalla lo
+ * anuncien como requerido.
+ */
 function Campo({
   etiqueta,
   nombre,
   error,
   ayuda,
+  obligatorio = false,
   children,
 }: {
   etiqueta: string;
   nombre: string;
   error?: string;
   ayuda?: string;
+  obligatorio?: boolean;
   children: React.ReactNode;
 }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={nombre} className="text-texto text-sm font-semibold">
+      <EtiquetaCampo htmlFor={nombre} obligatorio={obligatorio}>
         {etiqueta}
-      </label>
+      </EtiquetaCampo>
       {children}
       {ayuda && !error && <p className="text-texto-suave text-xs">{ayuda}</p>}
       {error && (
@@ -160,17 +170,60 @@ export function FormularioOrganizacion({
     // llegar al servidor y su único aviso era un globo sobre el campo. Valida el
     // esquema, con mensajes propios.
     <form onSubmit={enviar} noValidate className="flex flex-col gap-5">
+      <NotaCamposObligatorios />
       {general && <Alerta tipo="error">{general}</Alerta>}
 
-      <Campo etiqueta="Nombre" nombre="nombre" error={errores.nombre}>
-        <input
-          id="nombre"
-          value={valores.nombre}
-          onChange={(evento) => cambiar("nombre", evento.target.value)}
-          maxLength={160}
-          className={claseCampo}
-        />
-      </Campo>
+      {esAsociacion ? (
+        // Las asociaciones se conocen por sus siglas más que por su nombre
+        // completo, así que la ficha registra los dos: las siglas encabezan la
+        // tarjeta y la página, y el nombre completo las acompaña debajo.
+        <div className="grid gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
+          <Campo
+            etiqueta="Siglas o nombre corto"
+            nombre="siglas"
+            error={errores.siglas}
+            ayuda="Opcional. Por ejemplo AECCTIUVG."
+          >
+            <input
+              id="siglas"
+              value={valores.siglas}
+              onChange={(evento) => cambiar("siglas", evento.target.value)}
+              maxLength={30}
+              placeholder="AECCTIUVG"
+              className={claseCampo}
+            />
+          </Campo>
+
+          <Campo
+            etiqueta="Nombre completo"
+            nombre="nombre"
+            error={errores.nombre}
+            ayuda="El nombre oficial, sin abreviar."
+            obligatorio
+          >
+            <input
+              id="nombre"
+              required
+              value={valores.nombre}
+              onChange={(evento) => cambiar("nombre", evento.target.value)}
+              maxLength={160}
+              placeholder="Asociación de Estudiantes en Ciencias de la Computación y Tecnologías de la Información"
+              className={claseCampo}
+            />
+          </Campo>
+        </div>
+      ) : (
+        <Campo etiqueta="Nombre" nombre="nombre" error={errores.nombre} obligatorio>
+          <input
+            id="nombre"
+            required
+            value={valores.nombre}
+            onChange={(evento) => cambiar("nombre", evento.target.value)}
+            maxLength={160}
+            className={claseCampo}
+          />
+        </Campo>
+      )}
 
       <Campo
         etiqueta="Descripción"
@@ -268,7 +321,11 @@ export function FormularioOrganizacion({
         etiqueta="Imagen o logotipo"
         nombre="imagenUrl"
         error={errores.imagenUrl}
-        ayuda="Opcional. Sin imagen se presentan las iniciales del nombre."
+        ayuda={
+          esAsociacion
+            ? "Opcional. Sin imagen se presentan las siglas o las iniciales del nombre."
+            : "Opcional. Sin imagen se presentan las iniciales del nombre."
+        }
       >
         <input
           id="imagenUrl"

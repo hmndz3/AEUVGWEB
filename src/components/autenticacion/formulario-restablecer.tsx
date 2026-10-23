@@ -6,6 +6,7 @@ import { useState } from "react";
 import { CampoAcceso } from "@/components/autenticacion/campo-acceso";
 import { Icono } from "@/components/autenticacion/icono";
 import { IndicadorSeguridadContrasena } from "@/components/autenticacion/indicador-seguridad-contrasena";
+import { NotaCamposObligatorios } from "@/components/ui/etiqueta-campo";
 
 type Estado =
   | { fase: "inicial" }
@@ -84,6 +85,7 @@ export function FormularioRestablecer({ token }: { token: string }) {
   return (
     <form className="mt-8 max-w-xl" onSubmit={manejarEnvio} noValidate>
       <div className="flex flex-col gap-5">
+        <NotaCamposObligatorios />
         <div>
           <CampoAcceso
             id="contrasena-nueva"

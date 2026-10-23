@@ -12,6 +12,7 @@ import {
   obtenerAsociacion,
 } from "@/lib/organizaciones/consultas-organizaciones";
 import { obtenerActividadesDeOrganizador } from "@/lib/organizaciones/eventos-organizador";
+import { nombreConSiglas, nombreCorto } from "@/lib/organizaciones/nombre-organizacion";
 
 export const dynamic = "force-dynamic";
 
@@ -31,7 +32,7 @@ export async function generateMetadata({ params }: Props) {
   if (!asociacion) return { title: "Asociación no encontrada" };
 
   return {
-    title: asociacion.nombre,
+    title: nombreConSiglas(asociacion),
     description: (asociacion.descripcion ?? asociacion.mision ?? asociacion.nombre).slice(0, 160),
   };
 }
@@ -60,6 +61,7 @@ export default async function PaginaAsociacion({ params }: Props) {
       <article className="mx-auto flex max-w-5xl flex-col gap-10 px-4 py-10 sm:px-6">
         <EncabezadoOrganizacion
           nombre={asociacion.nombre}
+          siglas={asociacion.siglas}
           descripcion={asociacion.descripcion}
           imagenUrl={asociacion.imagenUrl}
           etiqueta="Asociación estudiantil"
@@ -81,7 +83,7 @@ export default async function PaginaAsociacion({ params }: Props) {
 
         <ActividadesOrganizador
           actividades={actividades}
-          nombre={asociacion.nombre}
+          nombre={nombreCorto(asociacion)}
           filtro={`asociacion=${asociacion.id}`}
           ahora={ahora}
         />

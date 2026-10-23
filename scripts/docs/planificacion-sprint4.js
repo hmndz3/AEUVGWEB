@@ -55,10 +55,10 @@ const doc = buildDocument([
   ),
   spacer(),
   p(
-    "La reunión de planificación se realizó el jueves 8 de octubre y no el primer día del sprint, porque el miércoles 7 se dedicó por completo a resolver las observaciones de la revisión del Sprint 3 y a corregir la carga inicial del texto de búsqueda que la verificación contra la base real dejó al descubierto. El sprint conserva su fecha de finalización."
+    "La reunión de planificación se realizó el jueves 8 de octubre por la noche y no el primer día del sprint. La revisión del Sprint 3 dejó una lista de ajustes finales que el equipo resolvió el miércoles 7 y el jueves 8 —el asterisco de los campos obligatorios, las siglas de las asociaciones con su migración, las tarjetas de asociaciones y clubes, la portada con su carrusel y el contenido de demostración—, y su documentación se cerró el sábado 10. Esos ajustes se registraron en el Sprint 3, al que pertenecen, de modo que las primeras horas de este sprint corresponden únicamente a la planificación. El sprint conserva su fecha de finalización."
   ),
   p(
-    "La estimación de 30 horas de equipo se calculó con la velocidad medida en el Sprint 3, que cerró en 29 horas frente a las 28 estimadas. Se estiman dos horas más que en el sprint anterior porque este módulo no reutiliza pantallas públicas ya resueltas: el panel de horas beca se comporta como una hoja de cálculo y no como los listados construidos hasta ahora, y la asociación de los registros con las cuentas obliga a modificar el modelo de datos y el registro de estudiantes."
+    "La estimación de 30 horas de equipo se calculó con la velocidad medida en el Sprint 3. Aquel sprint cerró en 40.9 horas, pero 10.5 de ellas fueron los ajustes finales pedidos en su revisión, que no formaban parte de las historias comprometidas; las seis historias y su cierre consumieron 30.4 horas frente a las 28 estimadas, y es esa cifra la que sirve de referencia. Se estiman dos horas más que las comprometidas en el sprint anterior porque este módulo no reutiliza pantallas públicas ya resueltas: el panel de horas beca se comporta como una hoja de cálculo y no como los listados construidos hasta ahora, y la asociación de los registros con las cuentas obliga a modificar el modelo de datos y el registro de estudiantes."
   ),
 
   h1("3. Objetivo del sprint"),
@@ -479,7 +479,7 @@ const doc = buildDocument([
 
   h2("6.4. Carga de trabajo estimada"),
   p(
-    "El Sprint 4 comprende 30 horas de trabajo de equipo, equivalentes a aproximadamente 15 horas por integrante durante las dos semanas. La carga es algo mayor que la del Sprint 3 porque el panel de horas beca no reutiliza los listados ya construidos: necesita una tabla densa, selección múltiple y operaciones en lote que ninguna pantalla anterior tenía. A cambio, el módulo reutiliza la protección de servicios por rol, la paginación por enlaces, la validación de parámetros de los filtros y la búsqueda sin acentos de los sprints anteriores."
+    "El Sprint 4 comprende 30 horas de trabajo de equipo, equivalentes a aproximadamente 15 horas por integrante durante las dos semanas. La carga es algo mayor que las 28 horas comprometidas en el Sprint 3 porque el panel de horas beca no reutiliza los listados ya construidos: necesita una tabla densa, selección múltiple y operaciones en lote que ninguna pantalla anterior tenía. A cambio, el módulo reutiliza la protección de servicios por rol, la paginación por enlaces, la validación de parámetros de los filtros y la búsqueda sin acentos de los sprints anteriores."
   ),
   p(
     "El orden de ejecución sigue la numeración de las historias. La ampliación del modelo de datos va primero porque de ella dependen todas las demás, y la asociación por carnet se trabaja después del registro de horas, cuando ya existe el servicio en el que se aplica. En caso de que la carga académica no permita alcanzar las horas estimadas, la historia HU-24 es la de menor prioridad y puede trasladarse al Sprint 5, dado que la información del perfil se deriva de los mismos registros y no condiciona la administración."
