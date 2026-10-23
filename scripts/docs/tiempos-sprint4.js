@@ -185,6 +185,15 @@ const HARRY = {
       "Documentación",
       "Actualización del registro de tiempos con el cierre completo, verificación de la migración pendiente y publicación de la versión final del sprint.",
     ],
+    [
+      "2026-10-22",
+      "19:10",
+      "20:05",
+      5,
+      "Revisión y cierre",
+      "Integración",
+      "Integración de los ajustes finales del Sprint 3 publicados en main, verificación conjunta de los dos incrementos y corrección de la planificación.",
+    ],
   ],
 };
 
@@ -487,7 +496,7 @@ function bloquesRegistroTiempos(seccion) {
       "El delta de tiempo corresponde a la hora de finalización menos la hora de inicio menos el tiempo de interrupción. Las interrupciones son pausas cortas dentro de una misma sesión. Las sesiones de planificación y de revisión conjunta aparecen en ambos registros con el mismo horario, por tratarse de trabajo realizado en conjunto."
     ),
     p(
-      `El sprint sumó ${enHoras(totalEquipo)} horas de equipo: ${enHoras(harry.total)} horas de Harry Méndez y ${enHoras(juan.total)} horas de Juan Gabriel Gualim, frente a las ${HORAS_ESTIMADAS} horas estimadas en la planificación, es decir, un ${desviacion(totalEquipo)} de lo previsto. La estimación se calculó con la velocidad medida en el Sprint 3 y resultó acertada: el módulo no reutilizó pantallas ya resueltas, pero sí la protección por rol, la paginación, la validación de parámetros y la búsqueda sin acentos de los sprints anteriores.`
+      `El sprint sumó ${enHoras(totalEquipo)} horas de equipo: ${enHoras(harry.total)} horas de Harry Méndez y ${enHoras(juan.total)} horas de Juan Gabriel Gualim, frente a las ${HORAS_ESTIMADAS} horas estimadas en la planificación, es decir, un ${desviacion(totalEquipo)} de lo previsto. La estimación se calculó con las 30.4 horas que consumieron las historias comprometidas del Sprint 3 y resultó acertada: el módulo no reutilizó pantallas ya resueltas, pero sí la protección por rol, la paginación, la validación de parámetros y la búsqueda sin acentos de los sprints anteriores. La última sesión corresponde a la integración de los ajustes finales del Sprint 3, que se publicaron en la rama principal mientras este sprint estaba en curso.`
     ),
 
     h2(`${seccion}.1. ${HARRY.nombre} - ${HARRY.carne}`),
