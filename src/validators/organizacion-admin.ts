@@ -48,21 +48,64 @@ function esEnlaceSeguro(valor: string): boolean {
 
 const nombre = z.string(MENSAJE_NOMBRE).trim().min(3, MENSAJE_NOMBRE).max(160, MENSAJE_NOMBRE);
 
-const MENSAJE_SIGLAS = "Las siglas deben tener entre 2 y 30 caracteres, o deja el campo vacío.";
+const MENSAJE_SIGLAS = "Las siglas deben tener entre 2 y 30 caracteres.";
+const MENSAJE_TELEFONO = "Escribe un teléfono de 8 dígitos, por ejemplo 5555 4444.";
+const MENSAJE_CONTACTO = "Indica al menos un medio de contacto: el correo o el teléfono.";
 
 /**
  * Siglas o nombre corto de una asociación, por ejemplo AECCTIUVG. Es opcional
  * y se guarda tal como se escribe: puede ser un acrónimo o un nombre abreviado
  * ("Química UVG"), así que no se fuerzan mayúsculas.
  */
-const siglasOpcionales = z
+/**
+ * Siglas o nombre corto. AEUVG las pidió obligatorias: son el nombre con el que
+ * el estudiantado conoce a cada asociación, y sin ellas las tarjetas del listado
+ * quedaban con el nombre oficial completo, demasiado largo para leerse de un
+ * vistazo.
+ */
+const siglas = z
   .string(MENSAJE_SIGLAS)
   .trim()
-  .transform((valor) => valor.replace(/\s+/g, " "))
-  .refine((valor) => valor === "" || (valor.length >= 2 && valor.length <= 30), MENSAJE_SIGLAS)
-  .transform((valor) => (valor === "" ? null : valor))
+  .min(2, MENSAJE_SIGLAS)
+  .max(30, MENSAJE_SIGLAS)
+  .transform((valor) => valor.replace(/\s+/g, " "));
+
+/**
+ * Teléfono opcional por sí solo: la obligación es tener correo o teléfono, y
+ * eso se comprueba sobre la ficha entera. Mismo formato que el del perfil del
+ * estudiante, y se guarda tal como se escribió porque la plataforma solo lo
+ * muestra.
+ */
+const telefonoOpcional = z
+  .string(MENSAJE_TELEFONO)
+  .trim()
+  .max(30, MENSAJE_TELEFONO)
+  .refine(
+    (valor) => valor === "" || /^(\+?502[\s-]?)?\d{4}[\s-]?\d{4}$/.test(valor),
+    MENSAJE_TELEFONO
+  )
+  .transform((valor) => (valor === "" ? null : valor.replace(/\s+/g, " ")))
   .nullable()
   .default(null);
+
+/**
+ * Al menos un medio de contacto.
+ *
+ * No sabemos cuál usará más cada asociación, así que en lugar de imponer uno se
+ * exige cualquiera de los dos: en cuanto se llena uno, el otro deja de hacer
+ * falta. El error se marca en los dos campos para que el formulario resalte el
+ * bloque completo y no uno elegido al azar.
+ */
+function exigirUnContacto(
+  datos: { correo: string | null; telefono: string | null },
+  contexto: z.RefinementCtx
+) {
+  if (datos.correo || datos.telefono) return;
+
+  for (const campo of ["correo", "telefono"] as const) {
+    contexto.addIssue({ code: "custom", path: [campo], message: MENSAJE_CONTACTO });
+  }
+}
 
 const correoOpcional = z
   .string(MENSAJE_CORREO)
@@ -99,19 +142,22 @@ const imagenOpcional = z
   .nullable()
   .default(null);
 
-export const esquemaAsociacionAdmin = z.object({
-  nombre,
-  siglas: siglasOpcionales,
-  descripcion: textoOpcional(5000, "La descripción no puede exceder 5000 caracteres."),
-  mision: textoOpcional(2000, "La misión no puede exceder 2000 caracteres."),
-  vision: textoOpcional(2000, "La visión no puede exceder 2000 caracteres."),
-  correo: correoOpcional,
-  informacionContacto: textoOpcional(
-    2000,
-    "La información de contacto no puede exceder 2000 caracteres."
-  ),
-  imagenUrl: imagenOpcional,
-});
+export const esquemaAsociacionAdmin = z
+  .object({
+    nombre,
+    siglas,
+    descripcion: textoOpcional(5000, "La descripción no puede exceder 5000 caracteres."),
+    mision: textoOpcional(2000, "La misión no puede exceder 2000 caracteres."),
+    vision: textoOpcional(2000, "La visión no puede exceder 2000 caracteres."),
+    correo: correoOpcional,
+    telefono: telefonoOpcional,
+    informacionContacto: textoOpcional(
+      2000,
+      "La información de contacto no puede exceder 2000 caracteres."
+    ),
+    imagenUrl: imagenOpcional,
+  })
+  .superRefine(exigirUnContacto);
 
 export type DatosAsociacionAdmin = z.infer<typeof esquemaAsociacionAdmin>;
 
@@ -123,24 +169,28 @@ export const ETIQUETAS_CAMPO_ASOCIACION: Record<string, string> = {
   mision: "Misión",
   vision: "Visión",
   correo: "Correo",
+  telefono: "Teléfono",
   informacionContacto: "Información de contacto",
   imagenUrl: "Imagen o logotipo",
 };
 
-export const esquemaClubAdmin = z.object({
-  nombre,
-  descripcion: textoOpcional(5000, "La descripción no puede exceder 5000 caracteres."),
-  actividades: textoOpcional(
-    2000,
-    "La descripción de las actividades no puede exceder 2000 caracteres."
-  ),
-  correo: correoOpcional,
-  informacionContacto: textoOpcional(
-    2000,
-    "La información de contacto no puede exceder 2000 caracteres."
-  ),
-  imagenUrl: imagenOpcional,
-});
+export const esquemaClubAdmin = z
+  .object({
+    nombre,
+    descripcion: textoOpcional(5000, "La descripción no puede exceder 5000 caracteres."),
+    actividades: textoOpcional(
+      2000,
+      "La descripción de las actividades no puede exceder 2000 caracteres."
+    ),
+    correo: correoOpcional,
+    telefono: telefonoOpcional,
+    informacionContacto: textoOpcional(
+      2000,
+      "La información de contacto no puede exceder 2000 caracteres."
+    ),
+    imagenUrl: imagenOpcional,
+  })
+  .superRefine(exigirUnContacto);
 
 export type DatosClubAdmin = z.infer<typeof esquemaClubAdmin>;
 
@@ -149,6 +199,7 @@ export const ETIQUETAS_CAMPO_CLUB: Record<string, string> = {
   descripcion: "Descripción",
   actividades: "Actividades",
   correo: "Correo",
+  telefono: "Teléfono",
   informacionContacto: "Información de contacto",
   imagenUrl: "Imagen o logotipo",
 };

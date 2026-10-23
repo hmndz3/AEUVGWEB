@@ -82,6 +82,7 @@ export async function PantallaEdicionOrganizacion({
     vision: organizacion.vision ?? "",
     actividades: organizacion.actividades ?? "",
     correo: organizacion.correo ?? "",
+    telefono: organizacion.telefono ?? "",
     informacionContacto: organizacion.informacionContacto ?? "",
     imagenUrl: organizacion.imagenUrl ?? "",
   };

@@ -34,6 +34,7 @@ const FORMULARIO_ASOCIACION = {
   mision: "Acompañar al estudiantado en su vida académica.",
   vision: "Una facultad con participación activa.",
   correo: "aei@uvg.edu.gt",
+  telefono: "",
   informacionContacto: "Oficina CIT-204",
   imagenUrl: "",
 };
@@ -43,6 +44,7 @@ const FORMULARIO_CLUB = {
   descripcion: "Construcción de robots para competencias nacionales.",
   actividades: "Reuniones los miércoles y competencias por ciclo.",
   correo: "",
+  telefono: "5555 4444",
   informacionContacto: "",
   imagenUrl: "",
 };
@@ -67,6 +69,7 @@ function organizacionGuardada(
     vision: null,
     actividades: null,
     correo: null,
+    telefono: null,
     informacionContacto: null,
     imagenUrl: null,
     activo: true,
@@ -210,21 +213,31 @@ test("las siglas se guardan junto al nombre completo, sin espacios sobrantes", (
   assert.equal(datos.siglas, "AECCTI UVG");
 });
 
-test("las siglas son opcionales y su longitud se valida", () => {
-  assert.equal(asociacionValida({ siglas: "" }).siglas, null);
-  assert.equal(asociacionValida({ siglas: undefined }).siglas, null);
-  assert.equal(
-    esquemaAsociacionAdmin.safeParse({ ...FORMULARIO_ASOCIACION, siglas: "A" }).success,
-    false
-  );
-  assert.equal(
-    esquemaAsociacionAdmin.safeParse({ ...FORMULARIO_ASOCIACION, siglas: "A".repeat(31) }).success,
-    false
-  );
+/*
+ * AEUVG las pidió obligatorias: son el nombre con el que el estudiantado conoce
+ * a cada asociación, y sin ellas la tarjeta del listado quedaba con el nombre
+ * oficial completo, demasiado largo para leerse de un vistazo.
+ */
+test("las siglas son obligatorias y su longitud se valida", () => {
+  for (const siglas of ["", "   ", "A", "A".repeat(31), undefined]) {
+    assert.equal(
+      esquemaAsociacionAdmin.safeParse({ ...FORMULARIO_ASOCIACION, siglas }).success,
+      false,
+      String(siglas)
+    );
+  }
+
+  assert.equal(asociacionValida({ siglas: "AEI" }).siglas, "AEI");
 });
 
 test("los campos opcionales vacíos se guardan como nulos", () => {
-  const datos = asociacionValida({ mision: "", vision: "", correo: "", informacionContacto: "" });
+  const datos = asociacionValida({
+    mision: "",
+    vision: "",
+    correo: "",
+    telefono: "5555 4444",
+    informacionContacto: "",
+  });
 
   assert.equal(datos.mision, null);
   assert.equal(datos.vision, null);
@@ -232,15 +245,73 @@ test("los campos opcionales vacíos se guardan como nulos", () => {
   assert.equal(datos.informacionContacto, null);
 });
 
-test("un correo mal escrito se rechaza y uno vacío no", () => {
+test("un correo mal escrito se rechaza, y uno vacío solo si hay teléfono", () => {
   assert.equal(
     esquemaAsociacionAdmin.safeParse({ ...FORMULARIO_ASOCIACION, correo: "sin-arroba" }).success,
     false
   );
   assert.equal(
-    esquemaAsociacionAdmin.safeParse({ ...FORMULARIO_ASOCIACION, correo: "" }).success,
+    esquemaAsociacionAdmin.safeParse({
+      ...FORMULARIO_ASOCIACION,
+      correo: "",
+      telefono: "5555 4444",
+    }).success,
     true
   );
+});
+
+/*
+ * No sabemos cuál medio usará más cada organización, así que en lugar de
+ * imponer uno se exige cualquiera de los dos: al llenar uno, el otro deja de
+ * hacer falta.
+ */
+test("hace falta al menos un medio de contacto", () => {
+  const sinContacto = esquemaAsociacionAdmin.safeParse({
+    ...FORMULARIO_ASOCIACION,
+    correo: "",
+    telefono: "",
+  });
+
+  assert.equal(sinContacto.success, false);
+  // El error se marca en los dos campos, para resaltar el bloque completo.
+  assert.deepEqual(
+    sinContacto.success ? [] : [...new Set(sinContacto.error.issues.map((i) => i.path.join(".")))],
+    ["correo", "telefono"]
+  );
+});
+
+test("basta con el correo, o basta con el teléfono", () => {
+  for (const contacto of [
+    { correo: "aei@uvg.edu.gt", telefono: "" },
+    { correo: "", telefono: "5555 4444" },
+    { correo: "aei@uvg.edu.gt", telefono: "5555 4444" },
+  ]) {
+    assert.equal(
+      esquemaAsociacionAdmin.safeParse({ ...FORMULARIO_ASOCIACION, ...contacto }).success,
+      true,
+      JSON.stringify(contacto)
+    );
+  }
+});
+
+test("la regla del contacto vale igual para los clubes", () => {
+  assert.equal(
+    esquemaClubAdmin.safeParse({ ...FORMULARIO_CLUB, correo: "", telefono: "" }).success,
+    false
+  );
+  assert.equal(clubValido({ correo: "club@uvg.edu.gt", telefono: "" }).correo, "club@uvg.edu.gt");
+});
+
+test("un teléfono mal escrito se rechaza", () => {
+  for (const telefono of ["555", "5555 444", "no es un teléfono"]) {
+    assert.equal(
+      esquemaAsociacionAdmin.safeParse({ ...FORMULARIO_ASOCIACION, telefono }).success,
+      false,
+      telefono
+    );
+  }
+
+  assert.equal(asociacionValida({ telefono: "+502 5555-4444" }).telefono, "+502 5555-4444");
 });
 
 test("un enlace de imagen sin esquema se completa con https", () => {
@@ -360,14 +431,16 @@ test("al editar, las siglas propias no cuentan como repetidas", async () => {
   assert.deepEqual(repositorio.siglasConsultadas[0], { siglas: "AEI", excepto: 7 });
 });
 
-test("una asociación sin siglas no consulta su disponibilidad", async () => {
+/*
+ * Los clubes no tienen siglas en el modelo, así que guardarlos no debe consultar
+ * su disponibilidad. Antes esta prueba cubría también a una asociación sin
+ * siglas, caso que dejó de existir cuando AEUVG las pidió obligatorias.
+ */
+test("un club no consulta la disponibilidad de siglas", async () => {
   const repositorio = new RepositorioFalso({ siglasLibres: false });
   const servicio = new ServicioOrganizaciones(repositorio);
 
-  const resultado = await servicio.crear({
-    tipo: "asociaciones",
-    datos: asociacionValida({ siglas: "" }),
-  });
+  const resultado = await servicio.crear({ tipo: "clubes", datos: clubValido() });
 
   assert.equal(resultado.tipo, "guardada");
   assert.equal(repositorio.siglasConsultadas.length, 0);
