@@ -36,6 +36,7 @@ export type AsociacionDetalle = OrganizacionResumen & {
   mision: string | null;
   vision: string | null;
   correo: string | null;
+  telefono: string | null;
   informacionContacto: string | null;
   integrantes: IntegranteJunta[];
   redesSociales: RedSocialOrganizacion[];
@@ -44,6 +45,7 @@ export type AsociacionDetalle = OrganizacionResumen & {
 export type ClubDetalle = OrganizacionResumen & {
   actividades: string | null;
   correo: string | null;
+  telefono: string | null;
   informacionContacto: string | null;
   redesSociales: RedSocialOrganizacion[];
 };
@@ -171,6 +173,7 @@ export async function obtenerAsociacion(idAsociacion: number): Promise<Asociacio
       mision: true,
       vision: true,
       correo: true,
+      telefono: true,
       informacionContacto: true,
       imagenUrl: true,
       integrantes: {
@@ -198,6 +201,7 @@ export async function obtenerAsociacion(idAsociacion: number): Promise<Asociacio
     mision: asociacion.mision,
     vision: asociacion.vision,
     correo: asociacion.correo,
+    telefono: asociacion.telefono,
     informacionContacto: asociacion.informacionContacto,
     imagenUrl: asociacion.imagenUrl,
     integrantes: asociacion.integrantes,
@@ -269,6 +273,7 @@ export async function obtenerClub(idClub: number): Promise<ClubDetalle | null> {
       descripcion: true,
       actividades: true,
       correo: true,
+      telefono: true,
       informacionContacto: true,
       imagenUrl: true,
       redesSociales: {
@@ -288,6 +293,7 @@ export async function obtenerClub(idClub: number): Promise<ClubDetalle | null> {
     descripcion: club.descripcion,
     actividades: club.actividades,
     correo: club.correo,
+    telefono: club.telefono,
     informacionContacto: club.informacionContacto,
     imagenUrl: club.imagenUrl,
     redesSociales: club.redesSociales,
