@@ -6,6 +6,7 @@ import { PrismaPg } from "@prisma/adapter-pg";
 
 import { crearHashContrasena } from "../src/lib/auth/contrasenas";
 import { ROLES, type Rol } from "../src/lib/auth/roles";
+import { vincularRegistrosDeCarnet } from "../src/lib/horas-beca/vinculacion-horas";
 
 /**
  * Crea las cuentas de demostración de la plataforma: una de estudiante y una de
@@ -48,6 +49,34 @@ const CUENTAS: DefinicionCuenta[] = [
     nombreCompleto: `${MARCADOR} Administrador de Demostración`,
     correo: "demo.admin@uvg.edu.gt",
     roles: [ROLES.estudiante, ROLES.administrador],
+  },
+  // Tres estudiantes más, para poder mostrar el módulo de horas beca con varias
+  // personas. A diferencia de las dos cuentas de arriba, estas no llevan el
+  // marcador [DEMO]: usan nombre, carnet de cinco dígitos y correo
+  // institucional con el formato real de UVG, para que la demostración ante
+  // AEUVG no se vea poblada de datos evidentemente falsos. La contrapartida es
+  // que no se distinguen a simple vista de una cuenta real, así que la base se
+  // reinicia antes de la puesta en producción definitiva.
+  {
+    clave: "Ana Lucía Morales Castillo",
+    carnet: "24117",
+    nombreCompleto: "Ana Lucía Morales Castillo",
+    correo: "mor24117@uvg.edu.gt",
+    roles: [ROLES.estudiante],
+  },
+  {
+    clave: "Diego Alejandro Ruiz Herrera",
+    carnet: "24263",
+    nombreCompleto: "Diego Alejandro Ruiz Herrera",
+    correo: "rui24263@uvg.edu.gt",
+    roles: [ROLES.estudiante],
+  },
+  {
+    clave: "Gabriela Fernanda Ortiz López",
+    carnet: "24518",
+    nombreCompleto: "Gabriela Fernanda Ortiz López",
+    correo: "ort24518@uvg.edu.gt",
+    roles: [ROLES.estudiante],
   },
 ];
 
@@ -123,6 +152,11 @@ async function principal() {
               update: { nombreCompleto: cuenta.nombreCompleto },
               select: { idEstudiante: true },
             });
+            // Igual que el registro web: las horas beca que AEUVG ya hubiera
+            // cargado a este carnet quedan vinculadas a la cuenta nueva. Sin
+            // esto, una cuenta creada por este script no recogería las horas
+            // registradas antes de existir.
+            await vincularRegistrosDeCarnet(tx, cuenta.carnet, estudiante.idEstudiante);
             const usuario = await tx.usuario.create({
               data: {
                 idEstudiante: estudiante.idEstudiante,
