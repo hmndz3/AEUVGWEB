@@ -179,6 +179,8 @@ En el Sprint 4 se agregó `registro_hora_beca.texto_busqueda`, que reúne el car
 
 En el Sprint 3 se agregaron `asociacion.texto_busqueda` y `club.texto_busqueda` con el mismo criterio: la primera reúne nombre, descripción y misión; la segunda, nombre, descripción y actividades. La normalización se trasladó a `src/lib/busqueda-texto.ts` para que los dos módulos generen la copia con la misma regla. En la misma migración se crearon los índices `(activo, nombre)` de ambas tablas, que son el orden exacto del listado público.
 
+`asociacion.siglas` (migración `20261008120000_add_siglas_asociacion`) guarda las siglas o el nombre corto con el que el estudiantado conoce a cada asociación, por ejemplo AECCTIUVG. Es opcional y única: PostgreSQL admite varios nulos, y el servicio de organizaciones comprueba además la repetición sin distinguir mayúsculas para responder con el error en el campo. Las siglas forman parte de `texto_busqueda`, encabezan la tarjeta y la página de la asociación, y se muestran como organizador en las tarjetas de eventos; el nombre completo las acompaña debajo. Los clubes no tienen siglas.
+
 ## Separación entre Estudiante y Usuario
 
 `Estudiante` representa a la persona dentro de la estructura académica y puede existir antes del registro web. `Usuario` contiene acceso, contraseña hash, estado de autenticación y roles. Su `idEstudiante` es obligatorio y único: todo usuario corresponde a un estudiante, pero no todo estudiante tiene usuario.

@@ -96,7 +96,22 @@ Se usa `migrate deploy` porque aplica únicamente las migraciones ya versionadas
 
 El servicio Postgres ofrece además **Settings → Networking → Public Access** (antes TCP Proxy), que expone la base a internet con un host y un puerto públicos. El script lo acepta como alternativa si no encuentra el túnel, pero no es el camino recomendado: mientras esté activo, cualquiera con la cadena de conexión puede conectarse, y el tráfico se factura como egreso. Solo se justifica para un cliente gráfico como DBeaver o pgAdmin que no soporte el túnel, y conviene retirarlo al terminar.
 
-Este paso se repite cada vez que se agrega una migración, después de publicar el cambio en `main`. Que sea explícito es deliberado: un cambio de esquema en producción conviene ejecutarlo de forma consciente y no como efecto secundario de un despliegue.
+Este paso se repite cada vez que se agrega una migración. Que sea explícito es deliberado: un cambio de esquema en producción conviene ejecutarlo de forma consciente y no como efecto secundario de un despliegue.
+
+**El orden importa.** Una migración que solo agrega columnas, tablas o índices se aplica **antes** de publicar el código en `main`: el código anterior la ignora, y así no existe un intervalo en el que el sitio consulte algo que todavía no existe. En el Sprint 3 la columna `asociacion.siglas` se publicó primero y, hasta aplicar la migración, las páginas de asociaciones, eventos y calendario respondieron con error. Una migración que elimina o renombra algo que el código actual usa necesita el orden inverso, o un paso intermedio en dos despliegues.
+
+### Contenido de demostración
+
+Mientras AEUVG carga su información real, la plataforma puede mostrarse con cinco asociaciones y doce eventos próximos ficticios, con logotipos e ilustraciones propias. Las imágenes son SVG versionados en `public/demo` (los genera `scripts/demo/generar-imagenes.js`) y se sirven desde el propio sitio, así que no dependen del volumen de imágenes subidas.
+
+Con el túnel abierto, y después de que el despliegue que incluye `public/demo` esté activo:
+
+```bash
+ALLOW_DEMO_CONTENT=true npm run db:railway:contenido-demo   # cargar o refrescar
+npm run db:railway:contenido-demo -- --retirar              # retirarlo
+```
+
+La carga es idempotente y fecha los eventos a partir del día en que se ejecuta, así que repetirla los vuelve a mover al futuro. Nunca modifica contenido real: reconoce lo suyo por el nombre y por la imagen bajo `/demo/`, y omite cualquier asociación real con el mismo nombre o las mismas siglas. Al retirarlo se conserva una asociación de demostración si alguien la asignó como organizadora de un evento real. Igual que `ALLOW_TEST_SEED`, `ALLOW_DEMO_CONTENT` se indica solo en el comando y no se configura en Railway.
 
 ## 5. Verificación
 

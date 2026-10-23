@@ -9,6 +9,7 @@ import type {
 
 export type DatosAsociacionPersistidos = {
   nombre: string;
+  siglas: string | null;
   descripcion: string | null;
   mision: string | null;
   vision: string | null;
@@ -52,6 +53,8 @@ export type RedSocialAdministrada = {
 export type OrganizacionAdministrada = {
   id: number;
   nombre: string;
+  /** Solo las asociaciones registran siglas; en un club siempre es null. */
+  siglas: string | null;
   descripcion: string | null;
   mision: string | null;
   vision: string | null;
@@ -69,6 +72,8 @@ export interface RepositorioOrganizaciones {
     nombre: string,
     excepto: number | null
   ): Promise<boolean>;
+  /** Igual que nombreDisponible, para las siglas de una asociación. */
+  siglasDisponibles(siglas: string, excepto: number | null): Promise<boolean>;
   crearAsociacion(datos: DatosAsociacionPersistidos): Promise<number>;
   crearClub(datos: DatosClubPersistidos): Promise<number>;
   actualizarAsociacion(idAsociacion: number, datos: DatosAsociacionPersistidos): Promise<boolean>;
@@ -100,6 +105,7 @@ export interface RepositorioOrganizaciones {
 const SELECCION_ASOCIACION = {
   idAsociacion: true,
   nombre: true,
+  siglas: true,
   descripcion: true,
   mision: true,
   vision: true,
@@ -145,6 +151,19 @@ export class RepositorioOrganizacionesPrisma implements RepositorioOrganizacione
             where: { ...donde, ...(excepto ? { idClub: { not: excepto } } : {}) },
             select: { idClub: true },
           });
+
+    return existente === null;
+  }
+
+  /** Sin distinguir mayúsculas, por la misma razón que el nombre. */
+  async siglasDisponibles(siglas: string, excepto: number | null): Promise<boolean> {
+    const existente = await this.prisma.asociacion.findFirst({
+      where: {
+        siglas: { equals: siglas, mode: "insensitive" },
+        ...(excepto ? { idAsociacion: { not: excepto } } : {}),
+      },
+      select: { idAsociacion: true },
+    });
 
     return existente === null;
   }
@@ -197,7 +216,7 @@ export class RepositorioOrganizacionesPrisma implements RepositorioOrganizacione
       select: SELECCION_CLUB,
     });
 
-    return club ? { ...club, id: club.idClub, mision: null, vision: null } : null;
+    return club ? { ...club, id: club.idClub, siglas: null, mision: null, vision: null } : null;
   }
 
   async cambiarEstado(tipo: TipoOrganizacion, id: number, activo: boolean): Promise<boolean> {

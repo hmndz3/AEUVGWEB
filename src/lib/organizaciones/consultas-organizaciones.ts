@@ -26,6 +26,8 @@ export type IntegranteJunta = {
 export type OrganizacionResumen = {
   id: number;
   nombre: string;
+  /** Siglas o nombre corto. Solo las asociaciones lo registran; en un club es null. */
+  siglas: string | null;
   descripcion: string | null;
   imagenUrl: string | null;
 };
@@ -131,7 +133,13 @@ export async function listarAsociaciones(
       orderBy: { nombre: "asc" },
       skip: saltar,
       take: tamano,
-      select: { idAsociacion: true, nombre: true, descripcion: true, imagenUrl: true },
+      select: {
+        idAsociacion: true,
+        nombre: true,
+        siglas: true,
+        descripcion: true,
+        imagenUrl: true,
+      },
     }),
   ]);
 
@@ -139,6 +147,7 @@ export async function listarAsociaciones(
     organizaciones: asociaciones.map((asociacion) => ({
       id: asociacion.idAsociacion,
       nombre: asociacion.nombre,
+      siglas: asociacion.siglas,
       descripcion: asociacion.descripcion,
       imagenUrl: asociacion.imagenUrl,
     })),
@@ -157,6 +166,7 @@ export async function obtenerAsociacion(idAsociacion: number): Promise<Asociacio
     select: {
       idAsociacion: true,
       nombre: true,
+      siglas: true,
       descripcion: true,
       mision: true,
       vision: true,
@@ -183,6 +193,7 @@ export async function obtenerAsociacion(idAsociacion: number): Promise<Asociacio
   return {
     id: asociacion.idAsociacion,
     nombre: asociacion.nombre,
+    siglas: asociacion.siglas,
     descripcion: asociacion.descripcion,
     mision: asociacion.mision,
     vision: asociacion.vision,
@@ -230,6 +241,7 @@ export async function listarClubes(opciones: OpcionesListado = {}): Promise<Pagi
     organizaciones: clubes.map((club) => ({
       id: club.idClub,
       nombre: club.nombre,
+      siglas: null,
       descripcion: club.descripcion,
       imagenUrl: club.imagenUrl,
     })),
@@ -272,6 +284,7 @@ export async function obtenerClub(idClub: number): Promise<ClubDetalle | null> {
   return {
     id: club.idClub,
     nombre: club.nombre,
+    siglas: null,
     descripcion: club.descripcion,
     actividades: club.actividades,
     correo: club.correo,
@@ -312,6 +325,7 @@ export async function listarOrganizacionesAdministracion(
         select: {
           idAsociacion: true,
           nombre: true,
+          siglas: true,
           descripcion: true,
           imagenUrl: true,
           activo: true,
@@ -324,6 +338,7 @@ export async function listarOrganizacionesAdministracion(
       organizaciones: filas.map((fila) => ({
         id: fila.idAsociacion,
         nombre: fila.nombre,
+        siglas: fila.siglas,
         descripcion: fila.descripcion,
         imagenUrl: fila.imagenUrl,
         activo: fila.activo,
@@ -357,6 +372,7 @@ export async function listarOrganizacionesAdministracion(
     organizaciones: filas.map((fila) => ({
       id: fila.idClub,
       nombre: fila.nombre,
+      siglas: null,
       descripcion: fila.descripcion,
       imagenUrl: fila.imagenUrl,
       activo: fila.activo,

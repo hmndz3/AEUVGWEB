@@ -47,7 +47,7 @@ export default async function PaginaAsociaciones({
         <BuscadorOrganizaciones
           ruta="/asociaciones"
           busqueda={filtros.q}
-          etiqueta="Nombre, descripción o misión"
+          etiqueta="Nombre, siglas, descripción o misión"
         />
 
         <p className="text-texto-suave mt-6 text-sm">

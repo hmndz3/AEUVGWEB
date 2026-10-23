@@ -6,12 +6,12 @@ const path = require("path");
 const { p, bullet, h1, h2, makeTable, spacer, cover, buildDocument } = require("./template");
 const { bloquesRegistroTiempos } = require("./tiempos-sprint3");
 
-const tiempos = bloquesRegistroTiempos(10);
+const tiempos = bloquesRegistroTiempos(11);
 
 const doc = buildDocument([
   ...cover({
     subtitle: "Documento de Desarrollo del Sprint 3",
-    date: "Guatemala, 7 de octubre del 2026",
+    date: "Guatemala, 10 de octubre del 2026",
   }),
 
   // ---------- 1 ----------
@@ -232,7 +232,7 @@ const doc = buildDocument([
   // ---------- 8 ----------
   h1("8. Pruebas y verificación"),
   p(
-    "Las pruebas automatizadas del proyecto pasaron de 147 a 225. Las 78 nuevas corresponden a este sprint y se ejecutan sin base de datos, sustituyendo el acceso a datos por dobles de prueba, para que puedan correrse en cualquier momento del desarrollo."
+    "Las pruebas automatizadas del proyecto pasaron de 147 a 236. Las 89 nuevas corresponden a este sprint, incluidas las de los ajustes finales de la sección 9, y se ejecutan sin base de datos, sustituyendo el acceso a datos por dobles de prueba, para que puedan correrse en cualquier momento del desarrollo."
   ),
   spacer(),
   makeTable(
@@ -269,6 +269,16 @@ const doc = buildDocument([
         "2",
         "Que ninguna migración nueva desalinee los juegos de caracteres de su translate() y que el último mapeo coincida con el de la aplicación.",
       ],
+      [
+        "Siglas de las asociaciones",
+        "6",
+        "Su validación, que sean opcionales, que no se repitan sin distinguir mayúsculas, que al editar no choquen con las propias y que formen parte del texto de búsqueda.",
+      ],
+      [
+        "Carrusel de la portada",
+        "5",
+        "La prioridad de los destacados, que un evento no se repita, el orden por fecha y las partes de la fecha en la hora de Guatemala.",
+      ],
     ]
   ),
   spacer(),
@@ -282,10 +292,72 @@ const doc = buildDocument([
     "La normalización de la aplicación, que es la que se ejecuta en cada creación y edición, siempre fue correcta, por lo que el problema solo alcanzaba a las filas previas a cada migración: de las seis filas afectadas en el ambiente, cinco eventos ya estaban correctos por haberse editado después y solo la ficha de AEUVG conservaba el valor mal calculado. Se corrigió con una migración que vuelve a calcular las tres columnas con el juego alineado, sin tocar las migraciones ya aplicadas, cuya suma de verificación Prisma conserva. La verificación posterior confirmó que ninguna fila difiere de lo que calcula la aplicación."
   ),
 
-  // ---------- 9 ----------
-  h1("9. Estado del sprint"),
+  // ---------- 9. Ajustes finales ----------
+  h1("9. Ajustes finales del sprint"),
   p(
-    `Las seis historias comprometidas para el Sprint 3 se encuentran completadas, con ${tiempos.enHoras(tiempos.totalEquipo)} horas de trabajo de equipo frente a las 28 estimadas. El detalle por sesión se encuentra en la sección 10. La plataforma cuenta ahora con:`
+    "Después de la revisión del 7 de octubre se acordó un segundo grupo de ajustes antes de dar por cerrado el sprint. Se desarrollaron entre el 7 y el 10 de octubre sin abrir historias nuevas: mejoran lo entregado y preparan la plataforma para presentarse a AEUVG con contenido."
+  ),
+
+  h2("9.1. Campos obligatorios"),
+  p(
+    "Todos los formularios del sitio marcan sus campos obligatorios con un asterisco rojo junto a la etiqueta, que es la convención que el estudiantado ya conoce de otros sitios. Abarca el registro, el inicio de sesión, la recuperación y el restablecimiento de la contraseña, el perfil, los eventos, las asociaciones y clubes, la junta directiva y las redes sociales. Los formularios con más de un campo abren con una nota que explica el asterisco, y en el inicio de sesión el asterisco sustituyó la etiqueta lateral que decía “Requerido”."
+  ),
+  p(
+    "Se resolvió con un componente de etiqueta compartido, que además usan los campos base del sistema de diseño: basta con marcar el control como requerido para que su etiqueta muestre el asterisco, de modo que un formulario nuevo no pueda olvidarlo. El asterisco se oculta a los lectores de pantalla, que ya anuncian el campo como requerido por el propio control; leer además “asterisco” solo añadiría ruido. Los formularios conservan la validación propia del esquema, con sus mensajes en español, en lugar de la del navegador."
+  ),
+
+  h2("9.2. Siglas de las asociaciones"),
+  p(
+    "Las asociaciones se conocen por sus siglas más que por su nombre completo: casi nadie dice “Asociación de Estudiantes en Ciencias de la Computación y Tecnologías de la Información”, sino AECCTIUVG. La ficha registra ahora las dos formas. Las siglas se agregaron con una migración nueva como una columna opcional, porque no todas las asociaciones tienen y las existentes no las tenían registradas, y única, porque identifican a la asociación tanto como su nombre. Igual que con el nombre, el servicio comprueba que no se repitan sin distinguir mayúsculas, para responder con el error en el campo y no con el de la restricción de la tabla."
+  ),
+  p(
+    "Las siglas encabezan la tarjeta y la página de la asociación, con el nombre completo debajo, y forman parte del texto de búsqueda, de modo que buscar “aecctiuvg” la encuentra. En las tarjetas de eventos el organizador aparece por sus siglas, que caben en el espacio disponible, y en las listas de selección del panel y de los filtros se muestran las siglas seguidas del nombre completo, ordenadas por esa etiqueta, para encontrar la asociación por cualquiera de las dos formas. Los clubes no registran siglas."
+  ),
+  p(
+    "Durante la verificación se encontró que el logotipo del encabezado de una organización rompía la página cuando su enlace apuntaba a un dominio externo: el optimizador de imágenes de Next rechaza los dominios que no se declaran de antemano, y el panel admite cualquier enlace. Se cambió por una imagen normal, la misma decisión que ya se había tomado para las imágenes de los eventos en el Sprint 2."
+  ),
+
+  h2("9.3. Tarjetas de asociaciones y clubes"),
+  p(
+    "La tarjeta de las organizaciones pasó a la misma estructura que la de los eventos, con la imagen en una franja superior y los datos debajo, que es la forma que el estudiantado ya reconoce en el sitio y le da más presencia a la imagen. A diferencia del afiche de un evento, la imagen de una organización casi siempre es un logotipo y recortarlo le quitaría justo los bordes; por eso se muestra completo y detrás se coloca la misma imagen ampliada y desenfocada, de modo que todas las tarjetas midan igual sin dejar bandas vacías. Sin imagen se presentan las siglas, o las iniciales del nombre, sobre un degradado."
+  ),
+
+  h2("9.4. Portada con el carrusel de próximos eventos"),
+  p(
+    "La portada era la pantalla más sencilla del sitio. El titular se revela ahora palabra por palabra, y tres de sus palabras toman los acentos del logo en sus variantes oscurecidas, las mismas de las categorías de eventos, que sí se leen sobre el fondo crema. Entre el texto y los botones se agregó un carrusel con hasta diez eventos próximos: primero los destacados por AEUVG y después los más cercanos, presentados en orden de fecha. Cada tarjeta muestra la imagen del evento a todo su tamaño, la fecha, la categoría, si es destacado, el nombre, la hora y el lugar."
+  ),
+  p(
+    "Una primera versión usó un fondo oscuro y boletos sin imagen; se descartó porque rompía el diseño del resto de las páginas y porque la imagen del evento es justamente lo que llama la atención. El carrusel avanza solo y se detiene cuando el cursor o el foco del teclado están sobre él y con un botón de pausa, que es lo que exige la accesibilidad para contenido que se mueve más de cinco segundos. Tiene además flechas a los lados y se desliza con el dedo en el teléfono; quien pidió al sistema reducir el movimiento recibe la fila quieta y la recorre a mano."
+  ),
+  p(
+    "Técnicamente es un desplazamiento horizontal real que avanza cuadro a cuadro, y no una animación de estilos, para que el avance automático, las flechas y el dedo muevan la misma fila. Para que nunca se acabe lleva dos copias de los eventos: al recorrer la primera, el desplazamiento vuelve al inicio sin que se note, porque la segunda ocupa exactamente el mismo lugar. Las copias no reciben el foco del teclado ni las leen los lectores de pantalla, de modo que cada evento se recorre una sola vez."
+  ),
+
+  h2("9.5. Navegación del panel"),
+  p(
+    "La sección de estudiantes pasó al segundo lugar de la barra lateral del panel, inmediatamente debajo del resumen. El cambio es solo de orden y no de funcionalidad; como el orden de la barra es también el de las tarjetas de la página de resumen, cambió en los dos lugares."
+  ),
+
+  h2("9.6. Contenido de demostración"),
+  p(
+    "Mientras AEUVG carga su información real, el sitio se veía casi vacío y el carrusel no podía apreciarse. Se preparó un contenido de demostración con cinco asociaciones y doce eventos próximos, con categorías, organizadores y varios destacados. Sus logotipos e ilustraciones se generan con un script del repositorio a partir de figuras simples: no dependen de fotografías con derechos de autor, pesan unos pocos kilobytes y se sirven como archivos del propio sitio, sin pasar por el volumen de imágenes subidas. Los validadores aceptan esas rutas como imágenes propias, para que editar uno de estos eventos desde el panel no rompa su imagen."
+  ),
+  p(
+    "La carga es idempotente, exige confirmarla de forma explícita en el comando y fecha los eventos a partir del día en que se ejecuta, de modo que repetirla los vuelve a mover al futuro. Nunca toca contenido real: reconoce lo suyo por el nombre y por la imagen de demostración, y omite cualquier asociación real con el mismo nombre o las mismas siglas. Se retira con un solo comando, que conserva una asociación de demostración si alguien la usó como organizadora de un evento real. Se cargó en producción el 8 de octubre."
+  ),
+
+  h2("9.7. Publicación en producción"),
+  p(
+    "La primera publicación de las siglas dejó con error las páginas de asociaciones, eventos y calendario y los formularios del panel: el código nuevo consultaba la columna de siglas antes de que su migración se aplicara en Railway, donde las migraciones no se ejecutan con el despliegue por una decisión documentada desde el Sprint 1. Se resolvió aplicando la migración mediante el túnel cifrado, sin pérdida de información y sin volver a desplegar; las páginas se recuperaron en cuanto terminó."
+  ),
+  p(
+    "Para no depender de una sola persona en la operación, ambos integrantes cuentan ahora con acceso al proyecto de Railway. El procedimiento de despliegue se actualizó para que una migración que solo agrega columnas o tablas se aplique antes de publicar el código y no después: el código anterior la ignora, y así no existe un intervalo en el que el sitio falle."
+  ),
+
+  // ---------- 10 ----------
+  h1("10. Estado del sprint"),
+  p(
+    `Las seis historias comprometidas para el Sprint 3 se encuentran completadas, con ${tiempos.enHoras(tiempos.totalEquipo)} horas de trabajo de equipo frente a las 28 estimadas; la diferencia corresponde a los ajustes finales de la sección 9. El detalle por sesión se encuentra en la sección 11. La plataforma cuenta ahora con:`
   ),
   bullet(
     "Las secciones de asociaciones y de clubes, con su listado, su buscador y su página de detalle."
@@ -305,8 +377,16 @@ const doc = buildDocument([
   bullet(
     "Las redes sociales oficiales de AEUVG en la página principal, el pie de página y la página institucional."
   ),
+  bullet(
+    "Las siglas de cada asociación, presentes en sus tarjetas, su página, los eventos que organiza y el buscador."
+  ),
+  bullet(
+    "Una portada renovada con el carrusel de próximos eventos y tarjetas de asociaciones y clubes con la imagen destacada."
+  ),
+  bullet("El asterisco de campo obligatorio en todos los formularios del sitio."),
+  bullet("El contenido de demostración cargado en producción, retirable con un solo comando."),
   p(
-    "Queda pendiente de AEUVG la carga de la información real de las asociaciones y clubes del campus, incluidas las fotografías de sus juntas directivas. No bloquea el sprint: la administración quedó lista y el módulo funciona con la información de prueba. Continúa también en gestión el trámite del dominio institucional iniciado en el Sprint 1."
+    "Queda pendiente de AEUVG la carga de la información real de las asociaciones y clubes del campus, incluidas las fotografías de sus juntas directivas y las siglas de cada asociación. No bloquea el sprint: la administración quedó lista y el módulo funciona con el contenido de demostración, que deberá retirarse antes de la entrega final para que el sitio presente únicamente información real. Continúa también en gestión el trámite del dominio institucional iniciado en el Sprint 1."
   ),
   p(
     "Tras la revisión del sprint se incorporaron las observaciones recibidas, sin alcance nuevo: el listado del panel deshabilita la eliminación de una organización que organiza eventos y explica en la misma fila por qué, ya que el botón invitaba a intentarlo solo para enterarse; cada fila del panel enlaza además a la ficha pública, para comprobar cómo quedó sin tener que buscarla en el listado del sitio; el perfil presenta el teléfono entre sus datos visibles, que antes solo aparecía dentro del formulario, de modo que quien entraba a revisar sus datos no sabía si lo tenía registrado; y la sección de eventos guardados muestra su total, porque con varias tarjetas repartidas en dos bloques no quedaba claro cuántos había."
@@ -315,7 +395,7 @@ const doc = buildDocument([
     "El desarrollo continúa en el Sprint 4 con el módulo de horas beca, que sustituye el control que AEUVG realiza actualmente mediante hojas de cálculo y que se apoya en el perfil entregado en este sprint para la sección “Mis horas beca”."
   ),
 
-  // ---------- 10. Registro de tiempos ----------
+  // ---------- 11. Registro de tiempos ----------
   ...tiempos.bloques,
 ]);
 

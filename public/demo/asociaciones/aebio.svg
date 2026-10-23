@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="aebio-fondo" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4A8C22"/>
+      <stop offset="1" stop-color="#00806B"/>
+    </linearGradient>
+  </defs>
+  <circle cx="256" cy="256" r="248" fill="url(#aebio-fondo)"/>
+  <circle cx="256" cy="256" r="222" fill="none" stroke="#ffffff" stroke-opacity="0.45" stroke-width="6"/>
+  <path d="M256 110 C350 150 360 260 256 320 C152 260 162 150 256 110 Z" fill="#ffffff"/>
+    <path d="M256 140 V310" stroke="#4A8C22" stroke-width="10" stroke-linecap="round"/>
+    <path d="M256 200 L300 170 M256 245 L305 215 M256 225 L210 195 M256 270 L205 240" stroke="#4A8C22" stroke-width="8" stroke-linecap="round"/>
+  <text x="256" y="400" text-anchor="middle" font-family="'Plus Jakarta Sans', 'Segoe UI', Arial, sans-serif" font-size="70" font-weight="800" letter-spacing="2" fill="#ffffff">AEBIO</text>
+</svg>

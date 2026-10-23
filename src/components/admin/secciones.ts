@@ -2,6 +2,11 @@
 export const SECCIONES_ADMIN = [
   { href: "/admin", texto: "Resumen", descripcion: "Indicadores generales de la plataforma." },
   {
+    href: "/admin/estudiantes",
+    texto: "Estudiantes",
+    descripcion: "Cuentas registradas y su estado de verificación.",
+  },
+  {
     href: "/admin/eventos",
     texto: "Eventos",
     descripcion: "Creación, edición y publicación de eventos.",
@@ -36,11 +41,6 @@ export const SECCIONES_ADMIN = [
     texto: "Tutorías",
     descripcion:
       "Postulaciones de estudiantes, tutores activos, cursos que imparten y disponibilidad.",
-  },
-  {
-    href: "/admin/estudiantes",
-    texto: "Estudiantes",
-    descripcion: "Cuentas registradas y su estado de verificación.",
   },
   {
     href: "/admin/reportes",

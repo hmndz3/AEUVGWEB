@@ -29,6 +29,7 @@ import {
 
 const FORMULARIO_ASOCIACION = {
   nombre: "Asociación de Estudiantes de Ingeniería",
+  siglas: "AEI",
   descripcion: "Representa al estudiantado de la Facultad de Ingeniería.",
   mision: "Acompañar al estudiantado en su vida académica.",
   vision: "Una facultad con participación activa.",
@@ -60,6 +61,7 @@ function organizacionGuardada(
   return {
     id: 3,
     nombre: "Asociación de Estudiantes de Ingeniería",
+    siglas: null,
     descripcion: null,
     mision: null,
     vision: null,
@@ -80,10 +82,12 @@ class RepositorioFalso implements RepositorioOrganizaciones {
   integrantesCreados: DatosIntegranteAdmin[] = [];
   redesCreadas: DatosRedSocialAdmin[] = [];
   nombresConsultados: { nombre: string; excepto: number | null }[] = [];
+  siglasConsultadas: { siglas: string; excepto: number | null }[] = [];
 
   constructor(
     private readonly opciones: {
       nombreLibre?: boolean;
+      siglasLibres?: boolean;
       organizacion?: OrganizacionAdministrada | null;
       organizaEventos?: boolean;
       actualizado?: boolean;
@@ -98,6 +102,11 @@ class RepositorioFalso implements RepositorioOrganizaciones {
   ): Promise<boolean> {
     this.nombresConsultados.push({ nombre, excepto });
     return this.opciones.nombreLibre ?? true;
+  }
+
+  async siglasDisponibles(siglas: string, excepto: number | null): Promise<boolean> {
+    this.siglasConsultadas.push({ siglas, excepto });
+    return this.opciones.siglasLibres ?? true;
   }
 
   async crearAsociacion(datos: DatosAsociacionPersistidos): Promise<number> {
@@ -190,6 +199,26 @@ test("el formulario de asociación válido se interpreta con sus tipos", () => {
 test("un nombre de menos de tres caracteres no se acepta", () => {
   assert.equal(
     esquemaAsociacionAdmin.safeParse({ ...FORMULARIO_ASOCIACION, nombre: "AB" }).success,
+    false
+  );
+});
+
+test("las siglas se guardan junto al nombre completo, sin espacios sobrantes", () => {
+  const datos = asociacionValida({ siglas: "  AECCTI   UVG " });
+
+  assert.equal(datos.nombre, "Asociación de Estudiantes de Ingeniería");
+  assert.equal(datos.siglas, "AECCTI UVG");
+});
+
+test("las siglas son opcionales y su longitud se valida", () => {
+  assert.equal(asociacionValida({ siglas: "" }).siglas, null);
+  assert.equal(asociacionValida({ siglas: undefined }).siglas, null);
+  assert.equal(
+    esquemaAsociacionAdmin.safeParse({ ...FORMULARIO_ASOCIACION, siglas: "A" }).success,
+    false
+  );
+  assert.equal(
+    esquemaAsociacionAdmin.safeParse({ ...FORMULARIO_ASOCIACION, siglas: "A".repeat(31) }).success,
     false
   );
 });
@@ -300,6 +329,48 @@ test("crear guarda el texto de búsqueda de la asociación", async () => {
   assert.deepEqual(resultado, { tipo: "guardada", id: 11 });
   assert.ok(repositorio.asociacionesCreadas[0].textoBusqueda.includes("ingenieria"));
   assert.ok(repositorio.asociacionesCreadas[0].textoBusqueda.includes("academica"));
+});
+
+test("crear guarda las siglas y permite buscar la asociación por ellas", async () => {
+  const repositorio = new RepositorioFalso();
+  const servicio = new ServicioOrganizaciones(repositorio);
+
+  await servicio.crear({ tipo: "asociaciones", datos: asociacionValida() });
+
+  assert.equal(repositorio.asociacionesCreadas[0].siglas, "AEI");
+  assert.ok(repositorio.asociacionesCreadas[0].textoBusqueda.split(" ").includes("aei"));
+});
+
+test("unas siglas ya registradas no se guardan y el error apunta al campo", async () => {
+  const repositorio = new RepositorioFalso({ siglasLibres: false });
+  const servicio = new ServicioOrganizaciones(repositorio);
+
+  const resultado = await servicio.crear({ tipo: "asociaciones", datos: asociacionValida() });
+
+  assert.ok(resultado.tipo === "invalida" && resultado.errores.siglas);
+  assert.equal(repositorio.asociacionesCreadas.length, 0);
+});
+
+test("al editar, las siglas propias no cuentan como repetidas", async () => {
+  const repositorio = new RepositorioFalso();
+  const servicio = new ServicioOrganizaciones(repositorio);
+
+  await servicio.editar(7, { tipo: "asociaciones", datos: asociacionValida() });
+
+  assert.deepEqual(repositorio.siglasConsultadas[0], { siglas: "AEI", excepto: 7 });
+});
+
+test("una asociación sin siglas no consulta su disponibilidad", async () => {
+  const repositorio = new RepositorioFalso({ siglasLibres: false });
+  const servicio = new ServicioOrganizaciones(repositorio);
+
+  const resultado = await servicio.crear({
+    tipo: "asociaciones",
+    datos: asociacionValida({ siglas: "" }),
+  });
+
+  assert.equal(resultado.tipo, "guardada");
+  assert.equal(repositorio.siglasConsultadas.length, 0);
 });
 
 test("crear un club guarda sus actividades en el texto de búsqueda", async () => {

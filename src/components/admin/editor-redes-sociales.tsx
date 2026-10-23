@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import { Alerta } from "@/components/ui/alerta";
 import { Boton } from "@/components/ui/boton";
+import { EtiquetaCampo, NotaCamposObligatorios } from "@/components/ui/etiqueta-campo";
 import type { RedSocialAdministrada } from "@/lib/organizaciones/repositorio-organizaciones";
 import type { TipoOrganizacion } from "@/validators/organizacion-admin";
 
@@ -133,13 +134,16 @@ export function EditorRedesSociales({
         noValidate
         className="border-borde bg-superficie flex flex-col gap-4 rounded-[1.25rem] border p-5"
       >
+        <NotaCamposObligatorios />
+
         <div className="grid gap-4 md:grid-cols-2">
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="red-plataforma" className="text-texto text-sm font-semibold">
+            <EtiquetaCampo htmlFor="red-plataforma" obligatorio>
               Plataforma
-            </label>
+            </EtiquetaCampo>
             <input
               id="red-plataforma"
+              required
               list="plataformas-sugeridas"
               value={plataforma}
               onChange={(evento) => setPlataforma(evento.target.value)}
@@ -159,11 +163,12 @@ export function EditorRedesSociales({
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="red-url" className="text-texto text-sm font-semibold">
+            <EtiquetaCampo htmlFor="red-url" obligatorio>
               Enlace
-            </label>
+            </EtiquetaCampo>
             <input
               id="red-url"
+              required
               value={url}
               onChange={(evento) => setUrl(evento.target.value)}
               maxLength={500}
