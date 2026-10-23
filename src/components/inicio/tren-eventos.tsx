@@ -47,7 +47,9 @@ function Vagon({ vagon, decorativo }: { vagon: VagonTren; decorativo: boolean })
         // data-vagon: las flechas avanzan exactamente un vagón.
         data-vagon
         className={cn(
-          "group/vagon relative flex h-[22rem] w-[16.5rem] flex-col justify-end overflow-hidden rounded-[1.25rem] shadow-md sm:h-[24rem] sm:w-[19rem]",
+          // Alto contenido a propósito: el carrusel tiene que caber completo en
+          // la primera pantalla, debajo del titular y del rótulo.
+          "group/vagon relative flex h-[20rem] w-[16.5rem] flex-col justify-end overflow-hidden rounded-[1.25rem] shadow-md sm:h-[21.5rem] sm:w-[19rem]",
           "focus-visible:ring-primario focus-visible:ring-4 focus-visible:outline-none"
         )}
       >
@@ -221,7 +223,7 @@ export function TrenEventos({ vagones }: { vagones: VagonTren[] }) {
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
         <h2
           id="titulo-tren"
-          className="text-texto flex items-center gap-2.5 text-sm font-extrabold tracking-[0.14em] uppercase sm:text-base sm:tracking-[0.2em]"
+          className="text-texto flex items-center gap-2.5 text-base font-extrabold tracking-[0.12em] uppercase sm:text-xl sm:tracking-[0.16em]"
         >
           <span aria-hidden className="bg-coral size-2 rounded-full motion-safe:animate-pulse" />
           Próximamente en el campus

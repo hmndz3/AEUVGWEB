@@ -8,6 +8,7 @@ import {
   diaParaFormulario,
   formatearFechaAcreditacion,
   nombreVisibleDelRegistro,
+  partesDelHorario,
 } from "@/lib/horas-beca/formato-horas";
 
 export const dynamic = "force-dynamic";
@@ -29,6 +30,9 @@ export default async function Pagina({
 
   // El listado del que se viene, con sus filtros, para volver a él al guardar.
   const destino = destinoPanelHoras(parametros.volver);
+  // Un registro anterior al selector podía llevar texto libre: en ese caso los
+  // selectores quedan vacíos y hay que volver a elegir el horario.
+  const horario = partesDelHorario(registro.horarioApoyo);
 
   return (
     <div className="flex flex-col gap-6">
@@ -59,7 +63,8 @@ export default async function Pagina({
           // cuenta existe, el servicio ya lo reemplazó por el de la cuenta.
           nombreEstudiante: registro.nombreEstudiante,
           fechaActividad: diaParaFormulario(registro.fechaActividad),
-          horarioApoyo: registro.horarioApoyo,
+          horaInicio: horario?.inicio ?? "",
+          horaFin: horario?.fin ?? "",
           descripcionActividad: registro.descripcionActividad,
           cantidadHoras: String(registro.cantidadHoras),
           observaciones: registro.observaciones ?? "",
