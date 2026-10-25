@@ -7,11 +7,9 @@ import {
 import {
   formatearFechaAcreditacion,
   formatearFechaActividad,
-  formatearHoras,
   nombreVisibleDelRegistro,
 } from "@/lib/horas-beca/formato-horas";
-import type { FiltrosHorasBeca } from "@/validators/horas-beca";
-import { ETIQUETAS_ESTADO_HORA_BECA } from "@/validators/horas-beca";
+import { ETIQUETAS_ESTADO_HORA_BECA, type FiltrosHorasBeca } from "@/validators/horas-beca";
 
 /**
  * Registros que admite una exportación.
