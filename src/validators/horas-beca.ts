@@ -104,3 +104,23 @@ export function parametrosDeFiltrosHoras(filtros: FiltrosHorasBeca): Record<stri
 
   return parametros;
 }
+
+/** Formatos en los que se puede descargar el listado de horas beca. */
+export const FORMATOS_EXPORTACION = ["csv", "excel", "pdf"] as const;
+
+export type FormatoExportacion = (typeof FORMATOS_EXPORTACION)[number];
+
+export const ETIQUETAS_FORMATO: Record<FormatoExportacion, string> = {
+  csv: "CSV",
+  excel: "Excel",
+  pdf: "PDF",
+};
+
+/**
+ * Formato pedido en la dirección, o null si no se reconoce. No hay formato por
+ * omisión a propósito: descargar algo distinto de lo que se pidió confunde más
+ * que un error.
+ */
+export function interpretarFormato(valor: string | null): FormatoExportacion | null {
+  return FORMATOS_EXPORTACION.find((formato) => formato === valor) ?? null;
+}
