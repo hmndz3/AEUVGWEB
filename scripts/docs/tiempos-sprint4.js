@@ -183,7 +183,7 @@ const HARRY = {
       5,
       "Revisión y cierre",
       "Documentación",
-      "Actualización del registro de tiempos con el cierre completo, verificación de la migración pendiente y publicación de la versión final del sprint.",
+      "Aplicación de la migración del sprint en Railway y su comprobación contra la base, actualización del registro de tiempos y publicación de la versión final del sprint.",
     ],
     [
       "2026-10-22",
