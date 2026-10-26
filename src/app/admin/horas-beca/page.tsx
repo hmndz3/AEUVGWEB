@@ -50,9 +50,14 @@ export default async function PaginaAdminHorasBeca({
           </p>
         </div>
 
-        <Link href={`/admin/horas-beca/nuevo?volver=${encodeURIComponent(rutaActual)}`}>
-          <Boton>Registrar horas</Boton>
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          <Link href="/admin/horas-beca/importar">
+            <Boton variante="contorno">Importar desde Excel</Boton>
+          </Link>
+          <Link href={`/admin/horas-beca/nuevo?volver=${encodeURIComponent(rutaActual)}`}>
+            <Boton>Registrar horas</Boton>
+          </Link>
+        </div>
       </div>
 
       <ResumenHorasBecaPanel resumen={resumen} />
