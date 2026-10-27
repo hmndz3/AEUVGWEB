@@ -12,6 +12,7 @@
     "format:check": "prettier --check .",
     "postinstall": "prisma generate",
     "db:seed": "prisma db seed",
+    "horas:verificar-plantilla": "tsx scripts/horas-beca/verificar-plantilla.ts",
     "db:migrate:deploy": "prisma migrate deploy",
     "db:railway:migrate": "node scripts/db/railway.js prisma migrate deploy",
     "db:railway:seed": "node scripts/db/railway.js prisma db seed",

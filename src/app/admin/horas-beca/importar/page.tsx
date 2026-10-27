@@ -19,6 +19,12 @@ export default function Pagina() {
           Carga una hoja de Excel con los registros de horas. El archivo debe traer estas columnas,
           en cualquier orden: {COLUMNAS_IMPORTACION.join(", ")}.
         </p>
+        <a
+          href="/api/admin/horas-beca/plantilla"
+          className="text-primario mt-3 inline-flex text-sm font-bold hover:underline"
+        >
+          Descargar la plantilla de Excel
+        </a>
       </div>
 
       <ImportarHorasBeca />
