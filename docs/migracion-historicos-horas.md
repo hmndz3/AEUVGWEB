@@ -19,6 +19,7 @@ La revisión es lo que evita el caso que hace daño: descubrir los errores cuand
 - Las columnas se localizan por su encabezado, no por su posición: la hoja puede traerlas en cualquier orden y puede tener columnas propias de más. Lo que no puede es tener los encabezados renombrados.
 - `Observaciones` es la única columna opcional; puede quedar vacía o quitarse entera.
 - Máximo 2000 filas de datos y 5 MB por archivo. Un histórico más grande se divide en varios archivos y se carga uno por uno.
+- `npm run horas:verificar-plantilla` comprueba que la plantilla que se descarga siga siendo legible para el importador. Es la comprobación que conviene correr después de tocar cualquiera de los dos.
 - Conviene empezar con un archivo pequeño —veinte o treinta filas— para ver cómo responde la validación antes de cargar años completos.
 
 ## Procedimiento
