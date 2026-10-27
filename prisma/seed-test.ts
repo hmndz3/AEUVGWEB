@@ -749,7 +749,16 @@ async function cargarDatos(tx: Prisma.TransactionClient): Promise<Resultados> {
     filasExitosas: 1,
     filasFallidas: 1,
     estado: "PARCIAL" as const,
-    detalleErrores: [{ fila: 2, error: "Fila ficticia inválida para probar el resumen." }],
+    // Misma forma que produce el importador (ErrorFila), para que la pantalla de
+    // importación y el reporte lean en pruebas lo que leerán en producción.
+    detalleErrores: [
+      {
+        fila: 3,
+        carnet: "24999",
+        campo: "Cantidad de horas",
+        mensaje: "Fila ficticia inválida para probar el resumen.",
+      },
+    ],
   };
   await sincronizar({
     tabla: "ImportacionHoras",
@@ -770,6 +779,42 @@ async function cargarDatos(tx: Prisma.TransactionClient): Promise<Resultados> {
   });
   const importacion = await tx.importacionHoras.findFirstOrThrow({
     where: { nombreArchivo: NOMBRES_PRUEBA.importacion },
+  });
+
+  // Una importación que entró entera, que es el caso que la del archivo parcial
+  // no cubre: deja ver en pruebas un histórico cargado de principio a fin, con
+  // sus filas vinculadas a la cuenta de su carnet.
+  const datosImportacionHistorica = {
+    realizadaPor: idAdministrador,
+    nombreArchivo: NOMBRES_PRUEBA.importacionHistorica,
+    fechaImportacion: FECHAS_PRUEBA.importacionHistorica,
+    totalFilas: 2,
+    filasExitosas: 2,
+    filasFallidas: 0,
+    estado: "COMPLETADA" as const,
+    detalleErrores: [],
+  };
+  await sincronizar({
+    tabla: "ImportacionHoras",
+    datos: datosImportacionHistorica,
+    buscar: () =>
+      tx.importacionHoras.findFirst({
+        where: { nombreArchivo: NOMBRES_PRUEBA.importacionHistorica },
+      }),
+    crear: () => tx.importacionHoras.create({ data: datosImportacionHistorica }),
+    actualizar: async () => {
+      const existente = await tx.importacionHoras.findFirstOrThrow({
+        where: { nombreArchivo: NOMBRES_PRUEBA.importacionHistorica },
+      });
+      return tx.importacionHoras.update({
+        where: { idImportacion: existente.idImportacion },
+        data: datosImportacionHistorica,
+      });
+    },
+    resultados,
+  });
+  const importacionHistorica = await tx.importacionHoras.findFirstOrThrow({
+    where: { nombreArchivo: NOMBRES_PRUEBA.importacionHistorica },
   });
 
   const horas = [
@@ -880,6 +925,39 @@ async function cargarDatos(tx: Prisma.TransactionClient): Promise<Resultados> {
       acreditadoPor: null,
       fechaAcreditacion: null,
       observaciones: "Segundo carnet ficticio sin cuenta, con una sola actividad pendiente.",
+    },
+    // Las dos filas del histórico que entró completo. Una acreditada y una
+    // pendiente, para que el resumen del programa tenga las dos columnas con
+    // horas que vinieron de un archivo y no del formulario.
+    {
+      idEstudiante: estudiante(CARNETS_PRUEBA.ana).idEstudiante,
+      carnet: estudiante(CARNETS_PRUEBA.ana).carnet,
+      nombreEstudiante: estudiante(CARNETS_PRUEBA.ana).nombreCompleto,
+      idOportunidad: null,
+      idImportacion: importacionHistorica.idImportacion,
+      fechaActividad: FECHAS_PRUEBA.actividadImportadaHistoricaPrimera,
+      horarioApoyo: "08:00-10:30",
+      descripcionActividad: DESCRIPCIONES_HORAS_PRUEBA.importadaHistoricaPrimera,
+      cantidadHoras: new Prisma.Decimal("2.50"),
+      estado: "ACREDITADA" as const,
+      acreditadoPor: idAdministrador,
+      fechaAcreditacion: FECHAS_PRUEBA.acreditacion,
+      observaciones: "Primera fila ficticia del histórico importado.",
+    },
+    {
+      idEstudiante: null,
+      carnet: CARNETS_PRUEBA.noRegistrado,
+      nombreEstudiante: NOMBRE_ESTUDIANTE_NO_REGISTRADO,
+      idOportunidad: null,
+      idImportacion: importacionHistorica.idImportacion,
+      fechaActividad: FECHAS_PRUEBA.actividadImportadaHistoricaSegunda,
+      horarioApoyo: "14:00-17:00",
+      descripcionActividad: DESCRIPCIONES_HORAS_PRUEBA.importadaHistoricaSegunda,
+      cantidadHoras: new Prisma.Decimal("3.00"),
+      estado: "PENDIENTE" as const,
+      acreditadoPor: null,
+      fechaAcreditacion: null,
+      observaciones: "Segunda fila ficticia del histórico importado, de un carnet sin cuenta.",
     },
   ];
   for (const registro of horas) {

@@ -231,12 +231,16 @@ async function verificar(): Promise<void> {
       "Debe existir exactamente un evento ficticio guardado."
     );
 
-    const [registrosHoras, importacion, inscripcionesDuplicadas] = await Promise.all([
-      prisma.registroHoraBeca.findMany({
-        where: { descripcionActividad: { in: descripcionesHoras } },
-      }),
-      prisma.importacionHoras.findFirst({ where: { nombreArchivo: NOMBRES_PRUEBA.importacion } }),
-      prisma.$queryRaw<Conteo[]>`
+    const [registrosHoras, importacion, importacionHistorica, inscripcionesDuplicadas] =
+      await Promise.all([
+        prisma.registroHoraBeca.findMany({
+          where: { descripcionActividad: { in: descripcionesHoras } },
+        }),
+        prisma.importacionHoras.findFirst({ where: { nombreArchivo: NOMBRES_PRUEBA.importacion } }),
+        prisma.importacionHoras.findFirst({
+          where: { nombreArchivo: NOMBRES_PRUEBA.importacionHistorica },
+        }),
+        prisma.$queryRaw<Conteo[]>`
         SELECT COUNT(*) AS cantidad
         FROM (
           SELECT id_oportunidad, id_estudiante
@@ -245,10 +249,10 @@ async function verificar(): Promise<void> {
           HAVING COUNT(*) > 1
         ) AS duplicados
       `,
-    ]);
+      ]);
     asegurar(
-      registrosHoras.length === 7,
-      "Deben existir exactamente siete registros ficticios de horas."
+      registrosHoras.length === 9,
+      "Deben existir exactamente nueve registros ficticios de horas."
     );
     asegurar(
       registrosHoras.every(
@@ -265,8 +269,8 @@ async function verificar(): Promise<void> {
       "Hay registros ficticios de horas cuyo texto de búsqueda no coincide con el calculado."
     );
     asegurar(
-      registrosHoras.filter(({ idEstudiante }) => idEstudiante === null).length === 3,
-      "Deben existir tres registros ficticios de horas sin cuenta vinculada."
+      registrosHoras.filter(({ idEstudiante }) => idEstudiante === null).length === 4,
+      "Deben existir cuatro registros ficticios de horas sin cuenta vinculada."
     );
     asegurar(
       registrosHoras
@@ -298,8 +302,11 @@ async function verificar(): Promise<void> {
     const totalAcreditado = registrosHoras
       .filter(({ estado }) => estado === "ACREDITADA")
       .reduce((total, item) => total + item.cantidadHoras.toNumber(), 0);
-    asegurar(totalPendiente === 8, `El total pendiente esperado es 8, no ${totalPendiente}.`);
-    asegurar(totalAcreditado === 10, `El total acreditado esperado es 10, no ${totalAcreditado}.`);
+    asegurar(totalPendiente === 11, `El total pendiente esperado es 11, no ${totalPendiente}.`);
+    asegurar(
+      totalAcreditado === 12.5,
+      `El total acreditado esperado es 12.5, no ${totalAcreditado}.`
+    );
     // La vinculación por carnet corre al crear la cuenta y al guardar el
     // registro. Si un registro quedó sin vínculo pese a existir la ficha de ese
     // carnet, alguna de las dos mitades dejó de aplicarse.
@@ -328,6 +335,22 @@ async function verificar(): Promise<void> {
     asegurar(
       registrosHoras.some(({ idImportacion }) => idImportacion === importacion.idImportacion),
       "Ningún registro ficticio está relacionado con la importación."
+    );
+    asegurar(
+      importacionHistorica !== null,
+      "No existe la importación ficticia que entró completa."
+    );
+    asegurar(
+      importacionHistorica.estado === "COMPLETADA" &&
+        importacionHistorica.filasFallidas === 0 &&
+        importacionHistorica.filasExitosas === importacionHistorica.totalFilas,
+      "La importación ficticia completa debe tener todas sus filas exitosas."
+    );
+    asegurar(
+      registrosHoras.filter(
+        ({ idImportacion }) => idImportacion === importacionHistorica.idImportacion
+      ).length === importacionHistorica.filasExitosas,
+      "Los registros del histórico ficticio no coinciden con sus filas exitosas."
     );
     asegurar(cantidad(inscripcionesDuplicadas) === 0, "Existen inscripciones duplicadas.");
     asegurar(
