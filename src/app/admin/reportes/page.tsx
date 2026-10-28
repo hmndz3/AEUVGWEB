@@ -1,3 +1,4 @@
+import { ExportarHorasBeca } from "@/components/admin/exportar-horas-beca";
 import { FiltrosReportePanel } from "@/components/admin/filtros-reporte";
 import { HorasPorEstudiante } from "@/components/admin/horas-por-estudiante";
 import { HorasPorMes } from "@/components/admin/horas-por-mes";
@@ -8,7 +9,7 @@ import {
   obtenerHorasPorMes,
   obtenerResumenPrograma,
 } from "@/lib/horas-beca/consultas-reportes";
-import { interpretarFiltrosReporte } from "@/validators/horas-beca";
+import { interpretarFiltrosReporte, parametrosDeFiltrosHoras } from "@/validators/horas-beca";
 
 export const dynamic = "force-dynamic";
 
@@ -38,6 +39,12 @@ export default async function PaginaAdminReportes({
       <FiltrosReportePanel filtros={filtros} />
 
       <ResumenPrograma resumen={resumen} />
+
+      {/* La descarga arrastra el periodo del reporte, de modo que el archivo
+          contenga los registros que componen los totales en pantalla. */}
+      {resumen.registros > 0 && (
+        <ExportarHorasBeca parametros={parametrosDeFiltrosHoras(filtros)} />
+      )}
 
       <div className="flex flex-col gap-3">
         <h2 className="text-texto text-lg font-bold">Horas por mes</h2>
