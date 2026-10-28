@@ -19,6 +19,9 @@ export default function Pagina() {
           Carga una hoja de Excel con los registros de horas. El archivo debe traer estas columnas,
           en cualquier orden: {COLUMNAS_IMPORTACION.join(", ")}.
         </p>
+        {/* Enlace normal y no <Link>: es una descarga que resuelve el servidor,
+            no una navegación de la aplicación. */}
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
         <a
           href="/api/admin/horas-beca/plantilla"
           className="text-primario mt-3 inline-flex text-sm font-bold hover:underline"
