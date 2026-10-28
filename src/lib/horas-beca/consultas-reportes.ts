@@ -26,6 +26,40 @@ export type ResumenPrograma = {
  */
 export type FiltrosReporte = Pick<FiltrosHorasBeca, "desde" | "hasta">;
 
+export type ResumenMes = {
+  /** Primer día del mes, para ordenar y formatear. */
+  mes: Date;
+  registros: number;
+  horasTotales: number;
+  horasAcreditadas: number;
+  horasPendientes: number;
+};
+
+export type ResumenEstudiante = {
+  carnet: string;
+  /** Nombre de la cuenta si el carnet tiene una; si no, el que trae el registro. */
+  estudiante: string;
+  vinculado: boolean;
+  registros: number;
+  horasTotales: number;
+  horasAcreditadas: number;
+  horasPendientes: number;
+};
+
+/**
+ * Estudiantes que presenta el detalle del reporte.
+ *
+ * El desglose se ordena de más horas a menos, así que el corte deja fuera la
+ * cola de quienes apenas tienen un registro. Para el listado completo está la
+ * exportación, que es la herramienta hecha para eso.
+ */
+export const MAXIMO_ESTUDIANTES_REPORTE = 100;
+
+/** Primer día del mes al que pertenece un día de calendario, en UTC. */
+function primeroDelMes(fecha: Date): Date {
+  return new Date(Date.UTC(fecha.getUTCFullYear(), fecha.getUTCMonth(), 1));
+}
+
 /**
  * Resumen general del programa de horas beca.
  *
@@ -78,4 +112,140 @@ export async function obtenerResumenPrograma(
     primeraActividad: periodo._min.fechaActividad,
     ultimaActividad: periodo._max.fechaActividad,
   };
+}
+
+/**
+ * Horas por mes, del mes más reciente al más antiguo.
+ *
+ * La base agrupa por día y por estado, y el pliegue a meses se hace aquí. Es
+ * deliberado: `date_trunc` obligaría a escribir la consulta a mano y a repetir
+ * la traducción de los filtros, mientras que los días distintos de un periodo
+ * son unos cuantos cientos como máximo, muy lejos del volumen de registros que
+ * se evita traer.
+ */
+export async function obtenerHorasPorMes(filtros: FiltrosReporte = {}): Promise<ResumenMes[]> {
+  const porDia = await obtenerPrisma().registroHoraBeca.groupBy({
+    by: ["fechaActividad", "estado"],
+    where: condicionesDeFiltrosHoras(filtros),
+    _sum: { cantidadHoras: true },
+    _count: { _all: true },
+  });
+
+  const meses = new Map<number, ResumenMes>();
+
+  for (const grupo of porDia) {
+    const mes = primeroDelMes(grupo.fechaActividad);
+    const clave = mes.getTime();
+    const acumulado =
+      meses.get(clave) ??
+      ({
+        mes,
+        registros: 0,
+        horasTotales: 0,
+        horasAcreditadas: 0,
+        horasPendientes: 0,
+      } satisfies ResumenMes);
+
+    const horas = Number(grupo._sum.cantidadHoras ?? 0);
+
+    acumulado.registros += grupo._count._all;
+    acumulado.horasTotales += horas;
+    if (grupo.estado === "ACREDITADA") acumulado.horasAcreditadas += horas;
+    else acumulado.horasPendientes += horas;
+
+    meses.set(clave, acumulado);
+  }
+
+  return [...meses.values()].sort((uno, otro) => otro.mes.getTime() - uno.mes.getTime());
+}
+
+/**
+ * Horas por estudiante, de más horas a menos.
+ *
+ * El nombre no se puede agrupar junto al carnet: un mismo carnet puede traer el
+ * nombre escrito de dos maneras en hojas de distintos años, y agruparlo lo
+ * partiría en dos filas con la mitad de las horas cada una. Se agrupa por
+ * carnet, que es el identificador, y los nombres se resuelven después: el de la
+ * cuenta cuando existe —que es el verificado— y el del registro más reciente
+ * cuando el carnet todavía no tiene cuenta.
+ */
+export async function obtenerHorasPorEstudiante(
+  filtros: FiltrosReporte = {},
+  maximo = MAXIMO_ESTUDIANTES_REPORTE
+): Promise<ResumenEstudiante[]> {
+  const where = condicionesDeFiltrosHoras(filtros);
+  const prisma = obtenerPrisma();
+
+  const porCarnet = await prisma.registroHoraBeca.groupBy({
+    by: ["carnet", "estado"],
+    where,
+    _sum: { cantidadHoras: true },
+    _count: { _all: true },
+  });
+
+  const acumulados = new Map<string, ResumenEstudiante>();
+
+  for (const grupo of porCarnet) {
+    const acumulado =
+      acumulados.get(grupo.carnet) ??
+      ({
+        carnet: grupo.carnet,
+        estudiante: grupo.carnet,
+        vinculado: false,
+        registros: 0,
+        horasTotales: 0,
+        horasAcreditadas: 0,
+        horasPendientes: 0,
+      } satisfies ResumenEstudiante);
+
+    const horas = Number(grupo._sum.cantidadHoras ?? 0);
+
+    acumulado.registros += grupo._count._all;
+    acumulado.horasTotales += horas;
+    if (grupo.estado === "ACREDITADA") acumulado.horasAcreditadas += horas;
+    else acumulado.horasPendientes += horas;
+
+    acumulados.set(grupo.carnet, acumulado);
+  }
+
+  const detalle = [...acumulados.values()]
+    .sort(
+      (uno, otro) => otro.horasTotales - uno.horasTotales || uno.carnet.localeCompare(otro.carnet)
+    )
+    .slice(0, Math.max(0, maximo));
+
+  if (detalle.length === 0) return detalle;
+
+  const carnets = detalle.map(({ carnet }) => carnet);
+
+  const [cuentas, cargados] = await Promise.all([
+    prisma.estudiante.findMany({
+      where: { carnet: { in: carnets, mode: "insensitive" } },
+      select: { carnet: true, nombreCompleto: true },
+    }),
+    prisma.registroHoraBeca.findMany({
+      where: { ...where, carnet: { in: carnets } },
+      distinct: ["carnet"],
+      orderBy: [{ fechaActividad: "desc" }, { idRegistroHora: "desc" }],
+      select: { carnet: true, nombreEstudiante: true },
+    }),
+  ]);
+
+  const porCuenta = new Map(
+    cuentas.map(({ carnet, nombreCompleto }) => [carnet.toUpperCase(), nombreCompleto])
+  );
+  const porRegistro = new Map(
+    cargados.map(({ carnet, nombreEstudiante }) => [carnet.toUpperCase(), nombreEstudiante])
+  );
+
+  return detalle.map((fila) => {
+    const clave = fila.carnet.toUpperCase();
+    const cuenta = porCuenta.get(clave);
+
+    return {
+      ...fila,
+      estudiante: cuenta ?? porRegistro.get(clave) ?? fila.carnet,
+      vinculado: cuenta !== undefined,
+    };
+  });
 }
