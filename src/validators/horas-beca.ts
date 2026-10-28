@@ -105,6 +105,22 @@ export function parametrosDeFiltrosHoras(filtros: FiltrosHorasBeca): Record<stri
   return parametros;
 }
 
+/**
+ * Periodo del reporte, tomado de la dirección.
+ *
+ * Reutiliza la interpretación del listado y se queda solo con las fechas: el
+ * resumen del programa no admite los demás filtros, porque un total con el
+ * estado ya filtrado dejaría la columna de pendientes en cero y se leería como
+ * un dato y no como un filtro.
+ */
+export function interpretarFiltrosReporte(
+  parametros: Record<string, ValorCrudo> | URLSearchParams
+): Pick<FiltrosHorasBeca, "desde" | "hasta"> {
+  const { desde, hasta } = interpretarFiltrosHorasBeca(parametros);
+
+  return { desde, hasta };
+}
+
 /** Formatos en los que se puede descargar el listado de horas beca. */
 export const FORMATOS_EXPORTACION = ["csv", "excel", "pdf"] as const;
 
