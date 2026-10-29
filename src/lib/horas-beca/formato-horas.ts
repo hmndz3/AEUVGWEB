@@ -34,6 +34,17 @@ export function formatearFechaAcreditacion(fecha: Date): string {
   return fechaAcreditacion.format(fecha);
 }
 
+const mesActividad = new Intl.DateTimeFormat("es-GT", {
+  month: "long",
+  year: "numeric",
+  timeZone: ZONA_DIA_CALENDARIO,
+});
+
+/** Mes al que corresponde un grupo del reporte, como "octubre de 2026". */
+export function formatearMes(fecha: Date): string {
+  return mesActividad.format(fecha);
+}
+
 /** Día de calendario en el formato que espera un campo de fecha del formulario. */
 export function diaParaFormulario(fecha: Date): string {
   return fecha.toISOString().slice(0, 10);
