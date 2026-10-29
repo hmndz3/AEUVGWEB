@@ -8,6 +8,9 @@
  */
 const DIA_DE_REFERENCIA = "1970-01-01";
 
+/** Hora de reloj de 24 horas, tal como la escribe un campo de hora. */
+export const PATRON_HORA = /^([01]\d|2[0-3]):[0-5]\d$/;
+
 /** Hora de reloj en el formato que guarda la base, a partir de "HH:MM". */
 export function aHoraDeBase(hora: string): Date {
   return new Date(`${DIA_DE_REFERENCIA}T${hora}:00.000Z`);
