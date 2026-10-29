@@ -1,3 +1,10 @@
+import {
+  nombrarEstudiantes,
+  plegarPorEstudiante,
+  plegarPorMes,
+  type ResumenEstudiante,
+  type ResumenMes,
+} from "@/lib/horas-beca/calculos-reportes";
 import { condicionesDeFiltrosHoras } from "@/lib/horas-beca/filtros-horas";
 import { obtenerPrisma } from "@/lib/prisma";
 import type { FiltrosHorasBeca } from "@/validators/horas-beca";
@@ -26,25 +33,7 @@ export type ResumenPrograma = {
  */
 export type FiltrosReporte = Pick<FiltrosHorasBeca, "desde" | "hasta">;
 
-export type ResumenMes = {
-  /** Primer día del mes, para ordenar y formatear. */
-  mes: Date;
-  registros: number;
-  horasTotales: number;
-  horasAcreditadas: number;
-  horasPendientes: number;
-};
-
-export type ResumenEstudiante = {
-  carnet: string;
-  /** Nombre de la cuenta si el carnet tiene una; si no, el que trae el registro. */
-  estudiante: string;
-  vinculado: boolean;
-  registros: number;
-  horasTotales: number;
-  horasAcreditadas: number;
-  horasPendientes: number;
-};
+export type { ResumenEstudiante, ResumenMes };
 
 /**
  * Estudiantes que presenta el detalle del reporte.
@@ -54,11 +43,6 @@ export type ResumenEstudiante = {
  * exportación, que es la herramienta hecha para eso.
  */
 export const MAXIMO_ESTUDIANTES_REPORTE = 100;
-
-/** Primer día del mes al que pertenece un día de calendario, en UTC. */
-function primeroDelMes(fecha: Date): Date {
-  return new Date(Date.UTC(fecha.getUTCFullYear(), fecha.getUTCMonth(), 1));
-}
 
 /**
  * Resumen general del programa de horas beca.
@@ -131,32 +115,14 @@ export async function obtenerHorasPorMes(filtros: FiltrosReporte = {}): Promise<
     _count: { _all: true },
   });
 
-  const meses = new Map<number, ResumenMes>();
-
-  for (const grupo of porDia) {
-    const mes = primeroDelMes(grupo.fechaActividad);
-    const clave = mes.getTime();
-    const acumulado =
-      meses.get(clave) ??
-      ({
-        mes,
-        registros: 0,
-        horasTotales: 0,
-        horasAcreditadas: 0,
-        horasPendientes: 0,
-      } satisfies ResumenMes);
-
-    const horas = Number(grupo._sum.cantidadHoras ?? 0);
-
-    acumulado.registros += grupo._count._all;
-    acumulado.horasTotales += horas;
-    if (grupo.estado === "ACREDITADA") acumulado.horasAcreditadas += horas;
-    else acumulado.horasPendientes += horas;
-
-    meses.set(clave, acumulado);
-  }
-
-  return [...meses.values()].sort((uno, otro) => otro.mes.getTime() - uno.mes.getTime());
+  return plegarPorMes(
+    porDia.map((grupo) => ({
+      fechaActividad: grupo.fechaActividad,
+      estado: grupo.estado,
+      horas: Number(grupo._sum.cantidadHoras ?? 0),
+      registros: grupo._count._all,
+    }))
+  );
 }
 
 /**
@@ -183,36 +149,15 @@ export async function obtenerHorasPorEstudiante(
     _count: { _all: true },
   });
 
-  const acumulados = new Map<string, ResumenEstudiante>();
-
-  for (const grupo of porCarnet) {
-    const acumulado =
-      acumulados.get(grupo.carnet) ??
-      ({
-        carnet: grupo.carnet,
-        estudiante: grupo.carnet,
-        vinculado: false,
-        registros: 0,
-        horasTotales: 0,
-        horasAcreditadas: 0,
-        horasPendientes: 0,
-      } satisfies ResumenEstudiante);
-
-    const horas = Number(grupo._sum.cantidadHoras ?? 0);
-
-    acumulado.registros += grupo._count._all;
-    acumulado.horasTotales += horas;
-    if (grupo.estado === "ACREDITADA") acumulado.horasAcreditadas += horas;
-    else acumulado.horasPendientes += horas;
-
-    acumulados.set(grupo.carnet, acumulado);
-  }
-
-  const detalle = [...acumulados.values()]
-    .sort(
-      (uno, otro) => otro.horasTotales - uno.horasTotales || uno.carnet.localeCompare(otro.carnet)
-    )
-    .slice(0, Math.max(0, maximo));
+  const detalle = plegarPorEstudiante(
+    porCarnet.map((grupo) => ({
+      carnet: grupo.carnet,
+      estado: grupo.estado,
+      horas: Number(grupo._sum.cantidadHoras ?? 0),
+      registros: grupo._count._all,
+    })),
+    maximo
+  );
 
   if (detalle.length === 0) return detalle;
 
@@ -231,21 +176,5 @@ export async function obtenerHorasPorEstudiante(
     }),
   ]);
 
-  const porCuenta = new Map(
-    cuentas.map(({ carnet, nombreCompleto }) => [carnet.toUpperCase(), nombreCompleto])
-  );
-  const porRegistro = new Map(
-    cargados.map(({ carnet, nombreEstudiante }) => [carnet.toUpperCase(), nombreEstudiante])
-  );
-
-  return detalle.map((fila) => {
-    const clave = fila.carnet.toUpperCase();
-    const cuenta = porCuenta.get(clave);
-
-    return {
-      ...fila,
-      estudiante: cuenta ?? porRegistro.get(clave) ?? fila.carnet,
-      vinculado: cuenta !== undefined,
-    };
-  });
+  return nombrarEstudiantes(detalle, cuentas, cargados);
 }
