@@ -37,7 +37,24 @@ export function ListaOportunidades({ oportunidades }: { oportunidades: Oportunid
               valor={formatearHorarioOportunidad(oportunidad.horaInicio, oportunidad.horaFin)}
             />
             <Dato titulo="Lugar" valor={oportunidad.lugar} />
+            <Dato
+              titulo="Se necesitan"
+              valor={`${oportunidad.cantidadPersonas} ${oportunidad.cantidadPersonas === 1 ? "persona" : "personas"}`}
+            />
           </div>
+
+          {/* La información adicional solo aparece cuando la hay: un apartado
+              vacío haría pensar que falta un dato. */}
+          {oportunidad.informacionAdicional && (
+            <div className="border-borde border-t pt-4">
+              <p className="text-texto-suave text-xs font-bold tracking-wide uppercase">
+                Antes de ir
+              </p>
+              <p className="text-texto-suave mt-1 text-sm leading-relaxed whitespace-pre-line">
+                {oportunidad.informacionAdicional}
+              </p>
+            </div>
+          )}
         </Tarjeta>
       ))}
     </div>
