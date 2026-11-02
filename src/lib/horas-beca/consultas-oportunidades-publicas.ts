@@ -1,3 +1,5 @@
+import type { Prisma } from "@prisma/client";
+
 import { aHoraDeReloj } from "@/lib/horas-beca/horario-oportunidad";
 import { obtenerPrisma } from "@/lib/prisma";
 
@@ -38,6 +40,30 @@ export function hoyEnGuatemala(ahora = new Date()): Date {
 }
 
 /**
+ * Condición de la consulta pública.
+ *
+ * Vive aparte de la consulta para poder comprobarla sin base de datos: es la
+ * regla que decide qué ve el estudiantado, y un error aquí dejaría a la vista
+ * un borrador o retiraría del sitio una convocatoria de hoy.
+ */
+export function condicionesOportunidadesPublicas(
+  ahora = new Date()
+): Prisma.OportunidadHoraBecaWhereInput {
+  return { estado: "PUBLICADA", fecha: { gte: hoyEnGuatemala(ahora) } };
+}
+
+/**
+ * Orden de la consulta pública: lo más próximo primero, y a igual día la
+ * convocatoria que empieza más temprano. El identificador desempata para que
+ * dos iguales no cambien de sitio entre dos visitas.
+ */
+export const ORDEN_OPORTUNIDADES_PUBLICAS = [
+  { fecha: "asc" },
+  { horaInicio: "asc" },
+  { idOportunidad: "asc" },
+] as const satisfies Prisma.OportunidadHoraBecaOrderByWithRelationInput[];
+
+/**
  * Convocatorias abiertas, de la más próxima a la más lejana.
  *
  * Solo las publicadas: un borrador es trabajo a medias y una cancelada ya no se
@@ -49,8 +75,8 @@ export async function listarOportunidadesPublicadas(
   ahora = new Date()
 ): Promise<OportunidadPublica[]> {
   const filas = await obtenerPrisma().oportunidadHoraBeca.findMany({
-    where: { estado: "PUBLICADA", fecha: { gte: hoyEnGuatemala(ahora) } },
-    orderBy: [{ fecha: "asc" }, { horaInicio: "asc" }, { idOportunidad: "asc" }],
+    where: condicionesOportunidadesPublicas(ahora),
+    orderBy: [...ORDEN_OPORTUNIDADES_PUBLICAS],
     take: MAXIMO_OPORTUNIDADES_PUBLICAS,
     select: {
       idOportunidad: true,
