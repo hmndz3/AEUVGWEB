@@ -1,8 +1,8 @@
 # Módulo de horas beca
 
-Implementado durante el Sprint 4 (HU-19 a HU-24). Sustituye el control que AEUVG llevaba en hojas de cálculo: el registro, la búsqueda, el filtrado y la acreditación de las horas de servicio del estudiantado, más la consulta de cada estudiante desde su perfil.
+Implementado durante el Sprint 4 (HU-19 a HU-24) y ampliado en el Sprint 5 (HU-25 a HU-30). Sustituye el control que AEUVG llevaba en hojas de cálculo: el registro, la búsqueda, el filtrado y la acreditación de las horas de servicio del estudiantado, su consulta desde el perfil, la exportación y la importación de los históricos, el reporte del programa y las convocatorias para realizar horas.
 
-La importación desde Excel, la exportación y las convocatorias para realizar horas corresponden al Sprint 5 y no forman parte de este módulo todavía.
+El procedimiento de migración de las hojas históricas se describe aparte, en [migracion-historicos-horas.md](migracion-historicos-horas.md).
 
 ## El carnet como identificador
 
@@ -30,7 +30,59 @@ El `nombre_estudiante` del registro conserva el nombre con el que AEUVG lo carg�
 | `/api/admin/horas-beca/acreditacion` | PATCH  | Administrador | Acredita o devuelve a pendiente los registros marcados. |
 | `/perfil#mis-horas-beca`             | —      | Con sesión    | Totales e historial del estudiante de la sesión.        |
 
-Las rutas de administración usan `protegerRuta([ROLES.administrador])`, que responde 401 sin sesión y 404 sin el rol, para no revelar que existen. La sección del perfil se resuelve con el usuario de la sesión y nunca con un parámetro, igual que el resto del perfil.
+Lo que agregó el Sprint 5:
+
+| Ruta                                              | Método | Acceso        | Qué hace                                                    |
+| ------------------------------------------------- | ------ | ------------- | ----------------------------------------------------------- |
+| `/api/admin/horas-beca/exportar`                  | GET    | Administrador | Descarga el listado filtrado en CSV, Excel o PDF.           |
+| `/admin/horas-beca/importar`                      | —      | Administrador | Revisión previa e importación de una hoja de Excel.         |
+| `/api/admin/horas-beca/importar`                  | POST   | Administrador | Revisa o importa el archivo, según la acción pedida.        |
+| `/api/admin/horas-beca/plantilla`                 | GET    | Administrador | Descarga la plantilla de Excel del importador.              |
+| `/admin/reportes`                                 | —      | Administrador | Resumen del programa, desglose por mes y por estudiante.    |
+| `/admin/horas-beca/oportunidades`                 | —      | Administrador | Listado de convocatorias, incluidas las no publicadas.      |
+| `/admin/horas-beca/oportunidades/nueva`           | —      | Administrador | Creación de una convocatoria, que nace como borrador.       |
+| `/admin/horas-beca/oportunidades/[id]`            | —      | Administrador | Corrección de una convocatoria que todavía no es histórico. |
+| `/api/admin/horas-beca/oportunidades`             | POST   | Administrador | Crea la convocatoria, a nombre del administrador de sesión. |
+| `/api/admin/horas-beca/oportunidades/[id]`        | PUT    | Administrador | Corrige los datos, sin tocar el estado.                     |
+| `/api/admin/horas-beca/oportunidades/[id]`        | DELETE | Administrador | Elimina una convocatoria sin horas registradas.             |
+| `/api/admin/horas-beca/oportunidades/[id]/estado` | PATCH  | Administrador | Publica, cierra, cancela o finaliza la convocatoria.        |
+| `/oportunidades`                                  | —      | Pública       | Convocatorias publicadas que todavía no han pasado.         |
+
+Las rutas de administración usan `protegerRuta([ROLES.administrador])`, que responde 401 sin sesión y 404 sin el rol, para no revelar que existen. La sección del perfil se resuelve con el usuario de la sesión y nunca con un parámetro, igual que el resto del perfil. `/oportunidades` es pública y no exige sesión: su contenido es una convocatoria abierta a quien quiera presentarse.
+
+## Exportación
+
+Los tres formatos salen de la misma conversión a filas (`aFilaExportacion`), para que el CSV, el Excel y el PDF digan exactamente lo mismo: si cada uno formateara por su cuenta, con el tiempo una columna acabaría distinta en un archivo y en otro.
+
+Se exporta lo que el panel está mostrando, con los filtros de la dirección, y no la base completa. El archivo se arma entero en memoria, así que la exportación se rechaza por encima de 5000 registros (`MAXIMO_REGISTROS_EXPORTACION`) con una explicación que pide acotar el periodo, en lugar de tumbar el servidor justo cuando AEUVG necesita el reporte.
+
+El CSV se escribe con BOM y punto y coma, que es lo que Excel en español abre sin preguntar nada. En el Excel las horas van como número y no como texto, porque AEUVG suma y filtra sobre el archivo descargado. Un formato que no se reconozca responde 404 en lugar de caer a uno por omisión que nadie pidió.
+
+## Importación
+
+Dos pasos: la revisión lee y valida sin escribir nada, y la importación guarda solo las filas correctas. La revisión es lo que evita el caso que hace daño —descubrir los errores cuando ya se guardó medio archivo— y se puede repetir cuantas veces haga falta.
+
+Las columnas se localizan por su encabezado y no por su posición: la hoja puede traerlas en cualquier orden. La validación reutiliza `esquemaRegistroHoraAdmin`, el mismo esquema del formulario del panel, así que una regla cambia en los dos sitios a la vez; lo único que agrega es armar el horario con las dos columnas de hora. Una fila con varios problemas se reporta una sola vez, con el primero.
+
+`importacion_horas` deja constancia de cada carga con sus conteos y el detalle de lo que falló, y distingue la que entró entera (`COMPLETADA`) de la que entró a medias (`PARCIAL`). Los carnets se consultan de una sola vez y no fila por fila, porque un histórico repite al mismo estudiante decenas de veces.
+
+La plantilla se genera en cada descarga a partir de la misma lista de columnas que usa el importador, de modo que no pueda quedarse desalineada. `npm run horas:verificar-plantilla` comprueba que el archivo que sale siga siendo legible para el que entra.
+
+## Reportes
+
+El resumen del programa cuenta los carnets como distintos y no como filas: el dato que AEUVG informa es a cuánta gente alcanzó el programa, no cuántas veces se capturó. Admite acotarse por periodo y nada más: con el estado ya filtrado, la columna de pendientes quedaría en cero y se leería como un dato en lugar de como un filtro.
+
+La base suma y cuenta agrupando por día o por carnet, y el pliegue a meses y a estudiantes vive en `calculos-reportes.ts`, separado de las consultas para poder comprobarlo con grupos escritos a mano. El mes se calcula en UTC por el mismo motivo que la fecha de la actividad. El detalle por estudiante se agrupa por carnet y no por nombre: un mismo carnet puede traer el nombre escrito de dos maneras en hojas de distintos años, y agruparlo por nombre lo partiría en dos filas con la mitad de las horas cada una.
+
+## Convocatorias
+
+Una convocatoria nace `BORRADOR` y solo se ve en el sitio cuando se publica. El estado cambia por su propia ruta y no en el cuerpo de la edición, de modo que corregir una descripción no pueda publicar lo que todavía se estaba preparando. `CANCELADA` y `FINALIZADA` son el final del recorrido: desde ahí no se edita ni se cambia de estado, porque su información es la que vio quien se presentó.
+
+Una convocatoria con horas registradas no se elimina, se cancela: esas horas son el historial de quien ya apoyó, y borrar la convocatoria las dejaría sin su origen. El panel ofrece eliminar solo cuando no hay ninguna, y el servidor lo rechaza igual si la petición llega por otro camino.
+
+La fecha es un día de calendario y las horas son horas de reloj (`time(0)`), igual que están en la base: una convocatoria no es un instante, es un día y un horario. `horario-oportunidad.ts` hace la conversión en UTC, porque interpretarla en la zona del país la correría seis horas.
+
+La consulta pública presenta únicamente las publicadas cuya fecha no ha pasado, de la más próxima a la más lejana. El corte compara contra el día de hoy en Guatemala, así que una convocatoria se retira sola al día siguiente sin que nadie tenga que cerrarla, y no desaparece la misma tarde en que se realiza.
 
 ## Estados y acreditación
 
@@ -78,4 +130,4 @@ La eliminación es definitiva y no hay baja lógica, a diferencia de las organiz
 
 ## Información de prueba
 
-El conjunto de datos ficticios incluye siete registros: pendientes y acreditados, manuales y provenientes de una importación, con cuenta vinculada y sin ella, repartidos entre dos carnets que no tienen ficha de estudiante. El verificador comprueba además que ningún registro quede sin vincular si su carnet sí tiene ficha, que es la señal de que alguna de las dos mitades de la asociación dejó de aplicarse.
+El conjunto de datos ficticios incluye nueve registros: pendientes y acreditados, manuales y provenientes de una importación, con cuenta vinculada y sin ella, repartidos entre dos carnets que no tienen ficha de estudiante. Hay dos importaciones de ejemplo, una que entró a medias y otra que entró completa, para que el reporte y la pantalla de importación tengan los dos casos. El verificador comprueba además que ningún registro quede sin vincular si su carnet sí tiene ficha, que es la señal de que alguna de las dos mitades de la asociación dejó de aplicarse.

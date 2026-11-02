@@ -50,8 +50,8 @@ La separación frontend/backend se mantiene a nivel de estructura interna: los c
 | Prisma                              | ORM: acceso a datos y migraciones versionadas (desde HU-02)                  |
 | scrypt (Node) y jose                | Cifrado de contraseñas y sesiones firmadas, con roles propios                |
 | Zod                                 | Validación de datos en cliente y servidor con un mismo esquema               |
-| exceljs                             | Importación y exportación de archivos Excel para horas beca (Sprints 4-5)    |
-| pdfmake                             | Generación de reportes PDF (Sprint 5)                                        |
+| exceljs                             | Importación y exportación de archivos Excel para horas beca (Sprint 5)       |
+| pdfkit                              | Generación de reportes PDF (Sprint 5)                                        |
 | Resend                              | Envío de correos transaccionales: recuperación de contraseña, notificaciones |
 
 **Justificación:** Prisma proporciona migraciones versionadas en git (criterio de HU-02) y un esquema declarativo que documenta el modelo de datos. La autenticación se implementó dentro del proyecto: las contraseñas se derivan con scrypt y las sesiones se firman con jose, lo que evita depender de un marco externo para un flujo que el proyecto ya define por completo y restringe el registro a correos institucionales `@uvg.edu.gt`. Las contraseñas se almacenarán hasheadas (bcrypt/argon2) y los permisos por rol se verifican siempre en el servidor.
