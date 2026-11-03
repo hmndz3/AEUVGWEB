@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { ExportarHorasBeca } from "@/components/admin/exportar-horas-beca";
 import { FiltrosHorasBecaPanel } from "@/components/admin/filtros-horas-beca";
 import { ResumenHorasBecaPanel } from "@/components/admin/resumen-horas-beca";
 import { TablaHorasBeca } from "@/components/admin/tabla-horas-beca";
@@ -49,20 +50,32 @@ export default async function PaginaAdminHorasBeca({
           </p>
         </div>
 
-        <Link href={`/admin/horas-beca/nuevo?volver=${encodeURIComponent(rutaActual)}`}>
-          <Boton>Registrar horas</Boton>
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          <Link href="/admin/horas-beca/oportunidades">
+            <Boton variante="contorno">Convocatorias</Boton>
+          </Link>
+          <Link href="/admin/horas-beca/importar">
+            <Boton variante="contorno">Importar desde Excel</Boton>
+          </Link>
+          <Link href={`/admin/horas-beca/nuevo?volver=${encodeURIComponent(rutaActual)}`}>
+            <Boton>Registrar horas</Boton>
+          </Link>
+        </div>
       </div>
 
       <ResumenHorasBecaPanel resumen={resumen} />
 
       <FiltrosHorasBecaPanel filtros={filtros} />
 
-      <p className="text-texto-suave text-sm">
-        {pagina.total === 0
-          ? "Sin registros"
-          : `${pagina.total} ${pagina.total === 1 ? "registro" : "registros"}`}
-      </p>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="text-texto-suave text-sm">
+          {pagina.total === 0
+            ? "Sin registros"
+            : `${pagina.total} ${pagina.total === 1 ? "registro" : "registros"}`}
+        </p>
+
+        {pagina.total > 0 && <ExportarHorasBeca parametros={parametrosDeFiltrosHoras(filtros)} />}
+      </div>
 
       {pagina.registros.length === 0 ? (
         <div className="border-borde bg-superficie-suave text-texto-suave rounded-[1.25rem] border border-dashed px-6 py-14 text-center text-sm">

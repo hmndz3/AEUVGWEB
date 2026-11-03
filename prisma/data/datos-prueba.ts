@@ -42,6 +42,7 @@ export const NOMBRES_PRUEBA = {
   eventoLejano: `${MARCADOR_PRUEBA} Feria de Clubes 2027`,
   oportunidad: `${MARCADOR_PRUEBA} Apoyo en Biblioteca`,
   importacion: "T02.6-horas-prueba-aeuvg.xlsx",
+  importacionHistorica: "T27.5-historico-horas-prueba.xlsx",
   postulacion: `${MARCADOR_PRUEBA} Postulación de tutoría de María`,
 } as const;
 
@@ -56,6 +57,8 @@ export const DESCRIPCIONES_HORAS_PRUEBA = {
   pendienteManual: `${MARCADOR_PRUEBA} Preparación manual de material informativo`,
   acreditadaOportunidad: `${MARCADOR_PRUEBA} Apoyo acreditado en biblioteca`,
   acreditadaImportacion: `${MARCADOR_PRUEBA} Registro histórico importado sin cuenta`,
+  importadaHistoricaPrimera: `${MARCADOR_PRUEBA} Apoyo histórico importado de la primera fila`,
+  importadaHistoricaSegunda: `${MARCADOR_PRUEBA} Apoyo histórico importado de la segunda fila`,
   pendienteSinCuenta: `${MARCADOR_PRUEBA} Apoyo manual pendiente sin cuenta`,
   pendienteNoRegistrado: `${MARCADOR_PRUEBA} Apoyo pendiente de carnet no registrado`,
   acreditadaNoRegistrado: `${MARCADOR_PRUEBA} Apoyo acreditado de carnet no registrado`,
@@ -89,6 +92,9 @@ export const FECHAS_PRUEBA = {
   actividadPendiente: new Date("2026-09-10T00:00:00.000Z"),
   actividadAcreditada: new Date("2026-09-12T00:00:00.000Z"),
   actividadImportada: new Date("2026-08-20T00:00:00.000Z"),
+  actividadImportadaHistoricaPrimera: new Date("2026-08-04T00:00:00.000Z"),
+  actividadImportadaHistoricaSegunda: new Date("2026-08-11T00:00:00.000Z"),
+  importacionHistorica: new Date("2026-10-27T15:30:00.000Z"),
   actividadSinCuenta: new Date("2026-09-15T00:00:00.000Z"),
   actividadNoRegistrada: new Date("2026-09-18T00:00:00.000Z"),
   actividadNoRegistradaAcreditada: new Date("2026-09-19T00:00:00.000Z"),

@@ -104,3 +104,39 @@ export function parametrosDeFiltrosHoras(filtros: FiltrosHorasBeca): Record<stri
 
   return parametros;
 }
+
+/**
+ * Periodo del reporte, tomado de la dirección.
+ *
+ * Reutiliza la interpretación del listado y se queda solo con las fechas: el
+ * resumen del programa no admite los demás filtros, porque un total con el
+ * estado ya filtrado dejaría la columna de pendientes en cero y se leería como
+ * un dato y no como un filtro.
+ */
+export function interpretarFiltrosReporte(
+  parametros: Record<string, ValorCrudo> | URLSearchParams
+): Pick<FiltrosHorasBeca, "desde" | "hasta"> {
+  const { desde, hasta } = interpretarFiltrosHorasBeca(parametros);
+
+  return { desde, hasta };
+}
+
+/** Formatos en los que se puede descargar el listado de horas beca. */
+export const FORMATOS_EXPORTACION = ["csv", "excel", "pdf"] as const;
+
+export type FormatoExportacion = (typeof FORMATOS_EXPORTACION)[number];
+
+export const ETIQUETAS_FORMATO: Record<FormatoExportacion, string> = {
+  csv: "CSV",
+  excel: "Excel",
+  pdf: "PDF",
+};
+
+/**
+ * Formato pedido en la dirección, o null si no se reconoce. No hay formato por
+ * omisión a propósito: descargar algo distinto de lo que se pidió confunde más
+ * que un error.
+ */
+export function interpretarFormato(valor: string | null): FormatoExportacion | null {
+  return FORMATOS_EXPORTACION.find((formato) => formato === valor) ?? null;
+}
