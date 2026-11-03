@@ -96,12 +96,20 @@ function validarEntorno(): string {
 async function cargarDatos(tx: Prisma.TransactionClient): Promise<Resultados> {
   const resultados: Resultados = new Map();
   const carrera = await tx.carrera.findUnique({ where: { codigo: "CC-ING-COMP" } });
+  // Las siete categorías que usan los eventos ficticios, no solo las tres
+  // primeras: con el filtro corto, el seed abortaba al llegar al cuarto evento
+  // porque su categoría no estaba en el mapa.
+  const NOMBRES_CATEGORIAS = [
+    "Festival",
+    "Convocatoria de horas beca",
+    "Colaboración estudiantil",
+    "Venta",
+    "Torneo deportivo",
+    "Conferencia o taller",
+    "Espíritu universitario",
+  ];
   const categorias = await tx.categoriaEvento.findMany({
-    where: {
-      nombre: {
-        in: ["Festival", "Convocatoria de horas beca", "Colaboración estudiantil"],
-      },
-    },
+    where: { nombre: { in: NOMBRES_CATEGORIAS } },
   });
   const roles = await tx.rol.findMany({
     where: { nombre: { in: ["ESTUDIANTE", "TUTOR", "ADMINISTRADOR"] } },
@@ -109,7 +117,7 @@ async function cargarDatos(tx: Prisma.TransactionClient): Promise<Resultados> {
 
   if (!carrera)
     throw new Error("Falta la carrera CC-ING-COMP. Ejecuta primero npx prisma db seed.");
-  if (categorias.length !== 3 || roles.length !== 3) {
+  if (categorias.length !== NOMBRES_CATEGORIAS.length || roles.length !== 3) {
     throw new Error("Faltan categorías o roles iniciales. Ejecuta primero npx prisma db seed.");
   }
 
