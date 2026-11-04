@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 import { EtiquetaEstado } from "@/components/ui/etiqueta-estado";
 import {
   Tabla,
@@ -40,18 +38,12 @@ export function HorasBecaPerfil({ horas }: { horas: HorasBecaEstudiante }) {
 
   return (
     <section id="mis-horas-beca" className="flex flex-col gap-6">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h2 className="text-texto text-lg font-bold">Mis horas beca</h2>
-          <p className="text-texto-suave mt-1 text-sm leading-relaxed">
-            Las horas de servicio que AEUVG tiene registradas a tu carnet. Las acredita AEUVG
-            después de cada actividad.
-          </p>
-        </div>
-
-        <Link href="/oportunidades" className="text-primario text-sm font-bold hover:underline">
-          Ver convocatorias abiertas →
-        </Link>
+      <div>
+        <h2 className="text-texto text-lg font-bold">Mis horas beca</h2>
+        <p className="text-texto-suave mt-1 text-sm leading-relaxed">
+          Las horas de servicio que AEUVG tiene registradas a tu carnet. Las acredita AEUVG después
+          de cada actividad.
+        </p>
       </div>
 
       {totales.actividades === 0 ? (
@@ -62,12 +54,6 @@ export function HorasBecaPerfil({ horas }: { horas: HorasBecaEstudiante }) {
             lo haga, aparecerán aquí con su estado, aunque se hayan realizado antes de que crearas
             tu cuenta.
           </p>
-          <Link
-            href="/oportunidades"
-            className="text-primario mt-4 inline-flex text-sm font-bold hover:underline"
-          >
-            Ver dónde puedes apoyar
-          </Link>
         </div>
       ) : (
         <>
