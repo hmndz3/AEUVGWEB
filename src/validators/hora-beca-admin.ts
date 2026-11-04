@@ -91,6 +91,25 @@ export const esquemaRegistroHoraAdmin = z.object({
 
 export type DatosRegistroHoraAdmin = z.infer<typeof esquemaRegistroHoraAdmin>;
 
+/**
+ * Registro de la misma actividad para varios carnets a la vez.
+ *
+ * Reutiliza los campos de la actividad del esquema de arriba y cambia el
+ * estudiante por una lista de carnets pegada como texto. El nombre no viaja: lo
+ * pone la cuenta de cada carnet, que es el dato verificado.
+ */
+export const esquemaLoteHoraAdmin = esquemaRegistroHoraAdmin
+  .omit({ carnet: true, nombreEstudiante: true })
+  .extend({
+    carnets: z
+      .string("Escribe los carnets de los estudiantes.")
+      .trim()
+      .min(3, "Escribe al menos un carnet.")
+      .max(6000, "La lista de carnets es demasiado larga."),
+  });
+
+export type DatosLoteHoraAdmin = z.infer<typeof esquemaLoteHoraAdmin>;
+
 /** Etiqueta legible de cada campo, para nombrar el primer error en el resumen. */
 export const ETIQUETAS_CAMPO_HORA_BECA: Record<string, string> = {
   carnet: "Carnet",
