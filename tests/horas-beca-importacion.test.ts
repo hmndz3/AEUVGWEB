@@ -135,9 +135,8 @@ test("un archivo sin las columnas obligatorias se rechaza nombrando las que falt
   assert.deepEqual(lectura.tipo === "sin_columnas" ? lectura.faltantes : [], [
     "Nombre del estudiante",
     "Fecha de la actividad",
-    "Hora de inicio",
-    "Hora de fin",
     "Cantidad de horas",
+    "Horario de apoyo (o Hora de inicio y Hora de fin)",
   ]);
 });
 

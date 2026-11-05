@@ -1,5 +1,12 @@
 import ExcelJS from "exceljs";
 
+import {
+  ALIAS_COLUMNAS,
+  ALIAS_HORARIO,
+  normalizarEncabezado,
+  partirHorario,
+} from "@/lib/horas-beca/columnas-importacion";
+
 /**
  * Columnas que espera el importador, en el orden de la plantilla.
  *
@@ -18,8 +25,22 @@ export const COLUMNAS_IMPORTACION = [
   "Observaciones",
 ] as const;
 
-/** Columnas sin las que el archivo no puede leerse. Observaciones es opcional. */
-const COLUMNAS_OBLIGATORIAS = COLUMNAS_IMPORTACION.filter((columna) => columna !== "Observaciones");
+/**
+ * Columnas sin las que el archivo no puede leerse.
+ *
+ * Observaciones es opcional, y el horario se comprueba aparte porque puede
+ * venir en dos columnas de hora o en una sola de rango.
+ */
+const COLUMNAS_OBLIGATORIAS = [
+  "Carnet",
+  "Nombre del estudiante",
+  "Fecha de la actividad",
+  "Actividad",
+  "Cantidad de horas",
+] as const;
+
+/** Lo que se nombra cuando el archivo no trae el horario de ninguna forma. */
+const FALTA_HORARIO = "Horario de apoyo (o Hora de inicio y Hora de fin)";
 
 /** Filas de datos que admite un archivo, sin contar la de encabezados. */
 export const MAXIMO_FILAS_IMPORTACION = 2000;
@@ -126,14 +147,34 @@ export async function leerFilasDeExcel(archivo: Buffer): Promise<ResultadoLectur
   const hoja = libro.worksheets[0];
   if (!hoja) return { tipo: "ilegible" };
 
+  // Los encabezados se comparan normalizados, así que "CARNÉ" y "Carnet" son el
+  // mismo. Ver columnas-importacion.ts para los nombres que admite cada uno.
   const encabezados = new Map<string, number>();
   hoja.getRow(1).eachCell((celda, columna) => {
-    const titulo = textoDeCelda(celda.value).toLocaleLowerCase("es");
-    if (titulo) encabezados.set(titulo, columna);
+    const titulo = normalizarEncabezado(textoDeCelda(celda.value));
+    if (titulo && !encabezados.has(titulo)) encabezados.set(titulo, columna);
   });
 
-  const indice = (columna: string) => encabezados.get(columna.toLocaleLowerCase("es"));
-  const faltantes = COLUMNAS_OBLIGATORIAS.filter((columna) => indice(columna) === undefined);
+  const indice = (columna: keyof typeof ALIAS_COLUMNAS): number | undefined => {
+    for (const alias of ALIAS_COLUMNAS[columna]) {
+      const encontrada = encabezados.get(alias);
+      if (encontrada !== undefined) return encontrada;
+    }
+    return undefined;
+  };
+
+  const columnaHorario = ALIAS_HORARIO.map((alias) => encabezados.get(alias)).find(
+    (columna) => columna !== undefined
+  );
+  // La hoja de AEUVG trae el horario entero en una celda; la plantilla, en dos
+  // columnas de hora. Las dos columnas mandan cuando están.
+  const horarioJunto =
+    indice("Hora de inicio") === undefined || indice("Hora de fin") === undefined;
+
+  const faltantes: string[] = COLUMNAS_OBLIGATORIAS.filter(
+    (columna) => indice(columna) === undefined
+  );
+  if (horarioJunto && columnaHorario === undefined) faltantes.push(FALTA_HORARIO);
 
   if (faltantes.length > 0) return { tipo: "sin_columnas", faltantes };
 
@@ -141,15 +182,21 @@ export async function leerFilasDeExcel(archivo: Buffer): Promise<ResultadoLectur
 
   for (let numero = 2; numero <= hoja.rowCount; numero += 1) {
     const fila = hoja.getRow(numero);
-    const celda = (columna: string) => fila.getCell(indice(columna) ?? 1).value;
+    const celda = (columna: keyof typeof ALIAS_COLUMNAS) =>
+      fila.getCell(indice(columna) ?? 1).value;
+
+    const horario =
+      horarioJunto && columnaHorario !== undefined
+        ? partirHorario(textoDeCelda(fila.getCell(columnaHorario).value))
+        : { inicio: horaDeCelda(celda("Hora de inicio")), fin: horaDeCelda(celda("Hora de fin")) };
 
     const cruda: FilaCruda = {
       fila: numero,
       carnet: textoDeCelda(celda("Carnet")),
       nombreEstudiante: textoDeCelda(celda("Nombre del estudiante")),
       fechaActividad: fechaDeCelda(celda("Fecha de la actividad")),
-      horaInicio: horaDeCelda(celda("Hora de inicio")),
-      horaFin: horaDeCelda(celda("Hora de fin")),
+      horaInicio: horario.inicio,
+      horaFin: horario.fin,
       descripcionActividad: textoDeCelda(celda("Actividad")),
       cantidadHoras: textoDeCelda(celda("Cantidad de horas")),
       observaciones:
