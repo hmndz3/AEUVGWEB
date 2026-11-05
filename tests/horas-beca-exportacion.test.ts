@@ -18,6 +18,7 @@ const REGISTRO = {
   carnet: "24117",
   nombreEstudiante: "Ana Lucía Morales Castillo",
   nombreCuenta: "Ana Lucía Morales Castillo",
+  facultad: "Facultad de Ingeniería",
   fechaActividad: new Date("2026-10-09T00:00:00.000Z"),
   horarioApoyo: "14:00-16:00",
   descripcionActividad: "Apoyo en la Feria de Voluntariado",

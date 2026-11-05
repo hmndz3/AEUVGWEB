@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { Boton } from "@/components/ui/boton";
+import type { FacultadFiltro } from "@/lib/horas-beca/consultas-facultades";
 import {
   contarFiltrosHoras,
   ESTADOS_HORA_BECA,
@@ -45,7 +46,13 @@ function Campo({
  * Los filtros se presentan desplegados y no detrás de un botón, al contrario que
  * en la cartelera: aquí filtrar es la operación habitual y no la excepción.
  */
-export function FiltrosHorasBecaPanel({ filtros }: { filtros: FiltrosHorasBeca }) {
+export function FiltrosHorasBecaPanel({
+  filtros,
+  facultades,
+}: {
+  filtros: FiltrosHorasBeca;
+  facultades: FacultadFiltro[];
+}) {
   const activos = contarFiltrosHoras(filtros);
 
   return (
@@ -76,6 +83,24 @@ export function FiltrosHorasBecaPanel({ filtros }: { filtros: FiltrosHorasBeca }
           {ESTADOS_HORA_BECA.map((estado) => (
             <option key={estado} value={estado}>
               {ETIQUETAS_ESTADO_HORA_BECA[estado]}
+            </option>
+          ))}
+        </select>
+      </Campo>
+
+      {/* La facultad llega de la carrera de la cuenta, así que este filtro deja
+          fuera los registros de carnets que todavía no se han registrado. */}
+      <Campo etiqueta="Facultad" nombre="facultad" ancho="min-w-56">
+        <select
+          id="facultad"
+          name="facultad"
+          defaultValue={filtros.facultad ? String(filtros.facultad) : ""}
+          className={claseCampo}
+        >
+          <option value="">Todas</option>
+          {facultades.map((facultad) => (
+            <option key={facultad.idFacultad} value={facultad.idFacultad}>
+              {facultad.nombre}
             </option>
           ))}
         </select>

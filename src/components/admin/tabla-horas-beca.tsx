@@ -76,7 +76,7 @@ export function TablaHorasBeca({
         alLimpiar={() => setSeleccion(new Set())}
       />
 
-      <Tabla className="min-w-[60rem]">
+      <Tabla className="min-w-[68rem]">
         <TablaEncabezado>
           <tr>
             <TablaCeldaEncabezado className="w-10">
@@ -90,6 +90,7 @@ export function TablaHorasBeca({
             </TablaCeldaEncabezado>
             <TablaCeldaEncabezado>Carnet</TablaCeldaEncabezado>
             <TablaCeldaEncabezado>Estudiante</TablaCeldaEncabezado>
+            <TablaCeldaEncabezado>Facultad</TablaCeldaEncabezado>
             <TablaCeldaEncabezado>Fecha</TablaCeldaEncabezado>
             <TablaCeldaEncabezado>Horario</TablaCeldaEncabezado>
             <TablaCeldaEncabezado>Actividad</TablaCeldaEncabezado>
@@ -142,6 +143,11 @@ export function TablaHorasBeca({
                     Cargado como {nombreCargadoDistinto(registro)}
                   </span>
                 )}
+              </TablaCelda>
+              {/* La facultad sale de la carrera de la cuenta, así que un carnet
+                  sin cuenta todavía no tiene cuál mostrar. */}
+              <TablaCelda className="text-texto-suave">
+                {registro.facultad ?? <span className="opacity-60">—</span>}
               </TablaCelda>
               <TablaCelda className="text-texto-suave whitespace-nowrap">
                 {formatearFechaActividad(registro.fechaActividad)}

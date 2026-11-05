@@ -19,6 +19,8 @@ export type RegistroHoraBecaAdmin = {
   nombreEstudiante: string;
   /** Nombre de la cuenta vinculada, cuando el carnet ya tiene una. */
   nombreCuenta: string | null;
+  /** Facultad de la carrera de la cuenta. Null mientras el carnet no tenga una. */
+  facultad: string | null;
   fechaActividad: Date;
   horarioApoyo: string;
   descripcionActividad: string;
@@ -53,7 +55,14 @@ const CAMPOS_REGISTRO = {
   estado: true,
   fechaAcreditacion: true,
   observaciones: true,
-  estudiante: { select: { nombreCompleto: true } },
+  estudiante: {
+    select: {
+      nombreCompleto: true,
+      // La facultad no está en el registro: cuelga de la carrera de la cuenta,
+      // así que un carnet sin cuenta no tiene facultad que mostrar.
+      carrera: { select: { facultad: { select: { nombre: true } } } },
+    },
+  },
   // AEUVG pidió en la revisión saber quién acreditó cada registro: la columna
   // ya guardaba el usuario, pero el panel no lo mostraba.
   acreditador: { select: { estudiante: { select: { nombreCompleto: true } } } },
@@ -72,6 +81,7 @@ function aRegistro(fila: FilaRegistro): RegistroHoraBecaAdmin {
     carnet: fila.carnet,
     nombreEstudiante: fila.nombreEstudiante,
     nombreCuenta: fila.estudiante?.nombreCompleto ?? null,
+    facultad: fila.estudiante?.carrera.facultad.nombre ?? null,
     fechaActividad: fila.fechaActividad,
     horarioApoyo: fila.horarioApoyo,
     descripcionActividad: fila.descripcionActividad,
