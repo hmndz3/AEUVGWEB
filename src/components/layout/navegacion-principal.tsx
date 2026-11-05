@@ -21,7 +21,6 @@ const ENLACES: Enlace[] = [
   { href: "/calendario", texto: "Calendario" },
   { href: "/asociaciones", texto: "Asociaciones" },
   { href: "/clubes", texto: "Clubes" },
-  { href: "/oportunidades", texto: "Horas beca" },
   // Tutorías se quita del menú hasta el Sprint 6: la ruta no existe todavía y
   // el enlace devolvía un 404 desde cualquier pantalla del sitio. La tarjeta de
   // la portada ya estaba sin enlace por el mismo motivo.
