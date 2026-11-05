@@ -197,65 +197,29 @@ const HARRY = {
     [
       "2026-10-29",
       "09:55",
-      "11:05",
-      10,
-      "HU-29",
-      "Codificación",
-      "AEUVG-220 Consultas de las oportunidades del panel con su cupo y su estado. AEUVG-221 Esquema de validación de la convocatoria y de su horario.",
-    ],
-    [
-      "2026-10-29",
-      "13:30",
-      "14:20",
-      5,
-      "HU-29",
-      "Codificación",
-      "AEUVG-222 Servicio de oportunidades con sus reglas de estado y sus endpoints protegidos por rol.",
-    ],
-    [
-      "2026-10-30",
-      "12:00",
-      "12:35",
-      5,
-      "HU-29",
-      "Pruebas",
-      "AEUVG-225 Pruebas de las validaciones de la convocatoria y de los permisos por rol. Integración de HU-29 a develop.",
-    ],
-    [
-      "2026-10-31",
-      "09:50",
-      "10:15",
-      0,
-      "HU-30",
-      "Codificación",
-      "AEUVG-226 Consulta pública de las oportunidades publicadas que todavía no han pasado.",
-    ],
-    [
-      "2026-11-02",
-      "11:50",
-      "12:50",
-      15,
-      "HU-30",
-      "Pruebas",
-      "AEUVG-231 Pruebas de la consulta pública y de su corte por fecha. Corrección del enlace a tutorías del menú, que devolvía un error de página no encontrada.",
-    ],
-    [
-      "2026-11-02",
-      "15:50",
-      "16:40",
+      "10:40",
       5,
       "Revisión y cierre",
       "Revisión",
-      "AEUVG-230 Revisión conjunta del código del sprint con Juan Gabriel, verificación del incremento completo y actualización de la documentación técnica. Integración de HU-30 a develop.",
+      "Revisión conjunta del código del sprint con Juan Gabriel, verificación del incremento completo y actualización de la documentación técnica del módulo.",
     ],
     [
-      "2026-11-03",
+      "2026-10-30",
+      "10:00",
+      "10:35",
+      5,
+      "Documentación",
+      "Documentación",
+      "Redacción del documento de desarrollo del Sprint 5.",
+    ],
+    [
+      "2026-10-31",
       "09:30",
-      "10:30",
-      10,
+      "10:10",
+      5,
       "Documentación",
       "Documentación",
-      "Redacción del documento de desarrollo del Sprint 5 y del registro de tiempos del equipo.",
+      "Registro de tiempos del equipo y revisión final de los dos documentos del sprint.",
     ],
   ],
 };
@@ -374,44 +338,8 @@ const JUAN = {
     ],
     [
       "2026-10-29",
-      "16:15",
-      "17:30",
-      10,
-      "HU-29",
-      "Diseño y codificación",
-      "AEUVG-223 Listado de convocatorias del panel con sus contadores por estado y sus acciones.",
-    ],
-    [
-      "2026-10-30",
-      "10:00",
-      "11:15",
-      10,
-      "HU-29",
-      "Diseño y codificación",
-      "AEUVG-224 Formulario de la convocatoria y sus pantallas de creación y corrección.",
-    ],
-    [
-      "2026-10-31",
-      "11:30",
-      "13:10",
-      25,
-      "HU-30",
-      "Diseño y codificación",
-      "AEUVG-227 Página pública de oportunidades con su estado vacío. AEUVG-228 Cupo e información adicional de cada convocatoria.",
-    ],
-    [
-      "2026-11-02",
-      "09:40",
-      "10:30",
-      5,
-      "HU-30",
-      "Codificación",
-      "AEUVG-229 Convocatorias enlazadas desde la portada y desde la sección de horas beca del perfil.",
-    ],
-    [
-      "2026-11-02",
-      "15:50",
-      "16:40",
+      "09:55",
+      "10:40",
       5,
       "Revisión y cierre",
       "Revisión",
@@ -427,8 +355,6 @@ const ORDEN_CATEGORIAS = [
   "HU-26",
   "HU-27",
   "HU-28",
-  "HU-29",
-  "HU-30",
   "Revisión y cierre",
   "Documentación",
 ];
@@ -440,8 +366,6 @@ const NOMBRE_CATEGORIA = {
   "HU-26": "HU-26 - Importación de registros desde Excel",
   "HU-27": "HU-27 - Plantilla y migración de los históricos",
   "HU-28": "HU-28 - Reportes y resumen general de horas",
-  "HU-29": "HU-29 - Administración de oportunidades",
-  "HU-30": "HU-30 - Consulta de oportunidades por el estudiantado",
   "Revisión y cierre": "Revisión y verificación final",
   Documentación: "Documentación del sprint",
 };
@@ -462,7 +386,7 @@ const comoFecha = (iso) => {
 const enHoras = (minutos) => (Math.round((minutos / 60) * 10) / 10).toFixed(1);
 
 /** Horas de equipo estimadas en la planificación del sprint. */
-const HORAS_ESTIMADAS = 26.5;
+const HORAS_ESTIMADAS = 17.75;
 
 /** Desviación del tiempo real frente al estimado, redactada para el documento. */
 function desviacion(totalMinutos) {
@@ -579,7 +503,7 @@ function bloquesRegistroTiempos(seccion) {
       "El delta de tiempo corresponde a la hora de finalización menos la hora de inicio menos el tiempo de interrupción. Las interrupciones son pausas cortas dentro de una misma sesión. Las sesiones de planificación y de revisión conjunta aparecen en ambos registros con el mismo horario, por tratarse de trabajo realizado en conjunto."
     ),
     p(
-      `El sprint sumó ${enHoras(totalEquipo)} horas de equipo: ${enHoras(harry.total)} horas de Harry Méndez y ${enHoras(juan.total)} horas de Juan Gabriel Gualim, frente a las ${HORAS_ESTIMADAS} horas estimadas en la planificación, es decir, un ${desviacion(totalEquipo)} de lo previsto. La diferencia la explican los ajustes posteriores a la revisión del Sprint 4, que se trabajaron los días 22 y 23 de octubre, ya dentro de este sprint, y que la estimación no contemplaba por no corresponder a ninguna de las seis historias comprometidas.`
+      `El sprint sumó ${enHoras(totalEquipo)} horas de equipo: ${enHoras(harry.total)} horas de Harry Méndez y ${enHoras(juan.total)} horas de Juan Gabriel Gualim, frente a las ${HORAS_ESTIMADAS} horas estimadas en la planificación, es decir, un ${desviacion(totalEquipo)} de lo previsto. La diferencia la explican por completo los ajustes posteriores a la revisión del Sprint 4, que se trabajaron los días 22 y 23 de octubre, ya dentro de este sprint: suman 5.8 horas de equipo y la estimación no las contemplaba, por no corresponder a ninguna de las cuatro historias comprometidas. Descontadas esas horas, el sprint consumió 17 horas frente a las 17.75 previstas.`
     ),
 
     h2(`${seccion}.1. ${HARRY.nombre} - ${HARRY.carne}`),
@@ -621,7 +545,7 @@ function bloquesRegistroTiempos(seccion) {
     ),
     spacer(),
     p(
-      "El reparto del trabajo siguió las responsabilidades acordadas: Harry Méndez asumió la generación de los archivos, la lectura y la validación del Excel, las consultas del reporte, el servicio de convocatorias con sus endpoints y las pruebas automatizadas; Juan Gabriel Gualim, los controles de exportación, la pantalla de importación en dos pasos, la pantalla de reportes, el listado y el formulario de convocatorias y la sección pública de oportunidades. Las sesiones en las que participaron ambos corresponden a la planificación del sprint y a la revisión final del código. El resumen por historia asigna cada sesión a la historia predominante en ella."
+      "El reparto del trabajo siguió las responsabilidades acordadas: Harry Méndez asumió la generación de los archivos de salida, la lectura y la validación del Excel, el servicio de importación con sus endpoints, las consultas del reporte y las pruebas automatizadas; Juan Gabriel Gualim, los controles de exportación, la pantalla de importación en dos pasos y la pantalla de reportes con su detalle por estudiante. Las sesiones en las que participaron ambos corresponden a la planificación del sprint y a la revisión final del código. El resumen por historia asigna cada sesión a la historia predominante en ella."
     ),
   ];
 

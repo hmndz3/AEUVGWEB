@@ -28,7 +28,7 @@ const doc = buildDocument([
     "El presente documento describe la planificación detallada del Sprint 5 del proyecto de la plataforma web de la Asociación General de Estudiantes de la Universidad del Valle de Guatemala (AEUVG). Complementa el documento de planificación general de sprints, en el cual se define la distribución del trabajo a lo largo de los seis sprints del proyecto."
   ),
   p(
-    "El Sprint 5 completa el módulo de horas beca y abre el de oportunidades. Por un lado, permite que la información entre y salga de la plataforma: importar las hojas de cálculo con las que AEUVG lleva el control hoy, y exportar los registros en los formatos que la asociación necesita para rendir cuentas. Por otro, publica las convocatorias para realizar horas, de modo que el estudiantado pueda enterarse de dónde apoyar en lugar de preguntarlo."
+    "El Sprint 5 completa el módulo de horas beca por sus dos extremos. Por la entrada, permite cargar las hojas de cálculo con las que AEUVG lleva el control hoy, con una validación previa que señale fila por fila lo que no cuadra. Por la salida, exportar los registros en los formatos que la asociación necesita para rendir cuentas y consultar un resumen general del programa, que hasta ahora se armaba a mano cada vez que alguien lo pedía."
   ),
   p(
     "En este documento se presentan el objetivo del sprint, su alcance, las historias de usuario comprometidas con sus criterios de aceptación y tareas, la distribución del trabajo por semana y los entregables esperados al finalizar el sprint."
@@ -41,7 +41,7 @@ const doc = buildDocument([
     ["Campo", "Detalle"],
     [
       ["Proyecto", "Página web AEUVG"],
-      ["Sprint", "Sprint 5 - Reportes y oportunidades para realizar horas"],
+      ["Sprint", "Sprint 5 - Importación, exportación y reportes de horas beca"],
       ["Fecha de inicio", "Miércoles 21 de octubre de 2026"],
       ["Fecha de finalización", "Martes 3 de noviembre de 2026"],
       ["Duración", "2 semanas"],
@@ -49,7 +49,7 @@ const doc = buildDocument([
       ["Historias de usuario", "6"],
       ["Tareas", "37"],
       ["Puntos de historia", "52"],
-      ["Horas estimadas de equipo", "26.5 horas"],
+      ["Horas estimadas de equipo", "17.75 horas"],
       ["Revisión de sprint", "Martes 3 de noviembre de 2026"],
     ]
   ),
@@ -58,12 +58,12 @@ const doc = buildDocument([
     "La reunión de planificación se realizó el viernes 23 de octubre y no el primer día del sprint. Los días 22 y 23 se dedicaron a resolver las observaciones que dejó la revisión del Sprint 4 y a aplicar su migración en el ambiente de Railway, trabajo que se registra en este sprint por haberse realizado dentro de sus fechas aunque pertenezca al anterior. El sprint conserva su fecha de finalización."
   ),
   p(
-    "La estimación de 26.5 horas de equipo corresponde únicamente a las seis historias de este sprint y es menor que las 30 del anterior por una razón concreta: las tablas de oportunidades, inscripciones e importaciones existen en el modelo de datos desde el Sprint 1, de modo que este sprint no necesita ninguna migración. El módulo reutiliza además los filtros, la tabla del panel, la protección de servicios por rol y los patrones de validación construidos en el Sprint 4."
+    "La estimación de 17.75 horas de equipo corresponde únicamente a las cuatro historias de este sprint y es bastante menor que las 30 del anterior por una razón concreta: la tabla de importaciones existe en el modelo de datos desde el Sprint 1 y el carnet del registro se agregó en el Sprint 4, de modo que este sprint no necesita ninguna migración. El módulo reutiliza además los filtros, la tabla del panel, la protección de servicios por rol y los patrones de validación construidos en el Sprint 4."
   ),
 
   h1("3. Objetivo del sprint"),
   p(
-    "Lograr que la información de horas beca entre y salga de la plataforma sin trabajo manual, y publicar las oportunidades para realizarlas. AEUVG debe poder cargar sus hojas de cálculo históricas con una validación previa que señale fila por fila lo que no cuadra, exportar los registros filtrados en Excel, PDF y CSV, y consultar un resumen general del programa. El estudiantado, por su parte, debe poder ver qué convocatorias hay abiertas, cuándo, dónde y cuánta gente se necesita."
+    "Lograr que la información de horas beca entre y salga de la plataforma sin trabajo manual. AEUVG debe poder cargar sus hojas de cálculo históricas con una validación previa que señale fila por fila lo que no cuadra, exportar los registros filtrados en Excel, PDF y CSV, y consultar un resumen general del programa con su desglose por mes y por estudiante."
   ),
   p(
     "Al finalizar el sprint, el control de horas beca que hoy vive en hojas de cálculo podrá trasladarse por completo a la plataforma, y AEUVG dejará de ser el único canal por el que el estudiantado se entera de dónde hacer horas."
@@ -84,20 +84,13 @@ const doc = buildDocument([
   bullet(
     "Pantalla de reportes con el resumen general del programa: totales por estado, desglose por mes y detalle por estudiante."
   ),
-  bullet(
-    "Administración de las oportunidades para realizar horas desde el panel: actividad, fecha, horario, lugar, cantidad de personas e información adicional."
-  ),
-  bullet("Estados de la oportunidad: borrador, publicada, cerrada y cancelada."),
-  bullet(
-    "Sección pública de oportunidades, con las convocatorias publicadas y su información completa."
-  ),
 
   h2("4.2. Trabajo no incluido"),
   bullet(
     "La carga de los datos históricos reales de AEUVG: se entrega la plantilla y el procedimiento, y la carga la realiza la asociación con su propia información."
   ),
   bullet(
-    "Inscripción del estudiantado a las oportunidades: en esta etapa las convocatorias se consultan y el apoyo se coordina con AEUVG por los medios de contacto publicados."
+    "Publicación de convocatorias para realizar horas: el estudiantado se entera por los canales que AEUVG ya usa, y la plataforma registra las horas una vez realizadas."
   ),
   bullet("Tutorías, tutores y postulaciones, correspondientes al Sprint 6."),
   bullet("Recomendaciones personalizadas y notificaciones, correspondientes al Sprint 6."),
@@ -108,7 +101,7 @@ const doc = buildDocument([
 
   h1("5. Historias de usuario del Sprint 5"),
   p(
-    "A continuación se presentan las 6 historias de usuario comprometidas para el Sprint 5, cada una con su descripción, criterios de aceptación y tareas correspondientes. En total, el sprint comprende 37 tareas. La numeración continúa la del Sprint 4."
+    "A continuación se presentan las 4 historias de usuario comprometidas para el Sprint 5, cada una con su descripción, criterios de aceptación y tareas correspondientes. En total, el sprint comprende 25 tareas. La numeración continúa la del Sprint 4."
   ),
 
   h2("5.1. HU-25 - Exportación de los registros de horas beca"),
@@ -291,89 +284,6 @@ const doc = buildDocument([
     ["T-28.6", "Realizar pruebas de los cálculos del resumen general.", "Ambos", "0.25"],
   ]),
 
-  h2("5.5. HU-29 - Administración de oportunidades para realizar horas"),
-  p(
-    "Historia: Como administrador de AEUVG, quiero publicar las convocatorias para realizar horas beca desde el panel, para que el estudiantado se entere de dónde apoyar sin que yo tenga que avisar uno por uno."
-  ),
-  spacer(),
-  ficha("Alta", 13, "5 h", "Harry Méndez"),
-  spacer(),
-  p("Criterios de aceptación:"),
-  bullet(
-    "El administrador puede crear y editar una oportunidad indicando actividad, descripción, fecha, horario, lugar, cantidad de personas e información adicional."
-  ),
-  bullet(
-    "El sistema valida que la hora de fin sea posterior a la de inicio y que la cantidad de personas sea mayor que cero."
-  ),
-  bullet("Una oportunidad nace como borrador y solo se ve en el sitio cuando se publica."),
-  bullet(
-    "El administrador puede cerrarla cuando ya no admite más gente y cancelarla si no se va a realizar."
-  ),
-  bullet(
-    "El listado del panel presenta las oportunidades con su fecha, su estado y su cupo, e incluye las que no están publicadas."
-  ),
-  bullet(
-    "Una oportunidad que ya tiene horas registradas no se puede eliminar; se cancela para conservar el historial."
-  ),
-  bullet("Las operaciones solo están disponibles para el rol de administrador."),
-  spacer(),
-  tareas([
-    ["T-29.1", "Implementar las consultas de oportunidades del panel.", "Harry", "0.75"],
-    ["T-29.2", "Implementar el esquema de validación de la oportunidad.", "Harry", "0.75"],
-    ["T-29.3", "Implementar el servicio y los endpoints protegidos por rol.", "Harry", "1.25"],
-    [
-      "T-29.4",
-      "Implementar el listado de oportunidades del panel con sus acciones.",
-      "Juan Gabriel",
-      "1",
-    ],
-    ["T-29.5", "Implementar el formulario de la oportunidad.", "Juan Gabriel", "1"],
-    ["T-29.6", "Realizar pruebas de las validaciones y de los permisos.", "Ambos", "0.25"],
-  ]),
-
-  h2("5.6. HU-30 - Consulta de oportunidades por el estudiantado"),
-  p(
-    "Historia: Como estudiante, quiero ver qué convocatorias hay abiertas para hacer horas beca, con su fecha, su horario y su lugar, para decidir a cuál presentarme sin tener que preguntarle a AEUVG."
-  ),
-  spacer(),
-  ficha("Media", 5, "3.75 h", "Juan Gabriel Gualim"),
-  spacer(),
-  p("Criterios de aceptación:"),
-  bullet(
-    "La sección presenta únicamente las oportunidades publicadas, de la más próxima a la más lejana."
-  ),
-  bullet(
-    "Cada oportunidad muestra su actividad, su descripción, su fecha, su horario, su lugar, cuánta gente se necesita y la información adicional cuando la hay."
-  ),
-  bullet("Una oportunidad cuya fecha ya pasó deja de aparecer, sin que nadie tenga que retirarla."),
-  bullet("Cuando no hay convocatorias abiertas, la pantalla lo explica en lugar de quedar vacía."),
-  bullet("La sección es alcanzable desde la portada y desde la sección de horas beca del perfil."),
-  bullet("La sección se visualiza correctamente en computadora, tableta y teléfono."),
-  spacer(),
-  tareas([
-    ["T-30.1", "Implementar la consulta pública de oportunidades publicadas.", "Harry", "0.75"],
-    ["T-30.2", "Implementar la página de oportunidades.", "Juan Gabriel", "1.5"],
-    [
-      "T-30.3",
-      "Presentar el cupo y la información adicional de cada oportunidad.",
-      "Juan Gabriel",
-      "0.5",
-    ],
-    [
-      "T-30.4",
-      "Enlazar las oportunidades desde la portada y desde el perfil.",
-      "Juan Gabriel",
-      "0.5",
-    ],
-    [
-      "T-30.5",
-      "Verificar el sprint completo y actualizar la documentación técnica.",
-      "Ambos",
-      "0.25",
-    ],
-    ["T-30.6", "Realizar pruebas de la consulta pública de oportunidades.", "Ambos", "0.25"],
-  ]),
-
   h1("6. Resumen del sprint"),
   h2("6.1. Resumen de historias"),
   spacer(),
@@ -385,9 +295,7 @@ const doc = buildDocument([
       ["HU-26", "Importación de registros desde Excel", "6", "13", "5.5"],
       ["HU-27", "Plantilla y migración de los registros históricos", "6", "5", "3"],
       ["HU-28", "Reportes y resumen general de horas", "6", "8", "4.25"],
-      ["HU-29", "Administración de oportunidades", "6", "13", "5"],
-      ["HU-30", "Consulta de oportunidades por el estudiantado", "6", "5", "3.75"],
-      ["", "Total", "37", "52", "26.5"],
+      ["", "Total", "25", "34", "17.75"],
     ]
   ),
 
@@ -397,15 +305,15 @@ const doc = buildDocument([
     [3400, 2000, 2000, 1960],
     ["Integrante", "Tareas asignadas", "Horas estimadas", "Porcentaje"],
     [
-      ["Harry Daniel Méndez Mendoza", "19", "14.75 h", "56%"],
-      ["Juan Gabriel Gualim Molina", "11", "9.25 h", "35%"],
-      ["Trabajo conjunto", "7", "2.5 h", "9%"],
-      ["Total", "37", "26.5 h", "100%"],
+      ["Harry Daniel Méndez Mendoza", "15", "11.25 h", "63%"],
+      ["Juan Gabriel Gualim Molina", "6", "4.75 h", "27%"],
+      ["Trabajo conjunto", "4", "1.75 h", "10%"],
+      ["Total", "25", "17.75 h", "100%"],
     ]
   ),
   spacer(),
   p(
-    "El reparto se inclina hacia Harry más que en sprints anteriores porque la mitad del sprint es trabajo que no tiene pantalla: leer y escribir archivos de Excel y de PDF, validar fila por fila y calcular los resúmenes. Juan Gabriel asume las cuatro pantallas nuevas, que son la importación en dos pasos, los reportes, la administración de oportunidades y la sección pública. El trabajo conjunto corresponde a las tareas de prueba de cada historia y a la verificación final."
+    "El reparto se inclina hacia Harry más que en sprints anteriores porque la mayor parte del sprint es trabajo que no tiene pantalla: leer y escribir archivos de Excel y de PDF, validar fila por fila y calcular los resúmenes del programa. Juan Gabriel asume las dos pantallas nuevas, que son la importación en dos pasos y los reportes, además de los controles de descarga del panel. El trabajo conjunto corresponde a las tareas de prueba de cada historia y a la verificación final."
   ),
 
   h2("6.3. Cronograma del sprint"),
@@ -423,18 +331,18 @@ const doc = buildDocument([
       [
         "Semana 2",
         "28/10 - 03/11",
-        "HU-27, HU-28, HU-29 y HU-30 completas.",
-        "Reportes publicados y oportunidades visibles para el estudiantado.",
+        "HU-27 y HU-28 completas. Revisión conjunta del incremento y documentación.",
+        "AEUVG consulta el estado del programa sin armar el resumen a mano.",
       ],
     ]
   ),
 
   h2("6.4. Carga de trabajo estimada"),
   p(
-    "El Sprint 5 comprende 26.5 horas de trabajo de equipo para sus seis historias, equivalentes a unas 13 horas por integrante durante las dos semanas. A esa cifra hay que sumar el arrastre del Sprint 4: las observaciones de su revisión y la aplicación de su migración se resolvieron el 22 y el 23 de octubre, ya dentro de las fechas de este sprint, y se registran aquí aunque pertenezcan al anterior."
+    "El Sprint 5 comprende 17.75 horas de trabajo de equipo para sus cuatro historias, equivalentes a unas 9 horas por integrante durante las dos semanas. A esa cifra hay que sumar el arrastre del Sprint 4: las observaciones de su revisión y la aplicación de su migración se resolvieron el 22 y el 23 de octubre, ya dentro de las fechas de este sprint, y se registran aquí aunque pertenezcan al anterior."
   ),
   p(
-    "La carga propia del sprint es menor que las 30 horas del anterior porque el modelo de datos ya contempla las oportunidades, las inscripciones y las importaciones desde el Sprint 1: este sprint no necesita ninguna migración y reutiliza los filtros, la tabla del panel y la protección por rol construidos en el Sprint 4. En caso de que la carga académica no permita alcanzar las horas estimadas, la historia HU-30 es la de menor prioridad y su sección pública puede trasladarse al Sprint 6, dado que no condiciona la administración del programa."
+    "La carga propia del sprint es bastante menor que las 30 horas del anterior porque el modelo de datos ya contempla las importaciones desde el Sprint 1: este sprint no necesita ninguna migración y reutiliza los filtros, la tabla del panel y la protección por rol construidos en el Sprint 4. En caso de que la carga académica no permita alcanzar las horas estimadas, la historia HU-27 es la de menor prioridad y su plantilla puede reducirse al procedimiento documentado, dado que el importador funciona sin ella."
   ),
 
   h1("7. Definición de terminado"),
@@ -459,8 +367,6 @@ const doc = buildDocument([
   bullet(
     "Pantalla de reportes con el resumen general, el desglose por mes y el detalle por estudiante."
   ),
-  bullet("Administración de oportunidades para realizar horas, con sus estados."),
-  bullet("Sección pública de oportunidades para el estudiantado."),
   bullet("Documento de desarrollo del Sprint 5 y registro de tiempos de ambos integrantes."),
 
   h1("9. Riesgos del sprint"),
@@ -492,7 +398,7 @@ const doc = buildDocument([
       [
         "Carga académica del equipo durante las dos semanas del sprint.",
         "No completar la totalidad de las historias comprometidas.",
-        "Priorizar las historias HU-25 a HU-29 y trasladar la sección pública de la historia HU-30 al Sprint 6 de ser necesario.",
+        "Priorizar las historias HU-25 y HU-26, que son las que trasladan la información a la plataforma, y reducir la HU-27 a su procedimiento documentado de ser necesario.",
       ],
     ]
   ),
