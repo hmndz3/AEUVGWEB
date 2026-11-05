@@ -16,6 +16,7 @@ test("los filtros válidos se interpretan con sus tipos", () => {
     desde: "2026-10-01",
     hasta: "2026-10-31",
     vinculo: "sin-cuenta",
+    facultad: "4",
     pagina: "3",
   });
 
@@ -25,6 +26,7 @@ test("los filtros válidos se interpretan con sus tipos", () => {
     desde: "2026-10-01",
     hasta: "2026-10-31",
     vinculo: "sin-cuenta",
+    facultad: 4,
     pagina: 3,
   });
 });
@@ -35,6 +37,7 @@ test("un parámetro inválido se descarta sin tumbar la pantalla", () => {
     estado: "inventado",
     desde: "01/10/2026",
     vinculo: "ninguno",
+    facultad: "ingenieria",
     pagina: "-4",
   });
 
@@ -92,6 +95,26 @@ test("el buscador compara contra la copia normalizada del registro", () => {
 
 test("sin filtros la consulta no agrega ninguna condición", () => {
   assert.deepEqual(condicionesDeFiltrosHoras({}), {});
+});
+
+test("el filtro de facultad consulta por la carrera de la cuenta", () => {
+  assert.deepEqual(condicionesDeFiltrosHoras({ facultad: 4 }), {
+    estudiante: { carrera: { idFacultad: 4 } },
+  });
+});
+
+test("el filtro de facultad se combina con los demás sin pisarlos", () => {
+  assert.deepEqual(condicionesDeFiltrosHoras({ facultad: 2, vinculo: "vinculados" }), {
+    estudiante: { carrera: { idFacultad: 2 } },
+    idEstudiante: { not: null },
+  });
+});
+
+test("una facultad que no es un identificador se descarta", () => {
+  assert.deepEqual(condicionesDeFiltrosHoras({}), {});
+  assert.equal(interpretarFiltrosHorasBeca({ facultad: "0" }).facultad, undefined);
+  assert.equal(interpretarFiltrosHorasBeca({ facultad: "2.5" }).facultad, undefined);
+  assert.equal(interpretarFiltrosHorasBeca({ facultad: "7" }).facultad, 7);
 });
 
 test("el filtro de vínculo distingue los registros con y sin cuenta", () => {

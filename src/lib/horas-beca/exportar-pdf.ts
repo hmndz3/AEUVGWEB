@@ -8,7 +8,7 @@ import {
 import { formatearHoras } from "@/lib/horas-beca/formato-horas";
 
 /** Ancho de cada columna en puntos. La suma cabe en una carta apaisada con márgenes. */
-const ANCHOS = [55, 125, 70, 65, 160, 35, 60, 85, 105];
+const ANCHOS = [50, 105, 95, 60, 58, 130, 32, 55, 72, 75];
 
 const MARGEN = 30;
 const ALTO_FILA = 16;

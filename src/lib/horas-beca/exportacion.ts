@@ -25,6 +25,7 @@ export const MAXIMO_REGISTROS_EXPORTACION = 5000;
 export const COLUMNAS_EXPORTACION = [
   "Carnet",
   "Estudiante",
+  "Facultad",
   "Fecha de la actividad",
   "Horario",
   "Actividad",
@@ -38,6 +39,8 @@ export const COLUMNAS_EXPORTACION = [
 export type FilaExportacion = {
   carnet: string;
   estudiante: string;
+  /** Vacía mientras el carnet no tenga cuenta: la facultad sale de su carrera. */
+  facultad: string;
   fechaActividad: string;
   horario: string;
   actividad: string;
@@ -67,6 +70,7 @@ export function aFilaExportacion(registro: RegistroHoraBecaAdmin): FilaExportaci
   return {
     carnet: registro.carnet,
     estudiante: nombreVisibleDelRegistro(registro),
+    facultad: registro.facultad ?? "",
     fechaActividad: formatearFechaActividad(registro.fechaActividad),
     horario: registro.horarioApoyo,
     actividad: registro.descripcionActividad,
@@ -84,6 +88,7 @@ export function valoresDeFila(fila: FilaExportacion): (string | number)[] {
   return [
     fila.carnet,
     fila.estudiante,
+    fila.facultad,
     fila.fechaActividad,
     fila.horario,
     fila.actividad,

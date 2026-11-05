@@ -22,9 +22,10 @@ export interface RepositorioImportacion {
   /** Cuentas de varios carnets de una sola vez. */
   estudiantesPorCarnet(carnets: string[]): Promise<Map<string, EstudianteDeCarnet>>;
   registrarImportacion(datos: DatosImportacion): Promise<number>;
+  /** `idImportacion` es nulo cuando los registros no vienen de un archivo. */
   crearRegistrosImportados(
     registros: RegistroImportado[],
-    idImportacion: number,
+    idImportacion: number | null,
     creadoPor: number
   ): Promise<number>;
 }
@@ -77,7 +78,7 @@ export class RepositorioImportacionPrisma implements RepositorioImportacion {
 
   async crearRegistrosImportados(
     registros: RegistroImportado[],
-    idImportacion: number,
+    idImportacion: number | null,
     creadoPor: number
   ): Promise<number> {
     const { count } = await this.prisma.registroHoraBeca.createMany({

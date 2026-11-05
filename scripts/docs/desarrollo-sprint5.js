@@ -6,7 +6,7 @@ const path = require("path");
 const { p, bullet, h1, h2, makeTable, spacer, cover, buildDocument } = require("./template");
 const { bloquesRegistroTiempos } = require("./tiempos-sprint5");
 
-const tiempos = bloquesRegistroTiempos(10);
+const tiempos = bloquesRegistroTiempos(8);
 const doc = buildDocument([
   ...cover({
     subtitle: "Documento de Desarrollo del Sprint 5",
@@ -16,16 +16,16 @@ const doc = buildDocument([
   // ---------- 1 ----------
   h1("1. Introducción"),
   p(
-    "El presente documento registra el desarrollo del Sprint 5 - Reportes y oportunidades para realizar horas (21 de octubre al 3 de noviembre de 2026) del proyecto de la plataforma web de la Asociación General de Estudiantes de la Universidad del Valle de Guatemala (AEUVG). Complementa la planificación del Sprint 5, documentando por cada historia de usuario el trabajo realizado y las decisiones tomadas durante su implementación."
+    "El presente documento registra el desarrollo del Sprint 5 - Importación, exportación y reportes de horas beca (21 de octubre al 3 de noviembre de 2026) del proyecto de la plataforma web de la Asociación General de Estudiantes de la Universidad del Valle de Guatemala (AEUVG). Complementa la planificación del Sprint 5, documentando por cada historia de usuario el trabajo realizado y las decisiones tomadas durante su implementación."
   ),
   p(
-    "El Sprint 4 dejó el módulo de horas beca funcionando, pero con los registros capturándose uno por uno desde el panel. Este sprint completa el ciclo por los dos extremos: la entrada, con la importación de las hojas de cálculo con las que AEUVG lleva el control desde antes de que la plataforma existiera, y la salida, con la exportación de los registros y el reporte del programa completo. Agrega además las convocatorias para realizar horas, que son el origen de esos registros y hasta ahora se avisaban persona por persona."
+    "El Sprint 4 dejó el módulo de horas beca funcionando, pero con los registros capturándose uno por uno desde el panel. Este sprint completa el ciclo por los dos extremos: la entrada, con la importación de las hojas de cálculo con las que AEUVG lleva el control desde antes de que la plataforma existiera, y la salida, con la exportación de los registros y el reporte del programa completo."
   ),
   p(
-    "Al cierre del sprint, AEUVG descarga los registros en tres formatos, carga sus históricos desde Excel con una revisión previa que no escribe nada, consulta cómo va el programa por mes y por estudiante, y publica convocatorias que el estudiantado ve en el sitio con su fecha, su horario, su lugar y su cupo."
+    "Al cierre del sprint, AEUVG descarga los registros en tres formatos, carga sus históricos desde Excel con una revisión previa que no escribe nada y consulta cómo va el programa completo, por mes y por estudiante, sin armar el resumen a mano."
   ),
   p(
-    "El sprint no requirió migración de base de datos. Las tablas de convocatorias y de importaciones existen desde el Sprint 1 y el carnet del registro se agregó en el Sprint 4, así que todo el incremento se apoya en el esquema ya desplegado. Es la primera vez en el proyecto que un sprint se publica sin tocar la estructura de la base."
+    "El sprint no requirió migración de base de datos. La tabla de importaciones existe desde el Sprint 1 y el carnet del registro se agregó en el Sprint 4, así que todo el incremento se apoya en el esquema ya desplegado. Es la primera vez en el proyecto que un sprint se publica sin tocar la estructura de la base."
   ),
 
   // ---------- 2. HU-25 ----------
@@ -165,63 +165,9 @@ const doc = buildDocument([
   ),
 
   // ---------- 6. HU-29 ----------
-  h1("6. HU-29 - Administración de oportunidades para realizar horas"),
-
-  h2("6.1. El estado no es un campo del formulario"),
+  h1("6. Pruebas y verificación"),
   p(
-    "Una convocatoria nace como borrador y solo se ve en el sitio cuando se publica. El cambio de estado vive en su propia ruta y no en el cuerpo de la edición, de modo que corregir una falta de ortografía no pueda publicar lo que todavía se estaba preparando. Es el mismo criterio con el que el Sprint 4 separó la acreditación del registro, y aquí el error que evita es más caro: lo publicado lo ve el estudiantado."
-  ),
-  p(
-    "El recorrido es borrador, publicada, cerrada y finalizada, con la cancelación disponible en cualquier punto. Cancelada y finalizada son el final: desde ahí no se edita ni se cambia de estado, porque la información de la convocatoria es la que vio quien se presentó y cambiarla después reescribiría lo que ya pasó. Pedir el estado que ya tiene se rechaza con una explicación en lugar de escribirse otra vez."
-  ),
-
-  h2("6.2. Eliminar frente a cancelar"),
-  p(
-    "Una convocatoria con horas registradas no se elimina: se cancela. Esas horas son el historial de quien ya apoyó, y borrar la convocatoria las dejaría sin su origen. El panel ofrece eliminar solo cuando no hay ninguna, y el servidor lo rechaza igual si la petición llega por otro camino, con un mensaje que dice cuántos registros hay y propone cancelarla."
-  ),
-  p(
-    "Es la misma idea que la baja lógica de las organizaciones, resuelta aquí con los estados que la tabla ya tenía desde el Sprint 1 en lugar de agregando una columna de activo."
-  ),
-
-  h2("6.3. Fecha de calendario y horas de reloj"),
-  p(
-    "La fecha de la convocatoria es un día sin hora y su horario son dos horas de reloj, igual que están en la base. Una convocatoria no es un instante: es un día y un horario, y convertirla a un instante obligaría a elegir una zona que nadie pidió. La conversión entre las horas de reloj de la base y las del formulario se hace en UTC; interpretarlas en la zona del país las correría seis horas y una convocatoria de las 14:00 se leería a las 08:00."
-  ),
-  p(
-    "El esquema valida que la hora de fin sea posterior a la de inicio y que la cantidad de personas sea un entero mayor que cero. La primera se comprueba entre campos y no en cada hora por separado: un horario invertido es correcto campo por campo y solo se ve al mirar los dos juntos."
-  ),
-
-  h2("6.4. El listado del panel"),
-  p(
-    "El listado presenta las convocatorias con su fecha, su horario, su lugar, su cupo y su estado, e incluye las que no están publicadas: el panel es justamente donde se preparan los borradores y donde se revisa lo que quedó cancelado. Los estados funcionan como filtro y como contador a la vez, porque la pregunta con la que AEUVG abre la pantalla es qué le falta publicar."
-  ),
-  p(
-    "Cada fila ofrece solo las acciones que tienen sentido en su estado, y las que no se deshacen piden confirmación explicando en qué consisten. Tras aplicar una se refresca la ruta en lugar de cambiar la fila en el cliente, porque los contadores por estado los calcula el servidor y quedarían desfasados."
-  ),
-
-  // ---------- 7. HU-30 ----------
-  h1("7. HU-30 - Consulta de oportunidades por el estudiantado"),
-
-  h2("7.1. Una sección pública"),
-  p(
-    "La sección no exige sesión: su contenido es una convocatoria abierta a quien quiera presentarse, y pedir cuenta para leerla solo estrecharía a quién llega. Presenta únicamente las convocatorias publicadas, de la más próxima a la más lejana, y a igual día la que empieza más temprano."
-  ),
-  p(
-    "Cada tarjeta trae lo que hace falta para decidir si presentarse: qué es, qué día, a qué hora, dónde, cuánta gente se necesita y la información adicional cuando la hay. Ese último apartado aparece solo si tiene contenido, porque uno vacío haría pensar que falta un dato. No hay inscripción: las horas las registra AEUVG después de la actividad, así que la tarjeta no promete un botón que no existe y la pantalla lo explica."
-  ),
-
-  h2("7.2. Las que ya pasaron se retiran solas"),
-  p(
-    "Una convocatoria cuya fecha ya pasó deja de aparecer sin que nadie tenga que retirarla. El corte compara contra el día de hoy en Guatemala y no en la zona del servidor: entre las seis de la tarde y la medianoche del país, en UTC ya es el día siguiente, y una convocatoria de esa misma tarde habría desaparecido del sitio mientras se estaba realizando."
-  ),
-  p(
-    "Cuando no hay convocatorias abiertas, la pantalla lo explica y enlaza a las horas ya registradas del perfil, en lugar de quedarse vacía. La sección se alcanza desde la portada y desde la sección de horas beca del perfil, que es donde el estudiantado la busca, y se verificó en anchos de teléfono, tableta y escritorio."
-  ),
-
-  // ---------- 8 ----------
-  h1("8. Pruebas y verificación"),
-  p(
-    "Las pruebas automatizadas del proyecto pasaron de 339 a 411. Las 72 nuevas corresponden a este sprint y se ejecutan sin base de datos, sustituyendo el acceso a datos por dobles de prueba, para que puedan correrse en cualquier momento del desarrollo."
+    "Las pruebas automatizadas del proyecto pasaron de 339 a 383. Las 44 nuevas corresponden a este sprint y se ejecutan sin base de datos, sustituyendo el acceso a datos por dobles de prueba, para que puedan correrse en cualquier momento del desarrollo."
   ),
   spacer(),
   makeTable(
@@ -248,33 +194,23 @@ const doc = buildDocument([
         "14",
         "La suma por mes y por estudiante, el mes calculado en UTC, el orden por horas con el carnet como desempate, el corte del detalle, la resolución de los nombres y que el reporte solo admita el periodo.",
       ],
-      [
-        "Convocatorias y permisos",
-        "22",
-        "Las horas de reloj de ida y vuelta, el horario invertido, la cantidad de personas, que el estado no se cuele en el cuerpo, las reglas de cambio de estado, que una convocatoria con horas no se elimine y que las rutas respondan 401 sin sesión y 404 sin el rol.",
-      ],
-      [
-        "Consulta pública",
-        "6",
-        "Que solo se pidan las publicadas, que el corte por fecha se calcule en la zona de Guatemala, que la convocatoria del propio día siga apareciendo y la de ayer no, y el orden del listado.",
-      ],
     ]
   ),
   spacer(),
   p(
-    "Además de las pruebas automatizadas se verificó que el proyecto compile sin errores de tipos, que el análisis estático no reporte problemas y que la compilación de producción se complete, incluyendo las nueve rutas nuevas del sprint: cinco pantallas —la importación, los reportes, el listado de convocatorias con su creación y su corrección, y la sección pública de oportunidades— y cuatro grupos de servicios. Las pantallas se revisaron en anchos de teléfono, tableta y escritorio. Se comprobó también que todos los enlaces internos del sitio resuelvan a una ruta existente."
+    "Además de las pruebas automatizadas se verificó que el proyecto compile sin errores de tipos, que el análisis estático no reporte problemas y que la compilación de producción se complete, incluyendo las cuatro rutas nuevas del sprint —la pantalla de importación y los tres servicios de exportación, importación y plantilla— y la pantalla de reportes, que dejó de ser un marcador para presentar el resumen del programa. Las pantallas se revisaron en anchos de teléfono, tableta y escritorio. Se comprobó también que todos los enlaces internos del sitio resuelvan a una ruta existente."
   ),
   p(
     "La comprobación de la plantilla contra el importador se ejecutó al cierre y sus ocho verificaciones pasaron. Por tratarse de un sprint sin migración, no hubo cambios que aplicar en el ambiente de Railway: el incremento se apoya en el esquema desplegado desde el Sprint 4."
   ),
   p(
-    "Durante el sprint se corrigieron además dos defectos que no pertenecían a ninguna historia. El enlace a tutorías del menú principal apuntaba a una ruta que no existe —la sección se entrega en el Sprint 6— y devolvía un error de página no encontrada desde cualquier pantalla del sitio; se retiró del menú, con el mismo criterio con el que la tarjeta de la portada ya estaba sin enlace, y su lugar lo ocupa ahora el acceso a las convocatorias. El otro fue el enlace de descarga de la plantilla, que el análisis estático señalaba como navegación de la aplicación cuando es una descarga que resuelve el servidor."
+    "Durante el sprint se corrigieron además dos defectos que no pertenecían a ninguna historia. El enlace a tutorías del menú principal apuntaba a una ruta que no existe —la sección se entrega en el Sprint 6— y devolvía un error de página no encontrada desde cualquier pantalla del sitio; se retiró del menú, con el mismo criterio con el que la tarjeta de la portada ya estaba sin enlace. El otro fue el enlace de descarga de la plantilla, que el análisis estático señalaba como navegación de la aplicación cuando es una descarga que resuelve el servidor."
   ),
 
   // ---------- 9 ----------
-  h1("9. Estado del sprint"),
+  h1("7. Estado del sprint"),
   p(
-    `Las seis historias comprometidas para el Sprint 5 se encuentran completadas, con ${tiempos.enHoras(tiempos.totalEquipo)} horas de trabajo de equipo frente a las 26.5 estimadas. El detalle por sesión se encuentra en la sección 10. La plataforma cuenta ahora con:`
+    `Las cuatro historias comprometidas para el Sprint 5 se encuentran completadas, con ${tiempos.enHoras(tiempos.totalEquipo)} horas de trabajo de equipo frente a las 17.75 estimadas. El detalle por sesión se encuentra en la sección 8. La plataforma cuenta ahora con:`
   ),
   bullet(
     "La exportación de los registros de horas beca en CSV, Excel y PDF, con los filtros del panel y su resumen del periodo."
@@ -288,20 +224,14 @@ const doc = buildDocument([
   bullet(
     "La pantalla de reportes, con el resumen del programa, el desglose por mes y el detalle por estudiante, acotables por periodo."
   ),
-  bullet(
-    "La administración de las convocatorias para realizar horas, con sus estados, su cupo y sus reglas de publicación y cancelación."
-  ),
-  bullet(
-    "La sección pública de oportunidades, alcanzable desde la portada y desde el perfil, que se mantiene al día por sí sola."
-  ),
   p(
     "Queda pendiente la carga efectiva de los históricos de AEUVG, que no es trabajo de desarrollo: el importador quedó listo y documentado, y la carga la realiza AEUVG con sus propias hojas cuando decida hacerlo. Continúa también en gestión el trámite del dominio institucional iniciado en el Sprint 1."
   ),
   p(
-    "Los ajustes posteriores a la revisión del Sprint 4 se trabajaron los días 22 y 23 de octubre, ya dentro de la ventana de este sprint, y por eso aparecen en su registro de tiempos: el rótulo del carrusel de la portada, el retiro de la sección de próximos eventos, el acceso único a las horas beca, el selector de horario con dos relojes, el buscador de estudiantes por carnet, el teléfono de contacto de las organizaciones con las siglas obligatorias y la marca de los campos obligatorios. Explican la diferencia frente a la estimación, que solo contemplaba las seis historias comprometidas."
+    "Los ajustes posteriores a la revisión del Sprint 4 se trabajaron los días 22 y 23 de octubre, ya dentro de la ventana de este sprint, y por eso aparecen en su registro de tiempos: el rótulo del carrusel de la portada, el retiro de la sección de próximos eventos, el acceso único a las horas beca, el selector de horario con dos relojes, el buscador de estudiantes por carnet, el teléfono de contacto de las organizaciones con las siglas obligatorias y la marca de los campos obligatorios. Suman 5.8 horas de equipo y explican por completo la diferencia frente a la estimación, que solo contemplaba las cuatro historias comprometidas: descontadas, el sprint consumió 17 horas frente a las 17.75 previstas."
   ),
   p(
-    "El desarrollo continúa en el Sprint 6 con el módulo de tutorías —el directorio de tutores, las postulaciones y los horarios— y las fotografías de perfil, que quedaron registradas como trabajo de ese sprint."
+    "El desarrollo continúa en el Sprint 6 con el módulo de tutorías —el directorio de tutores, las postulaciones y los horarios— y las fotografías de perfil. Se le suman las tres mejoras que AEUVG pidió al revisar este incremento: el registro de las mismas horas para varios estudiantes a la vez, la lectura del archivo de horas con los encabezados que la asociación ya usa y la facultad del estudiante visible y filtrable en el panel."
   ),
 
   // ---------- 10. Registro de tiempos ----------

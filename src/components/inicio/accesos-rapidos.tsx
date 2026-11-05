@@ -115,16 +115,6 @@ export function AccesosRapidos() {
           );
         })}
       </div>
-
-      {/* Las convocatorias para hacer horas no tienen tarjeta propia: la
-          rejilla se quedaría con una fila de uno. Van como enlace debajo, junto
-          al acceso de horas beca, que es donde el estudiantado las busca. */}
-      <p className="text-texto-suave mt-6 text-sm">
-        ¿Buscas dónde hacer horas beca?{" "}
-        <Link href="/oportunidades" className="text-primario font-bold hover:underline">
-          Mira las convocatorias abiertas →
-        </Link>
-      </p>
     </section>
   );
 }

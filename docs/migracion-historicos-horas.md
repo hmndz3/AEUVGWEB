@@ -16,6 +16,7 @@ La revisión es lo que evita el caso que hace daño: descubrir los errores cuand
 ## Antes de empezar
 
 - La plantilla se descarga desde `/admin/horas-beca/importar` o desde `/api/admin/horas-beca/plantilla`. Se genera en cada descarga a partir de la misma lista de columnas que usa el importador, así que no puede quedarse desalineada.
+- Los encabezados de la hoja con la que AEUVG lleva el control se reconocen tal como están escritos: `FECHA`, `NOMBRE COMPLETO`, `CARNÉ`, `CORREO`, `HORARIO DE APOYO`, `ACTIVIDAD DE APOYO` y `HORAS A ACREDITAR`. No hace falta renombrarlos ni partir el horario en dos columnas: el importador lo parte solo, y admite `14:00-16:00`, `8:00 a 12:00` y `2:00 pm - 4:00 pm`. La columna de correo se ignora, porque el dato que vincula el registro con su cuenta es el carnet.
 - Las columnas se localizan por su encabezado, no por su posición: la hoja puede traerlas en cualquier orden y puede tener columnas propias de más. Lo que no puede es tener los encabezados renombrados.
 - `Observaciones` es la única columna opcional; puede quedar vacía o quitarse entera.
 - Máximo 2000 filas de datos y 5 MB por archivo. Un histórico más grande se divide en varios archivos y se carga uno por uno.

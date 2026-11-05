@@ -10,6 +10,7 @@ import {
   listarRegistrosHoraBeca,
   obtenerResumenHorasBeca,
 } from "@/lib/horas-beca/consultas-horas-beca";
+import { listarFacultades } from "@/lib/horas-beca/consultas-facultades";
 import {
   contarFiltrosHoras,
   interpretarFiltrosHorasBeca,
@@ -33,9 +34,10 @@ export default async function PaginaAdminHorasBeca({
   const textoConsulta = consulta.toString();
   const rutaActual = textoConsulta ? `/admin/horas-beca?${textoConsulta}` : "/admin/horas-beca";
 
-  const [pagina, resumen] = await Promise.all([
+  const [pagina, resumen, facultades] = await Promise.all([
     listarRegistrosHoraBeca({ filtros }),
     obtenerResumenHorasBeca(filtros),
+    listarFacultades(),
   ]);
 
   return (
@@ -51,8 +53,8 @@ export default async function PaginaAdminHorasBeca({
         </div>
 
         <div className="flex flex-wrap gap-2">
-          <Link href="/admin/horas-beca/oportunidades">
-            <Boton variante="contorno">Convocatorias</Boton>
+          <Link href="/admin/horas-beca/lote">
+            <Boton variante="contorno">Registrar varios</Boton>
           </Link>
           <Link href="/admin/horas-beca/importar">
             <Boton variante="contorno">Importar desde Excel</Boton>
@@ -65,7 +67,7 @@ export default async function PaginaAdminHorasBeca({
 
       <ResumenHorasBecaPanel resumen={resumen} />
 
-      <FiltrosHorasBecaPanel filtros={filtros} />
+      <FiltrosHorasBecaPanel filtros={filtros} facultades={facultades} />
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-texto-suave text-sm">
