@@ -40,6 +40,7 @@ export const esquemaFiltrosHorasBeca = z.object({
   desde: fechaIso,
   hasta: fechaIso,
   vinculo: z.enum(VINCULOS_HORA_BECA),
+  facultad: identificador,
   pagina: identificador,
 });
 

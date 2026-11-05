@@ -29,6 +29,11 @@ export function condicionesDeFiltrosHoras(
 
   if (filtros.q) condiciones.textoBusqueda = { contains: normalizarTexto(filtros.q) };
   if (filtros.estado) condiciones.estado = filtros.estado;
+  // La facultad vive en la carrera de la cuenta, así que filtrar por ella deja
+  // fuera los registros sin cuenta: todavía no se sabe a qué facultad pertenecen.
+  if (filtros.facultad) {
+    condiciones.estudiante = { carrera: { idFacultad: filtros.facultad } };
+  }
   if (filtros.vinculo) {
     condiciones.idEstudiante = filtros.vinculo === "vinculados" ? { not: null } : null;
   }

@@ -7,7 +7,7 @@ import {
 } from "@/lib/horas-beca/exportacion";
 
 /** Ancho de cada columna, en caracteres aproximados. */
-const ANCHOS = [12, 32, 18, 16, 46, 8, 14, 20, 28];
+const ANCHOS = [12, 32, 26, 18, 16, 46, 8, 14, 20, 28];
 
 /**
  * Registros de horas beca en un libro de Excel.
@@ -34,7 +34,8 @@ export async function generarExcel(contenido: ContenidoExportacion): Promise<Buf
 
   for (const fila of contenido.filas) hoja.addRow(valoresDeFila(fila));
 
-  hoja.getColumn(6).numFmt = "0.00";
+  // Las horas son la séptima columna desde que la facultad entró en tercera.
+  hoja.getColumn(7).numFmt = "0.00";
 
   // El resumen del periodo va en su propia hoja: mezclarlo con el detalle
   // impediría ordenar o filtrar la tabla sin arrastrarlo.
