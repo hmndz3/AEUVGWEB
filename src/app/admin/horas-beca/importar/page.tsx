@@ -17,7 +17,9 @@ export default function Pagina() {
         </h1>
         <p className="text-texto-suave mt-2 max-w-2xl text-sm leading-relaxed">
           Carga una hoja de Excel con los registros de horas. El archivo debe traer estas columnas,
-          en cualquier orden: {COLUMNAS_IMPORTACION.join(", ")}.
+          en cualquier orden: {COLUMNAS_IMPORTACION.join(", ")}. También se aceptan los encabezados
+          de la hoja de AEUVG —FECHA, NOMBRE COMPLETO, CARNÉ, HORARIO DE APOYO, ACTIVIDAD DE APOYO y
+          HORAS A ACREDITAR—, así que no hace falta renombrar nada.
         </p>
         {/* Enlace normal y no <Link>: es una descarga que resuelve el servidor,
             no una navegación de la aplicación. */}
