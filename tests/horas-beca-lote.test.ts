@@ -4,7 +4,6 @@ import test from "node:test";
 import { MAXIMO_CARNETS_LOTE, separarCarnets } from "../src/lib/horas-beca/carnets-lote";
 import type { EstudianteDeCarnet } from "../src/lib/horas-beca/repositorio-horas-beca";
 import type {
-  DatosImportacion,
   RegistroImportado,
   RepositorioImportacion,
 } from "../src/lib/horas-beca/repositorio-importacion";
@@ -34,7 +33,7 @@ class RepositorioFalso implements RepositorioImportacion {
     );
   }
 
-  async registrarImportacion(_datos: DatosImportacion): Promise<number> {
+  async registrarImportacion(): Promise<number> {
     throw new Error("El registro en lote no debe dejar constancia de importación.");
   }
 
