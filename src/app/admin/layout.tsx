@@ -17,7 +17,7 @@ export default async function DisposicionAdmin({ children }: { children: React.R
     <div className="bg-fondo flex min-h-dvh flex-col md:flex-row">
       <BarraLateralAdmin />
       <main className="flex-1 px-5 py-8 md:px-10">
-        <div className="mx-auto max-w-6xl">{children}</div>
+        <div className="mx-auto max-w-[96rem]">{children}</div>
       </main>
     </div>
   );
