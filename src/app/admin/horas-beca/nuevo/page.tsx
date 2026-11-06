@@ -24,7 +24,8 @@ export default async function Pagina({
         </Link>
         <h1 className="text-texto mt-3 text-3xl font-extrabold tracking-tight">Registrar horas</h1>
         <p className="text-texto-suave mt-2 max-w-2xl text-sm leading-relaxed">
-          El estudiante se identifica por su carnet. Si todavía no tiene cuenta en la plataforma, el
+          Los estudiantes se agregan por carnet, uno tras otro, y se registra un renglón por cada
+          uno con la misma actividad. Si un carnet todavía no tiene cuenta en la plataforma, el
           registro queda sin vincular y se asocia solo cuando la cree.
         </p>
       </div>
