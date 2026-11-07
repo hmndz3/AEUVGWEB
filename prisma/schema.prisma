@@ -142,6 +142,9 @@ model Estudiante {
   nombreCompleto     String                   @map("nombre_completo") @db.VarChar(200)
   correoUvg          String                   @unique(map: "estudiante_correo_uvg_key") @map("correo_uvg") @db.VarChar(254)
   telefono           String?                  @db.VarChar(30)
+  // Fotografía de perfil. Opcional: la plataforma funciona sin ella y en todas
+  // partes hay iniciales como respaldo. Ver docs/perfil-y-eventos-guardados.md.
+  fotoUrl            String?                  @map("foto_url") @db.VarChar(500)
   activo             Boolean                  @default(true)
   fechaCreacion      DateTime                 @default(now()) @map("fecha_creacion") @db.Timestamptz(3)
   fechaActualizacion DateTime                 @updatedAt @map("fecha_actualizacion") @db.Timestamptz(3)
