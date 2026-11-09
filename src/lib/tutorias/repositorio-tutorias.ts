@@ -1,4 +1,4 @@
-import { Prisma, type PrismaClient } from "@prisma/client";
+import { Prisma, type EstadoTutor, type PrismaClient } from "@prisma/client";
 
 import { ROLES } from "@/lib/auth/roles";
 import { obtenerPrisma } from "@/lib/prisma";
@@ -44,6 +44,8 @@ export interface RepositorioTutorias {
     comentario: string | null,
     ahora: Date
   ): Promise<boolean>;
+  /** Cambia el estado del tutor y desactiva su ficha cuando deja de estar activo. */
+  cambiarEstadoTutor(idTutor: number, estado: EstadoTutor): Promise<boolean>;
 }
 
 export class RepositorioTutoriasPrisma implements RepositorioTutorias {
@@ -175,6 +177,20 @@ export class RepositorioTutoriasPrisma implements RepositorioTutorias {
 
       return tutor.idTutor;
     });
+  }
+
+  /**
+   * Un tutor suspendido o inactivo desaparece del directorio por su estado, no
+   * por borrarse: sus tutorías ya realizadas siguen contando y su ficha tiene
+   * que poder volver si AEUVG lo reactiva.
+   */
+  async cambiarEstadoTutor(idTutor: number, estado: EstadoTutor): Promise<boolean> {
+    const { count } = await this.prisma.tutor.updateMany({
+      where: { idTutor },
+      data: { estado },
+    });
+
+    return count > 0;
   }
 
   async rechazarPostulacion(

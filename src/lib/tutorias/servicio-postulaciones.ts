@@ -131,3 +131,27 @@ export class ServicioPostulaciones {
     return { tipo: "resuelta", estado: "APROBADA", idTutor };
   }
 }
+
+export type ResultadoEstadoTutor =
+  { tipo: "aplicado"; estado: "ACTIVO" | "INACTIVO" | "SUSPENDIDO" } | { tipo: "no_encontrado" };
+
+/**
+ * Estado de un tutor del directorio.
+ *
+ * Vive junto a las postulaciones porque es la otra mitad de la misma decisión:
+ * AEUVG aprueba a alguien y, más adelante, lo suspende o lo da de baja. No se
+ * elimina al tutor: sus tutorías realizadas siguen contando y su ficha tiene
+ * que poder volver.
+ */
+export class ServicioTutores {
+  constructor(private readonly repositorio: RepositorioTutorias) {}
+
+  async cambiarEstado(
+    idTutor: number,
+    estado: "ACTIVO" | "INACTIVO" | "SUSPENDIDO"
+  ): Promise<ResultadoEstadoTutor> {
+    const aplicado = await this.repositorio.cambiarEstadoTutor(idTutor, estado);
+
+    return aplicado ? { tipo: "aplicado", estado } : { tipo: "no_encontrado" };
+  }
+}
