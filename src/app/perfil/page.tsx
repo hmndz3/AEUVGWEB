@@ -5,10 +5,16 @@ import { DatosPerfil } from "@/components/perfil/datos-perfil";
 import { EventosGuardadosPerfil } from "@/components/perfil/eventos-guardados";
 import { FormularioPerfil } from "@/components/perfil/formulario-perfil";
 import { HorasBecaPerfil } from "@/components/perfil/horas-beca";
+import { TutoriasPerfil } from "@/components/perfil/tutorias";
 import { verificarAcceso } from "@/lib/auth/guardias";
 import { obtenerEventosGuardados } from "@/lib/perfil/consultas-eventos-guardados";
 import { obtenerHorasBecaEstudiante } from "@/lib/perfil/consultas-horas-beca";
 import { listarCarrerasDisponibles, obtenerPerfil } from "@/lib/perfil/consultas-perfil";
+import {
+  listarTutoriasDeEstudiante,
+  obtenerPostulacionDeEstudiante,
+  obtenerTutorDeUsuario,
+} from "@/lib/tutorias/consultas-tutorias";
 
 export const dynamic = "force-dynamic";
 
@@ -24,11 +30,14 @@ export default async function PaginaPerfil() {
   if (acceso.tipo !== "autorizado") redirect("/iniciar-sesion?continuar=/perfil");
 
   const ahora = new Date();
-  const [perfil, carreras, guardados, horas] = await Promise.all([
+  const [perfil, carreras, guardados, horas, tutorias, postulacion, tutor] = await Promise.all([
     obtenerPerfil(acceso.usuario.idUsuario),
     listarCarrerasDisponibles(),
     obtenerEventosGuardados(acceso.usuario.idUsuario, { ahora }),
     obtenerHorasBecaEstudiante(acceso.usuario.idUsuario),
+    listarTutoriasDeEstudiante(acceso.usuario.idUsuario),
+    obtenerPostulacionDeEstudiante(acceso.usuario.idUsuario),
+    obtenerTutorDeUsuario(acceso.usuario.idUsuario),
   ]);
 
   // La sesión es válida pero la cuenta ya no está: lo más seguro es volver al
@@ -41,6 +50,8 @@ export default async function PaginaPerfil() {
         <DatosPerfil perfil={perfil} />
 
         <HorasBecaPerfil horas={horas} />
+
+        <TutoriasPerfil tutorias={tutorias} postulacion={postulacion} tutor={tutor} />
 
         <EventosGuardadosPerfil eventos={guardados} ahora={ahora} />
 
