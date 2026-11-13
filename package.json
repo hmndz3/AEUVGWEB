@@ -20,6 +20,8 @@
     "db:seed:test": "tsx prisma/seed-test.ts",
     "db:verify-catalogs": "tsx prisma/verify-catalogs.ts",
     "db:verify-test-data": "tsx prisma/verify-test-data.ts",
+    "db:verificar-tutorias": "tsx prisma/verificar-tutorias.ts",
+    "db:railway:verificar-tutorias": "node scripts/db/railway.js tsx prisma/verificar-tutorias.ts",
     "db:admin": "tsx prisma/crear-administrador.ts",
     "db:railway:admin": "node scripts/db/railway.js tsx prisma/crear-administrador.ts",
     "db:admins": "tsx prisma/revisar-administradores.ts",
