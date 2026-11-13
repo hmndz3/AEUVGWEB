@@ -328,3 +328,79 @@ export async function listarTutoresPanel(): Promise<TutorVista[]> {
 
   return filas.map(aTutor);
 }
+
+export type TutoriaVista = {
+  idTutoria: number;
+  idTutor: number;
+  fechaInicio: Date;
+  fechaFin: Date;
+  modalidad: import("@prisma/client").ModalidadTutoria;
+  ubicacionEnlace: string | null;
+  estado: import("@prisma/client").EstadoTutoria;
+  observaciones: string | null;
+  curso: { codigo: string; nombre: string };
+  /** Nombre de la otra parte: el tutor para el estudiante y al revés. */
+  tutor: string;
+  estudiante: string;
+};
+
+const CAMPOS_TUTORIA = {
+  idTutoria: true,
+  idTutor: true,
+  fechaInicio: true,
+  fechaFin: true,
+  modalidad: true,
+  ubicacionEnlace: true,
+  estado: true,
+  observaciones: true,
+  curso: { select: { codigo: true, nombre: true } },
+  tutor: { select: { estudiante: { select: { nombreCompleto: true } } } },
+  estudiante: { select: { nombreCompleto: true } },
+} as const;
+
+type FilaTutoria = Prisma.TutoriaGetPayload<{ select: typeof CAMPOS_TUTORIA }>;
+
+function aTutoria(fila: FilaTutoria): TutoriaVista {
+  return {
+    idTutoria: fila.idTutoria,
+    idTutor: fila.idTutor,
+    fechaInicio: fila.fechaInicio,
+    fechaFin: fila.fechaFin,
+    modalidad: fila.modalidad,
+    ubicacionEnlace: fila.ubicacionEnlace,
+    estado: fila.estado,
+    observaciones: fila.observaciones,
+    curso: fila.curso,
+    tutor: fila.tutor.estudiante.nombreCompleto,
+    estudiante: fila.estudiante.nombreCompleto,
+  };
+}
+
+/**
+ * Tutorías del estudiante de la sesión, de la más próxima a la más antigua.
+ *
+ * Las programadas van primero aunque sean futuras: lo que trae a esta sección
+ * es saber a qué hay que presentarse, no repasar el historial.
+ */
+export async function listarTutoriasDeEstudiante(idUsuario: number): Promise<TutoriaVista[]> {
+  const filas = await obtenerPrisma().tutoria.findMany({
+    where: { estudiante: { usuario: { idUsuario } } },
+    orderBy: [{ estado: "asc" }, { fechaInicio: "desc" }],
+    take: 50,
+    select: CAMPOS_TUTORIA,
+  });
+
+  return filas.map(aTutoria);
+}
+
+/** Tutorías que el tutor de la sesión tiene que impartir o ya impartió. */
+export async function listarTutoriasDeTutor(idUsuario: number): Promise<TutoriaVista[]> {
+  const filas = await obtenerPrisma().tutoria.findMany({
+    where: { tutor: { estudiante: { usuario: { idUsuario } } } },
+    orderBy: [{ estado: "asc" }, { fechaInicio: "desc" }],
+    take: 50,
+    select: CAMPOS_TUTORIA,
+  });
+
+  return filas.map(aTutoria);
+}
