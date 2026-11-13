@@ -53,9 +53,6 @@ export default async function PaginaAdminHorasBeca({
         </div>
 
         <div className="flex flex-wrap gap-2">
-          <Link href="/admin/horas-beca/lote">
-            <Boton variante="contorno">Registrar varios</Boton>
-          </Link>
           <Link href="/admin/horas-beca/importar">
             <Boton variante="contorno">Importar desde Excel</Boton>
           </Link>

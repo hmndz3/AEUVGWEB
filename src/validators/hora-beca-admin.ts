@@ -119,6 +119,7 @@ export const ETIQUETAS_CAMPO_HORA_BECA: Record<string, string> = {
   descripcionActividad: "Actividad",
   cantidadHoras: "Cantidad de horas",
   observaciones: "Observaciones",
+  carnets: "Estudiantes",
 };
 
 /** Acciones de la acreditación en lote. */

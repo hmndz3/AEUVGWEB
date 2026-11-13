@@ -20,11 +20,20 @@ export function CargaImagen({
   onCambio,
   onError,
   descripcion = "Vista previa de la imagen del evento",
+  destino = "/api/admin/eventos/imagen",
+  etiqueta = "Subir imagen",
 }: {
   valor: string;
   onCambio: (url: string) => void;
   onError: (mensaje: string | null) => void;
   descripcion?: string;
+  /**
+   * Ruta que recibe la subida. La de eventos exige el rol de administrador; la
+   * del estudiante, solo sesión, y es la que usan el comprobante de la
+   * postulación a tutor y la fotografía de perfil.
+   */
+  destino?: string;
+  etiqueta?: string;
 }) {
   const entrada = useRef<HTMLInputElement>(null);
   const [subiendo, setSubiendo] = useState(false);
@@ -37,7 +46,7 @@ export function CargaImagen({
       const cuerpo = new FormData();
       cuerpo.append("imagen", archivo);
 
-      const respuesta = await fetch("/api/admin/eventos/imagen", { method: "POST", body: cuerpo });
+      const respuesta = await fetch(destino, { method: "POST", body: cuerpo });
       const datos = (await respuesta.json().catch(() => ({}))) as {
         url?: string;
         mensaje?: string;
@@ -77,7 +86,7 @@ export function CargaImagen({
         cargando={subiendo}
         onClick={() => entrada.current?.click()}
       >
-        Subir imagen
+        {etiqueta}
       </Boton>
 
       {valor && (

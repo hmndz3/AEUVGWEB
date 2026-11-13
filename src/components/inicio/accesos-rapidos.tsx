@@ -53,14 +53,10 @@ const ACCESOS: Acceso[] = [
     clase: "bg-turquesa/15 text-[#00695a]",
   },
   {
-    // La ruta /tutorias no existe todavía: el módulo completo (directorio de
-    // tutores, postulaciones y horarios) se entrega en el Sprint 6. Hasta
-    // entonces la tarjeta se queda sin enlace, porque enlazarla devolvía un 404
-    // desde la portada.
+    href: "/tutorias",
     titulo: "Tutorías",
-    descripcion: "Encuentra tutores por curso y horario.",
+    descripcion: "Encuentra tutores por curso y horario, y solicita una tutoría.",
     clase: "bg-ambar/20 text-[#8a5600]",
-    nota: "Próximamente este ciclo",
   },
 ];
 
