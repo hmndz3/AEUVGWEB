@@ -21,6 +21,7 @@ export function EstadoSesion() {
   const [estado, setEstado] = useState<Estado>({ fase: "cargando" });
   const [abierto, setAbierto] = useState(false);
   const [cerrando, setCerrando] = useState(false);
+  const [sinLeer, setSinLeer] = useState(0);
   const contenedor = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -56,6 +57,24 @@ export function EstadoSesion() {
       document.removeEventListener("keydown", alPresionar);
     };
   }, [abierto]);
+
+  // El contador se consulta aparte de la sesión: es el único dato del
+  // encabezado que cambia sin recargar, y pedirlo junto con el usuario
+  // obligaría a volver a resolver la sesión cada vez que se lee un aviso.
+  useEffect(() => {
+    if (estado.fase !== "autenticado") return;
+
+    const controlador = new AbortController();
+
+    fetch("/api/notificaciones", { signal: controlador.signal })
+      .then((respuesta) => (respuesta.ok ? respuesta.json() : { sinLeer: 0 }))
+      .then((cuerpo: { sinLeer?: number }) => setSinLeer(cuerpo.sinLeer ?? 0))
+      .catch(() => {
+        // El contador es un adorno: sin él el menú funciona igual.
+      });
+
+    return () => controlador.abort();
+  }, [estado.fase]);
 
   async function manejarCierre() {
     setCerrando(true);
@@ -112,6 +131,14 @@ export function EstadoSesion() {
         <span className="text-texto hidden max-w-32 truncate text-sm font-semibold sm:inline">
           {usuario.nombreCompleto}
         </span>
+        {sinLeer > 0 && (
+          <span
+            aria-label={`${sinLeer} notificaciones sin leer`}
+            className="bg-primario rounded-full px-1.5 py-0.5 text-[10px] font-bold text-white"
+          >
+            {sinLeer}
+          </span>
+        )}
         <span aria-hidden className="text-texto-suave text-[10px]">
           ▾
         </span>
@@ -134,6 +161,20 @@ export function EstadoSesion() {
           className="text-texto-suave hover:bg-superficie-suave hover:text-texto border-borde block border-b px-4 py-3 text-sm font-semibold transition-colors"
         >
           Mi perfil
+        </Link>
+
+        <Link
+          href="/notificaciones"
+          role="menuitem"
+          onClick={() => setAbierto(false)}
+          className="text-texto-suave hover:bg-superficie-suave hover:text-texto border-borde flex items-center justify-between gap-2 border-b px-4 py-3 text-sm font-semibold transition-colors"
+        >
+          Notificaciones
+          {sinLeer > 0 && (
+            <span className="bg-primario rounded-full px-2 py-0.5 text-xs font-bold text-white">
+              {sinLeer}
+            </span>
+          )}
         </Link>
 
         <button

@@ -1,5 +1,7 @@
 import { protegerRuta } from "@/lib/auth/guardias";
+import { notificar, TIPOS_NOTIFICACION } from "@/lib/notificaciones/notificaciones";
 import { crearServicioAgenda } from "@/lib/tutorias/crear-servicios-tutorias";
+import { obtenerTutoriaParaAviso } from "@/lib/tutorias/consultas-tutorias";
 import { erroresPorCampo } from "@/validators/errores";
 import { esquemaSolicitudTutoria } from "@/validators/tutoria";
 
@@ -39,6 +41,17 @@ export const POST = protegerRuta([], async (usuario, solicitud: Request) => {
         { errores: { general: resultado.mensaje } },
         { status: 422, headers: sinCache }
       );
+    }
+
+    const aviso = await obtenerTutoriaParaAviso(resultado.idTutoria);
+    if (aviso?.idUsuarioTutor) {
+      await notificar({
+        idUsuario: aviso.idUsuarioTutor,
+        tipo: TIPOS_NOTIFICACION.tutoria,
+        titulo: "Te agendaron una tutoría",
+        mensaje: `${aviso.estudiante} agendó una tutoría de ${aviso.curso} contigo.`,
+        urlDestino: "/tutorias/panel",
+      });
     }
 
     return Response.json({ idTutoria: resultado.idTutoria }, { status: 201, headers: sinCache });

@@ -1,6 +1,9 @@
 import { protegerRuta } from "@/lib/auth/guardias";
 import { ROLES } from "@/lib/auth/roles";
+import { destinatariosDeAcreditacion } from "@/lib/horas-beca/consultas-horas-beca";
 import { crearServicioHorasBeca } from "@/lib/horas-beca/crear-servicio-horas-beca";
+import { formatearHoras } from "@/lib/horas-beca/formato-horas";
+import { notificar, TIPOS_NOTIFICACION } from "@/lib/notificaciones/notificaciones";
 import { erroresPorCampo } from "@/validators/errores";
 import { esquemaAcreditacionLote } from "@/validators/hora-beca-admin";
 
@@ -38,6 +41,21 @@ export const PATCH = protegerRuta([ROLES.administrador], async (usuario, solicit
 
     if (resultado.tipo === "invalida") {
       return Response.json({ mensaje: resultado.mensaje }, { status: 422, headers: sinCache });
+    }
+
+    // Se avisa solo al acreditar: la reversión suele ser la corrección de un
+    // error de AEUVG y avisar de ella sembraría una duda que no toca al
+    // estudiante. El aviso nunca hace fallar la operación, que ya se aplicó.
+    if (accion === "acreditar" && resultado.afectados > 0) {
+      for (const destino of await destinatariosDeAcreditacion(ids)) {
+        await notificar({
+          idUsuario: destino.idUsuario,
+          tipo: TIPOS_NOTIFICACION.horasBeca,
+          titulo: "Te acreditaron horas beca",
+          mensaje: `AEUVG acreditó ${formatearHoras(destino.horas)} ${destino.horas === 1 ? "hora" : "horas"} de ${destino.registros} ${destino.registros === 1 ? "actividad" : "actividades"}.`,
+          urlDestino: "/perfil#mis-horas-beca",
+        });
+      }
     }
 
     return Response.json(

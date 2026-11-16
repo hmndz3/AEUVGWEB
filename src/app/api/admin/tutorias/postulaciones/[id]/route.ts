@@ -1,6 +1,8 @@
 import { protegerRuta } from "@/lib/auth/guardias";
 import { ROLES } from "@/lib/auth/roles";
+import { notificar, TIPOS_NOTIFICACION } from "@/lib/notificaciones/notificaciones";
 import { crearServicioPostulaciones } from "@/lib/tutorias/crear-servicios-tutorias";
+import { obtenerPostulacionParaAviso } from "@/lib/tutorias/consultas-tutorias";
 import { erroresPorCampo } from "@/validators/errores";
 import { esquemaRevisionPostulacion } from "@/validators/tutoria";
 
@@ -49,6 +51,25 @@ export const PATCH = protegerRuta(
       }
       if (resultado.tipo === "no_permitida") {
         return Response.json({ mensaje: resultado.mensaje }, { status: 409, headers: sinCache });
+      }
+
+      // El aviso va después de resolver y nunca hace fallar la petición: la
+      // postulación ya quedó decidida y perderla por un aviso sería peor.
+      const aviso = await obtenerPostulacionParaAviso(id);
+      if (aviso?.idUsuario) {
+        const aprobada = resultado.estado === "APROBADA";
+        await notificar({
+          idUsuario: aviso.idUsuario,
+          tipo: TIPOS_NOTIFICACION.postulacion,
+          titulo: aprobada
+            ? "Tu postulación para ser tutor fue aprobada"
+            : "Tu postulación para ser tutor no fue aprobada",
+          mensaje: aprobada
+            ? "Ya apareces en el directorio de tutores. Publica tus horarios para que te puedan agendar."
+            : (validacion.data.comentarioRevision ??
+              "AEUVG revisó tu postulación. Escríbeles si quieres saber más."),
+          urlDestino: aprobada ? "/tutorias/panel" : "/perfil#mis-tutorias",
+        });
       }
 
       return Response.json(
