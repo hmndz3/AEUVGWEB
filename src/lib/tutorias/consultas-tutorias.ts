@@ -1,6 +1,6 @@
 import type { EstadoPostulacion, EstadoTutor, Prisma } from "@prisma/client";
 
-import { aHoraDeReloj } from "@/lib/tutorias/formato-tutorias";
+import { aHoraDeReloj, formatearFechaTutoria } from "@/lib/tutorias/formato-tutorias";
 import { obtenerPrisma } from "@/lib/prisma";
 
 /** Postulaciones por página del panel. */
@@ -403,4 +403,47 @@ export async function listarTutoriasDeTutor(idUsuario: number): Promise<TutoriaV
   });
 
   return filas.map(aTutoria);
+}
+
+/** Lo mínimo para redactar el aviso de una postulación resuelta. */
+export async function obtenerPostulacionParaAviso(
+  idPostulacion: number
+): Promise<{ idUsuario: number | null } | null> {
+  const fila = await obtenerPrisma().postulacionTutor.findUnique({
+    where: { idPostulacion },
+    select: { estudiante: { select: { usuario: { select: { idUsuario: true } } } } },
+  });
+
+  return fila ? { idUsuario: fila.estudiante.usuario?.idUsuario ?? null } : null;
+}
+
+/** Lo mínimo para redactar el aviso de una tutoría, con sus dos cuentas. */
+export async function obtenerTutoriaParaAviso(idTutoria: number): Promise<{
+  idUsuarioTutor: number | null;
+  idUsuarioEstudiante: number | null;
+  estudiante: string;
+  curso: string;
+  cuando: string;
+} | null> {
+  const fila = await obtenerPrisma().tutoria.findUnique({
+    where: { idTutoria },
+    select: {
+      fechaInicio: true,
+      curso: { select: { nombre: true } },
+      estudiante: {
+        select: { nombreCompleto: true, usuario: { select: { idUsuario: true } } },
+      },
+      tutor: { select: { estudiante: { select: { usuario: { select: { idUsuario: true } } } } } },
+    },
+  });
+
+  if (!fila) return null;
+
+  return {
+    idUsuarioTutor: fila.tutor.estudiante.usuario?.idUsuario ?? null,
+    idUsuarioEstudiante: fila.estudiante.usuario?.idUsuario ?? null,
+    estudiante: fila.estudiante.nombreCompleto,
+    curso: fila.curso.nombre,
+    cuando: formatearFechaTutoria(fila.fechaInicio),
+  };
 }

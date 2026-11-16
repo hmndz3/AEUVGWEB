@@ -195,3 +195,37 @@ export async function obtenerResumenHorasBeca(
     registrosSinCuenta,
   };
 }
+
+/**
+ * Cuentas a las que avisar de una acreditación, con sus horas.
+ *
+ * Solo se avisa a quien tiene cuenta: un carnet sin ella no tiene a quién
+ * notificar, y sus horas aparecerán en su perfil cuando se registre.
+ */
+export async function destinatariosDeAcreditacion(
+  ids: readonly number[]
+): Promise<{ idUsuario: number; horas: number; registros: number }[]> {
+  if (ids.length === 0) return [];
+
+  const filas = await obtenerPrisma().registroHoraBeca.findMany({
+    where: { idRegistroHora: { in: [...ids] }, idEstudiante: { not: null } },
+    select: {
+      cantidadHoras: true,
+      estudiante: { select: { usuario: { select: { idUsuario: true } } } },
+    },
+  });
+
+  const porCuenta = new Map<number, { idUsuario: number; horas: number; registros: number }>();
+
+  for (const fila of filas) {
+    const idUsuario = fila.estudiante?.usuario?.idUsuario;
+    if (!idUsuario) continue;
+
+    const acumulado = porCuenta.get(idUsuario) ?? { idUsuario, horas: 0, registros: 0 };
+    acumulado.horas += Number(fila.cantidadHoras);
+    acumulado.registros += 1;
+    porCuenta.set(idUsuario, acumulado);
+  }
+
+  return [...porCuenta.values()];
+}

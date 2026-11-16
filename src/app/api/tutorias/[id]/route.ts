@@ -1,4 +1,6 @@
 import { protegerRuta } from "@/lib/auth/guardias";
+import { notificar, TIPOS_NOTIFICACION } from "@/lib/notificaciones/notificaciones";
+import { obtenerTutoriaParaAviso } from "@/lib/tutorias/consultas-tutorias";
 import { crearServicioAgenda } from "@/lib/tutorias/crear-servicios-tutorias";
 import { interpretarAccionTutoria } from "@/validators/tutoria";
 
@@ -40,6 +42,27 @@ export const PATCH = protegerRuta([], async (usuario, solicitud: Request, contex
     }
     if (resultado.tipo === "no_permitida") {
       return Response.json({ mensaje: resultado.mensaje }, { status: 409, headers: sinCache });
+    }
+
+    // Se avisa a la otra parte, nunca a quien acaba de hacerlo.
+    const aviso = await obtenerTutoriaParaAviso(id);
+    if (aviso) {
+      const cancelada = resultado.estado === "CANCELADA";
+      const destinatarios = [aviso.idUsuarioTutor, aviso.idUsuarioEstudiante].filter(
+        (idDestino): idDestino is number => idDestino !== null && idDestino !== usuario.idUsuario
+      );
+
+      for (const idDestino of destinatarios) {
+        await notificar({
+          idUsuario: idDestino,
+          tipo: TIPOS_NOTIFICACION.tutoria,
+          titulo: cancelada ? "Se canceló una tutoría" : "Una tutoría quedó como dada",
+          mensaje: cancelada
+            ? `La tutoría de ${aviso.curso} del ${aviso.cuando} ya no se realizará.`
+            : `El tutor marcó como dada la tutoría de ${aviso.curso} del ${aviso.cuando}.`,
+          urlDestino: "/perfil#mis-tutorias",
+        });
+      }
     }
 
     return Response.json({ estado: resultado.estado }, { headers: sinCache });
