@@ -1,5 +1,5 @@
+import { Avatar } from "@/components/ui/avatar";
 import { EtiquetaEstado } from "@/components/ui/etiqueta-estado";
-import { inicialesDe } from "@/lib/auth/usuario-sesion-cliente";
 import type { PerfilEstudiante } from "@/lib/perfil/consultas-perfil";
 
 const ETIQUETAS_ESTADO: Record<PerfilEstudiante["estado"], string> = {
@@ -29,12 +29,7 @@ export function DatosPerfil({ perfil }: { perfil: PerfilEstudiante }) {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-        <span
-          aria-hidden
-          className="bg-primario grid size-16 shrink-0 place-items-center rounded-full text-xl font-bold text-white"
-        >
-          {inicialesDe(perfil.nombreCompleto)}
-        </span>
+        <Avatar nombre={perfil.nombreCompleto} fotoUrl={perfil.fotoUrl} tamano="size-16 text-xl" />
 
         <div className="min-w-0">
           <h1 className="text-texto text-2xl leading-tight font-extrabold tracking-tight break-words sm:text-3xl">

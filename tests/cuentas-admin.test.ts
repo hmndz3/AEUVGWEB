@@ -158,6 +158,7 @@ function usuario(roles: UsuarioSesion["roles"]): UsuarioSesion {
     estado: "ACTIVO",
     correoVerificado: true,
     nombreCompleto: "Administrador Prueba",
+    fotoUrl: null,
     roles,
   };
 }
