@@ -4,6 +4,7 @@ import type { Rol } from "@/lib/auth/roles";
 export type UsuarioSesionCliente = {
   idUsuario: number;
   nombreCompleto: string;
+  fotoUrl: string | null;
   correo: string;
   roles: Rol[];
 };

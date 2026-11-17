@@ -410,6 +410,7 @@ function usuarioAdministrador(): UsuarioSesion {
     estado: "ACTIVO",
     correoVerificado: true,
     nombreCompleto: "Administradora AEUVG",
+    fotoUrl: null,
     roles: [ROLES.administrador],
   };
 }

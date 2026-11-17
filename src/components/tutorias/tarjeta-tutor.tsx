@@ -1,7 +1,7 @@
 import Link from "next/link";
 
+import { Avatar } from "@/components/ui/avatar";
 import { Tarjeta, TarjetaTexto, TarjetaTitulo } from "@/components/ui/tarjeta";
-import { inicialesDe } from "@/lib/auth/usuario-sesion-cliente";
 import type { TutorVista } from "@/lib/tutorias/consultas-tutorias";
 import {
   ETIQUETAS_DIA,
@@ -11,45 +11,6 @@ import {
 
 /** Franjas que caben en la tarjeta antes de resumir el resto. */
 const FRANJAS_VISIBLES = 3;
-
-/**
- * Avatar del tutor.
- *
- * Usa su fotografía cuando la tiene y sus iniciales cuando no, que es lo que
- * la plataforma ha mostrado desde el Sprint 1. La foto no es obligatoria, así
- * que las iniciales no son un respaldo temporal: son el caso habitual.
- */
-export function AvatarTutor({
-  nombre,
-  fotoUrl,
-  tamano = "size-14",
-}: {
-  nombre: string;
-  fotoUrl: string | null;
-  tamano?: string;
-}) {
-  if (fotoUrl) {
-    return (
-      /* eslint-disable-next-line @next/next/no-img-element -- la imagen la sirve
-         la propia plataforma desde el volumen; no pasa por el optimizador
-         porque su host depende del ambiente. */
-      <img
-        src={fotoUrl}
-        alt={`Fotografía de ${nombre}`}
-        className={`${tamano} shrink-0 rounded-full object-cover`}
-      />
-    );
-  }
-
-  return (
-    <span
-      aria-hidden
-      className={`${tamano} bg-primario grid shrink-0 place-items-center rounded-full font-bold text-white`}
-    >
-      {inicialesDe(nombre)}
-    </span>
-  );
-}
 
 /**
  * Un tutor en el directorio.
@@ -63,7 +24,7 @@ export function TarjetaTutor({ tutor }: { tutor: TutorVista }) {
   return (
     <Tarjeta className="flex flex-col gap-4">
       <div className="flex items-start gap-3">
-        <AvatarTutor nombre={tutor.nombreCompleto} fotoUrl={tutor.fotoUrl} />
+        <Avatar nombre={tutor.nombreCompleto} fotoUrl={tutor.fotoUrl} tamano="size-14" />
         <div className="min-w-0">
           <TarjetaTitulo>{tutor.nombreCompleto}</TarjetaTitulo>
           <TarjetaTexto className="mt-0.5">{tutor.carrera}</TarjetaTexto>

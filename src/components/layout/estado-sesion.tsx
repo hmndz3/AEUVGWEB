@@ -4,10 +4,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
+import { Avatar } from "@/components/ui/avatar";
 import {
   cerrarSesion,
   consultarSesion,
-  inicialesDe,
   type UsuarioSesionCliente,
 } from "@/lib/auth/usuario-sesion-cliente";
 
@@ -125,9 +125,7 @@ export function EstadoSesion() {
         aria-haspopup="menu"
         className="hover:bg-superficie-suave flex items-center gap-2 rounded-full py-1 pr-2 pl-1 transition-colors"
       >
-        <span className="bg-primario grid size-9 shrink-0 place-items-center rounded-full text-xs font-bold text-white">
-          {inicialesDe(usuario.nombreCompleto)}
-        </span>
+        <Avatar nombre={usuario.nombreCompleto} fotoUrl={usuario.fotoUrl} tamano="size-9 text-xs" />
         <span className="text-texto hidden max-w-32 truncate text-sm font-semibold sm:inline">
           {usuario.nombreCompleto}
         </span>

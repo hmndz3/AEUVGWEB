@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { MarcoSitio } from "@/components/layout/marco-sitio";
-import { AvatarTutor } from "@/components/tutorias/tarjeta-tutor";
+import { Avatar } from "@/components/ui/avatar";
 import { FormularioSolicitud } from "@/components/tutorias/formulario-solicitud";
 import { verificarAcceso } from "@/lib/auth/guardias";
 import { obtenerTutor } from "@/lib/tutorias/consultas-tutorias";
@@ -29,7 +29,7 @@ export default async function PaginaTutor({ params }: { params: Promise<{ id: st
           </Link>
 
           <div className="mt-4 flex flex-wrap items-start gap-4">
-            <AvatarTutor
+            <Avatar
               nombre={tutor.nombreCompleto}
               fotoUrl={tutor.fotoUrl}
               tamano="size-20 text-xl"

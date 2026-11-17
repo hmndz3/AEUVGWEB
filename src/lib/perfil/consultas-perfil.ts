@@ -11,6 +11,8 @@ export type CarreraDisponible = {
 export type PerfilEstudiante = {
   idUsuario: number;
   nombreCompleto: string;
+  /** Fotografía de perfil, cuando la subió. Las iniciales son el respaldo. */
+  fotoUrl: string | null;
   carnet: string;
   correoUvg: string;
   correoCuenta: string;
@@ -44,6 +46,7 @@ export async function obtenerPerfil(idUsuario: number): Promise<PerfilEstudiante
       estudiante: {
         select: {
           nombreCompleto: true,
+          fotoUrl: true,
           carnet: true,
           correoUvg: true,
           telefono: true,
@@ -61,6 +64,7 @@ export async function obtenerPerfil(idUsuario: number): Promise<PerfilEstudiante
   return {
     idUsuario: usuario.idUsuario,
     nombreCompleto: estudiante.nombreCompleto,
+    fotoUrl: estudiante.fotoUrl,
     carnet: estudiante.carnet,
     correoUvg: estudiante.correoUvg,
     correoCuenta: usuario.correo,
