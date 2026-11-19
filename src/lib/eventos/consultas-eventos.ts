@@ -52,7 +52,9 @@ export type PaginaEventos = {
   paginas: number;
 };
 
-const seleccionResumen = {
+/** Campos del resumen de un evento. Se exporta para que otras consultas
+ * produzcan exactamente la misma forma y las tarjetas sirvan en todas. */
+export const seleccionResumen = {
   idEvento: true,
   nombre: true,
   fechaInicio: true,
@@ -114,7 +116,7 @@ export function nombresDeOrganizadores(organizadores: readonly OrganizadorEnlace
   return organizadores.map((organizador) => organizador.nombre);
 }
 
-function mapearResumen(evento: EventoConsultado): EventoResumen {
+export function mapearResumen(evento: EventoConsultado): EventoResumen {
   return {
     idEvento: evento.idEvento,
     nombre: evento.nombre,
