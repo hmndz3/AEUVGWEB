@@ -14,7 +14,7 @@ export const SECCIONES_ADMIN = [
   {
     href: "/admin/calendario",
     texto: "Calendario",
-    descripcion: "Vista mensual de las actividades programadas.",
+    descripcion: "Vista mensual de las actividades, con sus borradores y cancelados.",
   },
   {
     href: "/admin/asociaciones",
@@ -39,13 +39,12 @@ export const SECCIONES_ADMIN = [
     // administran juntos en lugar de en dos secciones separadas.
     href: "/admin/tutorias",
     texto: "Tutorías",
-    descripcion:
-      "Postulaciones de estudiantes, tutores activos, cursos que imparten y disponibilidad.",
+    descripcion: "Postulaciones para ser tutor y tutores activos con sus cursos.",
   },
   {
     href: "/admin/reportes",
     texto: "Reportes",
-    descripcion: "Generación de reportes en Excel y PDF.",
+    descripcion: "Resumen del programa de horas beca, por mes y por estudiante.",
   },
 ] as const;
 
