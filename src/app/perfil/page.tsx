@@ -4,6 +4,7 @@ import { MarcoSitio } from "@/components/layout/marco-sitio";
 import { DatosPerfil } from "@/components/perfil/datos-perfil";
 import { EventosGuardadosPerfil } from "@/components/perfil/eventos-guardados";
 import { FormularioPerfil } from "@/components/perfil/formulario-perfil";
+import { FotoPerfil } from "@/components/perfil/foto-perfil";
 import { HorasBecaPerfil } from "@/components/perfil/horas-beca";
 import { TutoriasPerfil } from "@/components/perfil/tutorias";
 import { verificarAcceso } from "@/lib/auth/guardias";
@@ -48,6 +49,12 @@ export default async function PaginaPerfil() {
     <MarcoSitio>
       <div className="mx-auto flex max-w-4xl flex-col gap-10 px-4 py-10 sm:px-6">
         <DatosPerfil perfil={perfil} />
+
+        <FotoPerfil
+          nombre={perfil.nombreCompleto}
+          fotoUrl={perfil.fotoUrl}
+          esTutor={tutor !== null}
+        />
 
         <HorasBecaPerfil horas={horas} />
 

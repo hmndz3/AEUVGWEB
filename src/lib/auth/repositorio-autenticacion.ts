@@ -10,6 +10,8 @@ export type UsuarioAutenticacion = {
   estado: EstadoUsuario;
   correoVerificado: boolean;
   nombreCompleto: string;
+  /** Fotografía de perfil, para el avatar del encabezado. */
+  fotoUrl: string | null;
   roles: Rol[];
 };
 
@@ -44,7 +46,7 @@ export class RepositorioAutenticacionPrisma implements RepositorioAutenticacion 
           contrasenaHash: true,
           estado: true,
           correoVerificado: true,
-          estudiante: { select: { nombreCompleto: true } },
+          estudiante: { select: { nombreCompleto: true, fotoUrl: true } },
           roles: {
             where: { activo: true, rol: { activo: true } },
             select: { rol: { select: { nombre: true } } },
@@ -60,6 +62,7 @@ export class RepositorioAutenticacionPrisma implements RepositorioAutenticacion 
               estado: usuario.estado,
               correoVerificado: usuario.correoVerificado,
               nombreCompleto: usuario.estudiante.nombreCompleto,
+              fotoUrl: usuario.estudiante.fotoUrl,
               roles: rolesDe(usuario.roles),
             }
           : null
@@ -75,7 +78,7 @@ export class RepositorioAutenticacionPrisma implements RepositorioAutenticacion 
           correo: true,
           estado: true,
           correoVerificado: true,
-          estudiante: { select: { nombreCompleto: true } },
+          estudiante: { select: { nombreCompleto: true, fotoUrl: true } },
           roles: {
             where: { activo: true, rol: { activo: true } },
             select: { rol: { select: { nombre: true } } },
@@ -90,6 +93,7 @@ export class RepositorioAutenticacionPrisma implements RepositorioAutenticacion 
               estado: usuario.estado,
               correoVerificado: usuario.correoVerificado,
               nombreCompleto: usuario.estudiante.nombreCompleto,
+              fotoUrl: usuario.estudiante.fotoUrl,
               roles: rolesDe(usuario.roles),
             }
           : null

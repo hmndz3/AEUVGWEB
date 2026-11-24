@@ -285,6 +285,7 @@ function usuario(roles: UsuarioSesion["roles"]): UsuarioSesion {
     estado: "ACTIVO",
     correoVerificado: true,
     nombreCompleto: "Estudiante Prueba",
+    fotoUrl: null,
     roles,
   };
 }

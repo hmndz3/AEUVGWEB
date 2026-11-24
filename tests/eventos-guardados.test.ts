@@ -165,6 +165,7 @@ function usuario(): UsuarioSesion {
     estado: "ACTIVO",
     correoVerificado: true,
     nombreCompleto: "Estudiante Prueba",
+    fotoUrl: null,
     roles: [ROLES.estudiante],
   };
 }
