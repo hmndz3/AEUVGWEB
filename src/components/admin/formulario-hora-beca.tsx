@@ -7,6 +7,7 @@ import { Alerta } from "@/components/ui/alerta";
 import { Boton } from "@/components/ui/boton";
 import { EtiquetaCampo, NotaCamposObligatorios } from "@/components/ui/etiqueta-campo";
 import { BuscadorEstudiante } from "@/components/admin/buscador-estudiante";
+import { inicialesDe } from "@/lib/auth/usuario-sesion-cliente";
 import type { EstudianteSugerido } from "@/lib/horas-beca/consultas-estudiantes";
 import { componerHorario } from "@/lib/horas-beca/formato-horas";
 import { MAXIMO_HORAS_POR_REGISTRO } from "@/lib/horas-beca/servicio-horas-beca";
@@ -37,6 +38,54 @@ export const VALORES_HORA_BECA_VACIOS: ValoresHoraBeca = {
 
 const claseCampo =
   "border-borde bg-superficie text-texto focus:border-primario focus:ring-primario/30 w-full rounded-2xl border px-4 py-3 text-sm focus:ring-2 focus:outline-none";
+
+/** Un estudiante ya agregado al registro. */
+type Burbuja = {
+  carnet: string;
+  /** Nombre de su cuenta, o null si ese carnet todavía no tiene una. */
+  nombreCuenta: string | null;
+};
+
+/** El carnet en la forma en la que se compara y se guarda. */
+const normalizar = (carnet: string) => carnet.replace(/\s+/g, "").toUpperCase();
+
+/**
+ * Burbuja de un estudiante agregado, con su avatar de iniciales y el botón
+ * para quitarlo. Las de los carnets sin cuenta van en ámbar: son las que el
+ * registro para varios no admite, porque su nombre no lo pone nadie.
+ */
+function BurbujaEstudiante({ burbuja, alQuitar }: { burbuja: Burbuja; alQuitar: () => void }) {
+  const conCuenta = burbuja.nombreCuenta !== null;
+
+  return (
+    <span
+      className={`inline-flex max-w-full items-center gap-2 rounded-full py-1 pr-1 pl-1.5 text-sm ${
+        conCuenta ? "bg-turquesa/15 text-[#00695a]" : "bg-ambar/20 text-[#8a5600]"
+      }`}
+    >
+      <span
+        aria-hidden
+        className={`grid size-6 shrink-0 place-items-center rounded-full text-[0.6rem] font-bold ${
+          conCuenta ? "bg-turquesa/30" : "bg-ambar/40"
+        }`}
+      >
+        {conCuenta ? inicialesDe(burbuja.nombreCuenta ?? "") : "?"}
+      </span>
+      <span className="min-w-0 truncate font-semibold">
+        {burbuja.nombreCuenta ?? burbuja.carnet}
+      </span>
+      <span className="font-mono text-xs opacity-70">{burbuja.carnet}</span>
+      <button
+        type="button"
+        onClick={alQuitar}
+        aria-label={`Quitar a ${burbuja.nombreCuenta ?? burbuja.carnet}`}
+        className="grid size-6 shrink-0 place-items-center rounded-full text-base leading-none transition-colors hover:bg-black/10"
+      >
+        ×
+      </button>
+    </span>
+  );
+}
 
 function Campo({
   etiqueta,
@@ -115,23 +164,68 @@ export function FormularioHoraBeca({
 }) {
   const router = useRouter();
   const [valores, setValores] = useState(valoresIniciales);
+  const [burbujas, setBurbujas] = useState<Burbuja[]>(() =>
+    valoresIniciales.carnet
+      ? [
+          {
+            carnet: valoresIniciales.carnet,
+            nombreCuenta: valoresIniciales.nombreEstudiante || null,
+          },
+        ]
+      : []
+  );
+  const [buscado, setBuscado] = useState("");
   const [errores, setErrores] = useState<Record<string, string>>({});
   const [general, setGeneral] = useState<string | null>(null);
   const [guardando, setGuardando] = useState(false);
   const cambiar = <Clave extends keyof ValoresHoraBeca>(clave: Clave, valor: string) =>
     setValores((previos) => ({ ...previos, [clave]: valor }));
 
+  /** Al editar se corrige un registro y su estudiante no cambia. */
+  const varios = id === undefined;
+  const sinCuenta = burbujas.filter((burbuja) => burbuja.nombreCuenta === null);
+  // Un solo estudiante puede no tener cuenta, y entonces hay que escribir su
+  // nombre. Con varios eso no es posible, y el servidor los rechaza.
+  const pideNombre = burbujas.length === 1 && burbujas[0].nombreCuenta === null;
+
+  const agregar = (carnet: string, nombreCuenta: string | null) => {
+    const limpio = normalizar(carnet);
+    if (limpio.length === 0) return;
+
+    setBuscado("");
+    setBurbujas((previas) =>
+      previas.some((burbuja) => burbuja.carnet === limpio)
+        ? previas
+        : [...previas, { carnet: limpio, nombreCuenta }]
+    );
+  };
+
+  const quitar = (carnet: string) =>
+    setBurbujas((previas) => previas.filter((burbuja) => burbuja.carnet !== carnet));
+
   /**
-   * Al elegir un estudiante del buscador se completa el nombre, que es el único
-   * dato que el formulario puede deducir. Se escribe el de la cuenta porque es
-   * el verificado, y es además el que el servicio acabará guardando.
+   * Un carnet escrito a mano se resuelve contra las cuentas antes de volverse
+   * burbuja: así quien captura ve el nombre de la persona a la que le va a
+   * registrar horas, que es lo que delata un carnet mal tecleado.
    */
-  const elegirEstudiante = (estudiante: EstudianteSugerido) =>
-    setValores((previos) => ({
-      ...previos,
-      carnet: estudiante.carnet,
-      nombreEstudiante: estudiante.nombreCompleto,
-    }));
+  async function confirmarEscrito(texto: string) {
+    const limpio = normalizar(texto);
+
+    try {
+      const respuesta = await fetch(`/api/admin/estudiantes?q=${encodeURIComponent(limpio)}`);
+      const cuerpo = (await respuesta.json().catch(() => ({}))) as {
+        estudiantes?: EstudianteSugerido[];
+      };
+      const cuenta = cuerpo.estudiantes?.find(
+        (estudiante) => normalizar(estudiante.carnet) === limpio
+      );
+
+      agregar(limpio, cuenta?.nombreCompleto ?? null);
+    } catch {
+      // El buscador es una ayuda: sin él el carnet se agrega igual, sin nombre.
+      agregar(limpio, null);
+    }
+  }
 
   async function enviar(evento: React.FormEvent<HTMLFormElement>) {
     evento.preventDefault();
@@ -141,13 +235,34 @@ export function FormularioHoraBeca({
 
     try {
       const base = "/api/admin/horas-beca";
-      const respuesta = await fetch(id ? `${base}/${id}` : base, {
-        method: id ? "PUT" : "POST",
+      const actividad = {
+        fechaActividad: valores.fechaActividad,
+        horarioApoyo: componerHorario(valores.horaInicio, valores.horaFin),
+        descripcionActividad: valores.descripcionActividad,
+        cantidadHoras: valores.cantidadHoras,
+        observaciones: valores.observaciones,
+      };
+
+      // Con más de un estudiante la petición va al registro en lote, que
+      // escribe un renglón por carnet en una sola operación.
+      const enLote = burbujas.length > 1;
+      const destinoPeticion = enLote ? `${base}/lote` : id ? `${base}/${id}` : base;
+      const respuesta = await fetch(destinoPeticion, {
+        method: id && !enLote ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...valores,
-          horarioApoyo: componerHorario(valores.horaInicio, valores.horaFin),
-        }),
+        body: JSON.stringify(
+          enLote
+            ? {
+                accion: "registrar",
+                carnets: burbujas.map((burbuja) => burbuja.carnet).join(","),
+                ...actividad,
+              }
+            : {
+                ...actividad,
+                carnet: burbujas[0]?.carnet ?? "",
+                nombreEstudiante: burbujas[0]?.nombreCuenta ?? valores.nombreEstudiante,
+              }
+        ),
       });
 
       if (respuesta.ok) {
@@ -184,28 +299,58 @@ export function FormularioHoraBeca({
 
       <NotaCamposObligatorios />
 
-      <div className="grid gap-5 md:grid-cols-2">
-        <Campo
-          etiqueta="Carnet"
-          obligatorio
-          nombre="carnet"
-          error={errores.carnet}
-          ayuda="Escribe el carnet y elige de la lista si ya tiene cuenta. Si no aparece, escríbelo igual."
-        >
-          <BuscadorEstudiante
-            id="carnet"
-            valor={valores.carnet}
-            onCambiar={(carnet) => cambiar("carnet", carnet)}
-            onElegir={elegirEstudiante}
-          />
-        </Campo>
+      {/* Los estudiantes se agregan como los destinatarios de un correo: cada
+          uno que se elige se vuelve una burbuja y el campo queda listo para el
+          siguiente. Una misma actividad la realizan varios, y capturar los
+          mismos cinco campos una vez por persona es donde aparecen los errores
+          de dedo. */}
+      <Campo
+        etiqueta={varios ? "Estudiantes" : "Estudiante"}
+        obligatorio
+        nombre="carnet"
+        error={errores.carnet ?? errores.carnets}
+        ayuda={
+          varios
+            ? "Escribe el carnet y elige de la lista, o pulsa Enter para agregarlo tal cual. Puedes agregar los que quieras."
+            : "Escribe el carnet y elige de la lista."
+        }
+      >
+        <div className="border-borde bg-superficie focus-within:border-primario focus-within:ring-primario/30 flex flex-wrap items-center gap-2 rounded-2xl border p-2 focus-within:ring-2">
+          {burbujas.map((burbuja) => (
+            <BurbujaEstudiante
+              key={burbuja.carnet}
+              burbuja={burbuja}
+              alQuitar={() => quitar(burbuja.carnet)}
+            />
+          ))}
 
+          {(varios || burbujas.length === 0) && (
+            <div className="min-w-48 flex-1">
+              <BuscadorEstudiante
+                id="carnet"
+                valor={buscado}
+                onCambiar={setBuscado}
+                onElegir={(estudiante) => agregar(estudiante.carnet, estudiante.nombreCompleto)}
+                onConfirmarTexto={confirmarEscrito}
+                mostrarCuenta={false}
+                placeholder={burbujas.length === 0 ? "Carnet o nombre" : "Agregar otro"}
+                claseEntrada="text-texto w-full bg-transparent px-2 py-1.5 text-sm focus:outline-none"
+              />
+            </div>
+          )}
+        </div>
+      </Campo>
+
+      {/* Con varios carnets el nombre lo pone cada cuenta; con uno solo que no
+          la tiene, hay que escribirlo, que es el caso para el que nació este
+          módulo. */}
+      {pideNombre && (
         <Campo
           etiqueta="Nombre del estudiante"
           obligatorio
           nombre="nombreEstudiante"
           error={errores.nombreEstudiante}
-          ayuda="Si el carnet ya tiene cuenta, se conserva el nombre registrado en ella."
+          ayuda="Este carnet todavía no tiene cuenta, así que su nombre no se puede deducir."
         >
           <input
             id="nombreEstudiante"
@@ -215,7 +360,16 @@ export function FormularioHoraBeca({
             className={claseCampo}
           />
         </Campo>
-      </div>
+      )}
+
+      {burbujas.length > 1 && sinCuenta.length > 0 && (
+        <Alerta tipo="error">
+          {sinCuenta.map((burbuja) => burbuja.carnet).join(", ")}
+          {sinCuenta.length === 1 ? " todavía no tiene cuenta" : " todavía no tienen cuenta"} en la
+          plataforma, así que su nombre no se puede deducir. Quítalos y regístralos por separado, o
+          carga sus horas desde Excel.
+        </Alerta>
+      )}
 
       {/* Cuatro columnas y no tres: el horario lleva dos relojes y, con el mismo
           ancho que un campo simple, se apretaban hasta montarse sobre la
@@ -327,8 +481,16 @@ export function FormularioHoraBeca({
       </Campo>
 
       <div className="flex flex-wrap gap-3">
-        <Boton type="submit" cargando={guardando}>
-          {id ? "Guardar cambios" : "Registrar horas"}
+        <Boton
+          type="submit"
+          disabled={burbujas.length === 0 || (burbujas.length > 1 && sinCuenta.length > 0)}
+          cargando={guardando}
+        >
+          {id
+            ? "Guardar cambios"
+            : burbujas.length > 1
+              ? `Registrar horas para ${burbujas.length} estudiantes`
+              : "Registrar horas"}
         </Boton>
       </div>
 

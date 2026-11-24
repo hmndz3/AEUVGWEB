@@ -36,11 +36,26 @@ export function BuscadorEstudiante({
   valor,
   onCambiar,
   onElegir,
+  onConfirmarTexto,
+  placeholder,
+  mostrarCuenta = true,
+  claseEntrada,
 }: {
   id: string;
   valor: string;
   onCambiar: (carnet: string) => void;
   onElegir: (estudiante: EstudianteSugerido) => void;
+  /**
+   * Confirma lo escrito sin elegir de la lista, con Enter o con una coma. Lo
+   * usa el campo de varios estudiantes para agregar un carnet que no aparece
+   * entre las sugerencias.
+   */
+  onConfirmarTexto?: (texto: string) => void;
+  placeholder?: string;
+  /** El aviso de cuenta encontrada sobra cuando el carnet se vuelve una burbuja. */
+  mostrarCuenta?: boolean;
+  /** Reemplaza el borde y el relleno cuando el campo va dentro de otro recuadro. */
+  claseEntrada?: string;
 }) {
   const idLista = useId();
   const contenedor = useRef<HTMLDivElement>(null);
@@ -107,6 +122,24 @@ export function BuscadorEstudiante({
       setAbierto(false);
       return;
     }
+
+    // Enter o coma confirman lo escrito cuando no hay sugerencia marcada. Se
+    // intercepta siempre que el campo admita confirmación: de lo contrario el
+    // Enter enviaría el formulario a medio llenar.
+    const confirmando =
+      onConfirmarTexto !== undefined &&
+      (evento.key === "," || (evento.key === "Enter" && !(abierto && resaltado >= 0)));
+
+    if (confirmando) {
+      evento.preventDefault();
+      if (valor.trim().length > 0) {
+        onConfirmarTexto(valor);
+        setAbierto(false);
+        setResaltado(-1);
+      }
+      return;
+    }
+
     if (sugerencias.length === 0) return;
 
     if (evento.key === "ArrowDown" || evento.key === "ArrowUp") {
@@ -140,6 +173,7 @@ export function BuscadorEstudiante({
         aria-activedescendant={resaltado >= 0 ? `${idLista}-${resaltado}` : undefined}
         autoComplete="off"
         maxLength={20}
+        placeholder={placeholder}
         value={valor}
         onChange={(evento) => {
           onCambiar(evento.target.value);
@@ -147,7 +181,10 @@ export function BuscadorEstudiante({
         }}
         onFocus={() => setAbierto(true)}
         onKeyDown={alPresionar}
-        className="border-borde bg-superficie text-texto focus:border-primario focus:ring-primario/30 w-full rounded-2xl border px-4 py-3 text-sm focus:ring-2 focus:outline-none"
+        className={
+          claseEntrada ??
+          "border-borde bg-superficie text-texto focus:border-primario focus:ring-primario/30 w-full rounded-2xl border px-4 py-3 text-sm focus:ring-2 focus:outline-none"
+        }
       />
 
       {visibles && (
@@ -193,7 +230,7 @@ export function BuscadorEstudiante({
         </ul>
       )}
 
-      {cuenta && !visibles && (
+      {mostrarCuenta && cuenta && !visibles && (
         <p className="mt-1.5 flex items-center gap-2 text-xs font-semibold text-[#00695a]">
           <span
             aria-hidden

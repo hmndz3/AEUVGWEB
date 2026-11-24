@@ -76,7 +76,7 @@ export function TablaHorasBeca({
         alLimpiar={() => setSeleccion(new Set())}
       />
 
-      <Tabla className="min-w-[68rem]">
+      <Tabla className="min-w-[52rem]">
         <TablaEncabezado>
           <tr>
             <TablaCeldaEncabezado className="w-10">
@@ -91,8 +91,7 @@ export function TablaHorasBeca({
             <TablaCeldaEncabezado>Carnet</TablaCeldaEncabezado>
             <TablaCeldaEncabezado>Estudiante</TablaCeldaEncabezado>
             <TablaCeldaEncabezado>Facultad</TablaCeldaEncabezado>
-            <TablaCeldaEncabezado>Fecha</TablaCeldaEncabezado>
-            <TablaCeldaEncabezado>Horario</TablaCeldaEncabezado>
+            <TablaCeldaEncabezado>Fecha y horario</TablaCeldaEncabezado>
             <TablaCeldaEncabezado>Actividad</TablaCeldaEncabezado>
             <TablaCeldaEncabezado className="text-right">Horas</TablaCeldaEncabezado>
             <TablaCeldaEncabezado>Estado</TablaCeldaEncabezado>
@@ -146,17 +145,21 @@ export function TablaHorasBeca({
               </TablaCelda>
               {/* La facultad sale de la carrera de la cuenta, así que un carnet
                   sin cuenta todavía no tiene cuál mostrar. */}
-              <TablaCelda className="text-texto-suave">
+              <TablaCelda className="text-texto-suave max-w-[11rem] text-sm">
                 {registro.facultad ?? <span className="opacity-60">—</span>}
               </TablaCelda>
+              {/* La fecha y el horario comparten columna: son el mismo dato de
+                  cuándo se realizó el apoyo y por separado se llevaban el ancho
+                  de dos, que era lo que sacaba la tabla de la pantalla. */}
               <TablaCelda className="text-texto-suave whitespace-nowrap">
                 {formatearFechaActividad(registro.fechaActividad)}
+                <span className="block text-xs">{registro.horarioApoyo}</span>
               </TablaCelda>
-              <TablaCelda className="text-texto-suave whitespace-nowrap">
-                {registro.horarioApoyo}
-              </TablaCelda>
+              {/* La actividad se ajusta a dos líneas en lugar de recortarse en
+                  una: recortada obligaba a pasar el cursor por encima para
+                  leerla, y es la columna que más se consulta. */}
               <TablaCelda className="text-texto-suave">
-                <span className="block max-w-sm truncate" title={registro.descripcionActividad}>
+                <span className="line-clamp-2 max-w-[16rem]" title={registro.descripcionActividad}>
                   {registro.descripcionActividad}
                 </span>
               </TablaCelda>
