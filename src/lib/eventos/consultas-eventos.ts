@@ -52,7 +52,9 @@ export type PaginaEventos = {
   paginas: number;
 };
 
-const seleccionResumen = {
+/** Campos del resumen de un evento. Se exporta para que otras consultas
+ * produzcan exactamente la misma forma y las tarjetas sirvan en todas. */
+export const seleccionResumen = {
   idEvento: true,
   nombre: true,
   fechaInicio: true,
@@ -114,7 +116,7 @@ export function nombresDeOrganizadores(organizadores: readonly OrganizadorEnlace
   return organizadores.map((organizador) => organizador.nombre);
 }
 
-function mapearResumen(evento: EventoConsultado): EventoResumen {
+export function mapearResumen(evento: EventoConsultado): EventoResumen {
   return {
     idEvento: evento.idEvento,
     nombre: evento.nombre,
@@ -228,6 +230,29 @@ export async function consultarEventosPublicados(opciones: {
  * calendario, por lo que incluye los que empezaron antes del rango y siguen
  * en curso dentro de él.
  */
+/**
+ * Eventos del rango para el calendario del panel.
+ *
+ * A diferencia del público, incluye los borradores y los cancelados: el
+ * calendario del panel existe justamente para ver qué queda sin publicar antes
+ * de que llegue su fecha, y esconderlos lo volvería una copia del público.
+ */
+export async function listarEventosEnRangoAdmin(
+  desde: Date,
+  hasta: Date
+): Promise<EventoResumen[]> {
+  if (desde.getTime() > hasta.getTime()) return [];
+
+  const eventos = await obtenerPrisma().evento.findMany({
+    where: { fechaInicio: { lte: hasta }, fechaFin: { gte: desde } },
+    orderBy: [{ fechaInicio: "asc" }, { idEvento: "asc" }],
+    take: MAXIMO_POR_RANGO,
+    select: seleccionResumen,
+  });
+
+  return eventos.map(mapearResumen);
+}
+
 export async function listarEventosEnRango(desde: Date, hasta: Date): Promise<EventoResumen[]> {
   if (desde.getTime() > hasta.getTime()) return [];
 

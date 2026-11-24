@@ -1,4 +1,5 @@
 import { protegerRuta } from "@/lib/auth/guardias";
+import { registrarInteraccion } from "@/lib/personalizacion/consultas-personalizacion";
 import { crearServicioEventosGuardados } from "@/lib/perfil/crear-servicio-eventos-guardados";
 
 export const runtime = "nodejs";
@@ -24,6 +25,11 @@ export const POST = protegerRuta([], async (usuario, _solicitud: Request, contex
     const resultado = await crearServicioEventosGuardados().guardar(usuario.idUsuario, idEvento);
 
     if (resultado.tipo === "no_encontrado") return noEncontrado();
+
+    // Guardar un evento dice qué le interesa a esa persona. La constancia
+    // alimenta las recomendaciones y nunca hace fallar la petición: el evento
+    // ya quedó guardado.
+    await registrarInteraccion(usuario.idUsuario, "evento", idEvento, "guardar");
 
     return Response.json({ guardado: true }, { headers: sinCache });
   } catch {

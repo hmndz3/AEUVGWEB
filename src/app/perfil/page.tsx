@@ -6,9 +6,16 @@ import { EventosGuardadosPerfil } from "@/components/perfil/eventos-guardados";
 import { FormularioPerfil } from "@/components/perfil/formulario-perfil";
 import { FotoPerfil } from "@/components/perfil/foto-perfil";
 import { HorasBecaPerfil } from "@/components/perfil/horas-beca";
+import { InteresesPerfil } from "@/components/perfil/intereses";
+import { RecomendacionesPerfil } from "@/components/perfil/recomendaciones";
 import { TutoriasPerfil } from "@/components/perfil/tutorias";
 import { verificarAcceso } from "@/lib/auth/guardias";
+import { listarCategorias } from "@/lib/eventos/consultas-eventos";
 import { obtenerEventosGuardados } from "@/lib/perfil/consultas-eventos-guardados";
+import {
+  obtenerInteresesDeCategorias,
+  recomendarEventos,
+} from "@/lib/personalizacion/consultas-personalizacion";
 import { obtenerHorasBecaEstudiante } from "@/lib/perfil/consultas-horas-beca";
 import { listarCarrerasDisponibles, obtenerPerfil } from "@/lib/perfil/consultas-perfil";
 import {
@@ -31,7 +38,18 @@ export default async function PaginaPerfil() {
   if (acceso.tipo !== "autorizado") redirect("/iniciar-sesion?continuar=/perfil");
 
   const ahora = new Date();
-  const [perfil, carreras, guardados, horas, tutorias, postulacion, tutor] = await Promise.all([
+  const [
+    perfil,
+    carreras,
+    guardados,
+    horas,
+    tutorias,
+    postulacion,
+    tutor,
+    categorias,
+    intereses,
+    recomendados,
+  ] = await Promise.all([
     obtenerPerfil(acceso.usuario.idUsuario),
     listarCarrerasDisponibles(),
     obtenerEventosGuardados(acceso.usuario.idUsuario, { ahora }),
@@ -39,6 +57,9 @@ export default async function PaginaPerfil() {
     listarTutoriasDeEstudiante(acceso.usuario.idUsuario),
     obtenerPostulacionDeEstudiante(acceso.usuario.idUsuario),
     obtenerTutorDeUsuario(acceso.usuario.idUsuario),
+    listarCategorias(),
+    obtenerInteresesDeCategorias(acceso.usuario.idUsuario),
+    recomendarEventos(acceso.usuario.idUsuario, ahora),
   ]);
 
   // La sesión es válida pero la cuenta ya no está: lo más seguro es volver al
@@ -60,7 +81,15 @@ export default async function PaginaPerfil() {
 
         <TutoriasPerfil tutorias={tutorias} postulacion={postulacion} tutor={tutor} />
 
+        <RecomendacionesPerfil
+          eventos={recomendados}
+          ahora={ahora}
+          sinIntereses={intereses.length === 0}
+        />
+
         <EventosGuardadosPerfil eventos={guardados} ahora={ahora} />
+
+        <InteresesPerfil categorias={categorias} elegidas={intereses} />
 
         <FormularioPerfil
           telefono={perfil.telefono}

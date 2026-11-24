@@ -56,3 +56,13 @@ El listado reutiliza `consultarEventosPublicados` del módulo de eventos y separ
 
 - Sección "Mis horas beca" dentro del perfil (Sprint 4).
 - Recordatorios de los eventos guardados (Sprint 6).
+
+## Fotografía de perfil
+
+Agregada en el Sprint 6 con la migración `20261107000000_add_foto_perfil_estudiante`. La columna `estudiante.foto_url` es opcional porque la plataforma funcionaba sin ella y la mayoría de las cuentas no tendrá foto: en todas las pantallas hay iniciales como respaldo, que es lo que se ha mostrado desde el Sprint 1.
+
+Solo se admite una imagen servida por la propia plataforma (`esImagenDelSitio`): la dirección llega del endpoint de subida, que ya comprobó el formato y el tamaño. Aceptar una dirección externa dejaría al sitio cargando imágenes de cualquier parte, y la foto se ve en el directorio público de tutores.
+
+La foto aparece en el perfil, en el menú de la cuenta y, si la persona es tutor, en su ficha pública. La pantalla del perfil lo dice antes de subirla: quien la sube tiene que saber dónde va a aparecer. Enviar una cadena vacía la quita y devuelve las iniciales.
+
+El avatar se unificó en `src/components/ui/avatar.tsx`: antes cada pantalla repetía su propio círculo con iniciales y se iban separando entre sí.
