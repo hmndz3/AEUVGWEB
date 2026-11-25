@@ -46,23 +46,23 @@ Cancelar lo pueden los dos: al estudiante le surge algo y al tutor también. Dar
 
 ## Pantallas y servicios
 
-| Ruta                                     | Método | Acceso        | Qué hace                                               |
-| ---------------------------------------- | ------ | ------------- | ------------------------------------------------------ |
-| `/tutorias`                              | —      | Pública       | Directorio de tutores activos, con filtro por curso.   |
-| `/tutorias/[id]`                         | —      | Pública       | Ficha del tutor y formulario para agendar.             |
-| `/tutorias/postular`                     | —      | Con sesión    | Postulación con sus cursos, notas y comprobantes.      |
-| `/tutorias/panel`                        | —      | Tutor         | Horarios, tutorías solicitadas y ficha pública.        |
-| `/api/tutorias/postulaciones`            | POST   | Con sesión    | Envía la postulación del estudiante de la sesión.      |
-| `/api/tutorias`                          | POST   | Con sesión    | Agenda una tutoría con el tutor y el horario elegidos. |
-| `/api/tutorias/[id]`                     | PATCH  | Con sesión    | Cancela la tutoría o la da por completada.             |
-| `/api/tutorias/ficha`                    | PUT    | Tutor         | Guarda la descripción y el contacto del tutor.         |
-| `/api/tutorias/disponibilidad`           | POST   | Tutor         | Agrega una franja de disponibilidad.                   |
-| `/api/tutorias/disponibilidad/[id]`      | DELETE | Tutor         | Quita una franja.                                      |
-| `/api/imagenes/subir`                    | POST   | Con sesión    | Sube el comprobante o la fotografía del estudiante.    |
-| `/admin/tutorias`                        | —      | Administrador | Tutores con sus cursos y su estado.                    |
-| `/admin/tutorias/postulaciones`          | —      | Administrador | Postulaciones por estado, con la foto del estudiante.  |
-| `/api/admin/tutorias/postulaciones/[id]` | PATCH  | Administrador | Aprueba o rechaza una postulación.                     |
-| `/api/admin/tutorias/tutores/[id]`       | PATCH  | Administrador | Activa, desactiva o suspende a un tutor.               |
+| Ruta                                     | Método | Acceso        | Qué hace                                                 |
+| ---------------------------------------- | ------ | ------------- | -------------------------------------------------------- |
+| `/tutorias`                              | —      | Pública       | Directorio de tutores activos, con filtro por curso.     |
+| `/tutorias/[id]`                         | —      | Pública       | Ficha del tutor y formulario para agendar.               |
+| `/tutorias/postular`                     | —      | Con sesión    | Postulación con sus cursos, notas y comprobantes.        |
+| `/tutorias/panel`                        | —      | Tutor         | Horarios, tutorías solicitadas y ficha pública.          |
+| `/api/tutorias/postulaciones`            | POST   | Con sesión    | Envía la postulación del estudiante de la sesión.        |
+| `/api/tutorias`                          | POST   | Con sesión    | Agenda una tutoría con el tutor y el horario elegidos.   |
+| `/api/tutorias/[id]`                     | PATCH  | Con sesión    | Cancela la tutoría o la da por completada.               |
+| `/api/tutorias/ficha`                    | PUT    | Tutor         | Guarda la descripción y el contacto del tutor.           |
+| `/api/tutorias/disponibilidad`           | POST   | Tutor         | Agrega una franja de disponibilidad.                     |
+| `/api/tutorias/disponibilidad/[id]`      | DELETE | Tutor         | Quita una franja.                                        |
+| `/api/imagenes/subir`                    | POST   | Con sesión    | Sube el comprobante o la fotografía del estudiante.      |
+| `/admin/tutorias`                        | —      | Administrador | Tutores, con filtros por nombre, carnet, estado y curso. |
+| `/admin/tutorias/postulaciones`          | —      | Administrador | Postulaciones por estado, con la foto del estudiante.    |
+| `/api/admin/tutorias/postulaciones/[id]` | PATCH  | Administrador | Aprueba o rechaza una postulación.                       |
+| `/api/admin/tutorias/tutores/[id]`       | PATCH  | Administrador | Activa, desactiva o suspende a un tutor.                 |
 
 Las rutas de tutor no se protegen por el rol sino resolviendo el tutor de la sesión: el rol se concede al aprobar, pero la ficha y las franjas son de una persona concreta, y recibir el tutor por parámetro permitiría editar la de cualquiera.
 

@@ -322,9 +322,33 @@ export async function obtenerTutorDeUsuario(idUsuario: number): Promise<TutorVis
   return fila ? aTutor(fila) : null;
 }
 
-/** Todos los tutores del panel, incluidos los inactivos y los suspendidos. */
-export async function listarTutoresPanel(): Promise<TutorVista[]> {
+export type FiltrosTutoresPanel = {
+  /** Nombre o carnet. */
+  q?: string;
+  estado?: EstadoTutor;
+  idCurso?: number;
+};
+
+/**
+ * Tutores del panel, incluidos los inactivos y los suspendidos, con los
+ * filtros de la pantalla: nombre o carnet, estado y curso que imparten.
+ */
+export async function listarTutoresPanel(filtros: FiltrosTutoresPanel = {}): Promise<TutorVista[]> {
+  const where: Prisma.TutorWhereInput = {};
+
+  if (filtros.estado) where.estado = filtros.estado;
+  if (filtros.idCurso) where.cursos = { some: { activo: true, idCurso: filtros.idCurso } };
+  if (filtros.q) {
+    where.estudiante = {
+      OR: [
+        { nombreCompleto: { contains: filtros.q, mode: "insensitive" } },
+        { carnet: { contains: filtros.q, mode: "insensitive" } },
+      ],
+    };
+  }
+
   const filas = await obtenerPrisma().tutor.findMany({
+    where,
     orderBy: [{ estado: "asc" }, { estudiante: { nombreCompleto: "asc" } }],
     select: CAMPOS_TUTOR,
   });
