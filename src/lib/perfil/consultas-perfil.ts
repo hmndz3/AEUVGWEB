@@ -2,10 +2,10 @@ import type { EstadoUsuario } from "@prisma/client";
 
 import { obtenerPrisma } from "@/lib/prisma";
 
-export type CarreraDisponible = {
-  idCarrera: number;
+export type FacultadDisponible = {
+  idFacultad: number;
   nombre: string;
-  facultad: string;
+  carreras: { idCarrera: number; nombre: string }[];
 };
 
 export type PerfilEstudiante = {
@@ -19,6 +19,7 @@ export type PerfilEstudiante = {
   telefono: string | null;
   idCarrera: number;
   carrera: string;
+  idFacultad: number;
   facultad: string;
   estado: EstadoUsuario;
   correoVerificado: boolean;
@@ -51,7 +52,9 @@ export async function obtenerPerfil(idUsuario: number): Promise<PerfilEstudiante
           correoUvg: true,
           telefono: true,
           idCarrera: true,
-          carrera: { select: { nombre: true, facultad: { select: { nombre: true } } } },
+          carrera: {
+            select: { nombre: true, idFacultad: true, facultad: { select: { nombre: true } } },
+          },
         },
       },
     },
@@ -71,6 +74,7 @@ export async function obtenerPerfil(idUsuario: number): Promise<PerfilEstudiante
     telefono: estudiante.telefono,
     idCarrera: estudiante.idCarrera,
     carrera: estudiante.carrera.nombre,
+    idFacultad: estudiante.carrera.idFacultad,
     facultad: estudiante.carrera.facultad.nombre,
     estado: usuario.estado,
     correoVerificado: usuario.correoVerificado,
@@ -79,20 +83,22 @@ export async function obtenerPerfil(idUsuario: number): Promise<PerfilEstudiante
 }
 
 /**
- * Carreras activas con su facultad, para el selector del perfil. Se devuelven en
- * una sola lista con la facultad al lado en lugar de agrupadas: en el perfil se
- * cambia la carrera, y la facultad se deduce de ella.
+ * Facultades activas con sus carreras, para los dos selectores del perfil.
+ * Van agrupadas como en la creación de cuenta: primero se elige la facultad y
+ * con ella se filtran las carreras.
  */
-export async function listarCarrerasDisponibles(): Promise<CarreraDisponible[]> {
-  const carreras = await obtenerPrisma().carrera.findMany({
-    where: { activo: true, facultad: { activo: true } },
-    orderBy: [{ facultad: { nombre: "asc" } }, { nombre: "asc" }],
-    select: { idCarrera: true, nombre: true, facultad: { select: { nombre: true } } },
+export async function listarFacultadesDisponibles(): Promise<FacultadDisponible[]> {
+  return obtenerPrisma().facultad.findMany({
+    where: { activo: true },
+    orderBy: { nombre: "asc" },
+    select: {
+      idFacultad: true,
+      nombre: true,
+      carreras: {
+        where: { activo: true },
+        orderBy: { nombre: "asc" },
+        select: { idCarrera: true, nombre: true },
+      },
+    },
   });
-
-  return carreras.map((carrera) => ({
-    idCarrera: carrera.idCarrera,
-    nombre: carrera.nombre,
-    facultad: carrera.facultad.nombre,
-  }));
 }

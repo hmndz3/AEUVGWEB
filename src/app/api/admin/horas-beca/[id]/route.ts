@@ -1,5 +1,6 @@
 import { protegerRuta } from "@/lib/auth/guardias";
 import { ROLES } from "@/lib/auth/roles";
+import { resolverEventoDeActividad } from "@/lib/horas-beca/actividad-evento";
 import { crearServicioHorasBeca } from "@/lib/horas-beca/crear-servicio-horas-beca";
 import { erroresPorCampo } from "@/validators/errores";
 import { esquemaRegistroHoraAdmin } from "@/validators/hora-beca-admin";
@@ -43,7 +44,12 @@ export const PUT = protegerRuta(
     }
 
     try {
-      const resultado = await crearServicioHorasBeca().editar(id, validacion.data);
+      const actividad = await resolverEventoDeActividad(validacion.data);
+      if (!actividad.valido) {
+        return Response.json({ errores: actividad.errores }, { status: 422, headers: sinCache });
+      }
+
+      const resultado = await crearServicioHorasBeca().editar(id, actividad.datos);
 
       if (resultado.tipo === "invalido") {
         return Response.json({ errores: resultado.errores }, { status: 422, headers: sinCache });

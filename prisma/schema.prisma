@@ -357,6 +357,7 @@ model Evento {
   creador              Usuario             @relation("EventoCreadoPor", fields: [creadoPor], references: [idUsuario], onDelete: Restrict, onUpdate: Cascade)
   organizadores        OrganizadorEvento[]
   guardados            EventoGuardado[]
+  registrosHoraBeca    RegistroHoraBeca[]
 
   @@index([fechaInicio], map: "evento_fecha_inicio_idx")
   @@index([estado], map: "evento_estado_idx")
@@ -468,6 +469,9 @@ model RegistroHoraBeca {
   // carnet puede no tener cuenta todavía. Ver docs/horas-beca.md.
   idEstudiante         Int?                 @map("id_estudiante")
   idOportunidad        Int?                 @map("id_oportunidad")
+  // Evento en el que se apoyó, cuando la actividad fue uno. La descripción
+  // guarda su nombre igual, para que el registro se lea sin el evento.
+  idEvento             Int?                 @map("id_evento")
   idImportacion        Int?                 @map("id_importacion")
   creadoPor            Int                  @map("creado_por")
   acreditadoPor        Int?                 @map("acreditado_por")
@@ -485,6 +489,7 @@ model RegistroHoraBeca {
   fechaActualizacion   DateTime             @updatedAt @map("fecha_actualizacion") @db.Timestamptz(3)
   estudiante           Estudiante?          @relation(fields: [idEstudiante], references: [idEstudiante], onDelete: Restrict, onUpdate: Cascade)
   oportunidad          OportunidadHoraBeca? @relation(fields: [idOportunidad], references: [idOportunidad], onDelete: Restrict, onUpdate: Cascade)
+  evento               Evento?              @relation(fields: [idEvento], references: [idEvento], onDelete: SetNull, onUpdate: Cascade)
   importacion          ImportacionHoras?    @relation(fields: [idImportacion], references: [idImportacion], onDelete: Restrict, onUpdate: Cascade)
   creador              Usuario              @relation("RegistroCreadoPor", fields: [creadoPor], references: [idUsuario], onDelete: Restrict, onUpdate: Cascade)
   acreditador          Usuario?             @relation("RegistroAcreditadoPor", fields: [acreditadoPor], references: [idUsuario], onDelete: SetNull, onUpdate: Cascade)
@@ -497,6 +502,7 @@ model RegistroHoraBeca {
   @@index([carnet, estado], map: "registro_hora_beca_carnet_estado_idx")
   @@index([estado, fechaActividad], map: "registro_hora_beca_estado_fecha_actividad_idx")
   @@index([idOportunidad], map: "registro_hora_beca_id_oportunidad_idx")
+  @@index([idEvento], map: "registro_hora_beca_id_evento_idx")
   @@index([idImportacion], map: "registro_hora_beca_id_importacion_idx")
   @@index([creadoPor], map: "registro_hora_beca_creado_por_idx")
   @@index([acreditadoPor], map: "registro_hora_beca_acreditado_por_idx")
@@ -508,6 +514,9 @@ model Curso {
   codigo        String             @unique(map: "curso_codigo_key") @db.VarChar(30)
   nombre        String             @db.VarChar(160)
   activo        Boolean            @default(true)
+  // Lo propuso un estudiante con la opción "Otro" de la postulación y AEUVG
+  // todavía no lo admite: se queda inactivo hasta aprobarlo.
+  propuesto     Boolean            @default(false)
   postulaciones CursoPostulacion[]
   tutores       TutorCurso[]
   tutorias      Tutoria[]

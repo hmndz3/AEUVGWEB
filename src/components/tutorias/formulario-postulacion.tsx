@@ -14,10 +14,28 @@ import {
   NOTA_MINIMA_TUTOR,
 } from "@/validators/tutoria";
 
-/** Un curso de la postulación mientras se llena el formulario. */
-type CursoElegido = { idCurso: string; notaObtenida: string; comprobanteUrl: string };
+/** Valor del selector que abre los campos para escribir un curso que no está. */
+const OPCION_OTRO = "otro";
 
-const CURSO_VACIO: CursoElegido = { idCurso: "", notaObtenida: "", comprobanteUrl: "" };
+/**
+ * Un curso de la postulación mientras se llena el formulario. idCurso vale
+ * OPCION_OTRO cuando el curso no está en la lista y se escribe a mano.
+ */
+type CursoElegido = {
+  idCurso: string;
+  nombrePropuesto: string;
+  codigoPropuesto: string;
+  notaObtenida: string;
+  comprobanteUrl: string;
+};
+
+const CURSO_VACIO: CursoElegido = {
+  idCurso: "",
+  nombrePropuesto: "",
+  codigoPropuesto: "",
+  notaObtenida: "",
+  comprobanteUrl: "",
+};
 
 const claseCampo =
   "border-borde bg-superficie text-texto focus:border-primario focus:ring-primario/30 w-full rounded-2xl border px-4 py-3 text-sm focus:ring-2 focus:outline-none";
@@ -37,7 +55,9 @@ function resumenDeErrores(errores: Record<string, string>): string {
  * Postulación para ser tutor.
  *
  * Se pide un curso a la vez, cada uno con la nota que obtuvo y el comprobante
- * que la respalda. La nota va por curso y no como promedio porque quien sacó
+ * que la respalda. Los cursos salen del catálogo que administra AEUVG; si el
+ * curso no está, la opción "Otro" permite escribirlo y AEUVG lo revisa junto
+ * con la postulación. La nota va por curso y no como promedio porque quien sacó
  * cien en cálculo puede no estar en condiciones de dar química, y el
  * comprobante existe porque la nota la declara quien se postula: sin algo que
  * la respalde, AEUVG no tendría con qué contrastarla al revisar.
@@ -81,7 +101,9 @@ export function FormularioPostulacion({ cursos }: { cursos: CursoDisponible[] })
         body: JSON.stringify({
           comentarioSolicitante: comentario,
           cursos: elegidos.map((curso) => ({
-            idCurso: curso.idCurso,
+            idCurso: curso.idCurso === OPCION_OTRO ? null : curso.idCurso,
+            nombrePropuesto: curso.idCurso === OPCION_OTRO ? curso.nombrePropuesto : null,
+            codigoPropuesto: curso.idCurso === OPCION_OTRO ? curso.codigoPropuesto : null,
             notaObtenida: curso.notaObtenida,
             comprobanteUrl: curso.comprobanteUrl,
           })),
@@ -114,8 +136,15 @@ export function FormularioPostulacion({ cursos }: { cursos: CursoDisponible[] })
   }
 
   const completo = elegidos.every(
-    (curso) => curso.idCurso !== "" && curso.notaObtenida !== "" && curso.comprobanteUrl !== ""
+    (curso) =>
+      curso.idCurso !== "" &&
+      (curso.idCurso !== OPCION_OTRO || curso.nombrePropuesto.trim() !== "") &&
+      curso.notaObtenida !== "" &&
+      curso.comprobanteUrl !== ""
   );
+
+  /** Error de un campo de un curso, como lo devuelve el servidor. */
+  const errorDe = (indice: number, campo: string) => errores[`cursos.${indice}.${campo}`];
 
   return (
     <form onSubmit={enviar} noValidate className="flex flex-col gap-6">
@@ -159,7 +188,13 @@ export function FormularioPostulacion({ cursos }: { cursos: CursoDisponible[] })
                       {opcion.codigo} · {opcion.nombre}
                     </option>
                   ))}
+                  <option value={OPCION_OTRO}>Otro (no está en la lista)</option>
                 </select>
+                {errorDe(indice, "idCurso") && (
+                  <p role="alert" className="text-error text-xs font-medium">
+                    {errorDe(indice, "idCurso")}
+                  </p>
+                )}
               </div>
 
               <div className="flex flex-col gap-1.5">
@@ -180,6 +215,58 @@ export function FormularioPostulacion({ cursos }: { cursos: CursoDisponible[] })
                 <p className="text-texto-suave text-xs">Mínimo {NOTA_MINIMA_TUTOR}.</p>
               </div>
             </div>
+
+            {curso.idCurso === OPCION_OTRO && (
+              <div className="grid gap-4 sm:grid-cols-3">
+                <div className="flex flex-col gap-1.5 sm:col-span-2">
+                  <EtiquetaCampo htmlFor={`nombre-curso-${indice}`} obligatorio>
+                    Nombre del curso
+                  </EtiquetaCampo>
+                  <input
+                    id={`nombre-curso-${indice}`}
+                    required
+                    value={curso.nombrePropuesto}
+                    onChange={(evento) =>
+                      cambiarCurso(indice, { nombrePropuesto: evento.target.value })
+                    }
+                    maxLength={160}
+                    placeholder="Física Moderna"
+                    className={claseCampo}
+                  />
+                  {errorDe(indice, "nombrePropuesto") && (
+                    <p role="alert" className="text-error text-xs font-medium">
+                      {errorDe(indice, "nombrePropuesto")}
+                    </p>
+                  )}
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <EtiquetaCampo htmlFor={`codigo-curso-${indice}`}>Código</EtiquetaCampo>
+                  <input
+                    id={`codigo-curso-${indice}`}
+                    value={curso.codigoPropuesto}
+                    onChange={(evento) =>
+                      cambiarCurso(indice, { codigoPropuesto: evento.target.value })
+                    }
+                    maxLength={30}
+                    placeholder="FF2004"
+                    className={claseCampo}
+                  />
+                  {errorDe(indice, "codigoPropuesto") ? (
+                    <p role="alert" className="text-error text-xs font-medium">
+                      {errorDe(indice, "codigoPropuesto")}
+                    </p>
+                  ) : (
+                    <p className="text-texto-suave text-xs">Opcional, si lo conoces.</p>
+                  )}
+                </div>
+
+                <p className="text-texto-suave text-xs sm:col-span-3">
+                  AEUVG revisa el curso junto con tu postulación y, si la aprueba, lo agrega a la
+                  lista.
+                </p>
+              </div>
+            )}
 
             <div className="flex flex-col gap-1.5">
               <EtiquetaCampo obligatorio>Comprobante de la nota</EtiquetaCampo>
@@ -205,7 +292,9 @@ export function FormularioPostulacion({ cursos }: { cursos: CursoDisponible[] })
         </p>
       )}
 
-      {elegidos.length < MAXIMO_CURSOS_POSTULACION && elegidos.length < cursos.length && (
+      {/* Con la opción Otro siempre cabe un curso más, así que el límite es
+          solo el máximo de la postulación y no el tamaño del catálogo. */}
+      {elegidos.length < MAXIMO_CURSOS_POSTULACION && (
         <div>
           <Boton
             type="button"

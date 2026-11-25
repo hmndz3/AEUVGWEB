@@ -91,6 +91,7 @@ export class RepositorioImportacionPrisma implements RepositorioImportacion {
         fechaActividad: registro.fechaActividad,
         horarioApoyo: registro.horarioApoyo,
         descripcionActividad: registro.descripcionActividad,
+        idEvento: registro.idEvento ?? null,
         cantidadHoras: new Prisma.Decimal(registro.cantidadHoras.toFixed(2)),
         observaciones: registro.observaciones,
         textoBusqueda: textoDeBusquedaRegistroHora(registro),

@@ -13,7 +13,8 @@ const MENSAJE_NOMBRE = "El nombre del estudiante debe tener entre 3 y 200 caract
 const MENSAJE_FECHA = "Indica la fecha en la que se realizó la actividad.";
 const MENSAJE_HORARIO = "Indica la hora de inicio y la de fin del apoyo.";
 const MENSAJE_HORARIO_INVERTIDO = "La hora de fin debe ser posterior a la de inicio.";
-const MENSAJE_ACTIVIDAD = "Describe la actividad en la que se apoyó.";
+const MENSAJE_ACTIVIDAD = "Elige el evento o describe la actividad en la que se apoyó.";
+const MENSAJE_EVENTO = "Elige un evento de la lista.";
 const MENSAJE_HORAS = `La cantidad de horas debe ser mayor que cero, no exceder ${MAXIMO_HORAS_POR_REGISTRO} y tener como máximo dos decimales.`;
 
 /**
@@ -80,6 +81,12 @@ export const esquemaRegistroHoraAdmin = z.object({
       const [inicio, fin] = valor.split("-");
       return fin > inicio;
     }, MENSAJE_HORARIO_INVERTIDO),
+  // El evento de la actividad es opcional: hay apoyos que no fueron un evento.
+  // Cuando viene, la ruta reemplaza la descripción por el nombre del evento.
+  idEvento: z.preprocess(
+    (valor) => (valor === "" || valor === undefined ? null : valor),
+    z.coerce.number(MENSAJE_EVENTO).int(MENSAJE_EVENTO).positive(MENSAJE_EVENTO).nullable()
+  ),
   descripcionActividad: z
     .string(MENSAJE_ACTIVIDAD)
     .trim()
@@ -117,6 +124,7 @@ export const ETIQUETAS_CAMPO_HORA_BECA: Record<string, string> = {
   fechaActividad: "Fecha de la actividad",
   horarioApoyo: "Horario de apoyo",
   descripcionActividad: "Actividad",
+  idEvento: "Actividad",
   cantidadHoras: "Cantidad de horas",
   observaciones: "Observaciones",
   carnets: "Estudiantes",
