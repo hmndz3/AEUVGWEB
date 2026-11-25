@@ -14,7 +14,7 @@ La migración `20260909000000_add_email_verification_tokens` agrega la tabla que
 
 `EMAIL_PROVIDER=memory` no realiza conexiones ni escribe mensajes en la terminal. Está destinado al desarrollo y a las pruebas automatizadas; el proceso conserva temporalmente el mensaje en memoria y se bloquea explícitamente si `NODE_ENV=production`.
 
-Para envíos reales se usa `EMAIL_PROVIDER=resend`. Deben configurarse `RESEND_API_KEY` y `EMAIL_FROM`, y el dominio del remitente debe estar verificado previamente en Resend. La integración usa HTTPS detrás de `ProveedorCorreo`, de manera que puede sustituirse sin cambiar el servicio de registro.
+Para envíos reales se usa `EMAIL_PROVIDER=brevo`, con `BREVO_API_KEY` y un `EMAIL_FROM` verificado como remitente en Brevo; es el proveedor de producción mientras AEUVG no tenga dominio propio. `EMAIL_PROVIDER=resend` sigue disponible, con `RESEND_API_KEY` y un remitente de un dominio verificado en Resend. Las dos integraciones usan HTTPS detrás de `ProveedorCorreo`, de manera que pueden sustituirse sin cambiar el servicio de registro; la configuración en Railway está en [despliegue-railway.md](despliegue-railway.md). Un fallo de envío deja en el registro del servidor solo el motivo, nunca el destinatario ni el enlace.
 
 ## Variables
 
@@ -25,9 +25,10 @@ Para envíos reales se usa `EMAIL_PROVIDER=resend`. Deben configurarse `RESEND_A
 | `EMAIL_VERIFICATION_TOKEN_TTL_MINUTES`       | Vigencia del enlace                                       |
 | `EMAIL_VERIFICATION_RESEND_COOLDOWN_SECONDS` | Espera mínima entre solicitudes                           |
 | `EMAIL_VERIFICATION_RESEND_MAX_PER_HOUR`     | Máximo de tokens creados por cuenta en una hora           |
-| `EMAIL_PROVIDER`                             | `memory` en desarrollo/pruebas o `resend` para envío real |
+| `EMAIL_PROVIDER`                             | `memory` en desarrollo/pruebas; `brevo` o `resend` real   |
+| `BREVO_API_KEY`                              | Credencial de Brevo; obligatoria solo para ese proveedor  |
 | `RESEND_API_KEY`                             | Credencial de Resend; obligatoria solo para ese proveedor |
-| `EMAIL_FROM`                                 | Remitente autorizado por Resend                           |
+| `EMAIL_FROM`                                 | Remitente verificado en el proveedor elegido              |
 
 ## Límite de esta tarea
 
