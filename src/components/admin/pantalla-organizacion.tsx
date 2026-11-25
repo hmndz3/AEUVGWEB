@@ -94,7 +94,7 @@ export async function PantallaEdicionOrganizacion({
         titulo={nombreConSiglas(organizacion)}
         descripcion={
           organizacion.activo
-            ? "Los cambios se reflejan de inmediato en el sitio."
+            ? "Los datos actuales ya están cargados: cambia solo lo que necesites y guarda. Los cambios se reflejan de inmediato en el sitio."
             : "Este registro está dado de baja: no aparece en el sitio hasta reactivarlo desde el listado."
         }
       />
