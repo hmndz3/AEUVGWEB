@@ -1,6 +1,4 @@
-import Image from "next/image";
-
-import { inicialesDeNombre } from "@/lib/inicio/consultas-asociacion";
+import { inicialesDeNombre } from "@/lib/organizaciones/nombre-organizacion";
 import type { IntegranteJunta } from "@/lib/organizaciones/consultas-organizaciones";
 import { cn } from "@/lib/utils";
 
@@ -27,17 +25,18 @@ export function TarjetaIntegrante({
 
   return (
     <article className="group border-borde bg-superficie flex flex-col overflow-hidden rounded-[1.25rem] border shadow-sm transition-shadow hover:shadow-lg">
-      {/* El retrato viene recortado sobre blanco, así que se funde con la
-          tarjeta sin costura visible entre la imagen y el texto. */}
+      {/* Los retratos de AEUVG vienen recortados sobre blanco, así que se funden
+          con la tarjeta sin costura entre la imagen y el texto. Se usa <img> y
+          no next/image porque las fotografías las sube o enlaza AEUVG desde el
+          panel, y el optimizador rechaza los dominios no declarados. */}
       <div className="bg-superficie relative aspect-3/4 w-full overflow-hidden">
         {integrante.fotoUrl ? (
-          <Image
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
             src={integrante.fotoUrl}
             alt={`Fotografía de ${integrante.nombre}`}
-            fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
-            unoptimized={integrante.fotoUrl.startsWith("/api/")}
+            loading="lazy"
+            className="absolute inset-0 size-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
           <span

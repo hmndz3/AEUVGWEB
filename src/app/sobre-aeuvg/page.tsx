@@ -89,13 +89,26 @@ export default async function PaginaSobreAeuvg() {
           </div>
         </section>
 
-        {(asociacion?.correo || asociacion?.informacionContacto || redes.length > 0) && (
+        {(asociacion?.correo ||
+          asociacion?.telefono ||
+          asociacion?.informacionContacto ||
+          redes.length > 0) && (
           <section className="bg-superficie-suave rounded-[1.25rem] p-8">
             <h2 className="text-texto text-2xl font-extrabold tracking-tight">Contacto</h2>
             {asociacion?.correo && (
               <p className="text-texto-suave mt-3">
                 <a href={`mailto:${asociacion.correo}`} className="text-primario font-semibold">
                   {asociacion.correo}
+                </a>
+              </p>
+            )}
+            {asociacion?.telefono && (
+              <p className="text-texto-suave mt-2">
+                <a
+                  href={`tel:${asociacion.telefono.replace(/[^\d+]/g, "")}`}
+                  className="text-primario font-semibold"
+                >
+                  {asociacion.telefono}
                 </a>
               </p>
             )}

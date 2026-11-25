@@ -16,6 +16,7 @@ import { ServicioOrganizaciones } from "../src/lib/organizaciones/servicio-organ
 import {
   esquemaAsociacionAdmin,
   esquemaClubAdmin,
+  esquemaInformacionAeuvg,
   esquemaIntegranteAdmin,
   esquemaRedSocialAdmin,
   interpretarOrganizacion,
@@ -86,6 +87,7 @@ class RepositorioFalso implements RepositorioOrganizaciones {
   redesCreadas: DatosRedSocialAdmin[] = [];
   nombresConsultados: { nombre: string; excepto: number | null }[] = [];
   siglasConsultadas: { siglas: string; excepto: number | null }[] = [];
+  asociacionesActualizadas: { id: number; datos: DatosAsociacionPersistidos }[] = [];
 
   constructor(
     private readonly opciones: {
@@ -95,6 +97,7 @@ class RepositorioFalso implements RepositorioOrganizaciones {
       organizaEventos?: boolean;
       actualizado?: boolean;
       redRegistrada?: boolean;
+      idGeneral?: number | null;
     } = {}
   ) {}
 
@@ -112,6 +115,10 @@ class RepositorioFalso implements RepositorioOrganizaciones {
     return this.opciones.siglasLibres ?? true;
   }
 
+  async idAsociacionGeneral(): Promise<number | null> {
+    return this.opciones.idGeneral === undefined ? 1 : this.opciones.idGeneral;
+  }
+
   async crearAsociacion(datos: DatosAsociacionPersistidos): Promise<number> {
     this.asociacionesCreadas.push(datos);
     return 11;
@@ -122,7 +129,8 @@ class RepositorioFalso implements RepositorioOrganizaciones {
     return 22;
   }
 
-  async actualizarAsociacion(): Promise<boolean> {
+  async actualizarAsociacion(id: number, datos: DatosAsociacionPersistidos): Promise<boolean> {
+    this.asociacionesActualizadas.push({ id, datos });
     return this.opciones.actualizado ?? true;
   }
 
@@ -389,7 +397,97 @@ test("un integrante sin orden indicado se guarda al inicio", () => {
   assert.equal(datos.fotoUrl, null);
 });
 
+test("los retratos de la junta de AEUVG se guardan tal cual al editar un integrante", () => {
+  const datos = esquemaIntegranteAdmin.parse({
+    nombre: "Fátima Escobar",
+    cargo: "Vicepresidenta",
+    periodo: "2026",
+    fotoUrl: "/integrantes/fatima-escobar.jpg",
+    ordenVisualizacion: "2",
+  });
+
+  assert.equal(datos.fotoUrl, "/integrantes/fatima-escobar.jpg");
+});
+
+test("una ruta del sitio desconocida se rechaza en lugar de volverse https:///", () => {
+  const resultado = esquemaIntegranteAdmin.safeParse({
+    nombre: "Fátima Escobar",
+    cargo: "Vicepresidenta",
+    periodo: "2026",
+    fotoUrl: "/integrantes/fatima.jpg/otra",
+  });
+
+  assert.equal(resultado.success, false);
+});
+
 // ---------- Servicio ----------
+
+const INFORMACION_AEUVG = {
+  descripcion: "  Somos la asociación general.  ",
+  mision: "Representar al estudiantado.",
+  vision: "",
+  correo: "",
+  telefono: "",
+  informacionContacto: "",
+};
+
+test("la información de AEUVG no exige siglas ni contacto", () => {
+  const datos = esquemaInformacionAeuvg.parse(INFORMACION_AEUVG);
+
+  assert.equal(datos.descripcion, "Somos la asociación general.");
+  assert.equal(datos.vision, null);
+  assert.equal(datos.correo, null);
+  assert.equal(datos.telefono, null);
+});
+
+test("la información de AEUVG rechaza un correo o un teléfono inválidos", () => {
+  const resultado = esquemaInformacionAeuvg.safeParse({
+    ...INFORMACION_AEUVG,
+    correo: "no-es-correo",
+    telefono: "123",
+  });
+
+  assert.equal(resultado.success, false);
+});
+
+test("guardar la información de AEUVG conserva su nombre, siglas y logotipo", async () => {
+  const repositorio = new RepositorioFalso({
+    idGeneral: 1,
+    organizacion: organizacionGuardada({
+      id: 1,
+      nombre: "AEUVG",
+      siglas: "AEUVG",
+      imagenUrl: "/logo-aeuvg.png",
+    }),
+  });
+  const servicio = new ServicioOrganizaciones(repositorio);
+
+  const resultado = await servicio.guardarInformacionGeneral(
+    esquemaInformacionAeuvg.parse(INFORMACION_AEUVG)
+  );
+
+  assert.deepEqual(resultado, { tipo: "guardada", id: 1 });
+  const { id, datos } = repositorio.asociacionesActualizadas[0];
+  assert.equal(id, 1);
+  assert.equal(datos.nombre, "AEUVG");
+  assert.equal(datos.siglas, "AEUVG");
+  assert.equal(datos.imagenUrl, "/logo-aeuvg.png");
+  assert.equal(datos.mision, "Representar al estudiantado.");
+  assert.ok(datos.textoBusqueda.includes("representar"));
+});
+
+test("guardar la información de AEUVG crea la ficha si todavía no existe", async () => {
+  const repositorio = new RepositorioFalso({ idGeneral: null });
+  const servicio = new ServicioOrganizaciones(repositorio);
+
+  const resultado = await servicio.guardarInformacionGeneral(
+    esquemaInformacionAeuvg.parse(INFORMACION_AEUVG)
+  );
+
+  assert.deepEqual(resultado, { tipo: "guardada", id: 11 });
+  assert.equal(repositorio.asociacionesCreadas[0].nombre, "AEUVG");
+  assert.equal(repositorio.asociacionesActualizadas.length, 0);
+});
 
 test("crear guarda el texto de búsqueda de la asociación", async () => {
   const repositorio = new RepositorioFalso();

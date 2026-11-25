@@ -305,9 +305,12 @@ export const ORGANIZACIONES_POR_PAGINA_ADMIN = 15;
 
 /**
  * Listado del panel administrativo. A diferencia del público incluye los
- * registros dados de baja y la propia asociación general, porque AEUVG también
- * administra su ficha desde aquí, y reporta cuántos eventos organiza cada uno:
- * es el dato que decide si puede eliminarse o solo darse de baja.
+ * registros dados de baja, y reporta cuántos eventos organiza cada uno: es el
+ * dato que decide si puede eliminarse o solo darse de baja.
+ *
+ * La asociación general queda fuera, igual que en el sitio: su ficha se
+ * administra en la sección Sobre AEUVG, y desde aquí podía renombrarse o
+ * eliminarse, lo que dejaba la página institucional sin información.
  */
 export async function listarOrganizacionesAdministracion(
   tipo: TipoOrganizacion,
@@ -321,10 +324,11 @@ export async function listarOrganizacionesAdministracion(
   const prisma = obtenerPrisma();
 
   if (tipo === "asociaciones") {
+    const whereAsociaciones = { ...where, ...sinAsociacionGeneral() };
     const [total, filas] = await Promise.all([
-      prisma.asociacion.count({ where }),
+      prisma.asociacion.count({ where: whereAsociaciones }),
       prisma.asociacion.findMany({
-        where,
+        where: whereAsociaciones,
         orderBy: { nombre: "asc" },
         skip: saltar,
         take: tamano,

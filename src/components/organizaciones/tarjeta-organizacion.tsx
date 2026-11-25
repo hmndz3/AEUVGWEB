@@ -1,8 +1,7 @@
 import Link from "next/link";
 
-import { inicialesDeNombre } from "@/lib/inicio/consultas-asociacion";
 import type { OrganizacionResumen } from "@/lib/organizaciones/consultas-organizaciones";
-import { nombreCorto } from "@/lib/organizaciones/nombre-organizacion";
+import { inicialesDeNombre, nombreCorto } from "@/lib/organizaciones/nombre-organizacion";
 import { cn } from "@/lib/utils";
 
 /** Caracteres de descripción que caben en la tarjeta sin desalinear la rejilla. */
