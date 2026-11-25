@@ -22,6 +22,7 @@ const REGISTRO = {
   fechaActividad: new Date("2026-10-09T00:00:00.000Z"),
   horarioApoyo: "14:00-16:00",
   descripcionActividad: "Apoyo en la Feria de Voluntariado",
+  idEvento: null,
   cantidadHoras: 2.5,
   estado: "ACREDITADA" as const,
   fechaAcreditacion: new Date("2026-10-10T18:00:00.000Z"),

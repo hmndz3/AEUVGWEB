@@ -24,6 +24,8 @@ export type RegistroHoraBecaAdmin = {
   fechaActividad: Date;
   horarioApoyo: string;
   descripcionActividad: string;
+  /** Evento de la actividad, cuando se eligió uno al registrar. */
+  idEvento: number | null;
   cantidadHoras: number;
   estado: EstadoHoraBeca;
   fechaAcreditacion: Date | null;
@@ -51,6 +53,7 @@ const CAMPOS_REGISTRO = {
   fechaActividad: true,
   horarioApoyo: true,
   descripcionActividad: true,
+  idEvento: true,
   cantidadHoras: true,
   estado: true,
   fechaAcreditacion: true,
@@ -85,6 +88,7 @@ function aRegistro(fila: FilaRegistro): RegistroHoraBecaAdmin {
     fechaActividad: fila.fechaActividad,
     horarioApoyo: fila.horarioApoyo,
     descripcionActividad: fila.descripcionActividad,
+    idEvento: fila.idEvento,
     cantidadHoras: Number(fila.cantidadHoras),
     estado: fila.estado,
     fechaAcreditacion: fila.fechaAcreditacion,

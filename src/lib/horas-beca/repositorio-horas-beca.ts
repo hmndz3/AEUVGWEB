@@ -16,6 +16,7 @@ export type DatosRegistroHoraPersistidos = {
   fechaActividad: Date;
   horarioApoyo: string;
   descripcionActividad: string;
+  idEvento: number | null;
   cantidadHoras: number;
   observaciones: string | null;
   textoBusqueda: string;
@@ -72,6 +73,7 @@ export class RepositorioHorasBecaPrisma implements RepositorioHorasBeca {
         fechaActividad: datos.fechaActividad,
         horarioApoyo: datos.horarioApoyo,
         descripcionActividad: datos.descripcionActividad,
+        idEvento: datos.idEvento,
         cantidadHoras: aDecimal(datos.cantidadHoras),
         observaciones: datos.observaciones,
         textoBusqueda: datos.textoBusqueda,
@@ -97,6 +99,7 @@ export class RepositorioHorasBecaPrisma implements RepositorioHorasBeca {
         fechaActividad: datos.fechaActividad,
         horarioApoyo: datos.horarioApoyo,
         descripcionActividad: datos.descripcionActividad,
+        idEvento: datos.idEvento,
         cantidadHoras: aDecimal(datos.cantidadHoras),
         observaciones: datos.observaciones,
         textoBusqueda: datos.textoBusqueda,

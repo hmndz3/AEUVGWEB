@@ -9,7 +9,8 @@ import { EtiquetaCampo, NotaCamposObligatorios } from "@/components/ui/etiqueta-
 import { BuscadorEstudiante } from "@/components/admin/buscador-estudiante";
 import { inicialesDe } from "@/lib/auth/usuario-sesion-cliente";
 import type { EstudianteSugerido } from "@/lib/horas-beca/consultas-estudiantes";
-import { componerHorario } from "@/lib/horas-beca/formato-horas";
+import type { EventoDeActividad } from "@/lib/horas-beca/actividad-evento";
+import { ACTIVIDAD_OTRA, componerHorario } from "@/lib/horas-beca/formato-horas";
 import { MAXIMO_HORAS_POR_REGISTRO } from "@/lib/horas-beca/servicio-horas-beca";
 import { ETIQUETAS_CAMPO_HORA_BECA } from "@/validators/hora-beca-admin";
 
@@ -20,6 +21,11 @@ export type ValoresHoraBeca = {
   /** El horario se captura en dos selectores y se envía como "HH:MM-HH:MM". */
   horaInicio: string;
   horaFin: string;
+  /**
+   * Evento de la actividad: su identificador, ACTIVIDAD_OTRA si no fue un
+   * evento y se describe a mano, o vacío mientras no se elija.
+   */
+  idEvento: string;
   descripcionActividad: string;
   cantidadHoras: string;
   observaciones: string;
@@ -31,6 +37,7 @@ export const VALORES_HORA_BECA_VACIOS: ValoresHoraBeca = {
   fechaActividad: "",
   horaInicio: "",
   horaFin: "",
+  idEvento: "",
   descripcionActividad: "",
   cantidadHoras: "",
   observaciones: "",
@@ -45,6 +52,13 @@ type Burbuja = {
   /** Nombre de su cuenta, o null si ese carnet todavía no tiene una. */
   nombreCuenta: string | null;
 };
+
+/** "2026-10-09" como "09/10/2026", para la lista de eventos. */
+const fechaCorta = (dia: string) => dia.split("-").reverse().join("/");
+
+/** Hoy en Guatemala, como "AAAA-MM-DD", para no sugerir una fecha futura. */
+const hoyEnGuatemala = () =>
+  new Intl.DateTimeFormat("en-CA", { timeZone: "America/Guatemala" }).format(new Date());
 
 /** El carnet en la forma en la que se compara y se guarda. */
 const normalizar = (carnet: string) => carnet.replace(/\s+/g, "").toUpperCase();
@@ -151,14 +165,21 @@ function enfocarPrimerError(errores: Record<string, string>) {
  * tiene cuenta, y un selector solo podría ofrecer a quienes ya se registraron.
  * El nombre se pide junto al carnet por la misma razón; cuando la cuenta existe,
  * el servicio guarda el nombre verificado de la cuenta en lugar del escrito.
+ *
+ * La actividad se elige de los eventos de la plataforma en lugar de escribirse:
+ * así todas las horas de un mismo evento quedan con el mismo nombre y se pueden
+ * agrupar. "Otra actividad" queda para los apoyos que no fueron un evento.
  */
 export function FormularioHoraBeca({
   id,
   valoresIniciales,
+  eventos,
   destino,
 }: {
   id?: number;
   valoresIniciales: ValoresHoraBeca;
+  /** Eventos que pueden ser la actividad, del más reciente al más antiguo. */
+  eventos: EventoDeActividad[];
   /** Listado al que se vuelve tras guardar, con los filtros que traía. */
   destino: string;
 }) {
@@ -180,6 +201,36 @@ export function FormularioHoraBeca({
   const [guardando, setGuardando] = useState(false);
   const cambiar = <Clave extends keyof ValoresHoraBeca>(clave: Clave, valor: string) =>
     setValores((previos) => ({ ...previos, [clave]: valor }));
+
+  const otraActividad = valores.idEvento === ACTIVIDAD_OTRA;
+  // Un registro que se edita puede apuntar a un evento que ya no está en la
+  // lista (cancelado o muy antiguo): se ofrece igual para no perder el vínculo.
+  const eventoFueraDeLista =
+    valores.idEvento !== "" &&
+    !otraActividad &&
+    !eventos.some((evento) => String(evento.idEvento) === valores.idEvento);
+
+  /**
+   * Elegir un evento pone su nombre como actividad y, si la fecha todavía está
+   * vacía, sugiere la del evento: casi siempre es el mismo día.
+   */
+  function elegirActividad(valor: string) {
+    const evento = eventos.find((opcion) => String(opcion.idEvento) === valor);
+
+    setValores((previos) => ({
+      ...previos,
+      idEvento: valor,
+      descripcionActividad: evento
+        ? evento.nombre
+        : valor === ACTIVIDAD_OTRA && previos.idEvento !== ACTIVIDAD_OTRA
+          ? ""
+          : previos.descripcionActividad,
+      fechaActividad:
+        evento && previos.fechaActividad === "" && evento.fecha <= hoyEnGuatemala()
+          ? evento.fecha
+          : previos.fechaActividad,
+    }));
+  }
 
   /** Al editar se corrige un registro y su estudiante no cambia. */
   const varios = id === undefined;
@@ -238,6 +289,7 @@ export function FormularioHoraBeca({
       const actividad = {
         fechaActividad: valores.fechaActividad,
         horarioApoyo: componerHorario(valores.horaInicio, valores.horaFin),
+        idEvento: /^\d+$/.test(valores.idEvento) ? valores.idEvento : null,
         descripcionActividad: valores.descripcionActividad,
         cantidadHoras: valores.cantidadHoras,
         observaciones: valores.observaciones,
@@ -450,19 +502,49 @@ export function FormularioHoraBeca({
       <Campo
         etiqueta="Actividad"
         obligatorio
-        nombre="descripcionActividad"
-        error={errores.descripcionActividad}
-        ayuda="En qué apoyó el estudiante. Es lo que verá en su historial de horas."
+        nombre="idEvento"
+        error={errores.idEvento ?? (otraActividad ? undefined : errores.descripcionActividad)}
+        ayuda="El evento en el que apoyó el estudiante. Es lo que verá en su historial de horas."
       >
-        <textarea
-          id="descripcionActividad"
-          value={valores.descripcionActividad}
-          onChange={(evento) => cambiar("descripcionActividad", evento.target.value)}
-          rows={3}
-          maxLength={1000}
+        <select
+          id="idEvento"
+          required
+          value={valores.idEvento}
+          onChange={(evento) => elegirActividad(evento.target.value)}
           className={claseCampo}
-        />
+        >
+          <option value="">Elige el evento</option>
+          {eventoFueraDeLista && (
+            <option value={valores.idEvento}>{valores.descripcionActividad}</option>
+          )}
+          {eventos.map((evento) => (
+            <option key={evento.idEvento} value={evento.idEvento}>
+              {fechaCorta(evento.fecha)} · {evento.nombre}
+            </option>
+          ))}
+          <option value={ACTIVIDAD_OTRA}>Otra actividad (no fue un evento)</option>
+        </select>
       </Campo>
+
+      {otraActividad && (
+        <Campo
+          etiqueta="Descripción de la actividad"
+          obligatorio
+          nombre="descripcionActividad"
+          error={errores.descripcionActividad}
+          ayuda="En qué apoyó el estudiante, si no fue en un evento de la plataforma."
+        >
+          <textarea
+            id="descripcionActividad"
+            required
+            value={valores.descripcionActividad}
+            onChange={(evento) => cambiar("descripcionActividad", evento.target.value)}
+            rows={3}
+            maxLength={1000}
+            className={claseCampo}
+          />
+        </Campo>
+      )}
 
       <Campo
         etiqueta="Observaciones"
