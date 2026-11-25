@@ -1,122 +1,77 @@
-import Link from "next/link";
-
-import { ListaPostulaciones } from "@/components/admin/lista-postulaciones";
+import { FiltrosTutores } from "@/components/admin/filtros-tutores";
+import { PestanasTutorias } from "@/components/admin/pestanas-tutorias";
 import { TablaTutores } from "@/components/admin/tabla-tutores";
-import { Paginacion } from "@/components/eventos/paginacion";
 import {
+  contarCursosPropuestos,
   contarPostulacionesPorEstado,
-  listarPostulaciones,
+  listarCursos,
   listarTutoresPanel,
+  type FiltrosTutoresPanel,
 } from "@/lib/tutorias/consultas-tutorias";
-import { ESTADOS_POSTULACION, ETIQUETAS_ESTADO_POSTULACION } from "@/lib/tutorias/formato-tutorias";
+import { ESTADOS_TUTOR } from "@/lib/tutorias/formato-tutorias";
 
 export const dynamic = "force-dynamic";
 
-const RUTA = "/admin/tutorias";
+type Parametros = Record<string, string | string[] | undefined>;
 
-/** Estado pedido en la dirección, o undefined si no se reconoce. */
-function interpretarEstado(valor: string | string[] | undefined) {
-  const texto = Array.isArray(valor) ? valor[0] : valor;
-  if (!texto) return undefined;
+const primero = (valor: string | string[] | undefined) =>
+  (Array.isArray(valor) ? valor[0] : valor)?.trim() || undefined;
 
-  return ESTADOS_POSTULACION.find((estado) => estado === texto.toUpperCase());
+/** Filtros pedidos en la dirección; lo que no se reconoce se ignora. */
+function interpretarFiltros(parametros: Parametros): FiltrosTutoresPanel {
+  const q = primero(parametros.q)?.slice(0, 100);
+  const estadoTexto = primero(parametros.estado)?.toUpperCase();
+  const estado = ESTADOS_TUTOR.find((valor) => valor === estadoTexto);
+  const idCurso = Number(primero(parametros.curso));
+
+  return {
+    q,
+    estado,
+    idCurso: Number.isSafeInteger(idCurso) && idCurso > 0 ? idCurso : undefined,
+  };
 }
 
 export default async function PaginaAdminTutorias({
   searchParams,
 }: {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
+  searchParams: Promise<Parametros>;
 }) {
-  const parametros = await searchParams;
-  const estado = interpretarEstado(parametros.estado);
-  const numero = Number(
-    Array.isArray(parametros.pagina) ? parametros.pagina[0] : parametros.pagina
-  );
-  const pagina = Number.isSafeInteger(numero) && numero > 0 ? numero : 1;
+  const filtros = interpretarFiltros(await searchParams);
 
-  const [listado, conteo, tutores] = await Promise.all([
-    listarPostulaciones({ estado, pagina }),
+  const [tutores, cursos, conteo, propuestos] = await Promise.all([
+    listarTutoresPanel(filtros),
+    listarCursos(),
     contarPostulacionesPorEstado(),
-    listarTutoresPanel(),
+    contarCursosPropuestos(),
   ]);
 
-  const total = Object.values(conteo).reduce((suma, valor) => suma + valor, 0);
+  const filtrando = Boolean(filtros.q || filtros.estado || filtros.idCurso);
 
   return (
     <div className="flex flex-col gap-8">
       <div>
         <h1 className="text-texto text-3xl font-extrabold tracking-tight">Tutorías</h1>
         <p className="text-texto-suave mt-2 max-w-2xl text-sm leading-relaxed">
-          Postulaciones de estudiantes que quieren dar tutorías y tutores ya aprobados. Aprobar una
-          postulación da de alta al tutor con los cursos que respaldó y lo publica en el directorio.
+          Tutores aprobados con sus cursos. Un tutor inactivo o suspendido desaparece del
+          directorio, pero conserva sus tutorías realizadas y vuelve en cuanto se reactive.
         </p>
       </div>
 
-      <section className="flex flex-col gap-4">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-texto text-lg font-bold">Postulaciones</h2>
+      <PestanasTutorias activa="tutores" pendientes={conteo.PENDIENTE} propuestos={propuestos} />
 
-          {/* Los estados funcionan como filtro y como contador: la pregunta con
-              la que se abre esta pantalla es cuántas faltan por revisar. */}
-          <div className="flex flex-wrap items-center gap-2">
-            <Link
-              href={RUTA}
-              className={`border-borde inline-flex h-9 items-center rounded-full border px-4 text-sm font-bold transition-colors ${
-                estado === undefined
-                  ? "bg-primario border-primario text-white"
-                  : "bg-superficie text-texto hover:bg-superficie-suave"
-              }`}
-            >
-              Todas ({total})
-            </Link>
-
-            {ESTADOS_POSTULACION.map((valor) => (
-              <Link
-                key={valor}
-                href={`${RUTA}?estado=${valor.toLowerCase()}`}
-                className={`border-borde inline-flex h-9 items-center rounded-full border px-4 text-sm font-bold transition-colors ${
-                  estado === valor
-                    ? "bg-primario border-primario text-white"
-                    : "bg-superficie text-texto hover:bg-superficie-suave"
-                }`}
-              >
-                {ETIQUETAS_ESTADO_POSTULACION[valor]} ({conteo[valor]})
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        {listado.postulaciones.length === 0 ? (
-          <div className="border-borde bg-superficie-suave text-texto-suave rounded-[1.25rem] border border-dashed px-6 py-12 text-center text-sm">
-            {estado === undefined
-              ? "Todavía no hay postulaciones para ser tutor."
-              : `No hay postulaciones en estado ${ETIQUETAS_ESTADO_POSTULACION[estado].toLocaleLowerCase("es")}.`}
-          </div>
-        ) : (
-          <ListaPostulaciones postulaciones={listado.postulaciones} />
-        )}
-
-        <Paginacion
-          pagina={listado.pagina}
-          paginas={listado.paginas}
-          ruta={RUTA}
-          parametros={estado ? { estado: estado.toLowerCase() } : {}}
-          etiqueta="Páginas de postulaciones"
-        />
-      </section>
+      <FiltrosTutores filtros={filtros} cursos={cursos} />
 
       <section className="flex flex-col gap-4">
-        <div>
-          <h2 className="text-texto text-lg font-bold">Tutores</h2>
-          <p className="text-texto-suave mt-1 text-sm leading-relaxed">
-            Un tutor inactivo o suspendido desaparece del directorio, pero conserva sus tutorías
-            realizadas y vuelve en cuanto se reactive.
-          </p>
-        </div>
+        <p className="text-texto-suave text-sm">
+          {tutores.length === 1 ? "1 tutor" : `${tutores.length} tutores`}
+          {filtrando ? " con los filtros aplicados" : ""}
+        </p>
 
         {tutores.length === 0 ? (
           <div className="border-borde bg-superficie-suave text-texto-suave rounded-[1.25rem] border border-dashed px-6 py-12 text-center text-sm">
-            Todavía no hay tutores. Aprueba una postulación para dar de alta al primero.
+            {filtrando
+              ? "Ningún tutor coincide con los filtros."
+              : "Todavía no hay tutores. Aprueba una postulación para dar de alta al primero."}
           </div>
         ) : (
           <TablaTutores tutores={tutores} />

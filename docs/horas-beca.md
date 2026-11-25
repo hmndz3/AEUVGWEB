@@ -17,6 +17,12 @@ Las dos mitades comparan el carnet normalizado (sin espacios, en mayúsculas) e 
 
 El `nombre_estudiante` del registro conserva el nombre con el que AEUVG lo cargó, porque un carnet sin cuenta no tiene de dónde tomarlo. Cuando el vínculo existe, el servicio guarda el nombre de la cuenta —que es el verificado contra el correo institucional— y el panel presenta además el nombre cargado cuando difiere: si no coinciden, lo más probable es que la fila se capturó con el carnet de otra persona.
 
+## La actividad es un evento
+
+En el formulario del panel, el campo **Actividad** es un selector de los eventos publicados y finalizados de la plataforma (`listarEventosDeActividad`, del más reciente al más antiguo), en lugar de un texto libre: así todas las horas de un mismo evento quedan con el mismo nombre. El registro guarda el evento en `id_evento` (opcional, desde la migración `20261124010000_add_evento_registro_hora_beca`) y su nombre en `descripcion_actividad`, que es lo que leen el historial del estudiante, la búsqueda, los reportes y la exportación. El nombre lo pone el servidor a partir del evento (`aplicarEventoDeActividad`), no el cuerpo de la petición.
+
+La opción **Otra actividad** abre la descripción escrita a mano, para los apoyos que no fueron un evento. Los registros anteriores y los importados desde Excel no tienen evento y se editan con esa opción. Elegir un evento sugiere su fecha si el campo está vacío y el evento no es futuro. Borrar un evento no borra las horas: el vínculo queda en nulo y la descripción conserva el nombre.
+
 ## Pantallas y servicios
 
 | Ruta                                 | Método | Acceso        | Qué hace                                                |

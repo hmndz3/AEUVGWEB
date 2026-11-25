@@ -32,6 +32,7 @@ class RepositorioFalso implements RepositorioTutorias {
   aprobadas: { idPostulacion: number; idEstudiante: number; cursos: number[] }[] = [];
   rechazadas: number[] = [];
   estados: { idTutor: number; estado: string }[] = [];
+  propuestos: { nombre: string; codigo: string | null }[] = [];
 
   constructor(
     private readonly opciones: {
@@ -40,6 +41,8 @@ class RepositorioFalso implements RepositorioTutorias {
       tutor?: boolean;
       cursosActivos?: number[];
       postulacion?: PostulacionResumida | null;
+      /** Identificador que devuelve el curso escrito con "Otro". */
+      idPropuesto?: number;
     } = {}
   ) {}
 
@@ -60,6 +63,11 @@ class RepositorioFalso implements RepositorioTutorias {
   async cursosActivos(ids: readonly number[]): Promise<number[]> {
     const activos = this.opciones.cursosActivos;
     return activos === undefined ? [...ids] : ids.filter((id) => activos.includes(id));
+  }
+
+  async resolverCursoPropuesto(curso: { nombre: string; codigo: string | null }): Promise<number> {
+    this.propuestos.push(curso);
+    return this.opciones.idPropuesto ?? 90 + this.propuestos.length;
   }
 
   async crearPostulacion(datos: DatosNuevaPostulacion): Promise<number> {
@@ -111,6 +119,52 @@ test("una postulación completa pasa la validación", () => {
 test("la postulación exige al menos un curso y no admite repetidos", () => {
   assert.equal(esquemaPostulacionTutor.safeParse({ cursos: [] }).success, false);
   assert.equal(esquemaPostulacionTutor.safeParse({ cursos: [curso(1), curso(1)] }).success, false);
+});
+
+test("la opción Otro pide el nombre del curso y normaliza el código", () => {
+  const resultado = esquemaPostulacionTutor.safeParse({
+    cursos: [
+      {
+        idCurso: "",
+        nombrePropuesto: "  Física   Moderna ",
+        codigoPropuesto: "fi 2004",
+        notaObtenida: 90,
+        comprobanteUrl: COMPROBANTE,
+      },
+    ],
+  });
+
+  assert.equal(resultado.success, true);
+  if (!resultado.success) return;
+  assert.equal(resultado.data.cursos[0].idCurso, null);
+  assert.equal(resultado.data.cursos[0].nombrePropuesto, "Física Moderna");
+  assert.equal(resultado.data.cursos[0].codigoPropuesto, "FI2004");
+});
+
+test("un curso se elige de la lista o se escribe con Otro, no ambas ni ninguna", () => {
+  const base = { notaObtenida: 90, comprobanteUrl: COMPROBANTE };
+
+  assert.equal(esquemaPostulacionTutor.safeParse({ cursos: [base] }).success, false);
+  assert.equal(
+    esquemaPostulacionTutor.safeParse({
+      cursos: [{ ...base, idCurso: 1, nombrePropuesto: "Física Moderna" }],
+    }).success,
+    false
+  );
+});
+
+test("el mismo curso escrito dos veces con Otro cuenta como repetido", () => {
+  const otro = (nombrePropuesto: string) => ({
+    nombrePropuesto,
+    notaObtenida: 90,
+    comprobanteUrl: COMPROBANTE,
+  });
+
+  assert.equal(
+    esquemaPostulacionTutor.safeParse({ cursos: [otro("Física Moderna"), otro("fisica moderna")] })
+      .success,
+    false
+  );
 });
 
 test("la postulación no admite más cursos que el máximo", () => {
@@ -200,6 +254,51 @@ test("un curso que ya no está activo detiene la postulación", async () => {
 
   assert.equal(resultado.tipo, "invalida");
   assert.equal(repositorio.creadas.length, 0);
+});
+
+test("un curso escrito con Otro se resuelve y se guarda con la postulación", async () => {
+  const repositorio = new RepositorioFalso({ idPropuesto: 40 });
+  const datos = esquemaPostulacionTutor.parse({
+    cursos: [
+      curso(1),
+      { nombrePropuesto: "Física Moderna", notaObtenida: 90, comprobanteUrl: COMPROBANTE },
+    ],
+  });
+
+  const resultado = await new ServicioPostulaciones(repositorio).postular(99, datos);
+
+  assert.deepEqual(resultado, { tipo: "enviada", idPostulacion: 11 });
+  assert.deepEqual(repositorio.propuestos, [{ nombre: "Física Moderna", codigo: null }]);
+  assert.deepEqual(
+    repositorio.creadas[0].cursos.map((elegido) => elegido.idCurso),
+    [1, 40]
+  );
+});
+
+test("un curso escrito con Otro que ya se eligió de la lista detiene la postulación", async () => {
+  const repositorio = new RepositorioFalso({ idPropuesto: 1 });
+  const datos = esquemaPostulacionTutor.parse({
+    cursos: [
+      curso(1),
+      { nombrePropuesto: "Cálculo 1", notaObtenida: 90, comprobanteUrl: COMPROBANTE },
+    ],
+  });
+
+  const resultado = await new ServicioPostulaciones(repositorio).postular(99, datos);
+
+  assert.equal(resultado.tipo, "invalida");
+  assert.equal(repositorio.creadas.length, 0);
+});
+
+test("no se propone ningún curso si la postulación se detiene antes", async () => {
+  const repositorio = new RepositorioFalso({ pendiente: true });
+  const datos = esquemaPostulacionTutor.parse({
+    cursos: [{ nombrePropuesto: "Física Moderna", notaObtenida: 90, comprobanteUrl: COMPROBANTE }],
+  });
+
+  await new ServicioPostulaciones(repositorio).postular(99, datos);
+
+  assert.equal(repositorio.propuestos.length, 0);
 });
 
 test("una cuenta sin ficha de estudiante no puede postularse", async () => {

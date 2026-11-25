@@ -1,7 +1,9 @@
 import { RepositorioAgendaPrisma } from "@/lib/tutorias/repositorio-agenda";
+import { RepositorioCursosPrisma } from "@/lib/tutorias/repositorio-cursos";
 import { RepositorioFichaTutorPrisma } from "@/lib/tutorias/repositorio-ficha-tutor";
 import { RepositorioTutoriasPrisma } from "@/lib/tutorias/repositorio-tutorias";
 import { ServicioAgenda } from "@/lib/tutorias/servicio-agenda";
+import { ServicioCursos } from "@/lib/tutorias/servicio-cursos";
 import { ServicioFichaTutor } from "@/lib/tutorias/servicio-ficha-tutor";
 import { ServicioPostulaciones, ServicioTutores } from "@/lib/tutorias/servicio-postulaciones";
 
@@ -19,4 +21,8 @@ export function crearServicioFichaTutor(): ServicioFichaTutor {
 
 export function crearServicioAgenda(): ServicioAgenda {
   return new ServicioAgenda(new RepositorioAgendaPrisma());
+}
+
+export function crearServicioCursos(): ServicioCursos {
+  return new ServicioCursos(new RepositorioCursosPrisma());
 }

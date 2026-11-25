@@ -43,9 +43,9 @@ export default async function PaginaPostular() {
             Postularme como tutor
           </h1>
           <p className="text-texto-suave mt-3 leading-relaxed">
-            Elige los cursos que te gustaría impartir y adjunta el comprobante de la nota que
-            obtuviste en cada uno. AEUVG revisa la postulación y, si la aprueba, apareces en el
-            directorio de tutores.
+            Elige los cursos que te gustaría impartir (si alguno no está en la lista, usa la opción
+            Otro) y adjunta el comprobante de la nota que obtuviste en cada uno. AEUVG revisa la
+            postulación y, si la aprueba, apareces en el directorio de tutores.
           </p>
         </div>
 
@@ -63,14 +63,9 @@ export default async function PaginaPostular() {
           </Alerta>
         )}
 
-        {!tutor && !pendiente && cursos.length === 0 && (
-          <Alerta tipo="informativo" titulo="Todavía no hay cursos disponibles">
-            AEUVG aún no ha cargado el catálogo de cursos para tutorías. Vuelve a revisar más
-            adelante.
-          </Alerta>
-        )}
-
-        {!tutor && !pendiente && cursos.length > 0 && <FormularioPostulacion cursos={cursos} />}
+        {/* Aunque el catálogo esté vacío se puede postular: la opción Otro
+            permite escribir el curso y AEUVG lo agrega al aprobar. */}
+        {!tutor && !pendiente && <FormularioPostulacion cursos={cursos} />}
       </div>
     </MarcoSitio>
   );

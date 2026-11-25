@@ -2,7 +2,7 @@
 
 Implementado durante el Sprint 6. Cubre el ciclo completo: un estudiante se postula para dar tutorías de los cursos que aprobó, AEUVG revisa la postulación, el aprobado publica sus horarios en el directorio y cualquier estudiante le agenda una sesión.
 
-No requirió migración de base de datos. Las siete tablas del módulo —`curso`, `postulacion_tutor`, `curso_postulacion`, `tutor`, `tutor_curso`, `disponibilidad_tutor` y `tutoria`— existen desde el Sprint 1. Lo único que se agregó en este sprint fue `estudiante.foto_url`, que pertenece al perfil y se describe en [perfil-y-eventos-guardados.md](perfil-y-eventos-guardados.md).
+No requirió migración de base de datos en el Sprint 6; en las pruebas finales se agregó `curso.propuesto` (`20261124000000_add_propuesto_curso`) para la opción Otro. Las siete tablas del módulo —`curso`, `postulacion_tutor`, `curso_postulacion`, `tutor`, `tutor_curso`, `disponibilidad_tutor` y `tutoria`— existen desde el Sprint 1. Lo único que se agregó en este sprint fue `estudiante.foto_url`, que pertenece al perfil y se describe en [perfil-y-eventos-guardados.md](perfil-y-eventos-guardados.md).
 
 ## La nota respalda el curso, no a la persona
 
@@ -12,11 +12,17 @@ Cada curso de la postulación va además con su comprobante, que es obligatorio.
 
 El mínimo es 80 (`NOTA_MINIMA_TUTOR`) y lo comprueba el servicio, no solo el formulario.
 
+## Catálogo de cursos
+
+Los cursos que se ofrecen en la postulación los administra AEUVG desde **Panel → Tutorías → Cursos** (`/admin/tutorias/cursos`): se agregan con código y nombre, se editan en la misma fila y se activan o desactivan. El código es único y se guarda en mayúsculas. Un curso solo se elimina si nadie lo usa; si ya tiene postulaciones, tutores o tutorías, se desactiva, para no perder ese historial.
+
+Si el curso de un estudiante no está en la lista, la postulación ofrece la opción **Otro**: escribe el nombre y, si lo conoce, el código. El servicio busca primero un curso existente con ese código o ese nombre; si no lo hay, crea uno inactivo y marcado como `propuesto` (con un código provisional `OTRO-XXXXXX` si no se indicó). Los propuestos no aparecen en el formulario ni en el directorio. Entran al catálogo al aprobar la postulación que los trae, o cuando AEUVG los admite desde la pestaña de cursos. El curso se resuelve al final de las validaciones, para no dejar propuestos de postulaciones que nunca se guardaron.
+
 ## Postularse y ser aprobado
 
 Una cuenta no puede tener dos postulaciones sin resolver: duplicaría el trabajo de revisión sin aportar nada. Quien ya es tutor tampoco se postula de nuevo; para impartir otro curso escribe a AEUVG.
 
-Aprobar es lo que crea al tutor, y son cuatro escrituras que van juntas en una transacción: la postulación cambia de estado, nace o se reactiva el tutor, se le asignan los cursos que respaldó y se le concede el rol `TUTOR`. A medias dejaría a alguien aprobado sin poder entrar a su propia sección.
+Aprobar es lo que crea al tutor, y son cinco escrituras que van juntas en una transacción: la postulación cambia de estado, entran al catálogo los cursos propuestos, nace o se reactiva el tutor, se le asignan los cursos que respaldó y se le concede el rol `TUTOR`. A medias dejaría a alguien aprobado sin poder entrar a su propia sección.
 
 Una postulación ya resuelta no se vuelve a tocar: su comentario y su fecha son el registro de lo que AEUVG decidió, y reescribirlos borraría ese rastro. El comentario de un rechazo es obligatorio en la pantalla, porque un rechazo sin motivo obliga a la persona a adivinar qué faltó.
 
@@ -46,24 +52,31 @@ Cancelar lo pueden los dos: al estudiante le surge algo y al tutor también. Dar
 
 ## Pantallas y servicios
 
-| Ruta                                     | Método | Acceso        | Qué hace                                               |
-| ---------------------------------------- | ------ | ------------- | ------------------------------------------------------ |
-| `/tutorias`                              | —      | Pública       | Directorio de tutores activos, con filtro por curso.   |
-| `/tutorias/[id]`                         | —      | Pública       | Ficha del tutor y formulario para agendar.             |
-| `/tutorias/postular`                     | —      | Con sesión    | Postulación con sus cursos, notas y comprobantes.      |
-| `/tutorias/panel`                        | —      | Tutor         | Horarios, tutorías solicitadas y ficha pública.        |
-| `/api/tutorias/postulaciones`            | POST   | Con sesión    | Envía la postulación del estudiante de la sesión.      |
-| `/api/tutorias`                          | POST   | Con sesión    | Agenda una tutoría con el tutor y el horario elegidos. |
-| `/api/tutorias/[id]`                     | PATCH  | Con sesión    | Cancela la tutoría o la da por completada.             |
-| `/api/tutorias/ficha`                    | PUT    | Tutor         | Guarda la descripción y el contacto del tutor.         |
-| `/api/tutorias/disponibilidad`           | POST   | Tutor         | Agrega una franja de disponibilidad.                   |
-| `/api/tutorias/disponibilidad/[id]`      | DELETE | Tutor         | Quita una franja.                                      |
-| `/api/imagenes/subir`                    | POST   | Con sesión    | Sube el comprobante o la fotografía del estudiante.    |
-| `/admin/tutorias`                        | —      | Administrador | Postulaciones por estado y listado de tutores.         |
-| `/api/admin/tutorias/postulaciones/[id]` | PATCH  | Administrador | Aprueba o rechaza una postulación.                     |
-| `/api/admin/tutorias/tutores/[id]`       | PATCH  | Administrador | Activa, desactiva o suspende a un tutor.               |
+| Ruta                                     | Método | Acceso        | Qué hace                                                 |
+| ---------------------------------------- | ------ | ------------- | -------------------------------------------------------- |
+| `/tutorias`                              | —      | Pública       | Directorio de tutores activos, con filtro por curso.     |
+| `/tutorias/[id]`                         | —      | Pública       | Ficha del tutor y formulario para agendar.               |
+| `/tutorias/postular`                     | —      | Con sesión    | Postulación con sus cursos, notas y comprobantes.        |
+| `/tutorias/panel`                        | —      | Tutor         | Horarios, tutorías solicitadas y ficha pública.          |
+| `/api/tutorias/postulaciones`            | POST   | Con sesión    | Envía la postulación del estudiante de la sesión.        |
+| `/api/tutorias`                          | POST   | Con sesión    | Agenda una tutoría con el tutor y el horario elegidos.   |
+| `/api/tutorias/[id]`                     | PATCH  | Con sesión    | Cancela la tutoría o la da por completada.               |
+| `/api/tutorias/ficha`                    | PUT    | Tutor         | Guarda la descripción y el contacto del tutor.           |
+| `/api/tutorias/disponibilidad`           | POST   | Tutor         | Agrega una franja de disponibilidad.                     |
+| `/api/tutorias/disponibilidad/[id]`      | DELETE | Tutor         | Quita una franja.                                        |
+| `/api/imagenes/subir`                    | POST   | Con sesión    | Sube el comprobante o la fotografía del estudiante.      |
+| `/admin/tutorias`                        | —      | Administrador | Tutores, con filtros por nombre, carnet, estado y curso. |
+| `/admin/tutorias/postulaciones`          | —      | Administrador | Postulaciones por estado, con la foto del estudiante.    |
+| `/admin/tutorias/cursos`                 | —      | Administrador | Catálogo de cursos y cursos propuestos.                  |
+| `/api/admin/tutorias/cursos`             | POST   | Administrador | Agrega un curso al catálogo.                             |
+| `/api/admin/tutorias/cursos/[id]`        | PATCH  | Administrador | Edita, activa o desactiva un curso.                      |
+| `/api/admin/tutorias/cursos/[id]`        | DELETE | Administrador | Elimina un curso que nadie usa.                          |
+| `/api/admin/tutorias/postulaciones/[id]` | PATCH  | Administrador | Aprueba o rechaza una postulación.                       |
+| `/api/admin/tutorias/tutores/[id]`       | PATCH  | Administrador | Activa, desactiva o suspende a un tutor.                 |
 
 Las rutas de tutor no se protegen por el rol sino resolviendo el tutor de la sesión: el rol se concede al aprobar, pero la ficha y las franjas son de una persona concreta, y recibir el tutor por parámetro permitiría editar la de cualquiera.
+
+La sección del panel abre en los tutores; las postulaciones y los cursos están en pestañas aparte, cada una con el número de pendientes o propuestos, para que la vista de entrada no se llene de datos que solo se necesitan al revisar.
 
 ## Qué se ve y qué no
 

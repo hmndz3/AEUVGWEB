@@ -4,6 +4,7 @@ import {
   FormularioHoraBeca,
   VALORES_HORA_BECA_VACIOS,
 } from "@/components/admin/formulario-hora-beca";
+import { listarEventosDeActividad } from "@/lib/horas-beca/actividad-evento";
 import { destinoPanelHoras } from "@/lib/horas-beca/formato-horas";
 
 export const dynamic = "force-dynamic";
@@ -14,7 +15,8 @@ export default async function Pagina({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   // El listado del que se viene, con sus filtros, para volver a él al guardar.
-  const destino = destinoPanelHoras((await searchParams).volver);
+  const [parametros, eventos] = await Promise.all([searchParams, listarEventosDeActividad()]);
+  const destino = destinoPanelHoras(parametros.volver);
 
   return (
     <div className="flex flex-col gap-6">
@@ -30,7 +32,11 @@ export default async function Pagina({
         </p>
       </div>
 
-      <FormularioHoraBeca valoresIniciales={VALORES_HORA_BECA_VACIOS} destino={destino} />
+      <FormularioHoraBeca
+        valoresIniciales={VALORES_HORA_BECA_VACIOS}
+        eventos={eventos}
+        destino={destino}
+      />
     </div>
   );
 }

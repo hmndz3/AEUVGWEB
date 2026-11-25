@@ -29,7 +29,7 @@ El estudiante puede cambiar su teléfono y su carrera. El nombre, el carnet y el
 
 El teléfono se guarda tal como lo escribió su dueño; solo se valida el formato (ocho dígitos, con prefijo `+502` y separadores opcionales). La plataforma únicamente lo muestra, así que normalizarlo le quitaría el formato con el que lo reconoce.
 
-La carrera se comprueba contra la base además del esquema: este solo puede saber que es un número, no que la carrera exista y siga activa. La facultad no se edita, se deduce de la carrera.
+La carrera se comprueba contra la base además del esquema: este solo puede saber que es un número, no que la carrera exista y siga activa. En la pantalla, "Datos de la cuenta" tiene un botón **Editar datos** que despliega el formulario en la misma tarjeta, con dos selectores como en la creación de cuenta: la facultad filtra las carreras. La facultad no se guarda aparte, el servidor la deduce de la carrera.
 
 ## Eventos guardados
 
