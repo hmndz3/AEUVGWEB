@@ -10,6 +10,7 @@ import {
   consultarSesion,
   type UsuarioSesionCliente,
 } from "@/lib/auth/usuario-sesion-cliente";
+import { EVENTO_NOTIFICACIONES } from "@/lib/notificaciones/tipos-notificacion";
 
 type Estado =
   | { fase: "cargando" }
@@ -66,14 +67,23 @@ export function EstadoSesion() {
 
     const controlador = new AbortController();
 
-    fetch("/api/notificaciones", { signal: controlador.signal })
-      .then((respuesta) => (respuesta.ok ? respuesta.json() : { sinLeer: 0 }))
-      .then((cuerpo: { sinLeer?: number }) => setSinLeer(cuerpo.sinLeer ?? 0))
-      .catch(() => {
-        // El contador es un adorno: sin él el menú funciona igual.
-      });
+    const consultar = () =>
+      fetch("/api/notificaciones", { signal: controlador.signal })
+        .then((respuesta) => (respuesta.ok ? respuesta.json() : { sinLeer: 0 }))
+        .then((cuerpo: { sinLeer?: number }) => setSinLeer(cuerpo.sinLeer ?? 0))
+        .catch(() => {
+          // El contador es un adorno: sin él el menú funciona igual.
+        });
 
-    return () => controlador.abort();
+    consultar();
+    // La pantalla de notificaciones avisa cuando se lee alguna, para que el
+    // contador no siga mostrando un aviso que ya se abrió.
+    window.addEventListener(EVENTO_NOTIFICACIONES, consultar);
+
+    return () => {
+      controlador.abort();
+      window.removeEventListener(EVENTO_NOTIFICACIONES, consultar);
+    };
   }, [estado.fase]);
 
   async function manejarCierre() {

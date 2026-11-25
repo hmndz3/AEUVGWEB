@@ -23,7 +23,7 @@ El tipo se guarda como texto y no como enum del esquema, porque la lista crece c
 
 ## Leer
 
-Marcar como leído es manual y no al abrir la pantalla: quien entra a revisar sus avisos suele querer dejar pendientes los que todavía no resolvió, y marcarlos todos por el hecho de haberlos visto se los esconde.
+Un aviso se marca como leído al abrirlo (clic en la tarjeta), no al entrar a la pantalla: quien entra a revisar sus avisos suele querer dejar pendientes los que todavía no resolvió, y marcarlos todos por el hecho de haberlos visto se los esconde. Si el aviso tiene destino, abrirlo lleva ahí; la marca se envía con `keepalive` para que no se pierda al cambiar de página, y la pantalla emite el evento `aeuvg:notificaciones` para que el contador del encabezado se actualice sin recargar. "Marcar todas como leídas" sigue disponible.
 
 La cuenta entra en la condición de la escritura en lugar de comprobarse aparte, así que un aviso ajeno no se marca ni por accidente y responde como no encontrado, para no confirmar que existe.
 
