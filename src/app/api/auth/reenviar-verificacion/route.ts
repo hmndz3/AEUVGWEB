@@ -19,7 +19,11 @@ export async function POST(solicitud: Request) {
 
     // La respuesta es idéntica para correos ausentes, inválidos, verificados o limitados.
     return Response.json(respuestaUniforme, { status: 202 });
-  } catch {
+  } catch (error) {
+    console.error(
+      "Fallo al reenviar la verificación:",
+      error instanceof Error ? error.message : error
+    );
     return Response.json(respuestaUniforme, { status: 202 });
   }
 }

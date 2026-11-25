@@ -47,7 +47,13 @@ export async function POST(solicitud: Request) {
       },
       { status: 202 }
     );
-  } catch {
+  } catch (error) {
+    // Sin esto el motivo se perdía: una variable de correo ausente en Railway
+    // solo se veía como "no disponible temporalmente".
+    console.error(
+      "Fallo en el registro de cuentas:",
+      error instanceof Error ? error.message : error
+    );
     return Response.json(
       { mensaje: "El servicio de registro no está disponible temporalmente." },
       { status: 503 }

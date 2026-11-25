@@ -55,7 +55,12 @@ export class ServicioRegistro {
         minutosVigencia: this.configuracion.minutosVigenciaToken,
       });
       return { ...resultado, correoEnviado: true };
-    } catch {
+    } catch (error) {
+      // Solo el motivo: el registro de Railway no debe guardar el destinatario.
+      console.error(
+        "No se pudo enviar el correo de verificación:",
+        error instanceof Error ? error.message : error
+      );
       return { ...resultado, correoEnviado: false };
     }
   }
@@ -87,8 +92,13 @@ export class ServicioRegistro {
         urlAplicacion: this.configuracion.urlAplicacion,
         minutosVigencia: this.configuracion.minutosVigenciaToken,
       });
-    } catch {
-      // La respuesta pública permanece uniforme para impedir enumeración de cuentas.
+    } catch (error) {
+      // La respuesta pública permanece uniforme para impedir enumeración de
+      // cuentas; el motivo queda solo en el registro del servidor.
+      console.error(
+        "No se pudo reenviar el correo de verificación:",
+        error instanceof Error ? error.message : error
+      );
     }
   }
 }

@@ -53,8 +53,13 @@ export class ServicioRecuperacion {
         urlAplicacion: this.configuracion.urlAplicacion,
         minutosVigencia: this.configuracion.minutosVigenciaToken,
       });
-    } catch {
-      // El fallo de envío no debe revelar el estado de la cuenta al solicitante.
+    } catch (error) {
+      // El fallo de envío no debe revelar el estado de la cuenta al solicitante;
+      // el motivo queda solo en el registro del servidor.
+      console.error(
+        "No se pudo enviar el correo de recuperación:",
+        error instanceof Error ? error.message : error
+      );
     }
   }
 
