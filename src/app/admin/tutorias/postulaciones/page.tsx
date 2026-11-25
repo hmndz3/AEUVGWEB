@@ -4,6 +4,7 @@ import { ListaPostulaciones } from "@/components/admin/lista-postulaciones";
 import { PestanasTutorias } from "@/components/admin/pestanas-tutorias";
 import { Paginacion } from "@/components/eventos/paginacion";
 import {
+  contarCursosPropuestos,
   contarPostulacionesPorEstado,
   listarPostulaciones,
 } from "@/lib/tutorias/consultas-tutorias";
@@ -33,9 +34,10 @@ export default async function PaginaAdminPostulaciones({
   );
   const pagina = Number.isSafeInteger(numero) && numero > 0 ? numero : 1;
 
-  const [listado, conteo] = await Promise.all([
+  const [listado, conteo, propuestos] = await Promise.all([
     listarPostulaciones({ estado, pagina }),
     contarPostulacionesPorEstado(),
+    contarCursosPropuestos(),
   ]);
 
   const total = Object.values(conteo).reduce((suma, valor) => suma + valor, 0);
@@ -46,11 +48,16 @@ export default async function PaginaAdminPostulaciones({
         <h1 className="text-texto text-3xl font-extrabold tracking-tight">Tutorías</h1>
         <p className="text-texto-suave mt-2 max-w-2xl text-sm leading-relaxed">
           Postulaciones de estudiantes que quieren dar tutorías. Aprobar una postulación da de alta
-          al tutor con los cursos que respaldó y lo publica en el directorio.
+          al tutor con los cursos que respaldó, agrega al catálogo los que propuso con la opción
+          Otro y lo publica en el directorio.
         </p>
       </div>
 
-      <PestanasTutorias activa="postulaciones" pendientes={conteo.PENDIENTE} />
+      <PestanasTutorias
+        activa="postulaciones"
+        pendientes={conteo.PENDIENTE}
+        propuestos={propuestos}
+      />
 
       <section className="flex flex-col gap-4">
         <div className="flex flex-wrap items-center justify-between gap-3">

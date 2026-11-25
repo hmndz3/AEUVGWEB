@@ -1,4 +1,7 @@
-import type { RepositorioTutorias } from "@/lib/tutorias/repositorio-tutorias";
+import type {
+  CursoNuevaPostulacion,
+  RepositorioTutorias,
+} from "@/lib/tutorias/repositorio-tutorias";
 import { NOTA_MINIMA_TUTOR, type DatosPostulacionTutor } from "@/validators/tutoria";
 
 export type ResultadoPostulacion =
@@ -63,20 +66,52 @@ export class ServicioPostulaciones {
       };
     }
 
-    const existentes = await this.repositorio.cursosActivos(
-      datos.cursos.map((curso) => curso.idCurso)
+    const elegidos = datos.cursos.flatMap((curso) =>
+      curso.idCurso === null ? [] : [curso.idCurso]
     );
-    if (existentes.length !== datos.cursos.length) {
+    const existentes = await this.repositorio.cursosActivos(elegidos);
+    if (existentes.length !== elegidos.length) {
       return {
         tipo: "invalida",
         errores: { cursos: "Alguno de los cursos elegidos ya no está disponible." },
       };
     }
 
+    // Los cursos escritos con "Otro" se resuelven al final, cuando ya no hay
+    // otra regla que pueda detener la postulación: así no queda un curso
+    // propuesto creado para una postulación que nunca se guardó.
+    const cursos: CursoNuevaPostulacion[] = [];
+    for (const curso of datos.cursos) {
+      const idCurso =
+        curso.idCurso ??
+        (await this.repositorio.resolverCursoPropuesto({
+          nombre: curso.nombrePropuesto ?? "",
+          codigo: curso.codigoPropuesto,
+        }));
+
+      cursos.push({
+        idCurso,
+        notaObtenida: curso.notaObtenida,
+        comprobanteUrl: curso.comprobanteUrl,
+      });
+    }
+
+    // Un curso escrito con "Otro" puede resultar ser uno que también se eligió
+    // de la lista: guardarlo dos veces chocaría con la restricción de la tabla.
+    if (new Set(cursos.map((curso) => curso.idCurso)).size !== cursos.length) {
+      return {
+        tipo: "invalida",
+        errores: {
+          cursos:
+            "Uno de los cursos que escribiste con Otro ya está en la lista o se repite. Elígelo solo una vez.",
+        },
+      };
+    }
+
     const idPostulacion = await this.repositorio.crearPostulacion({
       idEstudiante: estudiante.idEstudiante,
       comentarioSolicitante: datos.comentarioSolicitante,
-      cursos: datos.cursos,
+      cursos,
     });
 
     return { tipo: "enviada", idPostulacion };

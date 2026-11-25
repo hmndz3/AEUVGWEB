@@ -17,11 +17,43 @@ export async function listarCursos(): Promise<CursoDisponible[]> {
   });
 }
 
+/** Un curso del catálogo como lo ve el panel, con dónde se usa. */
+export type CursoPanel = CursoDisponible & {
+  activo: boolean;
+  /** Lo escribió un estudiante con "Otro" y AEUVG todavía no lo admite. */
+  propuesto: boolean;
+  postulaciones: number;
+  tutores: number;
+  tutorias: number;
+};
+
+/**
+ * Todo el catálogo de cursos para el panel: los propuestos primero, porque son
+ * los que esperan una decisión, y después los activos antes que los inactivos.
+ */
+export async function listarCursosPanel(): Promise<CursoPanel[]> {
+  const filas = await obtenerPrisma().curso.findMany({
+    orderBy: [{ propuesto: "desc" }, { activo: "desc" }, { codigo: "asc" }],
+    select: {
+      idCurso: true,
+      codigo: true,
+      nombre: true,
+      activo: true,
+      propuesto: true,
+      _count: { select: { postulaciones: true, tutores: true, tutorias: true } },
+    },
+  });
+
+  return filas.map(({ _count, ...curso }) => ({ ...curso, ..._count }));
+}
+
 /** Un curso de la postulación, con lo que la respalda. */
 export type CursoPostulado = {
   idCurso: number;
   codigo: string;
   nombre: string;
+  /** Lo escribió el estudiante con "Otro": entra al catálogo si se aprueba. */
+  propuesto: boolean;
   notaObtenida: number | null;
   comprobanteUrl: string;
 };
@@ -66,7 +98,7 @@ const CAMPOS_POSTULACION = {
     select: {
       notaObtenida: true,
       comprobanteUrl: true,
-      curso: { select: { idCurso: true, codigo: true, nombre: true } },
+      curso: { select: { idCurso: true, codigo: true, nombre: true, propuesto: true } },
     },
   },
 } as const;
@@ -93,6 +125,7 @@ function aPostulacion(fila: FilaPostulacion): PostulacionAdmin {
       idCurso: curso.curso.idCurso,
       codigo: curso.curso.codigo,
       nombre: curso.curso.nombre,
+      propuesto: curso.curso.propuesto,
       notaObtenida: curso.notaObtenida === null ? null : Number(curso.notaObtenida),
       comprobanteUrl: curso.comprobanteUrl,
     })),
@@ -155,6 +188,11 @@ export async function contarPostulacionesPorEstado(): Promise<Record<EstadoPostu
   for (const grupo of grupos) conteo[grupo.estado] = grupo._count._all;
 
   return conteo;
+}
+
+/** Cursos que propusieron estudiantes con "Otro" y esperan que AEUVG los admita. */
+export async function contarCursosPropuestos(): Promise<number> {
+  return obtenerPrisma().curso.count({ where: { propuesto: true } });
 }
 
 /** La postulación del estudiante de la sesión, si ya envió alguna. */

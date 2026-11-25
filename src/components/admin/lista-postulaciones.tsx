@@ -74,6 +74,11 @@ export function ListaPostulaciones({ postulaciones }: { postulaciones: Postulaci
                     <p className="text-texto text-sm font-semibold">
                       <span className="font-mono">{curso.codigo}</span> · {curso.nombre}
                     </p>
+                    {curso.propuesto && (
+                      <p className="text-texto-suave mt-0.5 text-xs">
+                        Propuesto con la opción Otro: entra al catálogo si apruebas la postulación.
+                      </p>
+                    )}
                   </div>
 
                   <div className="flex items-center gap-3">

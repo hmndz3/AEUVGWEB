@@ -3,6 +3,7 @@ import Link from "next/link";
 const PESTANAS = [
   { clave: "tutores", href: "/admin/tutorias", texto: "Tutores" },
   { clave: "postulaciones", href: "/admin/tutorias/postulaciones", texto: "Postulaciones" },
+  { clave: "cursos", href: "/admin/tutorias/cursos", texto: "Cursos" },
 ] as const;
 
 export type PestanaTutorias = (typeof PESTANAS)[number]["clave"];
@@ -10,19 +11,24 @@ export type PestanaTutorias = (typeof PESTANAS)[number]["clave"];
 /**
  * Subsecciones de Tutorías en el panel.
  *
- * Los tutores son la vista de entrada; las postulaciones viven en su propia
- * pestaña para no llenar la pantalla de datos que solo se necesitan al
- * revisar. Las pendientes se cuentan en la pestaña para que no se olviden
- * aunque no estén a la vista.
+ * Los tutores son la vista de entrada; las postulaciones y el catálogo de
+ * cursos viven en su propia pestaña para no llenar la pantalla de datos que
+ * solo se necesitan al revisar. Las pendientes y los cursos propuestos se
+ * cuentan en la pestaña para que no se olviden aunque no estén a la vista.
  */
 export function PestanasTutorias({
   activa,
   pendientes = 0,
+  propuestos = 0,
 }: {
   activa: PestanaTutorias;
   pendientes?: number;
+  propuestos?: number;
 }) {
-  const contadores: Partial<Record<PestanaTutorias, number>> = { postulaciones: pendientes };
+  const contadores: Partial<Record<PestanaTutorias, number>> = {
+    postulaciones: pendientes,
+    cursos: propuestos,
+  };
 
   return (
     <nav aria-label="Secciones de tutorías" className="border-borde flex gap-1 border-b">

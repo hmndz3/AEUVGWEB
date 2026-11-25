@@ -2,6 +2,7 @@ import { FiltrosTutores } from "@/components/admin/filtros-tutores";
 import { PestanasTutorias } from "@/components/admin/pestanas-tutorias";
 import { TablaTutores } from "@/components/admin/tabla-tutores";
 import {
+  contarCursosPropuestos,
   contarPostulacionesPorEstado,
   listarCursos,
   listarTutoresPanel,
@@ -37,10 +38,11 @@ export default async function PaginaAdminTutorias({
 }) {
   const filtros = interpretarFiltros(await searchParams);
 
-  const [tutores, cursos, conteo] = await Promise.all([
+  const [tutores, cursos, conteo, propuestos] = await Promise.all([
     listarTutoresPanel(filtros),
     listarCursos(),
     contarPostulacionesPorEstado(),
+    contarCursosPropuestos(),
   ]);
 
   const filtrando = Boolean(filtros.q || filtros.estado || filtros.idCurso);
@@ -55,7 +57,7 @@ export default async function PaginaAdminTutorias({
         </p>
       </div>
 
-      <PestanasTutorias activa="tutores" pendientes={conteo.PENDIENTE} />
+      <PestanasTutorias activa="tutores" pendientes={conteo.PENDIENTE} propuestos={propuestos} />
 
       <FiltrosTutores filtros={filtros} cursos={cursos} />
 

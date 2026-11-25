@@ -508,6 +508,9 @@ model Curso {
   codigo        String             @unique(map: "curso_codigo_key") @db.VarChar(30)
   nombre        String             @db.VarChar(160)
   activo        Boolean            @default(true)
+  // Lo propuso un estudiante con la opción "Otro" de la postulación y AEUVG
+  // todavía no lo admite: se queda inactivo hasta aprobarlo.
+  propuesto     Boolean            @default(false)
   postulaciones CursoPostulacion[]
   tutores       TutorCurso[]
   tutorias      Tutoria[]
