@@ -21,7 +21,9 @@ El `nombre_estudiante` del registro conserva el nombre con el que AEUVG lo carg�
 
 En el formulario del panel, el campo **Actividad** es un selector de los eventos publicados y finalizados de la plataforma (`listarEventosDeActividad`, del más reciente al más antiguo), en lugar de un texto libre: así todas las horas de un mismo evento quedan con el mismo nombre. El registro guarda el evento en `id_evento` (opcional, desde la migración `20261124010000_add_evento_registro_hora_beca`) y su nombre en `descripcion_actividad`, que es lo que leen el historial del estudiante, la búsqueda, los reportes y la exportación. El nombre lo pone el servidor a partir del evento (`aplicarEventoDeActividad`), no el cuerpo de la petición.
 
-La opción **Otra actividad** abre la descripción escrita a mano, para los apoyos que no fueron un evento. Los registros anteriores y los importados desde Excel no tienen evento y se editan con esa opción. Elegir un evento sugiere su fecha si el campo está vacío y el evento no es futuro. Borrar un evento no borra las horas: el vínculo queda en nulo y la descripción conserva el nombre.
+La opción **Otra actividad** abre la descripción escrita a mano, para los apoyos que no fueron un evento. Los registros anteriores y los importados desde Excel no tienen evento y se editan con esa opción. Elegir un evento sugiere su fecha si el campo está vacío y el evento no es futuro.
+
+En el selector también se puede escribir (`SelectorActividad`): la lista se filtra por nombre o por fecha (`dd/mm/aaaa`) sin distinguir acentos ni mayúsculas, se recorre con las flechas, Enter elige la opción marcada (o la única que quede) y Escape cierra sin cambiar lo elegido. Se dibujan hasta 60 eventos a la vez y los demás aparecen al escribir; **Otra actividad** se ofrece siempre al final. Borrar un evento no borra las horas: el vínculo queda en nulo y la descripción conserva el nombre.
 
 ## Pantallas y servicios
 
