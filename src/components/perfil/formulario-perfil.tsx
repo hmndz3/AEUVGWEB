@@ -6,42 +6,58 @@ import { useState } from "react";
 import { Alerta } from "@/components/ui/alerta";
 import { Boton } from "@/components/ui/boton";
 import { EtiquetaCampo, NotaCamposObligatorios } from "@/components/ui/etiqueta-campo";
-import type { CarreraDisponible } from "@/lib/perfil/consultas-perfil";
+import type { FacultadDisponible } from "@/lib/perfil/consultas-perfil";
 import { ETIQUETAS_CAMPO_PERFIL } from "@/validators/perfil";
 
 const claseCampo =
-  "border-borde bg-superficie text-texto focus:border-primario focus:ring-primario/30 w-full rounded-2xl border px-4 py-3 text-sm focus:ring-2 focus:outline-none";
+  "border-borde bg-superficie text-texto focus:border-primario focus:ring-primario/30 w-full rounded-2xl border px-4 py-3 text-sm focus:ring-2 focus:outline-none disabled:opacity-60";
 
 /**
  * Edición de los datos que el estudiante sí puede cambiar.
  *
- * El aviso de guardado se muestra en la misma pantalla en lugar de navegar a
- * otra: el perfil es la pantalla donde ya está, y sacarlo de ahí para decirle
- * que se guardó no aporta nada.
+ * Se abre dentro de "Datos de la cuenta" en lugar de vivir en una tarjeta
+ * aparte: quien quiere corregir su teléfono lo está viendo justo ahí. La
+ * facultad y la carrera se eligen por separado, igual que al crear la cuenta;
+ * la facultad solo filtra las carreras y el servidor la deduce de la carrera.
  */
 export function FormularioPerfil({
   telefono: telefonoInicial,
+  idFacultad: idFacultadInicial,
   idCarrera: idCarreraInicial,
-  carreras,
+  facultades,
+  onCancelar,
+  onGuardado,
 }: {
   telefono: string | null;
+  idFacultad: number;
   idCarrera: number;
-  carreras: CarreraDisponible[];
+  facultades: FacultadDisponible[];
+  onCancelar: () => void;
+  onGuardado: () => void;
 }) {
   const router = useRouter();
   const [telefono, setTelefono] = useState(telefonoInicial ?? "");
+  const [idFacultad, setIdFacultad] = useState(String(idFacultadInicial));
   const [idCarrera, setIdCarrera] = useState(String(idCarreraInicial));
   const [errores, setErrores] = useState<Record<string, string>>({});
   const [general, setGeneral] = useState<string | null>(null);
-  const [guardado, setGuardado] = useState(false);
   const [guardando, setGuardando] = useState(false);
+
+  const carreras =
+    facultades.find((facultad) => facultad.idFacultad === Number(idFacultad))?.carreras ?? [];
 
   async function enviar(evento: React.FormEvent<HTMLFormElement>) {
     evento.preventDefault();
-    setGuardando(true);
     setErrores({});
     setGeneral(null);
-    setGuardado(false);
+
+    if (idCarrera === "") {
+      setErrores({ idCarrera: "Selecciona tu carrera." });
+      setGeneral(`Revisa el campo ${ETIQUETAS_CAMPO_PERFIL.idCarrera}: Selecciona tu carrera.`);
+      return;
+    }
+
+    setGuardando(true);
 
     try {
       const respuesta = await fetch("/api/perfil", {
@@ -51,10 +67,10 @@ export function FormularioPerfil({
       });
 
       if (respuesta.ok) {
-        setGuardado(true);
-        // Los datos de solo lectura de arriba los genera el servidor, así que se
-        // refresca la ruta para que la carrera nueva se vea también ahí.
+        // Los datos de la cuenta los genera el servidor, así que se refresca
+        // la ruta para que la carrera nueva se vea al cerrar el formulario.
         router.refresh();
+        onGuardado();
         return;
       }
 
@@ -81,43 +97,55 @@ export function FormularioPerfil({
   }
 
   return (
-    <section className="flex flex-col gap-4">
-      <div>
-        <h2 className="text-texto text-lg font-bold">Editar mis datos</h2>
-        <p className="text-texto-suave mt-1 text-sm leading-relaxed">
-          Puedes actualizar tu teléfono y tu carrera. El resto de los datos los administra AEUVG.
-        </p>
+    <form onSubmit={enviar} noValidate className="mt-4 flex flex-col gap-5">
+      {general && <Alerta tipo="error">{general}</Alerta>}
+
+      <NotaCamposObligatorios />
+
+      <div className="flex flex-col gap-1.5">
+        <EtiquetaCampo htmlFor="telefono">Teléfono</EtiquetaCampo>
+        <input
+          id="telefono"
+          value={telefono}
+          onChange={(evento) => setTelefono(evento.target.value)}
+          maxLength={30}
+          placeholder="5555 4444"
+          className={claseCampo}
+        />
+        {errores.telefono ? (
+          <p role="alert" className="text-error text-xs font-medium">
+            {errores.telefono}
+          </p>
+        ) : (
+          <p className="text-texto-suave text-xs">
+            Opcional. AEUVG lo usa para contactarte por las actividades en las que participas.
+          </p>
+        )}
       </div>
 
-      {general && <Alerta tipo="error">{general}</Alerta>}
-      {guardado && <Alerta tipo="exito">Tus datos se guardaron.</Alerta>}
-
-      <form
-        onSubmit={enviar}
-        noValidate
-        className="border-borde bg-superficie flex flex-col gap-5 rounded-[1.25rem] border p-6"
-      >
-        <NotaCamposObligatorios />
-
+      <div className="grid gap-5 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">
-          <EtiquetaCampo htmlFor="telefono">Teléfono</EtiquetaCampo>
-          <input
-            id="telefono"
-            value={telefono}
-            onChange={(evento) => setTelefono(evento.target.value)}
-            maxLength={30}
-            placeholder="5555 4444"
+          <EtiquetaCampo htmlFor="idFacultad" obligatorio>
+            Facultad
+          </EtiquetaCampo>
+          <select
+            id="idFacultad"
+            required
+            value={idFacultad}
+            onChange={(evento) => {
+              setIdFacultad(evento.target.value);
+              // La carrera anterior no pertenece a la facultad nueva.
+              setIdCarrera("");
+            }}
             className={claseCampo}
-          />
-          {errores.telefono ? (
-            <p role="alert" className="text-error text-xs font-medium">
-              {errores.telefono}
-            </p>
-          ) : (
-            <p className="text-texto-suave text-xs">
-              Opcional. AEUVG lo usa para contactarte por las actividades en las que participas.
-            </p>
-          )}
+          >
+            <option value="">Selecciona tu facultad</option>
+            {facultades.map((facultad) => (
+              <option key={facultad.idFacultad} value={facultad.idFacultad}>
+                {facultad.nombre}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="flex flex-col gap-1.5">
@@ -128,32 +156,33 @@ export function FormularioPerfil({
             id="idCarrera"
             required
             value={idCarrera}
+            disabled={idFacultad === ""}
             onChange={(evento) => setIdCarrera(evento.target.value)}
             className={claseCampo}
           >
+            <option value="">Selecciona tu carrera</option>
             {carreras.map((carrera) => (
               <option key={carrera.idCarrera} value={carrera.idCarrera}>
-                {carrera.nombre} · {carrera.facultad}
+                {carrera.nombre}
               </option>
             ))}
           </select>
-          {errores.idCarrera ? (
+          {errores.idCarrera && (
             <p role="alert" className="text-error text-xs font-medium">
               {errores.idCarrera}
             </p>
-          ) : (
-            <p className="text-texto-suave text-xs">
-              La facultad se toma de la carrera que elijas.
-            </p>
           )}
         </div>
+      </div>
 
-        <div>
-          <Boton type="submit" cargando={guardando}>
-            Guardar cambios
-          </Boton>
-        </div>
-      </form>
-    </section>
+      <div className="flex flex-wrap gap-3">
+        <Boton type="submit" cargando={guardando}>
+          Guardar cambios
+        </Boton>
+        <Boton type="button" variante="contorno" onClick={onCancelar} disabled={guardando}>
+          Cancelar
+        </Boton>
+      </div>
+    </form>
   );
 }
