@@ -7,6 +7,7 @@ import { Alerta } from "@/components/ui/alerta";
 import { Boton } from "@/components/ui/boton";
 import { EtiquetaCampo, NotaCamposObligatorios } from "@/components/ui/etiqueta-campo";
 import { BuscadorEstudiante } from "@/components/admin/buscador-estudiante";
+import { SelectorActividad } from "@/components/admin/selector-actividad";
 import { inicialesDe } from "@/lib/auth/usuario-sesion-cliente";
 import type { EstudianteSugerido } from "@/lib/horas-beca/consultas-estudiantes";
 import type { EventoDeActividad } from "@/lib/horas-beca/actividad-evento";
@@ -52,9 +53,6 @@ type Burbuja = {
   /** Nombre de su cuenta, o null si ese carnet todavía no tiene una. */
   nombreCuenta: string | null;
 };
-
-/** "2026-10-09" como "09/10/2026", para la lista de eventos. */
-const fechaCorta = (dia: string) => dia.split("-").reverse().join("/");
 
 /** Hoy en Guatemala, como "AAAA-MM-DD", para no sugerir una fecha futura. */
 const hoyEnGuatemala = () =>
@@ -203,12 +201,6 @@ export function FormularioHoraBeca({
     setValores((previos) => ({ ...previos, [clave]: valor }));
 
   const otraActividad = valores.idEvento === ACTIVIDAD_OTRA;
-  // Un registro que se edita puede apuntar a un evento que ya no está en la
-  // lista (cancelado o muy antiguo): se ofrece igual para no perder el vínculo.
-  const eventoFueraDeLista =
-    valores.idEvento !== "" &&
-    !otraActividad &&
-    !eventos.some((evento) => String(evento.idEvento) === valores.idEvento);
 
   /**
    * Elegir un evento pone su nombre como actividad y, si la fecha todavía está
@@ -504,26 +496,15 @@ export function FormularioHoraBeca({
         obligatorio
         nombre="idEvento"
         error={errores.idEvento ?? (otraActividad ? undefined : errores.descripcionActividad)}
-        ayuda="El evento en el que apoyó el estudiante. Es lo que verá en su historial de horas."
+        ayuda="El evento en el que apoyó el estudiante. Escribe parte del nombre o la fecha para filtrar la lista."
       >
-        <select
+        <SelectorActividad
           id="idEvento"
-          required
-          value={valores.idEvento}
-          onChange={(evento) => elegirActividad(evento.target.value)}
-          className={claseCampo}
-        >
-          <option value="">Elige el evento</option>
-          {eventoFueraDeLista && (
-            <option value={valores.idEvento}>{valores.descripcionActividad}</option>
-          )}
-          {eventos.map((evento) => (
-            <option key={evento.idEvento} value={evento.idEvento}>
-              {fechaCorta(evento.fecha)} · {evento.nombre}
-            </option>
-          ))}
-          <option value={ACTIVIDAD_OTRA}>Otra actividad (no fue un evento)</option>
-        </select>
+          valor={valores.idEvento}
+          eventos={eventos}
+          etiquetaActual={valores.descripcionActividad}
+          onElegir={elegirActividad}
+        />
       </Campo>
 
       {otraActividad && (

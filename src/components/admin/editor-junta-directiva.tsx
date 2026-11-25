@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { CargaImagen } from "@/components/admin/carga-imagen";
+import { TarjetaIntegrante } from "@/components/organizaciones/junta-directiva";
 import { Alerta } from "@/components/ui/alerta";
 import { Boton } from "@/components/ui/boton";
 import { EtiquetaCampo, NotaCamposObligatorios } from "@/components/ui/etiqueta-campo";
@@ -15,6 +16,7 @@ import {
   TablaEncabezado,
   TablaFila,
 } from "@/components/ui/tabla";
+import { inicialesDeNombre } from "@/lib/organizaciones/nombre-organizacion";
 import type { IntegranteAdministrado } from "@/lib/organizaciones/repositorio-organizaciones";
 
 const claseCampo =
@@ -36,14 +38,17 @@ const VACIOS: Valores = { nombre: "", cargo: "", periodo: "", fotoUrl: "", orden
  * Vive aparte del formulario de la ficha porque un integrante se guarda por su
  * cuenta: obligar a reenviar toda la asociación para corregir un cargo haría
  * perder los demás cambios a medio escribir. Por eso se administra solo al
- * editar, cuando la asociación ya tiene identificador.
+ * editar, cuando la asociación ya tiene identificador. La misma pantalla sirve
+ * para la Junta Directiva de AEUVG en la sección Sobre AEUVG.
  */
 export function EditorJuntaDirectiva({
   idAsociacion,
   integrantes,
+  descripcion = "El orden decide cómo se presentan en la página de la asociación: 1 aparece primero. Quien no tenga fotografía se muestra con sus iniciales.",
 }: {
   idAsociacion: number;
   integrantes: IntegranteAdministrado[];
+  descripcion?: string;
 }) {
   const router = useRouter();
   const [valores, setValores] = useState<Valores>(VACIOS);
@@ -133,10 +138,7 @@ export function EditorJuntaDirectiva({
     <section className="flex flex-col gap-4">
       <div>
         <h2 className="text-texto text-xl font-bold">Junta directiva</h2>
-        <p className="text-texto-suave mt-1 text-sm leading-relaxed">
-          El orden decide cómo se presentan en la página de la asociación: 1 aparece primero. Quien
-          no tenga fotografía se muestra con sus iniciales.
-        </p>
+        <p className="text-texto-suave mt-1 text-sm leading-relaxed">{descripcion}</p>
       </div>
 
       {mensaje && <Alerta tipo="error">{mensaje}</Alerta>}
@@ -158,8 +160,26 @@ export function EditorJuntaDirectiva({
                   {integrante.ordenVisualizacion}
                 </TablaCelda>
                 <TablaCelda>
-                  <span className="text-texto font-semibold">{integrante.nombre}</span>
-                  <span className="text-texto-suave mt-0.5 block text-xs">{integrante.cargo}</span>
+                  <div className="flex items-center gap-3">
+                    <span className="bg-superficie-suave text-texto-suave grid h-12 w-9 shrink-0 place-items-center overflow-hidden rounded-lg text-xs font-bold">
+                      {integrante.fotoUrl ? (
+                        // eslint-disable-next-line @next/next/no-img-element -- miniatura de un enlace que escribe AEUVG
+                        <img
+                          src={integrante.fotoUrl}
+                          alt=""
+                          className="size-full bg-white object-cover object-top"
+                        />
+                      ) : (
+                        inicialesDeNombre(integrante.nombre)
+                      )}
+                    </span>
+                    <span>
+                      <span className="text-texto font-semibold">{integrante.nombre}</span>
+                      <span className="text-texto-suave mt-0.5 block text-xs">
+                        {integrante.cargo}
+                      </span>
+                    </span>
+                  </div>
                 </TablaCelda>
                 <TablaCelda className="text-texto-suave whitespace-nowrap">
                   {integrante.periodo}
@@ -200,105 +220,130 @@ export function EditorJuntaDirectiva({
         </p>
         <NotaCamposObligatorios />
 
-        <div className="grid gap-4 md:grid-cols-2">
-          <div className="flex flex-col gap-1.5">
-            <EtiquetaCampo htmlFor="integrante-nombre" obligatorio>
-              Nombre
-            </EtiquetaCampo>
-            <input
-              id="integrante-nombre"
-              required
-              value={valores.nombre}
-              onChange={(evento) => cambiar("nombre", evento.target.value)}
-              maxLength={200}
-              className={claseCampo}
-            />
-            {errores.nombre && (
-              <p role="alert" className="text-error text-xs font-medium">
-                {errores.nombre}
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_14rem]">
+          <div className="flex flex-col gap-4">
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="flex flex-col gap-1.5">
+                <EtiquetaCampo htmlFor="integrante-nombre" obligatorio>
+                  Nombre
+                </EtiquetaCampo>
+                <input
+                  id="integrante-nombre"
+                  required
+                  value={valores.nombre}
+                  onChange={(evento) => cambiar("nombre", evento.target.value)}
+                  maxLength={200}
+                  className={claseCampo}
+                />
+                {errores.nombre && (
+                  <p role="alert" className="text-error text-xs font-medium">
+                    {errores.nombre}
+                  </p>
+                )}
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <EtiquetaCampo htmlFor="integrante-cargo" obligatorio>
+                  Cargo
+                </EtiquetaCampo>
+                <input
+                  id="integrante-cargo"
+                  required
+                  value={valores.cargo}
+                  onChange={(evento) => cambiar("cargo", evento.target.value)}
+                  maxLength={120}
+                  className={claseCampo}
+                />
+                {errores.cargo && (
+                  <p role="alert" className="text-error text-xs font-medium">
+                    {errores.cargo}
+                  </p>
+                )}
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <EtiquetaCampo htmlFor="integrante-periodo" obligatorio>
+                  Periodo
+                </EtiquetaCampo>
+                <input
+                  id="integrante-periodo"
+                  required
+                  value={valores.periodo}
+                  onChange={(evento) => cambiar("periodo", evento.target.value)}
+                  maxLength={50}
+                  placeholder="2026"
+                  className={claseCampo}
+                />
+                {errores.periodo && (
+                  <p role="alert" className="text-error text-xs font-medium">
+                    {errores.periodo}
+                  </p>
+                )}
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <EtiquetaCampo htmlFor="integrante-ordenVisualizacion">Orden</EtiquetaCampo>
+                <input
+                  id="integrante-ordenVisualizacion"
+                  type="number"
+                  min={0}
+                  max={999}
+                  value={valores.ordenVisualizacion}
+                  onChange={(evento) => cambiar("ordenVisualizacion", evento.target.value)}
+                  className={claseCampo}
+                />
+                {errores.ordenVisualizacion && (
+                  <p role="alert" className="text-error text-xs font-medium">
+                    {errores.ordenVisualizacion}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <EtiquetaCampo htmlFor="integrante-fotoUrl">Fotografía</EtiquetaCampo>
+              <p className="text-texto-suave text-xs leading-relaxed">
+                Para que se vea como el resto de la junta, usa un retrato vertical (3:4) con fondo
+                blanco o transparente: la tarjeta es blanca y la foto se funde con ella. Se recorta
+                desde arriba, así que deja la cabeza cerca del borde superior.
               </p>
-            )}
+              <input
+                id="integrante-fotoUrl"
+                value={valores.fotoUrl}
+                onChange={(evento) => cambiar("fotoUrl", evento.target.value)}
+                maxLength={500}
+                placeholder="https://ejemplo.com/retrato.jpg"
+                className={claseCampo}
+              />
+              <CargaImagen
+                valor={valores.fotoUrl}
+                descripcion="Vista previa del retrato del integrante"
+                onCambio={(url) => cambiar("fotoUrl", url)}
+                onError={(aviso) => setMensaje(aviso)}
+              />
+              {errores.fotoUrl && (
+                <p role="alert" className="text-error text-xs font-medium">
+                  {errores.fotoUrl}
+                </p>
+              )}
+            </div>
           </div>
 
-          <div className="flex flex-col gap-1.5">
-            <EtiquetaCampo htmlFor="integrante-cargo" obligatorio>
-              Cargo
-            </EtiquetaCampo>
-            <input
-              id="integrante-cargo"
-              required
-              value={valores.cargo}
-              onChange={(evento) => cambiar("cargo", evento.target.value)}
-              maxLength={120}
-              className={claseCampo}
+          {/* La misma tarjeta que se publica, con su animación al pasar el
+              cursor, para comprobar cómo queda el retrato antes de guardarlo. */}
+          <div className="flex flex-col gap-2">
+            <p className="text-texto text-sm font-semibold">Vista previa</p>
+            <TarjetaIntegrante
+              indice={editando ?? integrantes.length}
+              integrante={{
+                idIntegrante: editando ?? 0,
+                nombre: valores.nombre.trim() || "Nombre del integrante",
+                cargo: valores.cargo.trim() || "Cargo",
+                periodo: valores.periodo.trim(),
+                fotoUrl: valores.fotoUrl.trim() || null,
+              }}
             />
-            {errores.cargo && (
-              <p role="alert" className="text-error text-xs font-medium">
-                {errores.cargo}
-              </p>
-            )}
           </div>
-
-          <div className="flex flex-col gap-1.5">
-            <EtiquetaCampo htmlFor="integrante-periodo" obligatorio>
-              Periodo
-            </EtiquetaCampo>
-            <input
-              id="integrante-periodo"
-              required
-              value={valores.periodo}
-              onChange={(evento) => cambiar("periodo", evento.target.value)}
-              maxLength={50}
-              placeholder="2026"
-              className={claseCampo}
-            />
-            {errores.periodo && (
-              <p role="alert" className="text-error text-xs font-medium">
-                {errores.periodo}
-              </p>
-            )}
-          </div>
-
-          <div className="flex flex-col gap-1.5">
-            <EtiquetaCampo htmlFor="integrante-ordenVisualizacion">Orden</EtiquetaCampo>
-            <input
-              id="integrante-ordenVisualizacion"
-              type="number"
-              min={0}
-              max={999}
-              value={valores.ordenVisualizacion}
-              onChange={(evento) => cambiar("ordenVisualizacion", evento.target.value)}
-              className={claseCampo}
-            />
-            {errores.ordenVisualizacion && (
-              <p role="alert" className="text-error text-xs font-medium">
-                {errores.ordenVisualizacion}
-              </p>
-            )}
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-1.5">
-          <EtiquetaCampo htmlFor="integrante-fotoUrl">Fotografía</EtiquetaCampo>
-          <input
-            id="integrante-fotoUrl"
-            value={valores.fotoUrl}
-            onChange={(evento) => cambiar("fotoUrl", evento.target.value)}
-            maxLength={500}
-            placeholder="https://ejemplo.com/retrato.jpg"
-            className={claseCampo}
-          />
-          <CargaImagen
-            valor={valores.fotoUrl}
-            descripcion="Vista previa del retrato del integrante"
-            onCambio={(url) => cambiar("fotoUrl", url)}
-            onError={(aviso) => setMensaje(aviso)}
-          />
-          {errores.fotoUrl && (
-            <p role="alert" className="text-error text-xs font-medium">
-              {errores.fotoUrl}
-            </p>
-          )}
         </div>
 
         <div className="flex flex-wrap gap-3">

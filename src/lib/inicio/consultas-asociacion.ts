@@ -15,6 +15,7 @@ export type AsociacionGeneral = {
   mision: string | null;
   vision: string | null;
   correo: string | null;
+  telefono: string | null;
   informacionContacto: string | null;
   integrantes: IntegranteResumen[];
 };
@@ -36,6 +37,7 @@ export async function obtenerAsociacionGeneral(): Promise<AsociacionGeneral | nu
         mision: true,
         vision: true,
         correo: true,
+        telefono: true,
         informacionContacto: true,
         integrantes: {
           where: { activo: true },
@@ -55,14 +57,4 @@ export async function obtenerAsociacionGeneral(): Promise<AsociacionGeneral | nu
     // pendientes en lugar de responder con un error.
     return null;
   }
-}
-
-/** Iniciales para quienes no tienen fotografía registrada. */
-export function inicialesDeNombre(nombre: string): string {
-  const palabras = nombre.trim().split(/\s+/).filter(Boolean);
-  if (palabras.length === 0) return "?";
-
-  return (
-    (palabras[0][0] ?? "") + (palabras.length > 1 ? (palabras[1][0] ?? "") : "")
-  ).toUpperCase();
 }

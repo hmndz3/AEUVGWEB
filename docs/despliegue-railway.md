@@ -85,7 +85,7 @@ En otra terminal, con el túnel abierto:
 npm run db:railway:status    # revisar qué migraciones están aplicadas
 npm run db:railway:migrate   # aplicar las migraciones pendientes
 npm run db:railway:seed      # cargar los catálogos iniciales
-npm run db:railway:aeuvg     # cargar la información institucional de AEUVG
+npm run db:railway:aeuvg     # carga inicial de AEUVG; sobrescribe lo editado en el panel
 ```
 
 El script [`scripts/db/railway.js`](../scripts/db/railway.js) detecta el túnel en `127.0.0.1:55432`, obtiene las credenciales del servicio mediante el CLI, arma la cadena de conexión y se la entrega al comando de Prisma por variable de entorno, sin escribirla en disco ni mostrarla en pantalla. Con otro puerto, indicarlo en `RAILWAY_DB_TUNNEL`. Al terminar basta con cerrar el túnel con Ctrl+C.

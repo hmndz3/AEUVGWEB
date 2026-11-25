@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { esImagenDelSitio } from "@/lib/imagenes/validacion-imagen";
+import { esImagenDelSitio, RUTA_RETRATO_INSTITUCIONAL } from "@/lib/imagenes/validacion-imagen";
 import { erroresPorCampo } from "@/validators/errores";
 
 /**
@@ -125,19 +125,26 @@ const correoOpcional = z
  * por una razón que no le importa a nadie. Las imágenes subidas al volumen son
  * rutas del propio sitio y se dejan intactas.
  */
+/**
+ * Rutas del propio sitio que se guardan tal cual. Incluye los retratos de la
+ * junta de AEUVG: sin ellos, corregir el cargo de un integrante convertía su
+ * fotografía en "https:///integrantes/…" y la rompía.
+ */
+const esRutaPropia = (valor: string) =>
+  esImagenDelSitio(valor) || RUTA_RETRATO_INSTITUCIONAL.test(valor);
+
 const imagenOpcional = z
   .string(MENSAJE_IMAGEN)
   .trim()
   .max(500, "El enlace de la imagen es demasiado largo.")
   .transform((valor) =>
-    valor && !esImagenDelSitio(valor) && !/^[a-z][a-z0-9+.-]*:/i.test(valor)
+    // Una ruta que empieza con "/" no es un dominio sin esquema: completarla
+    // daba "https:///…", un enlace que pasaba la validación y no cargaba.
+    valor && !valor.startsWith("/") && !/^[a-z][a-z0-9+.-]*:/i.test(valor)
       ? `https://${valor}`
       : valor
   )
-  .refine(
-    (valor) => valor === "" || esImagenDelSitio(valor) || esEnlaceSeguro(valor),
-    MENSAJE_IMAGEN
-  )
+  .refine((valor) => valor === "" || esRutaPropia(valor) || esEnlaceSeguro(valor), MENSAJE_IMAGEN)
   .transform((valor) => (valor === "" ? null : valor))
   .nullable()
   .default(null);
@@ -172,6 +179,37 @@ export const ETIQUETAS_CAMPO_ASOCIACION: Record<string, string> = {
   telefono: "Teléfono",
   informacionContacto: "Información de contacto",
   imagenUrl: "Imagen o logotipo",
+};
+
+/**
+ * Información institucional de AEUVG, la que presenta la página Sobre AEUVG.
+ *
+ * Es un esquema aparte del de las asociaciones porque la ficha de AEUVG no se
+ * administra igual: el nombre no se edita, porque es con el que la página la
+ * encuentra, y el contacto es opcional, porque la página omite el bloque
+ * completo cuando no hay ninguno.
+ */
+export const esquemaInformacionAeuvg = z.object({
+  descripcion: textoOpcional(5000, "La presentación no puede exceder 5000 caracteres."),
+  mision: textoOpcional(2000, "La misión no puede exceder 2000 caracteres."),
+  vision: textoOpcional(2000, "La visión no puede exceder 2000 caracteres."),
+  correo: correoOpcional,
+  telefono: telefonoOpcional,
+  informacionContacto: textoOpcional(
+    2000,
+    "La información de contacto no puede exceder 2000 caracteres."
+  ),
+});
+
+export type DatosInformacionAeuvg = z.infer<typeof esquemaInformacionAeuvg>;
+
+export const ETIQUETAS_CAMPO_AEUVG: Record<string, string> = {
+  descripcion: "Quiénes somos",
+  mision: "Misión",
+  vision: "Visión",
+  correo: "Correo",
+  telefono: "Teléfono",
+  informacionContacto: "Información de contacto",
 };
 
 export const esquemaClubAdmin = z

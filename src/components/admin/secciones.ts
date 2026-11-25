@@ -17,6 +17,11 @@ export const SECCIONES_ADMIN = [
     descripcion: "Vista mensual de las actividades, con sus borradores y cancelados.",
   },
   {
+    href: "/admin/sobre-aeuvg",
+    texto: "Sobre AEUVG",
+    descripcion: "Presentación, misión, visión, junta directiva y contacto de AEUVG.",
+  },
+  {
     href: "/admin/asociaciones",
     texto: "Asociaciones",
     descripcion: "Información, junta directiva e integrantes de cada asociación.",
