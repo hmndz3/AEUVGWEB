@@ -1,4 +1,5 @@
 import { RevisionPostulacion } from "@/components/admin/revision-postulacion";
+import { Avatar } from "@/components/ui/avatar";
 import { EtiquetaEstado } from "@/components/ui/etiqueta-estado";
 import type { PostulacionAdmin } from "@/lib/tutorias/consultas-tutorias";
 import { formatearFechaAcreditacion } from "@/lib/horas-beca/formato-horas";
@@ -27,13 +28,20 @@ export function ListaPostulaciones({ postulaciones }: { postulaciones: Postulaci
           className="border-borde bg-superficie rounded-[1.25rem] border p-5"
         >
           <div className="flex flex-wrap items-start justify-between gap-3">
-            <div>
-              <h3 className="text-texto text-lg font-bold">{postulacion.nombreCompleto}</h3>
-              <p className="text-texto-suave mt-0.5 text-sm">
-                <span className="font-mono font-semibold">{postulacion.carnet}</span> ·{" "}
-                {postulacion.carrera} · {postulacion.facultad}
-              </p>
-              <p className="text-texto-suave mt-0.5 text-xs">{postulacion.correoUvg}</p>
+            <div className="flex min-w-0 items-center gap-4">
+              <Avatar
+                nombre={postulacion.nombreCompleto}
+                fotoUrl={postulacion.fotoUrl}
+                tamano="size-14 text-lg"
+              />
+              <div className="min-w-0">
+                <h3 className="text-texto text-lg font-bold">{postulacion.nombreCompleto}</h3>
+                <p className="text-texto-suave mt-0.5 text-sm">
+                  <span className="font-mono font-semibold">{postulacion.carnet}</span> ·{" "}
+                  {postulacion.carrera} · {postulacion.facultad}
+                </p>
+                <p className="text-texto-suave mt-0.5 text-xs">{postulacion.correoUvg}</p>
+              </div>
             </div>
 
             <div className="text-right">

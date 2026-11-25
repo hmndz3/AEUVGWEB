@@ -39,7 +39,7 @@ export const SECCIONES_ADMIN = [
     // administran juntos en lugar de en dos secciones separadas.
     href: "/admin/tutorias",
     texto: "Tutorías",
-    descripcion: "Postulaciones para ser tutor y tutores activos con sus cursos.",
+    descripcion: "Tutores con sus cursos y postulaciones para ser tutor.",
   },
   {
     href: "/admin/reportes",

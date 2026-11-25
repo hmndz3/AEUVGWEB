@@ -59,11 +59,14 @@ Cancelar lo pueden los dos: al estudiante le surge algo y al tutor también. Dar
 | `/api/tutorias/disponibilidad`           | POST   | Tutor         | Agrega una franja de disponibilidad.                   |
 | `/api/tutorias/disponibilidad/[id]`      | DELETE | Tutor         | Quita una franja.                                      |
 | `/api/imagenes/subir`                    | POST   | Con sesión    | Sube el comprobante o la fotografía del estudiante.    |
-| `/admin/tutorias`                        | —      | Administrador | Postulaciones por estado y listado de tutores.         |
+| `/admin/tutorias`                        | —      | Administrador | Tutores con sus cursos y su estado.                    |
+| `/admin/tutorias/postulaciones`          | —      | Administrador | Postulaciones por estado, con la foto del estudiante.  |
 | `/api/admin/tutorias/postulaciones/[id]` | PATCH  | Administrador | Aprueba o rechaza una postulación.                     |
 | `/api/admin/tutorias/tutores/[id]`       | PATCH  | Administrador | Activa, desactiva o suspende a un tutor.               |
 
 Las rutas de tutor no se protegen por el rol sino resolviendo el tutor de la sesión: el rol se concede al aprobar, pero la ficha y las franjas son de una persona concreta, y recibir el tutor por parámetro permitiría editar la de cualquiera.
+
+La sección del panel abre en los tutores; las postulaciones están en una pestaña aparte, con el número de pendientes, para que la vista de entrada no se llene de datos que solo se necesitan al revisar.
 
 ## Qué se ve y qué no
 

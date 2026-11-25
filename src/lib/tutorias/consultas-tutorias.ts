@@ -32,6 +32,7 @@ export type PostulacionAdmin = {
   carnet: string;
   nombreCompleto: string;
   correoUvg: string;
+  fotoUrl: string | null;
   carrera: string;
   facultad: string;
   estado: EstadoPostulacion;
@@ -56,6 +57,7 @@ const CAMPOS_POSTULACION = {
       carnet: true,
       nombreCompleto: true,
       correoUvg: true,
+      fotoUrl: true,
       carrera: { select: { nombre: true, facultad: { select: { nombre: true } } } },
     },
   },
@@ -78,6 +80,7 @@ function aPostulacion(fila: FilaPostulacion): PostulacionAdmin {
     carnet: fila.estudiante.carnet,
     nombreCompleto: fila.estudiante.nombreCompleto,
     correoUvg: fila.estudiante.correoUvg,
+    fotoUrl: fila.estudiante.fotoUrl,
     carrera: fila.estudiante.carrera.nombre,
     facultad: fila.estudiante.carrera.facultad.nombre,
     estado: fila.estado,
