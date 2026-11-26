@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import { formatearHora12, horasDisponibles } from "@/lib/ui/calendario-selector";
+import { formatearHora24, horasDisponibles } from "@/lib/ui/calendario-selector";
 
 const claseDisparador =
   "border-borde bg-superficie text-texto focus:border-primario focus:ring-primario/30 flex w-full items-center justify-between gap-2 rounded-2xl border px-4 py-3 text-left text-sm transition-colors focus:ring-2 focus:outline-none";
@@ -113,7 +113,7 @@ export function SelectorHora({
         className={`${claseDisparador} ${invalido ? "border-error" : ""}`}
       >
         <span className={valor ? "text-texto" : "text-texto-suave"}>
-          {valor ? formatearHora12(valor) : placeholder}
+          {valor ? formatearHora24(valor) : placeholder}
         </span>
         <IconoReloj />
       </button>
@@ -148,8 +148,7 @@ export function SelectorHora({
                         : "text-texto hover:bg-superficie-suave"
                     }`}
                   >
-                    <span>{formatearHora12(hora)}</span>
-                    <span className={elegida ? "text-white/70" : "text-texto-suave"}>{hora}</span>
+                    <span>{formatearHora24(hora)}</span>
                   </button>
                 </li>
               );

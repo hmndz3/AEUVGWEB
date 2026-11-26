@@ -62,10 +62,10 @@ export type ResultadoAccionTutoria =
 /**
  * Agenda de tutorías.
  *
- * La solicitud la hace el estudiante y queda programada de una vez, sin que el
- * tutor tenga que confirmarla: el tutor ya publicó en qué horarios puede, y
- * pedirle además que confirme cada cita convertiría su disponibilidad en una
- * intención y no en un compromiso. Lo que sí puede es cancelarla.
+ * La solicitud la hace el estudiante sobre un horario que el tutor ya publicó,
+ * y le llega al tutor para que la acepte o la rechace: la cita no queda cerrada
+ * hasta entonces. La respuesta y las pruebas de que la tutoría se dio viven en
+ * servicio-validacion-tutorias.ts; aquí solo se agenda y se cancela.
  *
  * Las reglas son las que impiden que una cita no se pueda cumplir: tiene que
  * caer dentro de una franja publicada, el tutor no puede tener dos a la misma

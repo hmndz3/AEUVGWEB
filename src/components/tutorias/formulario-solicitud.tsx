@@ -162,9 +162,9 @@ export function FormularioSolicitud({
 
   if (listo) {
     return (
-      <Alerta tipo="exito" titulo="Tutoría agendada">
-        Queda programada con {tutor.nombreCompleto}. La encuentras en tu perfil, en la sección de
-        tutorías, con el lugar o el enlace donde presentarte.
+      <Alerta tipo="exito" titulo="Solicitud enviada">
+        {tutor.nombreCompleto} ya la recibió y tiene que aceptarla; te avisamos en cuanto responda.
+        La encuentras en tu perfil, en la sección de tutorías.
       </Alerta>
     );
   }

@@ -5,7 +5,7 @@ import {
   construirMes,
   DIAS_CORTOS,
   esDiaElegible,
-  formatearHora12,
+  formatearHora24,
   horaDeMinutos,
   horasDisponibles,
   hoyEnGuatemala,
@@ -167,10 +167,15 @@ test("un rango invertido o un paso imposible no ofrecen nada", () => {
   assert.deepEqual(horasDisponibles(0, "14:00", "18:00"), []);
 });
 
-test("la hora se presenta en doce horas, como se lee en Guatemala", () => {
-  assert.equal(formatearHora12("14:30"), "2:30 p.m.");
-  assert.equal(formatearHora12("09:05"), "9:05 a.m.");
-  assert.equal(formatearHora12("00:30"), "12:30 a.m.");
-  assert.equal(formatearHora12("12:00"), "12:00 p.m.");
-  assert.equal(formatearHora12("no es hora"), "no es hora");
+test("la hora se presenta en el reloj de 24 horas de toda la plataforma", () => {
+  assert.equal(formatearHora24("14:30"), "14:30");
+  assert.equal(formatearHora24("09:05"), "09:05");
+  assert.equal(formatearHora24("00:30"), "00:30");
+  assert.equal(formatearHora24("12:00"), "12:00");
+});
+
+test("lo que no es una hora se devuelve tal cual, sin inventar un valor", () => {
+  assert.equal(formatearHora24("no es hora"), "no es hora");
+  assert.equal(formatearHora24("9:05"), "9:05");
+  assert.equal(formatearHora24(""), "");
 });
