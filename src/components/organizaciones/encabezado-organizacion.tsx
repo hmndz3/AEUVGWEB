@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { inicialesDeNombre } from "@/lib/inicio/consultas-asociacion";
+import { inicialesDeNombre } from "@/lib/organizaciones/nombre-organizacion";
 
 /**
  * Encabezado de la página de una organización. Lo comparten las asociaciones y

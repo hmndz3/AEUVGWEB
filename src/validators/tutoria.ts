@@ -21,26 +21,76 @@ const identificador = z.coerce.number().int().positive();
 
 const hora = z.string(MENSAJE_HORA).trim().regex(PATRON_HORA, MENSAJE_HORA);
 
+const MENSAJE_CURSO_ELEGIDO = "Elige un curso de la lista o indica cuál es con la opción Otro.";
+const MENSAJE_NOMBRE_CURSO = "Escribe el nombre del curso, entre 3 y 160 caracteres.";
+const MENSAJE_CODIGO_CURSO =
+  "El código del curso solo puede tener letras, números y guiones, hasta 30 caracteres.";
+
+/** Código de un curso: letras, números y guiones, como los del pensum de UVG. */
+const PATRON_CODIGO_CURSO = /^[A-Z0-9][A-Z0-9-]{0,29}$/;
+
+const nombreCurso = z
+  .string(MENSAJE_NOMBRE_CURSO)
+  .trim()
+  .min(3, MENSAJE_NOMBRE_CURSO)
+  .max(160, MENSAJE_NOMBRE_CURSO)
+  .transform((valor) => valor.replace(/\s+/g, " "));
+
+const codigoCurso = z
+  .string(MENSAJE_CODIGO_CURSO)
+  .trim()
+  .transform((valor) => valor.toUpperCase().replace(/\s+/g, ""))
+  .refine((valor) => PATRON_CODIGO_CURSO.test(valor), MENSAJE_CODIGO_CURSO);
+
+/** Un texto opcional: vacío equivale a no haberlo escrito. */
+const opcional = <T extends z.ZodType>(esquema: T) =>
+  z.preprocess(
+    (valor) =>
+      valor === undefined || valor === null || (typeof valor === "string" && valor.trim() === "")
+        ? null
+        : valor,
+    esquema.nullable()
+  );
+
 /**
  * Un curso de la postulación, con la nota que lo respalda y su comprobante.
+ *
+ * El curso se elige del catálogo (idCurso) o, si no está, se escribe con la
+ * opción "Otro" (nombrePropuesto y, si se conoce, codigoPropuesto). Tiene que
+ * venir exactamente una de las dos cosas.
  *
  * El comprobante es obligatorio y tiene que ser una imagen subida en esta misma
  * pantalla: la nota la declara quien se postula, y sin algo que la respalde la
  * revisión de AEUVG no tendría con qué contrastarla.
  */
-export const esquemaCursoPostulacion = z.object({
-  idCurso: identificador,
-  notaObtenida: z.coerce
-    .number(MENSAJE_NOTA)
-    .min(0, MENSAJE_NOTA)
-    .max(100, MENSAJE_NOTA)
-    .refine((valor) => Number.isInteger(Math.round(valor * 100)), MENSAJE_NOTA),
-  comprobanteUrl: z
-    .string(MENSAJE_COMPROBANTE)
-    .trim()
-    .max(500, MENSAJE_COMPROBANTE)
-    .refine(esImagenDelSitio, MENSAJE_COMPROBANTE),
-});
+export const esquemaCursoPostulacion = z
+  .object({
+    idCurso: opcional(identificador).default(null),
+    nombrePropuesto: opcional(nombreCurso).default(null),
+    codigoPropuesto: opcional(codigoCurso).default(null),
+    notaObtenida: z.coerce
+      .number(MENSAJE_NOTA)
+      .min(0, MENSAJE_NOTA)
+      .max(100, MENSAJE_NOTA)
+      .refine((valor) => Number.isInteger(Math.round(valor * 100)), MENSAJE_NOTA),
+    comprobanteUrl: z
+      .string(MENSAJE_COMPROBANTE)
+      .trim()
+      .max(500, MENSAJE_COMPROBANTE)
+      .refine(esImagenDelSitio, MENSAJE_COMPROBANTE),
+  })
+  .superRefine((datos, contexto) => {
+    if ((datos.idCurso === null) === (datos.nombrePropuesto === null)) {
+      contexto.addIssue({
+        code: "custom",
+        path: [datos.idCurso === null ? "nombrePropuesto" : "idCurso"],
+        message:
+          datos.idCurso === null
+            ? MENSAJE_CURSO_ELEGIDO
+            : "Elige un curso de la lista o escribe otro, pero no ambos.",
+      });
+    }
+  });
 
 export type DatosCursoPostulacion = z.infer<typeof esquemaCursoPostulacion>;
 
@@ -65,13 +115,44 @@ export const esquemaPostulacionTutor = z.object({
       MAXIMO_CURSOS_POSTULACION,
       `No puedes postularte a más de ${MAXIMO_CURSOS_POSTULACION} cursos.`
     )
-    .refine(
-      (cursos) => new Set(cursos.map((curso) => curso.idCurso)).size === cursos.length,
-      "Hay un curso repetido en la postulación."
-    ),
+    .refine((cursos) => {
+      // Un curso se repite si se eligió dos veces de la lista o si se escribió
+      // dos veces con Otro; el nombre se compara sin mayúsculas ni acentos.
+      const claves = cursos.map((curso) =>
+        curso.idCurso !== null
+          ? `id:${curso.idCurso}`
+          : `nombre:${normalizarNombreCurso(curso.nombrePropuesto ?? "")}`
+      );
+      return new Set(claves).size === claves.length;
+    }, "Hay un curso repetido en la postulación."),
 });
 
 export type DatosPostulacionTutor = z.infer<typeof esquemaPostulacionTutor>;
+
+/** Nombre de un curso para compararlo: sin mayúsculas, acentos ni espacios dobles. */
+export function normalizarNombreCurso(nombre: string): string {
+  return nombre
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLocaleLowerCase("es")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/**
+ * Un curso del catálogo, tal como lo crea o edita AEUVG.
+ *
+ * El código es único y se guarda en mayúsculas: es lo que se ve primero en el
+ * formulario y en el directorio, y dos cursos con el mismo código serían
+ * imposibles de distinguir.
+ */
+export const esquemaCursoAdmin = z.object({
+  codigo: codigoCurso,
+  nombre: nombreCurso,
+  activo: z.boolean("Indica si el curso está activo.").default(true),
+});
+
+export type DatosCursoAdmin = z.infer<typeof esquemaCursoAdmin>;
 
 /** Revisión de una postulación por parte de AEUVG. */
 export const esquemaRevisionPostulacion = z.object({
@@ -193,5 +274,10 @@ export const ETIQUETAS_CAMPO_TUTORIA: Record<string, string> = {
   fecha: "Fecha",
   idTutor: "Tutor",
   idCurso: "Curso",
+  nombrePropuesto: "Nombre del curso",
+  codigoPropuesto: "Código del curso",
+  codigo: "Código",
+  nombre: "Nombre",
+  activo: "Activo",
   observaciones: "Observaciones",
 };

@@ -6,7 +6,10 @@ import { useState } from "react";
 import { Alerta } from "@/components/ui/alerta";
 import { Boton } from "@/components/ui/boton";
 import { EtiquetaCampo } from "@/components/ui/etiqueta-campo";
+import { SelectorFecha } from "@/components/ui/selector-fecha";
+import { SelectorHora } from "@/components/ui/selector-hora";
 import type { TutorVista } from "@/lib/tutorias/consultas-tutorias";
+import { hoyEnGuatemala } from "@/lib/ui/calendario-selector";
 import {
   ETIQUETAS_DIA,
   ETIQUETAS_MODALIDAD,
@@ -16,15 +19,16 @@ import {
 const claseCampo =
   "border-borde bg-superficie text-texto focus:border-primario focus:ring-primario/30 w-full rounded-2xl border px-4 py-3 text-sm focus:ring-2 focus:outline-none";
 
-/** El día de hoy en Guatemala, como mínimo del campo de fecha. */
-function hoyEnGuatemala(): string {
-  return new Intl.DateTimeFormat("en-CA", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    timeZone: "America/Guatemala",
-  }).format(new Date());
-}
+/** El día de la semana de cada franja, en la convención de JavaScript. */
+const DIA_A_NUMERO: Record<string, number> = {
+  DOMINGO: 0,
+  LUNES: 1,
+  MARTES: 2,
+  MIERCOLES: 3,
+  JUEVES: 4,
+  VIERNES: 5,
+  SABADO: 6,
+};
 
 /**
  * Solicitud de una tutoría.
@@ -55,6 +59,10 @@ export function FormularioSolicitud({
 
   const franja = tutor.disponibilidades[Number(indiceFranja)];
 
+  // Solo el día de la franja elegida. Si todavía no hay franja, ninguno: sin
+  // horario no hay nada que agendar.
+  const diasPermitidos = franja ? [DIA_A_NUMERO[franja.diaSemana]] : [];
+
   /** Al cambiar de franja se heredan sus horas y su modalidad como punto de partida. */
   function elegirFranja(indice: string) {
     setIndiceFranja(indice);
@@ -64,6 +72,10 @@ export function FormularioSolicitud({
     setHoraInicio(elegida.horaInicio);
     setHoraFin(elegida.horaFin);
     setModalidad(elegida.modalidad === "AMBAS" ? "PRESENCIAL" : elegida.modalidad);
+
+    // El día elegido se descarta si ya no cae en el día de la nueva franja:
+    // conservarlo dejaría una fecha que el tutor no atiende.
+    setFecha("");
   }
 
   async function enviar(evento: React.FormEvent<HTMLFormElement>) {
@@ -183,18 +195,24 @@ export function FormularioSolicitud({
         )}
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-3">
-        <div className="flex flex-col gap-1.5">
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="flex flex-col gap-1.5 sm:col-span-2">
           <EtiquetaCampo htmlFor="fecha" obligatorio>
             Día
           </EtiquetaCampo>
-          <input
+          {/* El calendario solo deja elegir los días en los que el tutor
+              atiende esa franja: ofrecer el resto llevaría a pedir una fecha
+              que el servidor va a rechazar. */}
+          <SelectorFecha
             id="fecha"
-            type="date"
-            min={hoyEnGuatemala()}
-            value={fecha}
-            onChange={(evento) => setFecha(evento.target.value)}
-            className={claseCampo}
+            valor={fecha}
+            onCambiar={setFecha}
+            limites={{ minimo: hoyEnGuatemala(), diasPermitidos: diasPermitidos }}
+            placeholder={
+              franja
+                ? `Elige un ${ETIQUETAS_DIA[franja.diaSemana].toLocaleLowerCase("es")}`
+                : "Elige una fecha"
+            }
           />
         </div>
 
@@ -202,15 +220,13 @@ export function FormularioSolicitud({
           <EtiquetaCampo htmlFor="horaInicio" obligatorio>
             De
           </EtiquetaCampo>
-          <input
+          <SelectorHora
             id="horaInicio"
-            type="time"
-            step={300}
-            min={franja?.horaInicio}
-            max={franja?.horaFin}
-            value={horaInicio}
-            onChange={(evento) => setHoraInicio(evento.target.value)}
-            className={claseCampo}
+            valor={horaInicio}
+            onCambiar={setHoraInicio}
+            minimo={franja?.horaInicio}
+            maximo={franja?.horaFin}
+            paso={30}
           />
         </div>
 
@@ -218,15 +234,13 @@ export function FormularioSolicitud({
           <EtiquetaCampo htmlFor="horaFin" obligatorio>
             A
           </EtiquetaCampo>
-          <input
+          <SelectorHora
             id="horaFin"
-            type="time"
-            step={300}
-            min={franja?.horaInicio}
-            max={franja?.horaFin}
-            value={horaFin}
-            onChange={(evento) => setHoraFin(evento.target.value)}
-            className={claseCampo}
+            valor={horaFin}
+            onCambiar={setHoraFin}
+            minimo={horaInicio || franja?.horaInicio}
+            maximo={franja?.horaFin}
+            paso={30}
           />
         </div>
       </div>

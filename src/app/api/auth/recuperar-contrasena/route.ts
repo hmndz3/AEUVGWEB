@@ -23,7 +23,11 @@ export async function POST(solicitud: Request) {
 
     // La respuesta no distingue entre correos inexistentes, inválidos o limitados.
     return Response.json(respuestaUniforme, { status: 202 });
-  } catch {
+  } catch (error) {
+    console.error(
+      "Fallo al solicitar la recuperación de contraseña:",
+      error instanceof Error ? error.message : error
+    );
     return Response.json(respuestaUniforme, { status: 202 });
   }
 }

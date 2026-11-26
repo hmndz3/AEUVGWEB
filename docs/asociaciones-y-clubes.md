@@ -13,11 +13,27 @@ Implementado durante el Sprint 3 (HU-13 a HU-16). Cubre las secciones públicas 
 | `/admin/asociaciones`       | Administración | Listado con los registros de baja y su conteo de eventos.        |
 | `/admin/asociaciones/nueva` | Administración | Creación de una asociación.                                      |
 | `/admin/asociaciones/[id]`  | Administración | Edición, junta directiva y redes sociales.                       |
+| `/admin/sobre-aeuvg`        | Administración | Página Sobre AEUVG: textos, junta directiva y redes de AEUVG.    |
 | `/admin/clubes`             | Administración | Listado con los registros de baja y su conteo de eventos.        |
 | `/admin/clubes/nueva`       | Administración | Creación de un club.                                             |
 | `/admin/clubes/[id]`        | Administración | Edición y redes sociales.                                        |
 
-La asociación general AEUVG queda fuera del listado público y su detalle redirige a `/sobre-aeuvg`, que es su página institucional. Sí aparece en el panel, porque AEUVG administra su propia ficha desde ahí.
+Cada fila del listado del panel tiene un botón **Editar** que abre la ficha con sus datos actuales ya cargados, para corregir solo lo que haga falta sin volver a crear el registro. La junta directiva y las redes se editan en la misma pantalla.
+
+La asociación general AEUVG queda fuera de los dos listados, el público y el del panel, y su detalle redirige a `/sobre-aeuvg`, que es su página institucional. Su ficha se administra en la sección **Sobre AEUVG** del panel (ver más abajo); `/admin/asociaciones/[id]` con su identificador redirige ahí.
+
+## Sobre AEUVG
+
+La página institucional lee la ficha de la asociación cuyo nombre es `AEUVG` (`NOMBRE_ASOCIACION_GENERAL`). En `/admin/sobre-aeuvg` se editan:
+
+- **Quiénes somos, misión, visión, correo, teléfono e información de contacto**, con `PUT /api/admin/sobre-aeuvg` (`esquemaInformacionAeuvg`). Ningún campo es obligatorio: lo vacío se muestra como pendiente y el bloque de contacto se omite si no tiene datos. El nombre, las siglas y el logotipo no se editan, porque el nombre es con el que la página encuentra la ficha. Si la ficha no existe, el primer guardado la crea.
+- **La Junta Directiva** y **las redes sociales**, con los mismos editores y endpoints que las demás asociaciones.
+
+Cada integrante se presenta con la misma tarjeta (`TarjetaIntegrante`): retrato vertical sobre fondo blanco y un acercamiento suave al pasar el cursor. El editor muestra esa misma tarjeta como vista previa mientras se llena el formulario, y recomienda subir retratos verticales (3:4) con fondo blanco o transparente para que se fundan con la tarjeta como los actuales. La plataforma no recorta el fondo de la fotografía: una foto con otro fondo se ve con ese fondo.
+
+Los retratos de la junta inicial viven en `public/integrantes` y se guardan como `/integrantes/<archivo>`. El esquema de las organizaciones los acepta tal cual (`RUTA_RETRATO_INSTITUCIONAL`); antes, corregir el cargo de un integrante convertía la ruta en `https:///integrantes/…` y rompía la fotografía.
+
+`npm run db:railway:aeuvg` (`prisma/cargar-informacion-aeuvg.ts`) sigue sirviendo para la carga inicial, pero **sobrescribe** quiénes somos, misión, visión y la junta con los datos de `prisma/data/informacion-aeuvg.ts`. Una vez que AEUVG edite su información desde el panel, no debe volver a ejecutarse.
 
 ## Servicios
 
@@ -34,6 +50,8 @@ Las dos entidades comparten un grupo de endpoints con el tipo en la dirección (
 | `/api/admin/organizaciones/asociaciones/[id]/integrantes/[idInt]` | DELETE | Administración |
 | `/api/admin/organizaciones/[tipo]/[id]/redes`                     | POST   | Administración |
 | `/api/admin/organizaciones/[tipo]/[id]/redes/[idRed]`             | DELETE | Administración |
+
+| `/api/admin/sobre-aeuvg` | PUT | Administración |
 
 Un tipo que no sea `asociaciones` ni `clubes` responde 404. Las rutas de integrantes solo aceptan `asociaciones`: el requerimiento no contempla junta directiva para los clubes.
 
@@ -60,7 +78,7 @@ En la tarjeta de un evento los organizadores siguen siendo texto: la tarjeta ent
 
 ## Componentes compartidos
 
-`src/components/organizaciones/` reúne lo que usan las dos secciones: la tarjeta del listado, el encabezado del detalle, los bloques de texto opcionales, la junta directiva, el contacto y los enlaces a redes. La junta directiva es el mismo componente que usa `/sobre-aeuvg` desde este sprint.
+`src/components/organizaciones/` reúne lo que usan las dos secciones: la tarjeta del listado, el encabezado del detalle, los bloques de texto opcionales, la junta directiva, el contacto y los enlaces a redes. La junta directiva es el mismo componente que usa `/sobre-aeuvg` desde este sprint. Los retratos se muestran con `<img>` y no con `next/image`, porque los enlaces los escribe AEUVG y el optimizador rechaza los dominios no declarados.
 
 Los enlaces a redes se abren en otra pestaña con `rel="noreferrer noopener"`, y la presentación descarta los que no sean `http` o `https`: la validación del panel ya los rechaza, pero la base conserva lo que se cargó antes de este sprint.
 

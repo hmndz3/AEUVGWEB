@@ -24,3 +24,9 @@ export const ETIQUETAS_TIPO_NOTIFICACION: Record<string, string> = {
   [TIPOS_NOTIFICACION.horasBeca]: "Horas beca",
   [TIPOS_NOTIFICACION.evento]: "Eventos",
 };
+
+/**
+ * Evento del navegador con el que la pantalla de notificaciones avisa al
+ * encabezado que cambió el número de avisos sin leer.
+ */
+export const EVENTO_NOTIFICACIONES = "aeuvg:notificaciones";

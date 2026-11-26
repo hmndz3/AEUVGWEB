@@ -1,5 +1,6 @@
 import { protegerRuta } from "@/lib/auth/guardias";
 import { ROLES } from "@/lib/auth/roles";
+import { resolverEventoDeActividad } from "@/lib/horas-beca/actividad-evento";
 import { crearServicioLoteHoras } from "@/lib/horas-beca/crear-servicio-lote-horas";
 import { erroresPorCampo } from "@/validators/errores";
 import { esquemaLoteHoraAdmin } from "@/validators/hora-beca-admin";
@@ -37,7 +38,12 @@ export const POST = protegerRuta([ROLES.administrador], async (usuario, solicitu
     }
 
     const { carnets, ...datos } = validacion.data;
-    const resultado = await servicio.registrar(carnets, datos, usuario.idUsuario);
+    const actividad = await resolverEventoDeActividad(datos);
+    if (!actividad.valido) {
+      return Response.json({ errores: actividad.errores }, { status: 422, headers: sinCache });
+    }
+
+    const resultado = await servicio.registrar(carnets, actividad.datos, usuario.idUsuario);
 
     if (resultado.tipo === "invalido") {
       return Response.json(

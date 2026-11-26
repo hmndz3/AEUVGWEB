@@ -3,11 +3,11 @@ import { redirect } from "next/navigation";
 import { MarcoSitio } from "@/components/layout/marco-sitio";
 import { DatosPerfil } from "@/components/perfil/datos-perfil";
 import { EventosGuardadosPerfil } from "@/components/perfil/eventos-guardados";
-import { FormularioPerfil } from "@/components/perfil/formulario-perfil";
 import { FotoPerfil } from "@/components/perfil/foto-perfil";
 import { HorasBecaPerfil } from "@/components/perfil/horas-beca";
 import { InteresesPerfil } from "@/components/perfil/intereses";
 import { RecomendacionesPerfil } from "@/components/perfil/recomendaciones";
+import { TemaPerfil } from "@/components/perfil/tema";
 import { TutoriasPerfil } from "@/components/perfil/tutorias";
 import { verificarAcceso } from "@/lib/auth/guardias";
 import { listarCategorias } from "@/lib/eventos/consultas-eventos";
@@ -17,7 +17,7 @@ import {
   recomendarEventos,
 } from "@/lib/personalizacion/consultas-personalizacion";
 import { obtenerHorasBecaEstudiante } from "@/lib/perfil/consultas-horas-beca";
-import { listarCarrerasDisponibles, obtenerPerfil } from "@/lib/perfil/consultas-perfil";
+import { listarFacultadesDisponibles, obtenerPerfil } from "@/lib/perfil/consultas-perfil";
 import {
   listarTutoriasDeEstudiante,
   obtenerPostulacionDeEstudiante,
@@ -40,7 +40,7 @@ export default async function PaginaPerfil() {
   const ahora = new Date();
   const [
     perfil,
-    carreras,
+    facultades,
     guardados,
     horas,
     tutorias,
@@ -51,7 +51,7 @@ export default async function PaginaPerfil() {
     recomendados,
   ] = await Promise.all([
     obtenerPerfil(acceso.usuario.idUsuario),
-    listarCarrerasDisponibles(),
+    listarFacultadesDisponibles(),
     obtenerEventosGuardados(acceso.usuario.idUsuario, { ahora }),
     obtenerHorasBecaEstudiante(acceso.usuario.idUsuario),
     listarTutoriasDeEstudiante(acceso.usuario.idUsuario),
@@ -69,7 +69,7 @@ export default async function PaginaPerfil() {
   return (
     <MarcoSitio>
       <div className="mx-auto flex max-w-4xl flex-col gap-10 px-4 py-10 sm:px-6">
-        <DatosPerfil perfil={perfil} />
+        <DatosPerfil perfil={perfil} facultades={facultades} />
 
         <FotoPerfil
           nombre={perfil.nombreCompleto}
@@ -91,11 +91,7 @@ export default async function PaginaPerfil() {
 
         <InteresesPerfil categorias={categorias} elegidas={intereses} />
 
-        <FormularioPerfil
-          telefono={perfil.telefono}
-          idCarrera={perfil.idCarrera}
-          carreras={carreras}
-        />
+        <TemaPerfil />
       </div>
     </MarcoSitio>
   );

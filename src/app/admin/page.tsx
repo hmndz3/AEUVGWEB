@@ -1,7 +1,8 @@
-import { SECCIONES_ADMIN } from "@/components/admin/secciones";
-import { Tarjeta, TarjetaTexto, TarjetaTitulo } from "@/components/ui/tarjeta";
+import { AccesosSecciones, type DatosSecciones } from "@/components/admin/accesos-secciones";
+import { Tarjeta } from "@/components/ui/tarjeta";
 import { verificarAcceso } from "@/lib/auth/guardias";
 import { ROLES } from "@/lib/auth/roles";
+import { NOMBRE_ASOCIACION_GENERAL } from "@/lib/inicio/consultas-inicio";
 import { obtenerPrisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -25,11 +26,81 @@ async function obtenerIndicadores(): Promise<Indicador[]> {
   ];
 }
 
+/** "1 evento" o "3 eventos". */
+function cantidad(valor: number, singular: string, plural: string): string {
+  return `${valor} ${valor === 1 ? singular : plural}`;
+}
+
+/**
+ * Un dato breve por sección, para que el acceso diga además qué hay pendiente
+ * o cuánto contenido tiene. Si la consulta falla, las tarjetas se muestran sin
+ * él: siguen sirviendo para navegar.
+ */
+async function obtenerDatosSecciones(): Promise<DatosSecciones> {
+  const prisma = obtenerPrisma();
+  const sinGeneral = {
+    NOT: { nombre: { equals: NOMBRE_ASOCIACION_GENERAL, mode: "insensitive" as const } },
+  };
+
+  try {
+    const [
+      cuentas,
+      proximos,
+      borradores,
+      integrantes,
+      asociaciones,
+      clubes,
+      pendientes,
+      tutores,
+      acreditadas,
+    ] = await Promise.all([
+      prisma.usuario.count({ where: { estado: "ACTIVO" } }),
+      prisma.evento.count({ where: { estado: "PUBLICADO", fechaInicio: { gte: new Date() } } }),
+      prisma.evento.count({ where: { estado: "BORRADOR" } }),
+      prisma.integranteAsociacion.count({
+        where: {
+          activo: true,
+          asociacion: { nombre: { equals: NOMBRE_ASOCIACION_GENERAL, mode: "insensitive" } },
+        },
+      }),
+      prisma.asociacion.count({ where: { activo: true, ...sinGeneral } }),
+      prisma.club.count({ where: { activo: true } }),
+      prisma.registroHoraBeca.count({ where: { estado: "PENDIENTE" } }),
+      prisma.tutor.count({ where: { estado: "ACTIVO" } }),
+      prisma.registroHoraBeca.count({ where: { estado: "ACREDITADA" } }),
+    ]);
+
+    return {
+      "/admin/estudiantes": cantidad(cuentas, "cuenta activa", "cuentas activas"),
+      "/admin/eventos": cantidad(proximos, "evento próximo", "eventos próximos"),
+      "/admin/calendario": cantidad(borradores, "borrador sin publicar", "borradores sin publicar"),
+      "/admin/sobre-aeuvg": cantidad(
+        integrantes,
+        "integrante en la junta",
+        "integrantes en la junta"
+      ),
+      "/admin/asociaciones": cantidad(asociaciones, "asociación activa", "asociaciones activas"),
+      "/admin/clubes": cantidad(clubes, "club activo", "clubes activos"),
+      "/admin/horas-beca": cantidad(
+        pendientes,
+        "registro por acreditar",
+        "registros por acreditar"
+      ),
+      "/admin/tutorias": cantidad(tutores, "tutor activo", "tutores activos"),
+      "/admin/reportes": cantidad(acreditadas, "registro acreditado", "registros acreditados"),
+    };
+  } catch {
+    return {};
+  }
+}
+
 export default async function PaginaResumenAdmin() {
   const acceso = await verificarAcceso([ROLES.administrador]);
-  const indicadores = acceso.tipo === "autorizado" ? await obtenerIndicadores() : [];
+  const [indicadores, datos] =
+    acceso.tipo === "autorizado"
+      ? await Promise.all([obtenerIndicadores(), obtenerDatosSecciones()])
+      : [[], {}];
   const nombre = acceso.tipo === "autorizado" ? acceso.usuario.nombreCompleto : "";
-  const secciones = SECCIONES_ADMIN.filter((seccion) => seccion.href !== "/admin");
 
   return (
     <div className="flex flex-col gap-8">
@@ -47,17 +118,7 @@ export default async function PaginaResumenAdmin() {
         ))}
       </div>
 
-      <section className="flex flex-col gap-4">
-        <h2 className="text-texto text-xl font-bold">Secciones del panel</h2>
-        <div className="grid gap-4 md:grid-cols-2">
-          {secciones.map((seccion) => (
-            <Tarjeta key={seccion.href}>
-              <TarjetaTitulo>{seccion.texto}</TarjetaTitulo>
-              <TarjetaTexto className="mt-2">{seccion.descripcion}</TarjetaTexto>
-            </Tarjeta>
-          ))}
-        </div>
-      </section>
+      <AccesosSecciones datos={datos} />
     </div>
   );
 }

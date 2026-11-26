@@ -28,6 +28,10 @@ Las otras dos capas son solo de experiencia de uso y **no protegen nada por sí 
 
 Quien llegue directamente a una ruta protegida vuelve a pasar por la comprobación del servidor.
 
+### Resumen del panel
+
+`/admin` muestra cuatro indicadores y, debajo, un acceso a cada sección (`src/components/admin/accesos-secciones.tsx`), agrupados en **Contenido del sitio** y **Estudiantes y programas**. Cada tarjeta es un enlace a su sección, con su ícono, su descripción y un dato breve (eventos próximos, registros por acreditar, tutores activos…). Si la consulta de esos datos falla, las tarjetas se muestran sin el dato y siguen sirviendo para navegar. Las secciones salen de `SECCIONES_ADMIN`, la misma lista que la barra lateral.
+
 ## 3. Cuentas de administrador
 
 Las cuentas de administrador no se crean desde la plataforma: se otorgan de forma explícita con un script.

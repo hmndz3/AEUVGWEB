@@ -48,6 +48,11 @@ export type DatosRegistroHora = {
   fechaActividad: Date;
   horarioApoyo: string;
   descripcionActividad: string;
+  /**
+   * Evento en el que se apoyó. Cuando viene, la descripción ya trae su nombre:
+   * la resuelve la ruta con `aplicarEventoDeActividad` antes de llegar aquí.
+   */
+  idEvento?: number | null;
   cantidadHoras: number;
   observaciones: string | null;
 };
@@ -228,6 +233,7 @@ export class ServicioHorasBeca {
         fechaActividad: datos.fechaActividad,
         horarioApoyo: datos.horarioApoyo.trim(),
         descripcionActividad: datos.descripcionActividad.trim(),
+        idEvento: datos.idEvento ?? null,
         cantidadHoras: datos.cantidadHoras,
         observaciones: datos.observaciones,
         textoBusqueda: textoDeBusquedaRegistroHora({

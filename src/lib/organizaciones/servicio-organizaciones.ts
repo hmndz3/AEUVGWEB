@@ -1,3 +1,4 @@
+import { NOMBRE_ASOCIACION_GENERAL } from "@/lib/inicio/consultas-inicio";
 import {
   textoDeBusquedaAsociacion,
   textoDeBusquedaClub,
@@ -11,6 +12,7 @@ import {
   ETIQUETA_TIPO,
   type DatosAsociacionAdmin,
   type DatosClubAdmin,
+  type DatosInformacionAeuvg,
   type DatosIntegranteAdmin,
   type DatosRedSocialAdmin,
   type EntradaOrganizacion,
@@ -165,6 +167,43 @@ export class ServicioOrganizaciones {
     const eliminada = await this.repositorio.eliminar(tipo, id);
 
     return eliminada ? { tipo: "eliminada" } : { tipo: "no_encontrada" };
+  }
+
+  /** La ficha de AEUVG tal como se administra, o null mientras no exista. */
+  async obtenerInformacionGeneral() {
+    const id = await this.repositorio.idAsociacionGeneral();
+
+    return id === null ? null : this.repositorio.obtener("asociaciones", id);
+  }
+
+  /**
+   * Guarda la información institucional de AEUVG desde la pantalla Sobre AEUVG
+   * del panel.
+   *
+   * Solo cambia los textos que presenta esa página: el nombre, las siglas y el
+   * logotipo se conservan tal como están, porque el nombre es con el que la
+   * página encuentra la ficha. Si la ficha todavía no existe, se crea, para que
+   * AEUVG no dependa de un script para publicar su información por primera vez.
+   */
+  async guardarInformacionGeneral(datos: DatosInformacionAeuvg): Promise<ResultadoOrganizacion> {
+    const id = await this.repositorio.idAsociacionGeneral();
+    const actual = id === null ? null : await this.repositorio.obtener("asociaciones", id);
+
+    const ficha = {
+      nombre: actual?.nombre ?? NOMBRE_ASOCIACION_GENERAL,
+      siglas: actual?.siglas ?? null,
+      imagenUrl: actual?.imagenUrl ?? null,
+      ...datos,
+    };
+    const persistidos = { ...ficha, textoBusqueda: textoDeBusquedaAsociacion(ficha) };
+
+    if (!actual) {
+      return { tipo: "guardada", id: await this.repositorio.crearAsociacion(persistidos) };
+    }
+
+    const actualizada = await this.repositorio.actualizarAsociacion(actual.id, persistidos);
+
+    return actualizada ? { tipo: "guardada", id: actual.id } : { tipo: "no_encontrada" };
   }
 
   async obtener(tipo: TipoOrganizacion, id: number) {

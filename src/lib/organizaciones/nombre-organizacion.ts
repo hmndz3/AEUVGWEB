@@ -19,3 +19,17 @@ export function nombreConSiglas(organizacion: ConNombre): string {
     ? `${organizacion.siglas} — ${organizacion.nombre}`
     : organizacion.nombre;
 }
+
+/**
+ * Iniciales para quienes no tienen fotografía o logotipo registrado. Vive aquí,
+ * sin dependencias del servidor, porque también la usan vistas previas del
+ * panel que se dibujan en el navegador.
+ */
+export function inicialesDeNombre(nombre: string): string {
+  const palabras = nombre.trim().split(/\s+/).filter(Boolean);
+  if (palabras.length === 0) return "?";
+
+  return (
+    (palabras[0][0] ?? "") + (palabras.length > 1 ? (palabras[1][0] ?? "") : "")
+  ).toUpperCase();
+}

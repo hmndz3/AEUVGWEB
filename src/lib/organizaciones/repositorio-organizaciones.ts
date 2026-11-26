@@ -1,5 +1,6 @@
 import type { PrismaClient } from "@prisma/client";
 
+import { NOMBRE_ASOCIACION_GENERAL } from "@/lib/inicio/consultas-inicio";
 import { obtenerPrisma } from "@/lib/prisma";
 import type {
   DatosIntegranteAdmin,
@@ -77,6 +78,8 @@ export interface RepositorioOrganizaciones {
   ): Promise<boolean>;
   /** Igual que nombreDisponible, para las siglas de una asociación. */
   siglasDisponibles(siglas: string, excepto: number | null): Promise<boolean>;
+  /** Identificador de la ficha de AEUVG, o null mientras no exista. */
+  idAsociacionGeneral(): Promise<number | null>;
   crearAsociacion(datos: DatosAsociacionPersistidos): Promise<number>;
   crearClub(datos: DatosClubPersistidos): Promise<number>;
   actualizarAsociacion(idAsociacion: number, datos: DatosAsociacionPersistidos): Promise<boolean>;
@@ -171,6 +174,15 @@ export class RepositorioOrganizacionesPrisma implements RepositorioOrganizacione
     });
 
     return existente === null;
+  }
+
+  async idAsociacionGeneral(): Promise<number | null> {
+    const asociacion = await this.prisma.asociacion.findFirst({
+      where: { nombre: { equals: NOMBRE_ASOCIACION_GENERAL, mode: "insensitive" } },
+      select: { idAsociacion: true },
+    });
+
+    return asociacion?.idAsociacion ?? null;
   }
 
   async crearAsociacion(datos: DatosAsociacionPersistidos): Promise<number> {

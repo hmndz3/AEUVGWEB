@@ -17,11 +17,43 @@ export async function listarCursos(): Promise<CursoDisponible[]> {
   });
 }
 
+/** Un curso del catálogo como lo ve el panel, con dónde se usa. */
+export type CursoPanel = CursoDisponible & {
+  activo: boolean;
+  /** Lo escribió un estudiante con "Otro" y AEUVG todavía no lo admite. */
+  propuesto: boolean;
+  postulaciones: number;
+  tutores: number;
+  tutorias: number;
+};
+
+/**
+ * Todo el catálogo de cursos para el panel: los propuestos primero, porque son
+ * los que esperan una decisión, y después los activos antes que los inactivos.
+ */
+export async function listarCursosPanel(): Promise<CursoPanel[]> {
+  const filas = await obtenerPrisma().curso.findMany({
+    orderBy: [{ propuesto: "desc" }, { activo: "desc" }, { codigo: "asc" }],
+    select: {
+      idCurso: true,
+      codigo: true,
+      nombre: true,
+      activo: true,
+      propuesto: true,
+      _count: { select: { postulaciones: true, tutores: true, tutorias: true } },
+    },
+  });
+
+  return filas.map(({ _count, ...curso }) => ({ ...curso, ..._count }));
+}
+
 /** Un curso de la postulación, con lo que la respalda. */
 export type CursoPostulado = {
   idCurso: number;
   codigo: string;
   nombre: string;
+  /** Lo escribió el estudiante con "Otro": entra al catálogo si se aprueba. */
+  propuesto: boolean;
   notaObtenida: number | null;
   comprobanteUrl: string;
 };
@@ -32,6 +64,7 @@ export type PostulacionAdmin = {
   carnet: string;
   nombreCompleto: string;
   correoUvg: string;
+  fotoUrl: string | null;
   carrera: string;
   facultad: string;
   estado: EstadoPostulacion;
@@ -56,6 +89,7 @@ const CAMPOS_POSTULACION = {
       carnet: true,
       nombreCompleto: true,
       correoUvg: true,
+      fotoUrl: true,
       carrera: { select: { nombre: true, facultad: { select: { nombre: true } } } },
     },
   },
@@ -64,7 +98,7 @@ const CAMPOS_POSTULACION = {
     select: {
       notaObtenida: true,
       comprobanteUrl: true,
-      curso: { select: { idCurso: true, codigo: true, nombre: true } },
+      curso: { select: { idCurso: true, codigo: true, nombre: true, propuesto: true } },
     },
   },
 } as const;
@@ -78,6 +112,7 @@ function aPostulacion(fila: FilaPostulacion): PostulacionAdmin {
     carnet: fila.estudiante.carnet,
     nombreCompleto: fila.estudiante.nombreCompleto,
     correoUvg: fila.estudiante.correoUvg,
+    fotoUrl: fila.estudiante.fotoUrl,
     carrera: fila.estudiante.carrera.nombre,
     facultad: fila.estudiante.carrera.facultad.nombre,
     estado: fila.estado,
@@ -90,6 +125,7 @@ function aPostulacion(fila: FilaPostulacion): PostulacionAdmin {
       idCurso: curso.curso.idCurso,
       codigo: curso.curso.codigo,
       nombre: curso.curso.nombre,
+      propuesto: curso.curso.propuesto,
       notaObtenida: curso.notaObtenida === null ? null : Number(curso.notaObtenida),
       comprobanteUrl: curso.comprobanteUrl,
     })),
@@ -152,6 +188,11 @@ export async function contarPostulacionesPorEstado(): Promise<Record<EstadoPostu
   for (const grupo of grupos) conteo[grupo.estado] = grupo._count._all;
 
   return conteo;
+}
+
+/** Cursos que propusieron estudiantes con "Otro" y esperan que AEUVG los admita. */
+export async function contarCursosPropuestos(): Promise<number> {
+  return obtenerPrisma().curso.count({ where: { propuesto: true } });
 }
 
 /** La postulación del estudiante de la sesión, si ya envió alguna. */
@@ -319,9 +360,33 @@ export async function obtenerTutorDeUsuario(idUsuario: number): Promise<TutorVis
   return fila ? aTutor(fila) : null;
 }
 
-/** Todos los tutores del panel, incluidos los inactivos y los suspendidos. */
-export async function listarTutoresPanel(): Promise<TutorVista[]> {
+export type FiltrosTutoresPanel = {
+  /** Nombre o carnet. */
+  q?: string;
+  estado?: EstadoTutor;
+  idCurso?: number;
+};
+
+/**
+ * Tutores del panel, incluidos los inactivos y los suspendidos, con los
+ * filtros de la pantalla: nombre o carnet, estado y curso que imparten.
+ */
+export async function listarTutoresPanel(filtros: FiltrosTutoresPanel = {}): Promise<TutorVista[]> {
+  const where: Prisma.TutorWhereInput = {};
+
+  if (filtros.estado) where.estado = filtros.estado;
+  if (filtros.idCurso) where.cursos = { some: { activo: true, idCurso: filtros.idCurso } };
+  if (filtros.q) {
+    where.estudiante = {
+      OR: [
+        { nombreCompleto: { contains: filtros.q, mode: "insensitive" } },
+        { carnet: { contains: filtros.q, mode: "insensitive" } },
+      ],
+    };
+  }
+
   const filas = await obtenerPrisma().tutor.findMany({
+    where,
     orderBy: [{ estado: "asc" }, { estudiante: { nombreCompleto: "asc" } }],
     select: CAMPOS_TUTOR,
   });
@@ -342,6 +407,13 @@ export type TutoriaVista = {
   /** Nombre de la otra parte: el tutor para el estudiante y al revés. */
   tutor: string;
   estudiante: string;
+  /** Con qué presentarse a la cita: la ficha los muestra según quién mire. */
+  tutorFotoUrl: string | null;
+  tutorCarnet: string;
+  tutorContacto: string | null;
+  estudianteFotoUrl: string | null;
+  estudianteCarnet: string;
+  estudianteCorreo: string;
 };
 
 const CAMPOS_TUTORIA = {
@@ -354,8 +426,15 @@ const CAMPOS_TUTORIA = {
   estado: true,
   observaciones: true,
   curso: { select: { codigo: true, nombre: true } },
-  tutor: { select: { estudiante: { select: { nombreCompleto: true } } } },
-  estudiante: { select: { nombreCompleto: true } },
+  tutor: {
+    select: {
+      informacionContacto: true,
+      estudiante: { select: { nombreCompleto: true, carnet: true, fotoUrl: true } },
+    },
+  },
+  estudiante: {
+    select: { nombreCompleto: true, carnet: true, correoUvg: true, fotoUrl: true },
+  },
 } as const;
 
 type FilaTutoria = Prisma.TutoriaGetPayload<{ select: typeof CAMPOS_TUTORIA }>;
@@ -373,6 +452,12 @@ function aTutoria(fila: FilaTutoria): TutoriaVista {
     curso: fila.curso,
     tutor: fila.tutor.estudiante.nombreCompleto,
     estudiante: fila.estudiante.nombreCompleto,
+    tutorFotoUrl: fila.tutor.estudiante.fotoUrl,
+    tutorCarnet: fila.tutor.estudiante.carnet,
+    tutorContacto: fila.tutor.informacionContacto,
+    estudianteFotoUrl: fila.estudiante.fotoUrl,
+    estudianteCarnet: fila.estudiante.carnet,
+    estudianteCorreo: fila.estudiante.correoUvg,
   };
 }
 

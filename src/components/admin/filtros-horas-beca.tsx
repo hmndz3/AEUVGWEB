@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { CampoFecha } from "@/components/ui/campo-fecha";
+
 import { Boton } from "@/components/ui/boton";
 import type { FacultadFiltro } from "@/lib/horas-beca/consultas-facultades";
 import {
@@ -107,23 +109,11 @@ export function FiltrosHorasBecaPanel({
       </Campo>
 
       <Campo etiqueta="Desde" nombre="desde">
-        <input
-          id="desde"
-          name="desde"
-          type="date"
-          defaultValue={filtros.desde ?? ""}
-          className={claseCampo}
-        />
+        <CampoFecha id="desde" name="desde" valorInicial={filtros.desde ?? ""} />
       </Campo>
 
       <Campo etiqueta="Hasta" nombre="hasta">
-        <input
-          id="hasta"
-          name="hasta"
-          type="date"
-          defaultValue={filtros.hasta ?? ""}
-          className={claseCampo}
-        />
+        <CampoFecha id="hasta" name="hasta" valorInicial={filtros.hasta ?? ""} />
       </Campo>
 
       <Campo etiqueta="Cuenta" nombre="vinculo">

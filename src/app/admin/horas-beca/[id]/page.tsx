@@ -2,8 +2,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { FormularioHoraBeca } from "@/components/admin/formulario-hora-beca";
+import { listarEventosDeActividad } from "@/lib/horas-beca/actividad-evento";
 import { obtenerRegistroHoraBeca } from "@/lib/horas-beca/consultas-horas-beca";
 import {
+  ACTIVIDAD_OTRA,
   destinoPanelHoras,
   diaParaFormulario,
   formatearFechaAcreditacion,
@@ -24,7 +26,11 @@ export default async function Pagina({
 
   if (!Number.isSafeInteger(id) || id <= 0) notFound();
 
-  const [registro, parametros] = await Promise.all([obtenerRegistroHoraBeca(id), searchParams]);
+  const [registro, parametros, eventos] = await Promise.all([
+    obtenerRegistroHoraBeca(id),
+    searchParams,
+    listarEventosDeActividad(),
+  ]);
 
   if (!registro) notFound();
 
@@ -57,6 +63,7 @@ export default async function Pagina({
       <FormularioHoraBeca
         id={id}
         destino={destino}
+        eventos={eventos}
         valoresIniciales={{
           carnet: registro.carnet,
           // Se presenta el nombre con el que está guardado el registro: si la
@@ -65,6 +72,9 @@ export default async function Pagina({
           fechaActividad: diaParaFormulario(registro.fechaActividad),
           horaInicio: horario?.inicio ?? "",
           horaFin: horario?.fin ?? "",
+          // Los registros sin evento (anteriores, importados o de otra
+          // actividad) se abren con su descripción escrita a mano.
+          idEvento: registro.idEvento ? String(registro.idEvento) : ACTIVIDAD_OTRA,
           descripcionActividad: registro.descripcionActividad,
           cantidadHoras: String(registro.cantidadHoras),
           observaciones: registro.observaciones ?? "",

@@ -11,11 +11,11 @@ import { obtenerEventosTren, type EventoResumen } from "@/lib/inicio/consultas-i
  */
 const TITULAR: { texto: string; clase?: string }[] = [
   { texto: "Tu" },
-  { texto: "comunidad,", clase: "text-[#00806b]" },
+  { texto: "comunidad,", clase: "text-sobre-turquesa" },
   { texto: "tus" },
-  { texto: "eventos,", clase: "text-[#d93f3c]" },
+  { texto: "eventos,", clase: "text-sobre-coral" },
   { texto: "tu" },
-  { texto: "voz", clase: "text-[#a66a00]" },
+  { texto: "voz", clase: "text-sobre-ambar" },
   { texto: "en" },
   { texto: "UVG" },
 ];

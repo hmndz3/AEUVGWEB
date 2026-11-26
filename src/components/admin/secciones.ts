@@ -17,6 +17,11 @@ export const SECCIONES_ADMIN = [
     descripcion: "Vista mensual de las actividades, con sus borradores y cancelados.",
   },
   {
+    href: "/admin/sobre-aeuvg",
+    texto: "Sobre AEUVG",
+    descripcion: "Presentación, misión, visión, junta directiva y contacto de AEUVG.",
+  },
+  {
     href: "/admin/asociaciones",
     texto: "Asociaciones",
     descripcion: "Información, junta directiva e integrantes de cada asociación.",
@@ -39,7 +44,7 @@ export const SECCIONES_ADMIN = [
     // administran juntos en lugar de en dos secciones separadas.
     href: "/admin/tutorias",
     texto: "Tutorías",
-    descripcion: "Postulaciones para ser tutor y tutores activos con sus cursos.",
+    descripcion: "Tutores con sus cursos, postulaciones para ser tutor y catálogo de cursos.",
   },
   {
     href: "/admin/reportes",

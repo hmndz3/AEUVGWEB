@@ -231,10 +231,10 @@ export function BuscadorEstudiante({
       )}
 
       {mostrarCuenta && cuenta && !visibles && (
-        <p className="mt-1.5 flex items-center gap-2 text-xs font-semibold text-[#00695a]">
+        <p className="text-sobre-turquesa mt-1.5 flex items-center gap-2 text-xs font-semibold">
           <span
             aria-hidden
-            className="bg-turquesa/20 grid size-6 shrink-0 place-items-center rounded-full text-[0.6rem] font-bold text-[#00695a]"
+            className="bg-turquesa/20 text-sobre-turquesa grid size-6 shrink-0 place-items-center rounded-full text-[0.6rem] font-bold"
           >
             {inicialesDe(cuenta.nombreCompleto)}
           </span>

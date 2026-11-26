@@ -21,6 +21,14 @@ export const RUTA_IMAGEN_PROPIA = /^\/api\/imagenes\/[0-9a-f]{32}\.(jpg|png|webp
 export const RUTA_IMAGEN_DEMOSTRACION = /^\/demo\/(eventos|asociaciones)\/[a-z0-9-]+\.svg$/;
 
 /**
+ * Retratos de la Junta Directiva de AEUVG versionados en public/integrantes
+ * (prisma/cargar-informacion-aeuvg.ts). Solo los admite la ficha de las
+ * organizaciones: son fotografías institucionales, no algo que un estudiante
+ * deba poder usar como su foto de perfil.
+ */
+export const RUTA_RETRATO_INSTITUCIONAL = /^\/integrantes\/[a-z0-9-]+\.(jpg|jpeg|png|webp)$/;
+
+/**
  * Indica si el valor es una imagen servida por el propio sitio, sin dominio.
  * Esas rutas se guardan tal cual: completarlas con https:// las rompería.
  */

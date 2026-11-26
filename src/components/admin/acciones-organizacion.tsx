@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -18,9 +19,11 @@ const CONFIRMACIONES: Record<Accion, string> = {
 /**
  * Acciones de una fila del listado del panel.
  *
- * Las tres cambian lo que ve el estudiantado, así que ninguna se ejecuta sin
- * confirmar. Tras aplicarlas se refresca la ruta para que la tabla muestre el
- * estado real y no una versión optimista.
+ * Editar abre la ficha con sus datos actuales ya cargados, para corregir solo
+ * lo que haga falta sin volver a crear el registro. Las otras tres cambian lo
+ * que ve el estudiantado, así que ninguna se ejecuta sin confirmar. Tras
+ * aplicarlas se refresca la ruta para que la tabla muestre el estado real y no
+ * una versión optimista.
  */
 export function AccionesOrganizacion({
   tipo,
@@ -80,6 +83,15 @@ export function AccionesOrganizacion({
   return (
     <div className="flex flex-col items-end gap-1">
       <div className="flex flex-wrap justify-end gap-2">
+        {/* Con la forma de los botones vecinos, aunque es un enlace: abre otra
+            pantalla en lugar de ejecutar una acción. */}
+        <Link
+          href={`/admin/${tipo}/${id}`}
+          className="border-borde bg-superficie text-texto hover:bg-superficie-suave focus-visible:ring-primario inline-flex h-9 items-center justify-center rounded-full border px-4 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+        >
+          Editar
+        </Link>
+
         {activo ? (
           <Boton
             tamano="sm"

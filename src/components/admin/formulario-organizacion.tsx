@@ -35,7 +35,7 @@ export const VALORES_ORGANIZACION_VACIOS: ValoresOrganizacion = {
   imagenUrl: "",
 };
 
-const claseCampo =
+export const claseCampo =
   "border-borde bg-superficie text-texto focus:border-primario focus:ring-primario/30 w-full rounded-2xl border px-4 py-3 text-sm focus:ring-2 focus:outline-none";
 
 /**
@@ -43,7 +43,7 @@ const claseCampo =
  * el control debe llevar además required para que los lectores de pantalla lo
  * anuncien como requerido.
  */
-function Campo({
+export function Campo({
   etiqueta,
   nombre,
   error,

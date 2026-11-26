@@ -136,3 +136,9 @@ export function partesDelHorario(valor: string): { inicio: string; fin: string }
 export function componerHorario(inicio: string, fin: string): string {
   return inicio && fin ? `${inicio}-${fin}` : "";
 }
+
+/**
+ * Valor del selector de actividad del formulario de horas que abre la
+ * descripción escrita a mano, para los apoyos que no fueron un evento.
+ */
+export const ACTIVIDAD_OTRA = "otra";

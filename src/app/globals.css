@@ -31,6 +31,19 @@
   --color-texto: #1c162b;
   --color-texto-suave: #6e6580;
 
+  /*
+   * Color del texto sobre un acento rebajado (bg-turquesa/15 y compañía).
+   * Existen como tokens y no escritos a mano en cada ficha porque el modo
+   * oscuro los invierte: sobre un fondo oscuro, un verde oscuro no se lee.
+   */
+  --color-sobre-turquesa: #00695a;
+  --color-sobre-ambar: #8a5600;
+  --color-sobre-magenta: #a3145f;
+  --color-sobre-lavanda: #5a35e8;
+  --color-sobre-cielo: #0b5f8a;
+  --color-sobre-coral: #d93f3c;
+  --color-sobre-lima: #3f7d1c;
+
   /* Estados */
   --color-exito: #15b67a;
   --color-advertencia: #ffa31a;
@@ -72,4 +85,39 @@
 body {
   background: var(--color-fondo);
   color: var(--color-texto);
+}
+
+/*
+ * Modo oscuro.
+ *
+ * Se activa con data-tema="oscuro" en <html> y no con la media query sola: la
+ * preferencia se elige desde el perfil y tiene que poder diferir de la del
+ * sistema. El guion del layout resuelve cuál aplicar antes de pintar, de modo
+ * que no haya un destello claro al cargar.
+ *
+ * Solo se redefinen los neutros y los textos sobre acento. Los acentos del
+ * logo se quedan igual: son la identidad de AEUVG y apagarlos convertiría el
+ * modo oscuro en otro sitio.
+ */
+:root[data-tema="oscuro"] {
+  --color-fondo: #141026;
+  --color-superficie: #1d1833;
+  --color-superficie-suave: #272040;
+  --color-borde: #362e52;
+  --color-texto: #f2eefb;
+  --color-texto-suave: #a79fc2;
+  --color-primario-suave: #2d2456;
+
+  --color-sobre-turquesa: #5fe8cd;
+  --color-sobre-ambar: #ffc879;
+  --color-sobre-magenta: #ff93c6;
+  --color-sobre-lavanda: #c4abff;
+  --color-sobre-cielo: #85d6ff;
+  --color-sobre-coral: #ff9a98;
+  --color-sobre-lima: #b2e58c;
+}
+
+/* La imagen de fondo del navegador (barras, campos nativos) sigue al tema. */
+:root[data-tema="oscuro"] {
+  color-scheme: dark;
 }

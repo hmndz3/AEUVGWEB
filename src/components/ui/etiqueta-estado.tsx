@@ -4,10 +4,10 @@ type Tono = "pendiente" | "acreditada" | "neutro" | "informativo" | "error";
 
 const TONOS: Record<Tono, string> = {
   // Los estados de horas beca conservan el mismo color en toda la plataforma.
-  pendiente: "bg-ambar/15 text-[#8a5600]",
-  acreditada: "bg-turquesa/15 text-[#00695a]",
+  pendiente: "bg-ambar/15 text-sobre-ambar",
+  acreditada: "bg-turquesa/15 text-sobre-turquesa",
   neutro: "bg-superficie-suave text-texto-suave",
-  informativo: "bg-primario-suave text-primario-fuerte",
+  informativo: "bg-primario-suave text-sobre-lavanda",
   error: "bg-error/15 text-error",
 };
 

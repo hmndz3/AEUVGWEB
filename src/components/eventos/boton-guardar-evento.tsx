@@ -87,7 +87,7 @@ export function BotonGuardarEvento({
             "focus-visible:ring-primario focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
             "disabled:pointer-events-none disabled:opacity-50",
             guardado
-              ? "bg-primario-suave text-primario-fuerte"
+              ? "bg-primario-suave text-sobre-lavanda"
               : "border-borde bg-superficie text-texto hover:bg-superficie-suave border"
           )}
         >

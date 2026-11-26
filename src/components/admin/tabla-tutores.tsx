@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import { Avatar } from "@/components/ui/avatar";
 import { EtiquetaEstado } from "@/components/ui/etiqueta-estado";
 import {
   Tabla,
@@ -74,10 +75,19 @@ export function TablaTutores({ tutores }: { tutores: TutorVista[] }) {
           {tutores.map((tutor) => (
             <TablaFila key={tutor.idTutor}>
               <TablaCelda>
-                <span className="text-texto block font-semibold">{tutor.nombreCompleto}</span>
-                <span className="text-texto-suave block text-xs">
-                  <span className="font-mono">{tutor.carnet}</span> · {tutor.carrera}
-                </span>
+                <div className="flex items-center gap-3">
+                  <Avatar
+                    nombre={tutor.nombreCompleto}
+                    fotoUrl={tutor.fotoUrl}
+                    tamano="size-9 text-xs"
+                  />
+                  <div className="min-w-0">
+                    <span className="text-texto block font-semibold">{tutor.nombreCompleto}</span>
+                    <span className="text-texto-suave block text-xs">
+                      <span className="font-mono">{tutor.carnet}</span> · {tutor.carrera}
+                    </span>
+                  </div>
+                </div>
               </TablaCelda>
               <TablaCelda className="text-texto-suave max-w-[18rem] text-sm">
                 {tutor.cursos.length === 0

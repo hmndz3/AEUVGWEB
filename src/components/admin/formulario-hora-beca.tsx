@@ -6,10 +6,14 @@ import { useState } from "react";
 import { Alerta } from "@/components/ui/alerta";
 import { Boton } from "@/components/ui/boton";
 import { EtiquetaCampo, NotaCamposObligatorios } from "@/components/ui/etiqueta-campo";
+import { SelectorFecha } from "@/components/ui/selector-fecha";
+import { SelectorHora } from "@/components/ui/selector-hora";
 import { BuscadorEstudiante } from "@/components/admin/buscador-estudiante";
+import { SelectorActividad } from "@/components/admin/selector-actividad";
 import { inicialesDe } from "@/lib/auth/usuario-sesion-cliente";
 import type { EstudianteSugerido } from "@/lib/horas-beca/consultas-estudiantes";
-import { componerHorario } from "@/lib/horas-beca/formato-horas";
+import type { EventoDeActividad } from "@/lib/horas-beca/actividad-evento";
+import { ACTIVIDAD_OTRA, componerHorario } from "@/lib/horas-beca/formato-horas";
 import { MAXIMO_HORAS_POR_REGISTRO } from "@/lib/horas-beca/servicio-horas-beca";
 import { ETIQUETAS_CAMPO_HORA_BECA } from "@/validators/hora-beca-admin";
 
@@ -20,6 +24,11 @@ export type ValoresHoraBeca = {
   /** El horario se captura en dos selectores y se envía como "HH:MM-HH:MM". */
   horaInicio: string;
   horaFin: string;
+  /**
+   * Evento de la actividad: su identificador, ACTIVIDAD_OTRA si no fue un
+   * evento y se describe a mano, o vacío mientras no se elija.
+   */
+  idEvento: string;
   descripcionActividad: string;
   cantidadHoras: string;
   observaciones: string;
@@ -31,6 +40,7 @@ export const VALORES_HORA_BECA_VACIOS: ValoresHoraBeca = {
   fechaActividad: "",
   horaInicio: "",
   horaFin: "",
+  idEvento: "",
   descripcionActividad: "",
   cantidadHoras: "",
   observaciones: "",
@@ -46,6 +56,10 @@ type Burbuja = {
   nombreCuenta: string | null;
 };
 
+/** Hoy en Guatemala, como "AAAA-MM-DD", para no sugerir una fecha futura. */
+const hoyEnGuatemala = () =>
+  new Intl.DateTimeFormat("en-CA", { timeZone: "America/Guatemala" }).format(new Date());
+
 /** El carnet en la forma en la que se compara y se guarda. */
 const normalizar = (carnet: string) => carnet.replace(/\s+/g, "").toUpperCase();
 
@@ -60,7 +74,7 @@ function BurbujaEstudiante({ burbuja, alQuitar }: { burbuja: Burbuja; alQuitar: 
   return (
     <span
       className={`inline-flex max-w-full items-center gap-2 rounded-full py-1 pr-1 pl-1.5 text-sm ${
-        conCuenta ? "bg-turquesa/15 text-[#00695a]" : "bg-ambar/20 text-[#8a5600]"
+        conCuenta ? "bg-turquesa/15 text-sobre-turquesa" : "bg-ambar/20 text-sobre-ambar"
       }`}
     >
       <span
@@ -151,14 +165,21 @@ function enfocarPrimerError(errores: Record<string, string>) {
  * tiene cuenta, y un selector solo podría ofrecer a quienes ya se registraron.
  * El nombre se pide junto al carnet por la misma razón; cuando la cuenta existe,
  * el servicio guarda el nombre verificado de la cuenta en lugar del escrito.
+ *
+ * La actividad se elige de los eventos de la plataforma en lugar de escribirse:
+ * así todas las horas de un mismo evento quedan con el mismo nombre y se pueden
+ * agrupar. "Otra actividad" queda para los apoyos que no fueron un evento.
  */
 export function FormularioHoraBeca({
   id,
   valoresIniciales,
+  eventos,
   destino,
 }: {
   id?: number;
   valoresIniciales: ValoresHoraBeca;
+  /** Eventos que pueden ser la actividad, del más reciente al más antiguo. */
+  eventos: EventoDeActividad[];
   /** Listado al que se vuelve tras guardar, con los filtros que traía. */
   destino: string;
 }) {
@@ -180,6 +201,30 @@ export function FormularioHoraBeca({
   const [guardando, setGuardando] = useState(false);
   const cambiar = <Clave extends keyof ValoresHoraBeca>(clave: Clave, valor: string) =>
     setValores((previos) => ({ ...previos, [clave]: valor }));
+
+  const otraActividad = valores.idEvento === ACTIVIDAD_OTRA;
+
+  /**
+   * Elegir un evento pone su nombre como actividad y, si la fecha todavía está
+   * vacía, sugiere la del evento: casi siempre es el mismo día.
+   */
+  function elegirActividad(valor: string) {
+    const evento = eventos.find((opcion) => String(opcion.idEvento) === valor);
+
+    setValores((previos) => ({
+      ...previos,
+      idEvento: valor,
+      descripcionActividad: evento
+        ? evento.nombre
+        : valor === ACTIVIDAD_OTRA && previos.idEvento !== ACTIVIDAD_OTRA
+          ? ""
+          : previos.descripcionActividad,
+      fechaActividad:
+        evento && previos.fechaActividad === "" && evento.fecha <= hoyEnGuatemala()
+          ? evento.fecha
+          : previos.fechaActividad,
+    }));
+  }
 
   /** Al editar se corrige un registro y su estudiante no cambia. */
   const varios = id === undefined;
@@ -238,6 +283,7 @@ export function FormularioHoraBeca({
       const actividad = {
         fechaActividad: valores.fechaActividad,
         horarioApoyo: componerHorario(valores.horaInicio, valores.horaFin),
+        idEvento: /^\d+$/.test(valores.idEvento) ? valores.idEvento : null,
         descripcionActividad: valores.descripcionActividad,
         cantidadHoras: valores.cantidadHoras,
         observaciones: valores.observaciones,
@@ -382,12 +428,14 @@ export function FormularioHoraBeca({
           nombre="fechaActividad"
           error={errores.fechaActividad}
         >
-          <input
+          {/* El apoyo ya se prestó, así que no se ofrecen fechas futuras: el
+              servicio las rechaza y dejarlas elegibles solo lleva al error. */}
+          <SelectorFecha
             id="fechaActividad"
-            type="date"
-            value={valores.fechaActividad}
-            onChange={(evento) => cambiar("fechaActividad", evento.target.value)}
-            className={claseCampo}
+            valor={valores.fechaActividad}
+            onCambiar={(fecha) => cambiar("fechaActividad", fecha)}
+            limites={{ maximo: hoyEnGuatemala() }}
+            invalido={Boolean(errores.fechaActividad)}
           />
         </Campo>
 
@@ -404,25 +452,28 @@ export function FormularioHoraBeca({
           clase="md:col-span-2"
         >
           <div className="flex items-center gap-2">
-            <input
-              id="horarioApoyo"
-              type="time"
-              step={300}
-              aria-label="Hora de inicio del apoyo"
-              value={valores.horaInicio}
-              onChange={(evento) => cambiar("horaInicio", evento.target.value)}
-              className={`${claseCampo} min-w-0 flex-1`}
-            />
+            <div className="min-w-0 flex-1">
+              <SelectorHora
+                id="horarioApoyo"
+                valor={valores.horaInicio}
+                onCambiar={(hora) => cambiar("horaInicio", hora)}
+                paso={30}
+                placeholder="Desde"
+                invalido={Boolean(errores.horarioApoyo)}
+              />
+            </div>
             <span className="text-texto-suave shrink-0 text-sm">a</span>
-            <input
-              id="horaFin"
-              type="time"
-              step={300}
-              aria-label="Hora de fin del apoyo"
-              value={valores.horaFin}
-              onChange={(evento) => cambiar("horaFin", evento.target.value)}
-              className={`${claseCampo} min-w-0 flex-1`}
-            />
+            <div className="min-w-0 flex-1">
+              <SelectorHora
+                id="horaFin"
+                valor={valores.horaFin}
+                onCambiar={(hora) => cambiar("horaFin", hora)}
+                minimo={valores.horaInicio || undefined}
+                paso={30}
+                placeholder="Hasta"
+                invalido={Boolean(errores.horarioApoyo)}
+              />
+            </div>
           </div>
         </Campo>
 
@@ -450,19 +501,38 @@ export function FormularioHoraBeca({
       <Campo
         etiqueta="Actividad"
         obligatorio
-        nombre="descripcionActividad"
-        error={errores.descripcionActividad}
-        ayuda="En qué apoyó el estudiante. Es lo que verá en su historial de horas."
+        nombre="idEvento"
+        error={errores.idEvento ?? (otraActividad ? undefined : errores.descripcionActividad)}
+        ayuda="El evento en el que apoyó el estudiante. Escribe parte del nombre o la fecha para filtrar la lista."
       >
-        <textarea
-          id="descripcionActividad"
-          value={valores.descripcionActividad}
-          onChange={(evento) => cambiar("descripcionActividad", evento.target.value)}
-          rows={3}
-          maxLength={1000}
-          className={claseCampo}
+        <SelectorActividad
+          id="idEvento"
+          valor={valores.idEvento}
+          eventos={eventos}
+          etiquetaActual={valores.descripcionActividad}
+          onElegir={elegirActividad}
         />
       </Campo>
+
+      {otraActividad && (
+        <Campo
+          etiqueta="Descripción de la actividad"
+          obligatorio
+          nombre="descripcionActividad"
+          error={errores.descripcionActividad}
+          ayuda="En qué apoyó el estudiante, si no fue en un evento de la plataforma."
+        >
+          <textarea
+            id="descripcionActividad"
+            required
+            value={valores.descripcionActividad}
+            onChange={(evento) => cambiar("descripcionActividad", evento.target.value)}
+            rows={3}
+            maxLength={1000}
+            className={claseCampo}
+          />
+        </Campo>
+      )}
 
       <Campo
         etiqueta="Observaciones"

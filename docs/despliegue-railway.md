@@ -31,27 +31,37 @@ Railway inyecta su propia variable `PORT` en tiempo de ejecución, que tiene pri
 
 Se configuran en el servicio de la aplicación, pestaña **Variables**. Nunca se suben al repositorio: el `.gitignore` excluye todo archivo `.env`.
 
-| Variable                                     | Valor                                                                  |
-| -------------------------------------------- | ---------------------------------------------------------------------- |
-| `DATABASE_URL`                               | `${{Postgres.DATABASE_URL}}` — referencia literal que Railway resuelve |
-| `NEXT_PUBLIC_APP_URL`                        | dominio generado por Railway, con `https://` y sin barra final         |
-| `INSTITUTIONAL_EMAIL_DOMAIN`                 | `uvg.edu.gt`, sin arroba                                               |
-| `EMAIL_VERIFICATION_TOKEN_TTL_MINUTES`       | `30`                                                                   |
-| `EMAIL_VERIFICATION_RESEND_COOLDOWN_SECONDS` | `60`                                                                   |
-| `EMAIL_VERIFICATION_RESEND_MAX_PER_HOUR`     | `5`                                                                    |
-| `EMAIL_PROVIDER`                             | `resend` en pruebas y producción                                       |
-| `RESEND_API_KEY`                             | clave de envío creada en Resend, nunca versionada                      |
-| `EMAIL_FROM`                                 | remitente perteneciente a un dominio verificado en Resend              |
-| `AUTH_SECRET`                                | valor aleatorio propio, generado con `openssl rand -base64 32`         |
-| `SESSION_DURATION_HOURS`                     | `8`; duración de la sesión firmada, entre 1 y 168 horas                |
-| `PORT`                                       | `3000`, para que coincida con el puerto del dominio                    |
+| Variable                                     | Valor                                                                   |
+| -------------------------------------------- | ----------------------------------------------------------------------- |
+| `DATABASE_URL`                               | `${{Postgres.DATABASE_URL}}` — referencia literal que Railway resuelve  |
+| `NEXT_PUBLIC_APP_URL`                        | dominio generado por Railway, con `https://` y sin barra final          |
+| `INSTITUTIONAL_EMAIL_DOMAIN`                 | `uvg.edu.gt`, sin arroba                                                |
+| `EMAIL_VERIFICATION_TOKEN_TTL_MINUTES`       | `30`                                                                    |
+| `EMAIL_VERIFICATION_RESEND_COOLDOWN_SECONDS` | `60`                                                                    |
+| `EMAIL_VERIFICATION_RESEND_MAX_PER_HOUR`     | `5`                                                                     |
+| `EMAIL_PROVIDER`                             | `brevo` en producción (o `resend` cuando haya dominio propio)           |
+| `BREVO_API_KEY`                              | clave de API creada en Brevo, nunca versionada                          |
+| `RESEND_API_KEY`                             | clave de envío creada en Resend, solo con `EMAIL_PROVIDER=resend`       |
+| `EMAIL_FROM`                                 | `AEUVG <dirección>`; la dirección debe estar verificada en el proveedor |
+| `AUTH_SECRET`                                | valor aleatorio propio, generado con `openssl rand -base64 32`          |
+| `SESSION_DURATION_HOURS`                     | `8`; duración de la sesión firmada, entre 1 y 168 horas                 |
+| `PORT`                                       | `3000`, para que coincida con el puerto del dominio                     |
 
 `AUTH_SECRET` firma las sesiones de los usuarios, por lo que debe ser un valor aleatorio generado con el comando indicado y nunca una palabra escogida a mano. `SESSION_DURATION_HOURS` controla su expiración. `NEXT_PUBLIC_APP_URL` se incrusta durante el build: cambiar su valor exige un nuevo despliegue para que tome efecto.
 
-El registro solo permite `EMAIL_PROVIDER=memory` fuera de producción. Railway debe usar `resend` y
-un dominio de remitente verificado; de lo contrario, la cuenta puede crearse pero el mensaje no se
-entrega. El detalle del flujo está en [registro-estudiantes.md](registro-estudiantes.md). La lista
-completa vive en [.env.example](../.env.example).
+El registro solo permite `EMAIL_PROVIDER=memory` fuera de producción. **Sin `EMAIL_PROVIDER` el registro responde "El servicio de registro no está disponible temporalmente"** y la recuperación de contraseña no envía nada; el motivo aparece en los registros del servicio (`Fallo en el registro de cuentas: …`). El detalle del flujo está en [registro-estudiantes.md](registro-estudiantes.md). La lista completa vive en [.env.example](../.env.example).
+
+### Correo con Brevo
+
+Railway bloquea el SMTP saliente en el plan Hobby, así que el correo sale por la API HTTP de un proveedor. Mientras AEUVG no tenga dominio propio se usa Brevo, que permite enviar a cualquier destinatario desde una sola dirección verificada (el plan gratuito admite 300 correos al día). Resend sigue soportado, pero sin dominio verificado solo entrega a la dirección dueña de la cuenta.
+
+1. Crear la cuenta de Brevo con una dirección de AEUVG (no la personal de un integrante, por el relevo de la junta).
+2. **Senders, Domains & Dedicated IPs → Senders**: agregar esa dirección como remitente y confirmarla con el enlace que llega a su bandeja.
+3. **SMTP & API → API keys**: crear una clave de API.
+4. **Security → Authorised IPs**: desactivar el bloqueo de IP no reconocidas. Railway no tiene IP de salida fija en el plan Hobby, y con el bloqueo activo Brevo rechaza los envíos con `HTTP 401`.
+5. En Railway, en el servicio `AEUVGWEB`: `EMAIL_PROVIDER=brevo`, `BREVO_API_KEY=<clave>` y `EMAIL_FROM=AEUVG <dirección verificada>`. Al guardar, Railway vuelve a desplegar.
+
+Si el envío falla, el registro del servicio muestra `Brevo rechazó el envío (HTTP …)`: 401 es la clave o el bloqueo de IP, y 400 suele ser un remitente sin verificar. Como el remitente es una dirección de Gmail u otro servicio gratuito, algunos correos pueden llegar a spam hasta que AEUVG tenga un dominio propio verificado.
 
 ## 4. Migraciones de la base de datos
 
@@ -85,7 +95,7 @@ En otra terminal, con el túnel abierto:
 npm run db:railway:status    # revisar qué migraciones están aplicadas
 npm run db:railway:migrate   # aplicar las migraciones pendientes
 npm run db:railway:seed      # cargar los catálogos iniciales
-npm run db:railway:aeuvg     # cargar la información institucional de AEUVG
+npm run db:railway:aeuvg     # carga inicial de AEUVG; sobrescribe lo editado en el panel
 ```
 
 El script [`scripts/db/railway.js`](../scripts/db/railway.js) detecta el túnel en `127.0.0.1:55432`, obtiene las credenciales del servicio mediante el CLI, arma la cadena de conexión y se la entrega al comando de Prisma por variable de entorno, sin escribirla en disco ni mostrarla en pantalla. Con otro puerto, indicarlo en `RAILWAY_DB_TUNNEL`. Al terminar basta con cerrar el túnel con Ctrl+C.
