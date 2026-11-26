@@ -407,6 +407,13 @@ export type TutoriaVista = {
   /** Nombre de la otra parte: el tutor para el estudiante y al revés. */
   tutor: string;
   estudiante: string;
+  /** Con qué presentarse a la cita: la ficha los muestra según quién mire. */
+  tutorFotoUrl: string | null;
+  tutorCarnet: string;
+  tutorContacto: string | null;
+  estudianteFotoUrl: string | null;
+  estudianteCarnet: string;
+  estudianteCorreo: string;
 };
 
 const CAMPOS_TUTORIA = {
@@ -419,8 +426,15 @@ const CAMPOS_TUTORIA = {
   estado: true,
   observaciones: true,
   curso: { select: { codigo: true, nombre: true } },
-  tutor: { select: { estudiante: { select: { nombreCompleto: true } } } },
-  estudiante: { select: { nombreCompleto: true } },
+  tutor: {
+    select: {
+      informacionContacto: true,
+      estudiante: { select: { nombreCompleto: true, carnet: true, fotoUrl: true } },
+    },
+  },
+  estudiante: {
+    select: { nombreCompleto: true, carnet: true, correoUvg: true, fotoUrl: true },
+  },
 } as const;
 
 type FilaTutoria = Prisma.TutoriaGetPayload<{ select: typeof CAMPOS_TUTORIA }>;
@@ -438,6 +452,12 @@ function aTutoria(fila: FilaTutoria): TutoriaVista {
     curso: fila.curso,
     tutor: fila.tutor.estudiante.nombreCompleto,
     estudiante: fila.estudiante.nombreCompleto,
+    tutorFotoUrl: fila.tutor.estudiante.fotoUrl,
+    tutorCarnet: fila.tutor.estudiante.carnet,
+    tutorContacto: fila.tutor.informacionContacto,
+    estudianteFotoUrl: fila.estudiante.fotoUrl,
+    estudianteCarnet: fila.estudiante.carnet,
+    estudianteCorreo: fila.estudiante.correoUvg,
   };
 }
 

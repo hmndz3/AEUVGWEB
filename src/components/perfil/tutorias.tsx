@@ -57,9 +57,20 @@ export function TutoriasPerfil({
               {tutor.tutoriasCompletadas === 1 ? "tutoría impartida" : "tutorías impartidas"}.
             </p>
           </div>
-          <Link href="/tutorias/panel" className="text-primario text-sm font-bold hover:underline">
-            Ir a mi panel de tutor →
-          </Link>
+          <div className="flex flex-wrap items-center gap-4">
+            <Link
+              href="/tutorias/solicitudes"
+              className="text-primario text-sm font-bold hover:underline"
+            >
+              Tutorías que me solicitaron →
+            </Link>
+            <Link
+              href="/tutorias/panel"
+              className="text-texto-suave hover:text-texto text-sm font-semibold"
+            >
+              Mi panel de tutor
+            </Link>
+          </div>
         </div>
       ) : postulacion ? (
         <div className="border-borde bg-superficie-suave flex flex-col gap-2 rounded-[1.25rem] border p-5">

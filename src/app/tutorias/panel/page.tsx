@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 import { MarcoSitio } from "@/components/layout/marco-sitio";
 import { EditorDisponibilidad } from "@/components/tutorias/editor-disponibilidad";
 import { FormularioFichaTutor } from "@/components/tutorias/formulario-ficha-tutor";
-import { ListaTutorias } from "@/components/tutorias/lista-tutorias";
 import { verificarAcceso } from "@/lib/auth/guardias";
 import { listarTutoriasDeTutor, obtenerTutorDeUsuario } from "@/lib/tutorias/consultas-tutorias";
 import { ETIQUETAS_ESTADO_TUTOR } from "@/lib/tutorias/formato-tutorias";
@@ -28,6 +27,7 @@ export default async function PaginaPanelTutor() {
   if (!tutor) redirect("/tutorias/postular");
 
   const tutorias = await listarTutoriasDeTutor(acceso.usuario.idUsuario);
+  const programadas = tutorias.filter((tutoria) => tutoria.estado === "PROGRAMADA").length;
 
   return (
     <MarcoSitio>
@@ -70,17 +70,24 @@ export default async function PaginaPanelTutor() {
           <EditorDisponibilidad franjas={tutor.disponibilidades} />
         </section>
 
-        <section className="flex flex-col gap-4">
+        {/* Las tutorías solicitadas tienen su propia pantalla: aquí se
+            configuran los horarios y la ficha, y la lista de citas encima era
+            ruido sobre lo que se viene a hacer. Queda el acceso con el
+            pendiente a la vista, que es el dato que hace volver. */}
+        <Link
+          href="/tutorias/solicitudes"
+          className="border-borde bg-superficie hover:bg-superficie-suave flex flex-wrap items-center justify-between gap-3 rounded-[1.25rem] border p-5 transition-colors"
+        >
           <div>
-            <h2 className="text-texto text-lg font-bold">Tutorías solicitadas</h2>
-            <p className="text-texto-suave mt-1 text-sm leading-relaxed">
-              Cuando una ya ocurrió, márcala como dada: es lo que respalda tu ficha ante quien te
-              elige.
+            <p className="text-texto text-sm font-bold">Tutorías que me solicitaron</p>
+            <p className="text-texto-suave mt-0.5 text-sm">
+              {programadas === 0
+                ? "No tienes ninguna por delante."
+                : `Tienes ${programadas} ${programadas === 1 ? "tutoría" : "tutorías"} por delante.`}
             </p>
           </div>
-
-          <ListaTutorias tutorias={tutorias} comoTutor />
-        </section>
+          <span className="text-primario text-sm font-bold">Ver todas →</span>
+        </Link>
 
         <section className="flex flex-col gap-4">
           <div>
