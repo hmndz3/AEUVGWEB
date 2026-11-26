@@ -45,7 +45,11 @@ export function AccionesOrganizacion({
   // intentarlo para enterarse. Se deshabilita con la razón a la vista.
   const motivoNoEliminar =
     eventosOrganizados > 0
-      ? `Organiza ${eventosOrganizados} ${eventosOrganizados === 1 ? "evento" : "eventos"}: dala de baja en lugar de eliminarla, para no borrar su historial.`
+      ? `Organiza ${eventosOrganizados} ${eventosOrganizados === 1 ? "evento" : "eventos"}: ${
+          tipo === "asociaciones"
+            ? "dala de baja en lugar de eliminarla"
+            : "dalo de baja en lugar de eliminarlo"
+        }, para no borrar su historial.`
       : null;
 
   async function ejecutar(accion: Accion) {

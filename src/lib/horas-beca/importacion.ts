@@ -3,9 +3,17 @@ import ExcelJS from "exceljs";
 import {
   ALIAS_COLUMNAS,
   ALIAS_HORARIO,
-  normalizarEncabezado,
   partirHorario,
 } from "@/lib/horas-beca/columnas-importacion";
+import {
+  buscarColumna,
+  fechaDeCelda,
+  horaDeCelda,
+  localizarEncabezados,
+  textoDeCelda,
+} from "@/lib/importacion/celdas";
+
+export { fechaDeCelda, horaDeCelda };
 
 /**
  * Columnas que espera el importador, en el orden de la plantilla.
@@ -65,69 +73,6 @@ export type ResultadoLectura =
   | { tipo: "demasiadas_filas"; total: number; maximo: number }
   | { tipo: "ilegible" };
 
-/** Texto de una celda, venga como cadena, número, fecha o fórmula. */
-function textoDeCelda(valor: ExcelJS.CellValue): string {
-  if (valor === null || valor === undefined) return "";
-  if (valor instanceof Date) return "";
-  if (typeof valor === "object") {
-    if ("text" in valor && typeof valor.text === "string") return valor.text.trim();
-    if ("result" in valor) return String(valor.result ?? "").trim();
-    if ("richText" in valor)
-      return valor.richText
-        .map((parte) => parte.text)
-        .join("")
-        .trim();
-    return "";
-  }
-
-  return String(valor).trim();
-}
-
-/**
- * Fecha de una celda, como día de calendario.
- *
- * Excel puede entregarla como fecha real o como texto, según cómo esté
- * formateada la columna. Cuando es fecha real se toman sus componentes en UTC,
- * que es como la guarda el archivo: convertirla a la zona local correría el día.
- */
-export function fechaDeCelda(valor: ExcelJS.CellValue): string {
-  if (valor instanceof Date) return valor.toISOString().slice(0, 10);
-
-  const texto = textoDeCelda(valor);
-  if (texto === "") return "";
-
-  // Formatos que escribe la gente: 2026-10-09, 09/10/2026 o 9-10-2026.
-  const iso = texto.match(/^(\d{4})-(\d{2})-(\d{2})/);
-  if (iso) return `${iso[1]}-${iso[2]}-${iso[3]}`;
-
-  const latino = texto.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})$/);
-  if (latino) {
-    const [, dia, mes, anio] = latino;
-    return `${anio}-${mes.padStart(2, "0")}-${dia.padStart(2, "0")}`;
-  }
-
-  return texto;
-}
-
-/**
- * Hora de una celda, en horas y minutos.
- *
- * Una celda con formato de hora llega como fecha; una escrita a mano, como
- * texto. Se admiten las dos, y también "9:00" sin el cero de delante.
- */
-export function horaDeCelda(valor: ExcelJS.CellValue): string {
-  if (valor instanceof Date) {
-    const horas = String(valor.getUTCHours()).padStart(2, "0");
-    const minutos = String(valor.getUTCMinutes()).padStart(2, "0");
-    return `${horas}:${minutos}`;
-  }
-
-  const texto = textoDeCelda(valor);
-  const partes = texto.match(/^(\d{1,2}):(\d{2})/);
-
-  return partes ? `${partes[1].padStart(2, "0")}:${partes[2]}` : texto;
-}
-
 /**
  * Lee el archivo y devuelve sus filas sin validarlas.
  *
@@ -149,23 +94,12 @@ export async function leerFilasDeExcel(archivo: Buffer): Promise<ResultadoLectur
 
   // Los encabezados se comparan normalizados, así que "CARNÉ" y "Carnet" son el
   // mismo. Ver columnas-importacion.ts para los nombres que admite cada uno.
-  const encabezados = new Map<string, number>();
-  hoja.getRow(1).eachCell((celda, columna) => {
-    const titulo = normalizarEncabezado(textoDeCelda(celda.value));
-    if (titulo && !encabezados.has(titulo)) encabezados.set(titulo, columna);
-  });
+  const encabezados = localizarEncabezados(hoja);
 
-  const indice = (columna: keyof typeof ALIAS_COLUMNAS): number | undefined => {
-    for (const alias of ALIAS_COLUMNAS[columna]) {
-      const encontrada = encabezados.get(alias);
-      if (encontrada !== undefined) return encontrada;
-    }
-    return undefined;
-  };
+  const indice = (columna: keyof typeof ALIAS_COLUMNAS): number | undefined =>
+    buscarColumna(encabezados, ALIAS_COLUMNAS[columna]);
 
-  const columnaHorario = ALIAS_HORARIO.map((alias) => encabezados.get(alias)).find(
-    (columna) => columna !== undefined
-  );
+  const columnaHorario = buscarColumna(encabezados, ALIAS_HORARIO);
   // La hoja de AEUVG trae el horario entero en una celda; la plantilla, en dos
   // columnas de hora. Las dos columnas mandan cuando están.
   const horarioJunto =

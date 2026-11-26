@@ -75,9 +75,14 @@ export default async function PaginaAdminEventos({
           </p>
         </div>
 
-        <Link href="/admin/eventos/nuevo">
-          <Boton>Crear evento</Boton>
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          <Link href="/admin/eventos/importar">
+            <Boton variante="contorno">Importar desde Excel</Boton>
+          </Link>
+          <Link href="/admin/eventos/nuevo">
+            <Boton>Crear evento</Boton>
+          </Link>
+        </div>
       </div>
 
       <form method="get" action="/admin/eventos" className="flex flex-wrap items-end gap-3">

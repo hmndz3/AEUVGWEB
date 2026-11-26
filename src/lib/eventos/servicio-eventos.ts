@@ -61,7 +61,12 @@ export function construirOrganizadores(datos: DatosEventoAdmin): OrganizadorNuev
   return organizadores;
 }
 
-function aDatosPersistidos(datos: DatosEventoAdmin): DatosEventoPersistidos {
+/**
+ * Pasa los datos validados del formulario a la forma en la que se guardan. Lo
+ * usan también las importaciones por archivo, que crean eventos con el mismo
+ * esquema.
+ */
+export function aDatosPersistidos(datos: DatosEventoAdmin): DatosEventoPersistidos {
   return {
     nombre: datos.nombre,
     descripcion: datos.descripcion,
