@@ -97,6 +97,17 @@ Páginas: `/prestamo-batas` (pública), `/prestamo-batas/postular`,
 `/prestamo-batas/panel` (voluntario) y `/admin/prestamo-batas` con sus subsecciones
 (inventario, turnos, postulaciones, préstamos, comprobantes).
 
+Los turnos se presentan como un horario y no como una lista: las horas en el
+costado y los días arriba. `rejilla-turnos.ts` reacomoda la lista de turnos en esa
+forma —saca los bloques distintos, los ordena por hora de inicio y deja a mano el
+turno de cada cruce— y el componente del mismo nombre la dibuja. Lo usan los tres
+sitios donde aparecen los turnos: la página pública, la postulación y el panel. Los
+bloques no son iguales todos los días (entre semana se abre a las 6:45 y el sábado
+a las 7:00), así que un bloque que solo existe un día deja vacías las demás
+casillas de su fila, igual que en el horario de papel. En el teléfono no caben seis
+columnas sin volver ilegible la letra: ahí se escoge el día con una pestaña y se
+ven sus bloques.
+
 ## 5. Seed
 
 Los turnos estándar del salón y un inventario inicial se cargan con un seed
