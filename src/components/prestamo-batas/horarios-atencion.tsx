@@ -1,43 +1,49 @@
-import type { DiaConTurnos } from "@/lib/prestamo-batas/consultas-prestamo-batas";
+"use client";
+
+import { RejillaTurnos } from "@/components/prestamo-batas/rejilla-turnos";
+import type { TurnoPublico } from "@/lib/prestamo-batas/consultas-prestamo-batas";
 
 /**
  * Horarios en los que el salón está abierto, con quién atiende cada turno.
- * Es la tabla que los voluntarios llevaban en Excel, publicada para que el
- * estudiantado sepa cuándo puede ir a prestar una bata.
+ * Es la tabla que los voluntarios llevaban en Excel, publicada como horario
+ * para que el estudiantado ubique de un vistazo cuándo puede ir a prestar una
+ * bata.
  */
-export function HorariosAtencion({ dias }: { dias: DiaConTurnos[] }) {
-  if (dias.length === 0) {
-    return (
-      <div className="border-borde bg-superficie-suave text-texto-suave rounded-[1.25rem] border border-dashed px-6 py-10 text-center text-sm">
-        Todavía no hay turnos de atención publicados.
-      </div>
-    );
-  }
-
+export function HorariosAtencion({ turnos }: { turnos: TurnoPublico[] }) {
   return (
-    <div className="flex flex-col gap-4">
-      {dias.map((dia) => (
-        <div key={dia.dia} className="border-borde bg-superficie rounded-[1.25rem] border p-5">
-          <h3 className="text-texto text-base font-bold">{dia.etiqueta}</h3>
-          <ul className="mt-3 flex flex-col gap-2">
-            {dia.turnos.map((turno) => (
-              <li
-                key={turno.idTurno}
-                className="border-borde flex flex-wrap items-center justify-between gap-2 border-t pt-2 first:border-t-0 first:pt-0"
-              >
-                <span className="text-texto text-sm font-semibold">{turno.rango}</span>
-                <span className="text-texto-suave text-sm">
-                  {turno.voluntarios.length > 0 ? (
-                    turno.voluntarios.join(" · ")
-                  ) : (
-                    <span className="italic">Sin voluntarios asignados</span>
-                  )}
-                </span>
-              </li>
-            ))}
-          </ul>
+    <RejillaTurnos
+      turnos={turnos}
+      casilla={(turno) => (
+        <div
+          className={`flex h-full flex-col gap-1 rounded-xl px-2.5 py-2 text-xs ${
+            turno.voluntarios.length > 0
+              ? "bg-turquesa/15 text-sobre-turquesa"
+              : "bg-superficie-suave text-texto-suave"
+          }`}
+        >
+          <span className="text-[0.65rem] font-bold tracking-wide uppercase opacity-70">
+            Abierto
+          </span>
+          {turno.voluntarios.length > 0 ? (
+            <ul className="flex flex-col gap-0.5">
+              {turno.voluntarios.map((voluntario) => (
+                <li key={voluntario} className="leading-snug font-semibold">
+                  {voluntario}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <span className="italic">Sin voluntarios asignados</span>
+          )}
         </div>
-      ))}
-    </div>
+      )}
+      casillaVacia={() => (
+        <div className="flex h-full min-h-10 items-center justify-center">
+          <span aria-hidden className="text-texto-suave text-xs opacity-40">
+            —
+          </span>
+        </div>
+      )}
+    />
   );
 }

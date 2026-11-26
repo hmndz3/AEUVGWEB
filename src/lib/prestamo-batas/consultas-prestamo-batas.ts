@@ -33,15 +33,17 @@ export type InventarioPublico = {
 
 export type TurnoPublico = {
   idTurno: number;
+  dia: DiaSemana;
+  etiquetaDia: string;
+  horaInicio: string;
+  horaFin: string;
   rango: string;
   voluntarios: string[];
   cupo: number;
   cubierto: boolean;
 };
 
-export type DiaConTurnos = { dia: DiaSemana; etiqueta: string; turnos: TurnoPublico[] };
-
-export type PanoramaPublico = { inventario: InventarioPublico; dias: DiaConTurnos[] };
+export type PanoramaPublico = { inventario: InventarioPublico; turnos: TurnoPublico[] };
 
 /** Unidades prestadas y sin devolver de cada artículo. */
 async function prestadasPorArticulo(): Promise<Map<number, number>> {
@@ -105,27 +107,23 @@ export async function obtenerPanoramaPublico(): Promise<PanoramaPublico> {
       }
     : null;
 
-  const dias: DiaConTurnos[] = DIAS_SEMANA.map((dia) => ({
-    dia,
-    etiqueta: ETIQUETAS_DIA[dia],
-    turnos: turnos
-      .filter((turno) => turno.diaSemana === dia)
-      .map((turno) => ({
-        idTurno: turno.idTurno,
-        rango: formatearRangoTurno(turno.horaInicio, turno.horaFin),
-        voluntarios: turno.asignaciones.map((a) => a.estudiante.nombreCompleto),
-        cupo: turno.cupo,
-        cubierto: turno.asignaciones.length >= turno.cupo,
-      })),
-  })).filter((dia) => dia.turnos.length > 0);
-
   return {
     inventario: {
       batasAzules: porTalla("BATA_AZUL"),
       batasBlancas: porTalla("BATA_BLANCA"),
       lentes,
     },
-    dias,
+    turnos: turnos.map((turno) => ({
+      idTurno: turno.idTurno,
+      dia: turno.diaSemana,
+      etiquetaDia: ETIQUETAS_DIA[turno.diaSemana],
+      horaInicio: aHoraDeReloj(turno.horaInicio),
+      horaFin: aHoraDeReloj(turno.horaFin),
+      rango: formatearRangoTurno(turno.horaInicio, turno.horaFin),
+      voluntarios: turno.asignaciones.map((a) => a.estudiante.nombreCompleto),
+      cupo: turno.cupo,
+      cubierto: turno.asignaciones.length >= turno.cupo,
+    })),
   };
 }
 
@@ -137,6 +135,8 @@ export type TurnoSelector = {
   idTurno: number;
   dia: DiaSemana;
   etiquetaDia: string;
+  horaInicio: string;
+  horaFin: string;
   rango: string;
   libre: boolean;
 };
@@ -160,6 +160,8 @@ export async function listarTurnosParaPostular(): Promise<TurnoSelector[]> {
     idTurno: turno.idTurno,
     dia: turno.diaSemana,
     etiquetaDia: ETIQUETAS_DIA[turno.diaSemana],
+    horaInicio: aHoraDeReloj(turno.horaInicio),
+    horaFin: aHoraDeReloj(turno.horaFin),
     rango: formatearRangoTurno(turno.horaInicio, turno.horaFin),
     libre: turno._count.asignaciones < turno.cupo,
   }));

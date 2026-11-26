@@ -93,7 +93,7 @@ export default async function PaginaPrestamoBatas() {
 
         <section className="flex flex-col gap-4">
           <h2 className="text-texto text-xl font-bold">Horarios de atención</h2>
-          <HorariosAtencion dias={panorama.dias} />
+          <HorariosAtencion turnos={panorama.turnos} />
         </section>
       </div>
     </MarcoSitio>
