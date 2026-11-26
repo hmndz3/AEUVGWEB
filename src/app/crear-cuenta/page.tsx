@@ -90,7 +90,7 @@ function PanelRegistro() {
         <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-[11px] font-bold tracking-wide">
           <Icono nombre="graduacion" className="size-4" /> Comunidad Universitaria Oficial
         </span>
-        <div className="text-texto mt-6 inline-flex items-center gap-3 rounded-xl bg-white px-4 py-3 shadow-sm">
+        <div className="text-contraste mt-6 inline-flex items-center gap-3 rounded-xl bg-white px-4 py-3 shadow-sm">
           <Image src="/logo-aeuvg.png" alt="AEUVG" width={38} height={38} />
           <span className="text-sm font-extrabold">AEUVG</span>
           <span className="text-turquesa text-xs font-bold">Comunidad Activa UVG</span>
@@ -395,7 +395,7 @@ export default function PaginaCrearCuenta() {
             <button
               type="submit"
               disabled={enviando || facultades.length === 0}
-              className="bg-primario hover:bg-primario-fuerte disabled:bg-texto-suave flex h-12 items-center justify-center gap-2 rounded-xl text-sm font-bold text-white shadow-md transition-colors disabled:cursor-not-allowed"
+              className="bg-primario hover:bg-primario-fuerte flex h-12 items-center justify-center gap-2 rounded-xl text-sm font-bold text-white shadow-md transition-colors disabled:cursor-not-allowed disabled:opacity-50"
             >
               {enviando ? "Creando cuenta…" : "Crear cuenta estudiantil"} <Icono nombre="flecha" />
             </button>

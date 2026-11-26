@@ -55,7 +55,7 @@ export default function PaginaReenviarVerificacion() {
           <button
             type="submit"
             disabled={enviando}
-            className="bg-primario hover:bg-primario-fuerte disabled:bg-texto-suave flex h-12 items-center justify-center rounded-xl text-sm font-bold text-white disabled:cursor-not-allowed"
+            className="bg-primario hover:bg-primario-fuerte flex h-12 items-center justify-center rounded-xl text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
           >
             {enviando ? "Procesando…" : "Enviar enlace de verificación"}
           </button>

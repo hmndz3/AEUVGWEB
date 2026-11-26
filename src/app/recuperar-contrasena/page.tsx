@@ -28,7 +28,7 @@ function PanelRecuperacion({ minutosVigencia }: { minutosVigencia: number }) {
         El enlace de recuperación vence en {minutosVigencia} minutos y solo puede utilizarse una
         vez.
       </p>
-      <div className="mt-7 rounded-xl bg-white p-5 shadow-md">
+      <div className="bg-superficie mt-7 rounded-xl p-5 shadow-md">
         <p className="text-turquesa flex items-center gap-2 text-[10px] font-extrabold tracking-wider uppercase">
           <Icono nombre="verificado" className="size-4" /> Proceso de restablecimiento
         </p>
