@@ -38,7 +38,10 @@ export function AgendaCalendario({
       {conEventos.map((dia) => (
         <li
           key={dia.clave}
-          className="border-borde bg-superficie rounded-[1.25rem] border p-4 shadow-sm"
+          // El ancla la usa la rejilla compacta de arriba al tocar un día. El
+          // margen de desplazamiento deja el día debajo del encabezado fijo.
+          id={`dia-${dia.clave}`}
+          className="border-borde bg-superficie scroll-mt-24 rounded-[1.25rem] border p-4 shadow-sm"
         >
           <p
             className={cn(

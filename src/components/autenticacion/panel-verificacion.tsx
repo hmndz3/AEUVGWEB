@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import { Icono } from "@/components/autenticacion/icono";
+import { Icono } from "@/components/ui/icono";
 
 export function PanelVerificacion() {
   return (

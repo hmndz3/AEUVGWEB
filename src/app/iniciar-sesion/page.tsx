@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, Suspense, useState } from "react";
 
 import { CampoAcceso } from "@/components/autenticacion/campo-acceso";
-import { Icono } from "@/components/autenticacion/icono";
+import { Icono } from "@/components/ui/icono";
 import { MarcoAcceso } from "@/components/autenticacion/marco-acceso";
 import { NotaCamposObligatorios } from "@/components/ui/etiqueta-campo";
 import { destinoSeguro } from "@/lib/auth/destino-seguro";

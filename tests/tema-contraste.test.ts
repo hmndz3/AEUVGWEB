@@ -77,3 +77,37 @@ test("el color de contraste existe en los dos temas y no es el mismo", () => {
   assert.ok(oscuro, "falta --color-contraste en el tema oscuro");
   assert.notEqual(claro, oscuro);
 });
+
+/**
+ * Texto sobre un acento rebajado.
+ *
+ * Cada uno de estos tonos tiene que estar definido en los dos temas y con
+ * valores distintos: son colores pensados para leerse sobre su propio tinte, y
+ * el tinte cambia con el tema. Un color fijo —como era --color-primario en las
+ * tarjetas de la portada— se pierde contra el fondo en modo oscuro.
+ */
+const TEXTOS_SOBRE_TINTE = [
+  "sobre-turquesa",
+  "sobre-ambar",
+  "sobre-magenta",
+  "sobre-lavanda",
+  "sobre-cielo",
+  "sobre-coral",
+  "sobre-lima",
+  "sobre-primario-suave",
+];
+
+test("el texto sobre un acento rebajado cambia con el tema", () => {
+  const css = readFileSync(join(RAIZ, "app", "globals.css"), "utf8");
+  const bloqueOscuro = css.slice(css.indexOf('data-tema="oscuro"'));
+
+  for (const token of TEXTOS_SOBRE_TINTE) {
+    const patron = new RegExp(`--color-${token}:\\s*(#[0-9a-f]{6})`, "i");
+    const claro = css.match(patron)?.[1];
+    const oscuro = bloqueOscuro.match(patron)?.[1];
+
+    assert.ok(claro, `falta --color-${token} en el tema claro`);
+    assert.ok(oscuro, `falta --color-${token} en el tema oscuro`);
+    assert.notEqual(claro, oscuro, `--color-${token} no cambia en modo oscuro`);
+  }
+});

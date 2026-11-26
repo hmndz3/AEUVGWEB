@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { CampoAcceso } from "@/components/autenticacion/campo-acceso";
-import { Icono } from "@/components/autenticacion/icono";
+import { Icono } from "@/components/ui/icono";
 import { IndicadorSeguridadContrasena } from "@/components/autenticacion/indicador-seguridad-contrasena";
 import { NotaCamposObligatorios } from "@/components/ui/etiqueta-campo";
 

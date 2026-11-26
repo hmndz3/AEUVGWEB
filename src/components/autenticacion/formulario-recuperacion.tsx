@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import { CampoAcceso } from "@/components/autenticacion/campo-acceso";
-import { Icono } from "@/components/autenticacion/icono";
+import { Icono } from "@/components/ui/icono";
 
 type Estado =
   | { fase: "inicial" }

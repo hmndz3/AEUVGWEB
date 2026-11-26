@@ -2,11 +2,13 @@ import { cn } from "@/lib/utils";
 
 type NombreIcono =
   | "at"
+  | "boleto"
   | "calendario"
   | "candado"
   | "chevron"
   | "edificio"
   | "escudo"
+  | "estrella"
   | "flecha"
   | "flechaAtras"
   | "graduacion"
@@ -27,6 +29,12 @@ const TRAZOS: Record<NombreIcono, React.ReactNode> = {
     <>
       <circle cx="12" cy="12" r="8.25" />
       <path d="M16 8.75v4.1a2.1 2.1 0 0 0 4.2 0V12a8.2 8.2 0 1 1-2.5-5.9" />
+    </>
+  ),
+  boleto: (
+    <>
+      <path d="M3.5 9.6V7.5a1 1 0 0 1 1-1h15a1 1 0 0 1 1 1v2.1a2.4 2.4 0 0 0 0 4.8v2.1a1 1 0 0 1-1 1h-15a1 1 0 0 1-1-1v-2.1a2.4 2.4 0 0 0 0-4.8Z" />
+      <path d="M14.5 7.2v1.6M14.5 11.2v1.6M14.5 15.2v1.6" />
     </>
   ),
   calendario: (
@@ -53,6 +61,9 @@ const TRAZOS: Record<NombreIcono, React.ReactNode> = {
       <path d="M12 3.5 19 6v5c0 4.5-3 7.5-7 9.5-4-2-7-5-7-9.5V6l7-2.5Z" />
       <path d="m9 12 2 2 4-4" />
     </>
+  ),
+  estrella: (
+    <path d="m12 4.2 2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.6-4.8 2.6.9-5.4L4.2 9.9l5.4-.8L12 4.2Z" />
   ),
   flecha: <path d="M5 12h14m-5-5 5 5-5 5" />,
   flechaAtras: <path d="M19 12H5m5 5-5-5 5-5" />,

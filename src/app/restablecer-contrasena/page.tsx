@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { FormularioRestablecer } from "@/components/autenticacion/formulario-restablecer";
-import { Icono } from "@/components/autenticacion/icono";
+import { Icono } from "@/components/ui/icono";
 import { MarcoAcceso } from "@/components/autenticacion/marco-acceso";
 
 export const dynamic = "force-dynamic";
