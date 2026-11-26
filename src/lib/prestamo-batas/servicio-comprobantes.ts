@@ -1,11 +1,12 @@
 import {
   aFechaDeCalendario,
   describirTurno,
+  diaSemanaDeFechaDeCalendario,
   duracionHorasTurno,
 } from "@/lib/prestamo-batas/formato-prestamo-batas";
 import type { RepositorioComprobantes } from "@/lib/prestamo-batas/repositorio-comprobantes";
 import type { ServicioHorasBeca } from "@/lib/horas-beca/servicio-horas-beca";
-import { aHoraDeBase, diaSemanaDe, ETIQUETAS_DIA } from "@/lib/tutorias/formato-tutorias";
+import { aHoraDeBase, ETIQUETAS_DIA } from "@/lib/tutorias/formato-tutorias";
 import type { DatosComprobanteTurno } from "@/validators/prestamo-batas";
 
 export type ResultadoComprobante =
@@ -61,7 +62,7 @@ export class ServicioComprobantes {
 
     const fecha = aFechaDeCalendario(datos.fecha);
 
-    if (diaSemanaDe(fecha) !== turno.diaSemana) {
+    if (diaSemanaDeFechaDeCalendario(fecha) !== turno.diaSemana) {
       return {
         tipo: "invalido",
         errores: {

@@ -110,6 +110,30 @@ export function aFechaDeCalendario(fecha: string): Date {
   return new Date(`${fecha}T00:00:00.000Z`);
 }
 
+/**
+ * Día de la semana de una fecha de calendario.
+ *
+ * Las fechas de este módulo son días de calendario guardados como medianoche en
+ * UTC, no instantes, así que el día se lee en UTC. `diaSemanaDe` de tutorías no
+ * sirve aquí: lee la zona de Guatemala, y como va seis horas detrás de UTC, la
+ * medianoche del jueves cae el miércoles por la tarde y el día salía corrido
+ * uno hacia atrás.
+ */
+export function diaSemanaDeFechaDeCalendario(fecha: Date): DiaSemana {
+  // getUTCDay() devuelve 0 para domingo; DIAS_SEMANA empieza en lunes.
+  const porIndice: readonly DiaSemana[] = [
+    "DOMINGO",
+    "LUNES",
+    "MARTES",
+    "MIERCOLES",
+    "JUEVES",
+    "VIERNES",
+    "SABADO",
+  ];
+
+  return porIndice[fecha.getUTCDay()] ?? "LUNES";
+}
+
 /** Nombre de un artículo con su talla: "Bata azul (M)" o "Lentes". */
 export function describirArticulo(tipo: TipoArticuloBata, talla: TallaBata | null): string {
   return esBata(tipo) && talla

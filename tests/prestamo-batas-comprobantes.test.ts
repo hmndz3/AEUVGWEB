@@ -1,7 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { aFechaDeCalendario } from "../src/lib/prestamo-batas/formato-prestamo-batas";
+import {
+  aFechaDeCalendario,
+  diaSemanaDeFechaDeCalendario,
+} from "../src/lib/prestamo-batas/formato-prestamo-batas";
 import type {
   ComprobanteParaRevision,
   DatosComprobantePersistido,
@@ -10,12 +13,17 @@ import type {
   VoluntarioDeSesion,
 } from "../src/lib/prestamo-batas/repositorio-comprobantes";
 import { ServicioComprobantes } from "../src/lib/prestamo-batas/servicio-comprobantes";
-import type { DatosRegistroHora, ServicioHorasBeca } from "../src/lib/horas-beca/servicio-horas-beca";
-import { diaSemanaDe } from "../src/lib/tutorias/formato-tutorias";
+import type {
+  DatosRegistroHora,
+  ServicioHorasBeca,
+} from "../src/lib/horas-beca/servicio-horas-beca";
 
 const FECHA = "2026-11-23";
 const AHORA = () => new Date("2026-12-01T12:00:00.000Z");
-const DIA_DE_FECHA = diaSemanaDe(aFechaDeCalendario(FECHA));
+// El 23 de noviembre de 2026 cae lunes. Se escribe el día a mano a propósito:
+// derivarlo de la misma función que valida el comprobante haría que la prueba
+// siguiera al código aunque el día saliera corrido.
+const DIA_DE_FECHA = "LUNES" as const;
 
 const turno = (): TurnoAsignado => ({
   diaSemana: DIA_DE_FECHA,
@@ -141,7 +149,11 @@ test("un comprobante del día correcto se envía", async () => {
 
 test("aprobar un comprobante acredita las horas del turno al carnet del voluntario", async () => {
   const horas = horasFalso();
-  const servicio = new ServicioComprobantes(new RepositorioComprobantesFalso(), horas.servicio, AHORA);
+  const servicio = new ServicioComprobantes(
+    new RepositorioComprobantesFalso(),
+    horas.servicio,
+    AHORA
+  );
 
   const resultado = await servicio.revisar(1, "aprobar", null, 9);
 
@@ -167,11 +179,52 @@ test("si el comprobante deja de estar pendiente, se deshace el registro de horas
 
 test("rechazar un comprobante no acredita horas", async () => {
   const horas = horasFalso();
-  const servicio = new ServicioComprobantes(new RepositorioComprobantesFalso(), horas.servicio, AHORA);
+  const servicio = new ServicioComprobantes(
+    new RepositorioComprobantesFalso(),
+    horas.servicio,
+    AHORA
+  );
 
   const resultado = await servicio.revisar(1, "rechazar", "Horas incompletas", 9);
 
   assert.equal(resultado.tipo, "resuelto");
   if (resultado.tipo === "resuelto") assert.equal(resultado.estado, "RECHAZADO");
   assert.equal(horas.creados.length, 0);
+});
+
+// Las fechas del módulo son días de calendario guardados como medianoche en
+// UTC. Leerlas en la zona de Guatemala, seis horas detrás, corría el día uno
+// hacia atrás y ningún comprobante se podía enviar: el jueves se leía miércoles.
+test("el día de la semana de una fecha de calendario se lee en UTC", () => {
+  const dias = {
+    "2026-11-23": "LUNES",
+    "2026-11-24": "MARTES",
+    "2026-11-25": "MIERCOLES",
+    "2026-11-26": "JUEVES",
+    "2026-11-27": "VIERNES",
+    "2026-11-28": "SABADO",
+    "2026-11-29": "DOMINGO",
+  } as const;
+
+  for (const [fecha, dia] of Object.entries(dias)) {
+    assert.equal(diaSemanaDeFechaDeCalendario(aFechaDeCalendario(fecha)), dia, fecha);
+  }
+});
+
+test("se acepta el comprobante de un turno del mismo día de calendario", async () => {
+  const repositorio = new RepositorioComprobantesFalso({ asignado: true });
+  const servicio = new ServicioComprobantes(repositorio, horasFalso().servicio, AHORA);
+
+  const resultado = await servicio.enviar(1, {
+    idTurno: 7,
+    fecha: "2026-11-26",
+    horaEntrada: "06:45",
+    horaSalida: "09:00",
+    comentarioVoluntario: null,
+  });
+
+  assert.equal(resultado.tipo, "invalido");
+  // El turno de la prueba es de lunes: el jueves se rechaza por el día, no por
+  // haberse corrido la fecha.
+  assert.match(resultado.errores.fecha ?? "", /Lunes/);
 });
