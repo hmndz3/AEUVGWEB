@@ -45,6 +45,12 @@ export const SECCIONES_ADMIN = [
     descripcion: "Tutores con sus cursos, postulaciones para ser tutor y catálogo de cursos.",
   },
   {
+    href: "/admin/prestamo-batas",
+    texto: "Préstamo de batas",
+    descripcion:
+      "Inventario, turnos de atención, postulaciones de voluntarios, préstamos, lista negra y comprobantes de horas.",
+  },
+  {
     href: "/admin/reportes",
     texto: "Reportes",
     descripcion: "Resumen del programa de horas beca, por mes y por estudiante.",

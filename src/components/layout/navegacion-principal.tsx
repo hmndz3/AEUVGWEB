@@ -4,31 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { ROLES, tieneRol, type Rol } from "@/lib/auth/roles";
+import { enlaceActivo, enlacesVisibles } from "@/components/layout/enlaces-navegacion";
+import type { Rol } from "@/lib/auth/roles";
 import { consultarSesion } from "@/lib/auth/usuario-sesion-cliente";
 import { cn } from "@/lib/utils";
-
-type Enlace = {
-  href: string;
-  texto: string;
-  /** Sin roles, el enlace es público. */
-  roles?: readonly Rol[];
-};
-
-const ENLACES: Enlace[] = [
-  { href: "/", texto: "Inicio" },
-  { href: "/eventos", texto: "Eventos" },
-  { href: "/calendario", texto: "Calendario" },
-  { href: "/asociaciones", texto: "Asociaciones" },
-  { href: "/clubes", texto: "Clubes" },
-  { href: "/tutorias", texto: "Tutorías" },
-  { href: "/sobre-aeuvg", texto: "Sobre AEUVG" },
-  { href: "/admin", texto: "Panel", roles: [ROLES.administrador] },
-];
-
-function esActivo(href: string, rutaActual: string): boolean {
-  return href === "/" ? rutaActual === "/" : rutaActual.startsWith(href);
-}
 
 export function NavegacionPrincipal() {
   const rutaActual = usePathname();
@@ -51,11 +30,8 @@ export function NavegacionPrincipal() {
     return () => controlador.abort();
   }, []);
 
-  // Mientras se resuelve la sesión solo se muestran los enlaces públicos, para
-  // que el menú no parpadee mostrando opciones que luego desaparecen.
-  const visibles = ENLACES.filter(
-    (enlace) => !enlace.roles || (roles !== null && tieneRol(roles, enlace.roles))
-  );
+  const visibles = enlacesVisibles(roles);
+  const activo = enlaceActivo(visibles, rutaActual);
 
   return (
     <>
@@ -64,10 +40,10 @@ export function NavegacionPrincipal() {
           <Link
             key={enlace.href}
             href={enlace.href}
-            aria-current={esActivo(enlace.href, rutaActual) ? "page" : undefined}
+            aria-current={enlace.href === activo ? "page" : undefined}
             className={cn(
               "rounded-full px-3 py-2 text-sm font-medium transition-colors",
-              esActivo(enlace.href, rutaActual)
+              enlace.href === activo
                 ? "bg-primario-suave text-primario font-semibold"
                 : "text-texto-suave hover:text-texto hover:bg-superficie-suave"
             )}
@@ -103,10 +79,10 @@ export function NavegacionPrincipal() {
               key={enlace.href}
               href={enlace.href}
               onClick={() => setMenuAbierto(false)}
-              aria-current={esActivo(enlace.href, rutaActual) ? "page" : undefined}
+              aria-current={enlace.href === activo ? "page" : undefined}
               className={cn(
                 "rounded-xl px-4 py-3 text-sm font-medium transition-colors",
-                esActivo(enlace.href, rutaActual)
+                enlace.href === activo
                   ? "bg-primario-suave text-primario font-semibold"
                   : "text-texto-suave hover:bg-superficie-suave"
               )}

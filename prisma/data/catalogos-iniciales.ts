@@ -405,6 +405,12 @@ export const ROLES_INICIALES: readonly RolInicial[] = [
     activo: true,
   },
   {
+    nombre: "VOLUNTARIO",
+    descripcion:
+      "Atiende el préstamo de batas en sus turnos: registra préstamos, lista negra y comprobantes de horas.",
+    activo: true,
+  },
+  {
     nombre: "ADMINISTRADOR",
     descripcion: "Administra contenidos, catálogos y operaciones internas de AEUVG.",
     activo: true,
