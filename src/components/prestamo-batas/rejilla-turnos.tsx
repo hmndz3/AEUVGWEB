@@ -10,6 +10,9 @@ import {
 } from "@/lib/prestamo-batas/rejilla-turnos";
 import type { DiaSemana } from "@prisma/client";
 
+/** Ancho de la columna de las horas, igual en las dos tablas. */
+const ANCHO_HORAS = "4.5rem";
+
 /** Los días que comparten el mismo horario de atención. */
 const ENTRE_SEMANA: DiaSemana[] = ["LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES"];
 
@@ -107,10 +110,11 @@ export function RejillaTurnos<T extends TurnoUbicable>({
         </div>
       </div>
 
-      {/* Escritorio: entre semana a la izquierda y el fin de semana a la derecha.
-          Cada tabla crece según cuántos días tenga, para que las columnas
-          queden del mismo ancho en las dos. */}
-      <div className="hidden items-start gap-4 md:flex">
+      {/* Escritorio: entre semana a la izquierda y el fin de semana a la
+          derecha. Las dos tablas se estiran a lo mismo —el mismo alto y el
+          mismo ancho de columna— para que se lean como un solo horario partido
+          en dos y no como dos tablas sueltas. */}
+      <div className="hidden items-stretch gap-4 md:flex">
         {[semana, finDeSemana]
           .filter((rejilla) => rejilla.columnas.length > 0)
           .map((rejilla) => (
@@ -140,10 +144,14 @@ function Cuadricula<T extends TurnoUbicable>({
     <div
       className="border-borde bg-superficie grid overflow-hidden rounded-[1.25rem] border"
       style={{
-        // La columna de horas no cuenta para el reparto: lo que se iguala entre
-        // las dos tablas es el ancho de los días.
-        flex: `${rejilla.columnas.length} 1 0`,
-        gridTemplateColumns: `4.5rem repeat(${rejilla.columnas.length}, minmax(0, 1fr))`,
+        // El ancho base es el de la columna de horas y lo que sobra se reparte
+        // entre los días: así una columna del sábado mide lo mismo que una de
+        // entre semana, aunque las tablas tengan distinto número de días.
+        flex: `${rejilla.columnas.length} 1 ${ANCHO_HORAS}`,
+        gridTemplateColumns: `${ANCHO_HORAS} repeat(${rejilla.columnas.length}, minmax(0, 1fr))`,
+        // Las filas se reparten el alto en partes iguales, de modo que las dos
+        // tablas terminen a la misma altura aunque una tenga menos bloques.
+        gridTemplateRows: `auto repeat(${rejilla.bloques.length}, minmax(3.5rem, 1fr))`,
       }}
     >
       <span className="border-borde bg-superficie-suave border-r border-b" />

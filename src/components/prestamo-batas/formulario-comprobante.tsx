@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import { CargaImagen } from "@/components/admin/carga-imagen";
 import { Alerta } from "@/components/ui/alerta";
 import { Boton } from "@/components/ui/boton";
 import { EtiquetaCampo, NotaCamposObligatorios } from "@/components/ui/etiqueta-campo";
@@ -14,9 +15,12 @@ const claseCampo =
   "border-borde bg-superficie text-texto focus:border-primario focus:ring-primario/30 h-11 w-full rounded-2xl border px-4 text-sm focus:ring-2 focus:outline-none";
 
 /**
- * Comprobante de entrada y salida de un turno. El voluntario elige uno de los
- * turnos que atiende y reporta sus horas; AEUVG lo revisa y, si todo está bien,
- * le acredita las horas beca por la duración del turno.
+ * Comprobante de entrada y salida de un turno.
+ *
+ * El voluntario elige uno de los turnos que atiende, reporta sus horas y sube
+ * una foto al entrar y otra al salir: son la prueba de que estuvo en el salón,
+ * y sin ellas AEUVG no tiene con qué acreditarle las horas. Enviarlo cierra el
+ * turno de ese día, así que el formulario de préstamos deja de estar a la vista.
  */
 export function FormularioComprobante({ turnos }: { turnos: MiTurno[] }) {
   const router = useRouter();
@@ -24,6 +28,8 @@ export function FormularioComprobante({ turnos }: { turnos: MiTurno[] }) {
   const [fecha, setFecha] = useState("");
   const [horaEntrada, setHoraEntrada] = useState("");
   const [horaSalida, setHoraSalida] = useState("");
+  const [fotoInicio, setFotoInicio] = useState("");
+  const [fotoFin, setFotoFin] = useState("");
   const [comentario, setComentario] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [enviando, setEnviando] = useState(false);
@@ -50,6 +56,10 @@ export function FormularioComprobante({ turnos }: { turnos: MiTurno[] }) {
       setError("Indica tu hora de entrada y de salida.");
       return;
     }
+    if (!fotoInicio || !fotoFin) {
+      setError("Sube la foto de cuando entraste y la de cuando saliste.");
+      return;
+    }
 
     setEnviando(true);
     try {
@@ -61,6 +71,8 @@ export function FormularioComprobante({ turnos }: { turnos: MiTurno[] }) {
           fecha,
           horaEntrada,
           horaSalida,
+          fotoInicioUrl: fotoInicio,
+          fotoFinUrl: fotoFin,
           comentarioVoluntario: comentario,
         }),
       });
@@ -70,6 +82,8 @@ export function FormularioComprobante({ turnos }: { turnos: MiTurno[] }) {
         setFecha("");
         setHoraEntrada("");
         setHoraSalida("");
+        setFotoInicio("");
+        setFotoFin("");
         setComentario("");
         router.refresh();
         return;
@@ -145,6 +159,41 @@ export function FormularioComprobante({ turnos }: { turnos: MiTurno[] }) {
         </div>
       </div>
 
+      <fieldset className="flex flex-col gap-3">
+        <legend className="text-texto text-sm font-semibold">
+          Fotos del turno
+          <span aria-hidden className="text-error ml-0.5 font-bold">
+            *
+          </span>
+        </legend>
+        <p className="text-texto-suave text-sm leading-relaxed">
+          Una al entrar al salón y otra al salir. AEUVG las revisa antes de acreditarte las horas.
+        </p>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="flex flex-col gap-1.5">
+            <span className="text-texto text-sm font-semibold">Foto de entrada</span>
+            <CargaImagen
+              valor={fotoInicio}
+              onCambio={setFotoInicio}
+              onError={setError}
+              descripcion="Vista previa de la foto de entrada"
+              destino="/api/imagenes/subir"
+            />
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <span className="text-texto text-sm font-semibold">Foto de salida</span>
+            <CargaImagen
+              valor={fotoFin}
+              onCambio={setFotoFin}
+              onError={setError}
+              descripcion="Vista previa de la foto de salida"
+              destino="/api/imagenes/subir"
+            />
+          </div>
+        </div>
+      </fieldset>
+
       <div className="flex flex-col gap-1.5">
         <EtiquetaCampo htmlFor="comentario-comprobante">Comentario</EtiquetaCampo>
         <textarea
@@ -160,7 +209,7 @@ export function FormularioComprobante({ turnos }: { turnos: MiTurno[] }) {
 
       <div>
         <Boton type="submit" cargando={enviando}>
-          Enviar comprobante
+          Enviar y cerrar mi turno
         </Boton>
       </div>
     </form>

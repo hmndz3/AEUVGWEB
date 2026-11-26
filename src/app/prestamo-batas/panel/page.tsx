@@ -10,6 +10,7 @@ import {
   listarMisComprobantes,
   listarMisTurnos,
   listarPrestamos,
+  obtenerJornadaDeHoy,
 } from "@/lib/prestamo-batas/consultas-prestamo-batas";
 
 export const dynamic = "force-dynamic";
@@ -27,16 +28,17 @@ export default async function PaginaPanelVoluntario() {
   // donde puede postularse.
   if (acceso.tipo === "sin_permiso") redirect("/prestamo-batas");
 
-  const [articulos, prestamos, turnos, comprobantes] = await Promise.all([
+  const [articulos, prestamos, turnos, comprobantes, jornada] = await Promise.all([
     listarArticulosDisponibles(),
     listarPrestamos(60),
     listarMisTurnos(acceso.usuario.idUsuario),
     listarMisComprobantes(acceso.usuario.idUsuario),
+    obtenerJornadaDeHoy(acceso.usuario.idUsuario),
   ]);
 
   return (
     <MarcoSitio>
-      <div className="mx-auto flex max-w-4xl flex-col gap-8 px-4 py-10 sm:px-6">
+      <div className="mx-auto flex max-w-5xl flex-col gap-8 px-4 py-10 sm:px-6">
         <div>
           <Link href="/prestamo-batas" className="text-primario text-sm font-bold hover:underline">
             ← Volver al préstamo de batas
@@ -46,8 +48,8 @@ export default async function PaginaPanelVoluntario() {
           </h1>
           <p className="text-texto-suave mt-2 leading-relaxed">
             Atiendes {turnos.length} {turnos.length === 1 ? "turno" : "turnos"}. Desde aquí
-            registras los préstamos, su devolución, la lista negra y los comprobantes con los que se
-            te acreditan las horas beca.
+            registras los préstamos, su devolución y la lista negra, y cierras tu turno con las
+            fotos de entrada y salida con las que se te acreditan las horas beca.
           </p>
         </div>
 
@@ -56,6 +58,7 @@ export default async function PaginaPanelVoluntario() {
           prestamos={prestamos}
           turnos={turnos}
           comprobantes={comprobantes}
+          jornada={jornada}
         />
       </div>
     </MarcoSitio>

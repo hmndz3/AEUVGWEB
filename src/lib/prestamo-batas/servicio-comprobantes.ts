@@ -85,6 +85,8 @@ export class ServicioComprobantes {
         fecha,
         horaEntrada: aHoraDeBase(datos.horaEntrada),
         horaSalida: aHoraDeBase(datos.horaSalida),
+        fotoInicioUrl: datos.fotoInicioUrl,
+        fotoFinUrl: datos.fotoFinUrl,
         comentarioVoluntario: datos.comentarioVoluntario,
       },
       voluntario.idEstudiante

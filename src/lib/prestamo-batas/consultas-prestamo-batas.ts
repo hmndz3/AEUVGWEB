@@ -477,6 +477,8 @@ export type ComprobantePanel = {
   horaEntrada: string;
   horaSalida: string;
   horasTurno: number;
+  fotoInicioUrl: string | null;
+  fotoFinUrl: string | null;
   comentarioVoluntario: string | null;
   comentarioRevision: string | null;
 };
@@ -487,6 +489,8 @@ function aComprobantePanel(fila: {
   fecha: Date;
   horaEntrada: Date;
   horaSalida: Date;
+  fotoInicioUrl: string | null;
+  fotoFinUrl: string | null;
   comentarioVoluntario: string | null;
   comentarioRevision: string | null;
   estudiante: { nombreCompleto: string; carnet: string };
@@ -502,6 +506,8 @@ function aComprobantePanel(fila: {
     horaEntrada: aHoraDeReloj(fila.horaEntrada),
     horaSalida: aHoraDeReloj(fila.horaSalida),
     horasTurno: duracionHorasTurno(fila.turno.horaInicio, fila.turno.horaFin),
+    fotoInicioUrl: fila.fotoInicioUrl,
+    fotoFinUrl: fila.fotoFinUrl,
     comentarioVoluntario: fila.comentarioVoluntario,
     comentarioRevision: fila.comentarioRevision,
   };
@@ -513,6 +519,8 @@ const SELECCION_COMPROBANTE = {
   fecha: true,
   horaEntrada: true,
   horaSalida: true,
+  fotoInicioUrl: true,
+  fotoFinUrl: true,
   comentarioVoluntario: true,
   comentarioRevision: true,
   estudiante: { select: { nombreCompleto: true, carnet: true } },
@@ -652,3 +660,163 @@ export async function estadoPostulacionDe(idUsuario: number): Promise<EstadoPost
 }
 
 export { ESTADOS_PRESTAMO };
+
+// ---------------------------------------------------------------------------
+// La jornada del voluntario
+// ---------------------------------------------------------------------------
+
+/**
+ * Lo que un voluntario hizo el día que estuvo a cargo.
+ *
+ * Al enviar el comprobante su turno queda cerrado y los formularios dejan de
+ * estar a la vista: ya no está atendiendo. Lo que sí se conserva es esto, el
+ * registro de la jornada, para que pueda consultar qué prestó y a quién anotó
+ * sin poder seguir escribiendo sobre un turno terminado.
+ */
+export type JornadaVoluntario = {
+  /** Día de calendario en Guatemala, "AAAA-MM-DD". */
+  dia: string;
+  fecha: string;
+  cerrada: boolean;
+  /** Estado del comprobante con el que se cerró, si ya se envió. */
+  comprobante: MiComprobante | null;
+  prestamos: PrestamoPanel[];
+  listaNegra: EntradaListaNegra[];
+};
+
+const diaEnGuatemala = new Intl.DateTimeFormat("en-CA", {
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  timeZone: "America/Guatemala",
+});
+
+/** Hoy en Guatemala, como el día de calendario con el que se guardan las fechas. */
+export function diaDeHoy(ahora = new Date()): string {
+  return diaEnGuatemala.format(ahora);
+}
+
+/**
+ * La jornada de hoy del voluntario de la sesión.
+ *
+ * El día se decide en la hora de Guatemala y no en la del servidor: un turno
+ * de las siete de la noche pertenece a ese día, no al siguiente.
+ */
+export async function obtenerJornadaDeHoy(
+  idUsuario: number,
+  ahora = new Date()
+): Promise<JornadaVoluntario> {
+  const prisma = obtenerPrisma();
+  const dia = diaDeHoy(ahora);
+  const fechaDelDia = new Date(`${dia}T00:00:00.000Z`);
+
+  const [comprobante, prestamos, listaNegra] = await Promise.all([
+    prisma.comprobanteTurno.findFirst({
+      where: { fecha: fechaDelDia, estudiante: { usuario: { idUsuario } } },
+      orderBy: { fechaEnvio: "desc" },
+      select: {
+        idComprobante: true,
+        estado: true,
+        fecha: true,
+        horaEntrada: true,
+        horaSalida: true,
+        fotoInicioUrl: true,
+        fotoFinUrl: true,
+        comentarioRevision: true,
+        turno: { select: { diaSemana: true, horaInicio: true, horaFin: true } },
+      },
+    }),
+    prisma.prestamoBata.findMany({
+      where: { fechaPrestamo: fechaDelDia, registradoPor: idUsuario },
+      orderBy: { idPrestamo: "desc" },
+      select: {
+        idPrestamo: true,
+        fechaPrestamo: true,
+        nombre: true,
+        apellido: true,
+        carnet: true,
+        correo: true,
+        telefono: true,
+        estado: true,
+        horaSalida: true,
+        horaEntregaEstimada: true,
+        comentarios: true,
+        articulos: {
+          select: { cantidad: true, articulo: { select: { tipo: true, talla: true } } },
+        },
+        registrador: { select: { estudiante: { select: { nombreCompleto: true } } } },
+      },
+    }),
+    prisma.listaNegraBata.findMany({
+      where: {
+        registradoPor: idUsuario,
+        fechaCreacion: {
+          gte: new Date(`${dia}T00:00:00.000-06:00`),
+          lt: new Date(`${dia}T23:59:59.999-06:00`),
+        },
+      },
+      orderBy: { idListaNegra: "desc" },
+      select: {
+        idListaNegra: true,
+        fecha: true,
+        nombre: true,
+        apellido: true,
+        correo: true,
+        carnet: true,
+        telefono: true,
+        justificacion: true,
+        registrador: { select: { estudiante: { select: { nombreCompleto: true } } } },
+      },
+    }),
+  ]);
+
+  return {
+    dia,
+    fecha: formatearFecha(fechaDelDia),
+    cerrada: comprobante !== null,
+    comprobante: comprobante
+      ? {
+          idComprobante: comprobante.idComprobante,
+          turno: `${ETIQUETAS_DIA[comprobante.turno.diaSemana]}, ${formatearRangoTurno(comprobante.turno.horaInicio, comprobante.turno.horaFin)}`,
+          fecha: formatearFecha(comprobante.fecha),
+          horaEntrada: aHoraDeReloj(comprobante.horaEntrada),
+          horaSalida: aHoraDeReloj(comprobante.horaSalida),
+          estado: comprobante.estado,
+          etiquetaEstado: ETIQUETAS_ESTADO_COMPROBANTE[comprobante.estado],
+          horasTurno: duracionHorasTurno(comprobante.turno.horaInicio, comprobante.turno.horaFin),
+          comentarioRevision: comprobante.comentarioRevision,
+        }
+      : null,
+    prestamos: prestamos.map((prestamo) => ({
+      idPrestamo: prestamo.idPrestamo,
+      fecha: formatearFecha(prestamo.fechaPrestamo),
+      persona: `${prestamo.nombre} ${prestamo.apellido}`,
+      carnet: prestamo.carnet,
+      correo: prestamo.correo,
+      telefono: prestamo.telefono,
+      estado: prestamo.estado,
+      etiquetaEstado: ETIQUETAS_ESTADO_PRESTAMO[prestamo.estado],
+      horaSalida: aHoraDeReloj(prestamo.horaSalida),
+      horaEntregaEstimada: prestamo.horaEntregaEstimada
+        ? aHoraDeReloj(prestamo.horaEntregaEstimada)
+        : null,
+      articulos: prestamo.articulos.map(
+        (linea) =>
+          `${linea.cantidad > 1 ? `${linea.cantidad}× ` : ""}${describirArticulo(linea.articulo.tipo, linea.articulo.talla)}`
+      ),
+      comentarios: prestamo.comentarios,
+      registrador: prestamo.registrador.estudiante?.nombreCompleto ?? null,
+    })),
+    listaNegra: listaNegra.map((entrada) => ({
+      idListaNegra: entrada.idListaNegra,
+      fecha: entrada.fecha ? formatearFecha(entrada.fecha) : null,
+      nombre: entrada.nombre,
+      apellido: entrada.apellido,
+      correo: entrada.correo,
+      carnet: entrada.carnet,
+      telefono: entrada.telefono,
+      justificacion: entrada.justificacion,
+      registrador: entrada.registrador.estudiante?.nombreCompleto ?? null,
+    })),
+  };
+}

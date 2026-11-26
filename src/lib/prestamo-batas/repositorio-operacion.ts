@@ -41,6 +41,8 @@ export interface RepositorioOperacion {
   /** Marca un préstamo como devuelto; false si no existe o ya estaba devuelto. */
   marcarDevuelto(idPrestamo: number, nota: string | null, ahora: Date): Promise<boolean>;
   crearListaNegra(datos: DatosListaNegraPersistido, registradoPor: number): Promise<number>;
+  /** True si el voluntario ya envió el comprobante de ese día. */
+  turnoCerrado(registradoPor: number, dia: string): Promise<boolean>;
 }
 
 /** Nota del voluntario al devolver, sin perder lo que ya tenía el préstamo. */
@@ -51,6 +53,17 @@ function combinarComentarioDevolucion(previo: string | null, nota: string | null
 
 export class RepositorioOperacionPrisma implements RepositorioOperacion {
   constructor(private readonly prisma: PrismaClient = obtenerPrisma()) {}
+
+  async turnoCerrado(registradoPor: number, dia: string): Promise<boolean> {
+    const cuantos = await this.prisma.comprobanteTurno.count({
+      where: {
+        fecha: new Date(`${dia}T00:00:00.000Z`),
+        estudiante: { usuario: { idUsuario: registradoPor } },
+      },
+    });
+
+    return cuantos > 0;
+  }
 
   async articulosParaPrestamo(ids: readonly number[]): Promise<ArticuloParaPrestamo[]> {
     if (ids.length === 0) return [];

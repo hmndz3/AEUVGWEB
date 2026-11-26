@@ -26,6 +26,13 @@ export const POST = protegerRuta([ROLES.voluntario], async (usuario, solicitud: 
       usuario.idUsuario
     );
 
+    if (resultado.tipo === "invalido") {
+      return Response.json(
+        { errores: resultado.errores, mensaje: Object.values(resultado.errores)[0] },
+        { status: 409, headers: sinCache }
+      );
+    }
+
     return Response.json(
       { idListaNegra: resultado.idListaNegra },
       { status: 201, headers: sinCache }

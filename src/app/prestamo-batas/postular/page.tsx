@@ -33,7 +33,7 @@ export default async function PaginaPostularVoluntario() {
 
   return (
     <MarcoSitio>
-      <div className="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-10 sm:px-6">
+      <div className="mx-auto flex max-w-5xl flex-col gap-8 px-4 py-10 sm:px-6">
         <div>
           <Link href="/prestamo-batas" className="text-primario text-sm font-bold hover:underline">
             ← Volver al préstamo de batas

@@ -925,6 +925,11 @@ model ComprobanteTurno {
   fecha                DateTime               @db.Date
   horaEntrada          DateTime               @map("hora_entrada") @db.Time(0)
   horaSalida           DateTime               @map("hora_salida") @db.Time(0)
+  // Pruebas con las que el voluntario respalda el turno: una al entrar y otra
+  // al salir. Son opcionales en la base por los comprobantes anteriores a esta
+  // regla; el formulario las exige desde que se pidieron.
+  fotoInicioUrl        String?                @map("foto_inicio_url") @db.VarChar(500)
+  fotoFinUrl           String?                @map("foto_fin_url") @db.VarChar(500)
   estado               EstadoComprobanteTurno @default(PENDIENTE)
   comentarioVoluntario String?                @map("comentario_voluntario") @db.Text
   comentarioRevision   String?                @map("comentario_revision") @db.Text
