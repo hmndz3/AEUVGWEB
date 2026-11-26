@@ -22,6 +22,7 @@ const ENLACES: Enlace[] = [
   { href: "/asociaciones", texto: "Asociaciones" },
   { href: "/clubes", texto: "Clubes" },
   { href: "/tutorias", texto: "Tutorías" },
+  { href: "/prestamo-batas", texto: "Batas" },
   { href: "/sobre-aeuvg", texto: "Sobre AEUVG" },
   { href: "/admin", texto: "Panel", roles: [ROLES.administrador] },
 ];
