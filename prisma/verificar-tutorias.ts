@@ -5,6 +5,7 @@
 //
 // No imprime la cadena de conexión ni ningún dato personal: solo conteos y el
 // resultado de cada comprobación.
+import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@prisma/client";
 

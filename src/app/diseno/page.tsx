@@ -180,8 +180,8 @@ export default function PaginaDiseno() {
             <Alerta tipo="error" titulo="No se pudo guardar">
               Revisa los campos marcados e intenta de nuevo.
             </Alerta>
-            <Alerta tipo="informativo" titulo="Nueva convocatoria">
-              Se publicaron oportunidades para realizar horas beca.
+            <Alerta tipo="informativo" titulo="Nueva actividad publicada">
+              Ya puedes ver los eventos de este ciclo en la cartelera.
             </Alerta>
           </div>
         </Seccion>

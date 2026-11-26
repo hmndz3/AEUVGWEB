@@ -40,7 +40,7 @@ export function ResumenHorasBecaPanel({ resumen }: { resumen: ResumenHorasBeca }
       <Indicador
         titulo="Sin cuenta vinculada"
         valor={String(resumen.registrosSinCuenta)}
-        detalle="Carnets que todavía no se han registrado"
+        detalle={`${resumen.registrosSinCuenta === 1 ? "Registro" : "Registros"} de carnets que todavía no se han registrado`}
       />
     </div>
   );
