@@ -5,7 +5,7 @@
 1. `GET /api/catalogos/academicos` obtiene únicamente facultades y carreras activas.
 2. `POST /api/auth/registro` vuelve a validar todos los datos, incluido el dominio institucional y la relación facultad-carrera.
 3. Una transacción crea `Estudiante`, `Usuario` pendiente, su rol `ESTUDIANTE` y un token de verificación. La contraseña se deriva con `scrypt`; el token aleatorio nunca se guarda, solo su hash SHA-256.
-4. El usuario recibe un enlace hacia `/verificar-correo`. `POST /api/auth/verificar-correo` consume el token una sola vez y activa la cuenta.
+4. El usuario recibe un enlace hacia `/verificar-correo` y pulsa **Confirmar mi correo**. Solo entonces `POST /api/auth/verificar-correo` consume el token, una sola vez, y activa la cuenta. Abrir el enlace no activa nada: los filtros de correo de UVG (Microsoft Defender) abren cada enlace para analizarlo, y cuando la página verificaba al cargar, ese análisis activaba cuentas cuyo dueño nunca vio el mensaje.
 5. `POST /api/auth/reenviar-verificacion` invalida tokens vigentes antes de crear otro. Aplica una espera mínima y un máximo por hora, y su respuesta no revela si la cuenta existe.
 
 La migración `20260909000000_add_email_verification_tokens` agrega la tabla que permite auditar vigencia, uso e invalidación de los enlaces. El borrado en cascada se limita a estos tokens, que no tienen sentido sin su usuario.
