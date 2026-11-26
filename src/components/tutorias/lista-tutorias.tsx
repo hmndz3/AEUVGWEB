@@ -1,10 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-
+import { AccionesTutoria } from "@/components/tutorias/acciones-tutoria";
 import { Avatar } from "@/components/ui/avatar";
-import { Boton } from "@/components/ui/boton";
 import { EtiquetaEstado } from "@/components/ui/etiqueta-estado";
 import type { TutoriaVista } from "@/lib/tutorias/consultas-tutorias";
 import { ETIQUETAS_ESTADO_TUTORIA, ETIQUETAS_MODALIDAD } from "@/lib/tutorias/formato-tutorias";
@@ -12,12 +9,11 @@ import { formatearHora12 } from "@/lib/ui/calendario-selector";
 
 const TONOS = {
   PROGRAMADA: "pendiente",
+  ACEPTADA: "informativo",
+  RECHAZADA: "error",
   COMPLETADA: "acreditada",
   CANCELADA: "error",
 } as const;
-
-const CONFIRMAR_CANCELAR =
-  "La tutoría se cancela para los dos y no se puede volver a programar; habría que agendar otra. ¿Continuar?";
 
 const MESES_CORTOS = [
   "ene",
@@ -110,37 +106,6 @@ export function ListaTutorias({
   tutorias: TutoriaVista[];
   comoTutor?: boolean;
 }) {
-  const router = useRouter();
-  const [trabajando, setTrabajando] = useState<number | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  async function resolver(idTutoria: number, accion: "completar" | "cancelar") {
-    if (accion === "cancelar" && !window.confirm(CONFIRMAR_CANCELAR)) return;
-
-    setTrabajando(idTutoria);
-    setError(null);
-
-    try {
-      const respuesta = await fetch(`/api/tutorias/${idTutoria}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ accion }),
-      });
-
-      if (!respuesta.ok) {
-        const cuerpo = (await respuesta.json().catch(() => ({}))) as { mensaje?: string };
-        setError(cuerpo.mensaje ?? "No se pudo actualizar la tutoría.");
-        return;
-      }
-
-      router.refresh();
-    } catch {
-      setError("No se pudo conectar con el servidor. Revisa tu conexión.");
-    } finally {
-      setTrabajando(null);
-    }
-  }
-
   if (tutorias.length === 0) {
     return (
       <div className="border-borde bg-superficie-suave text-texto-suave rounded-[1.25rem] border border-dashed px-6 py-12 text-center text-sm">
@@ -170,7 +135,9 @@ export function ListaTutorias({
               papel: "Tutor",
             };
 
-        const pasada = tutoria.estado !== "PROGRAMADA";
+        // La ficha se atenúa cuando la cita ya no está en pie; mientras siga
+        // viva —agendada o aceptada— se lee con todo el contraste.
+        const pasada = tutoria.estado !== "PROGRAMADA" && tutoria.estado !== "ACEPTADA";
 
         return (
           <article
@@ -183,7 +150,9 @@ export function ListaTutorias({
               {/* Bloque de fecha: día grande y mes, como un recorte de calendario. */}
               <div
                 className={`flex shrink-0 flex-row items-center gap-3 px-5 py-4 sm:w-28 sm:flex-col sm:justify-center sm:gap-0 sm:py-6 ${
-                  tutoria.estado === "CANCELADA" ? "bg-superficie-suave" : "bg-primario-suave"
+                  tutoria.estado === "CANCELADA" || tutoria.estado === "RECHAZADA"
+                    ? "bg-superficie-suave"
+                    : "bg-primario-suave"
                 }`}
               >
                 <span className="text-sobre-lavanda text-xs font-bold tracking-wide uppercase">
@@ -265,41 +234,12 @@ export function ListaTutorias({
                   </div>
                 )}
 
-                {tutoria.estado === "PROGRAMADA" && (
-                  <div className="border-borde flex flex-wrap items-center gap-2 border-t pt-3">
-                    {comoTutor && (
-                      <Boton
-                        type="button"
-                        tamano="sm"
-                        cargando={trabajando === tutoria.idTutoria}
-                        disabled={trabajando !== null}
-                        onClick={() => resolver(tutoria.idTutoria, "completar")}
-                      >
-                        Marcar como dada
-                      </Boton>
-                    )}
-                    <Boton
-                      type="button"
-                      variante="contorno"
-                      tamano="sm"
-                      disabled={trabajando !== null}
-                      onClick={() => resolver(tutoria.idTutoria, "cancelar")}
-                    >
-                      Cancelar
-                    </Boton>
-                  </div>
-                )}
+                <AccionesTutoria tutoria={tutoria} comoTutor={comoTutor} />
               </div>
             </div>
           </article>
         );
       })}
-
-      {error && (
-        <p role="alert" className="text-error text-sm font-medium">
-          {error}
-        </p>
-      )}
     </div>
   );
 }

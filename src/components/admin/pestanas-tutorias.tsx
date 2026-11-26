@@ -4,6 +4,7 @@ const PESTANAS = [
   { clave: "tutores", href: "/admin/tutorias", texto: "Tutores" },
   { clave: "postulaciones", href: "/admin/tutorias/postulaciones", texto: "Postulaciones" },
   { clave: "cursos", href: "/admin/tutorias/cursos", texto: "Cursos" },
+  { clave: "horas", href: "/admin/tutorias/horas", texto: "Horas" },
 ] as const;
 
 export type PestanaTutorias = (typeof PESTANAS)[number]["clave"];
@@ -20,14 +21,17 @@ export function PestanasTutorias({
   activa,
   pendientes = 0,
   propuestos = 0,
+  horasPorRevisar = 0,
 }: {
   activa: PestanaTutorias;
   pendientes?: number;
   propuestos?: number;
+  horasPorRevisar?: number;
 }) {
   const contadores: Partial<Record<PestanaTutorias, number>> = {
     postulaciones: pendientes,
     cursos: propuestos,
+    horas: horasPorRevisar,
   };
 
   return (

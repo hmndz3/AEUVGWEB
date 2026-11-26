@@ -84,12 +84,27 @@ enum EstadoTutor {
   @@map("estado_tutor")
 }
 
+/// Recorrido de una tutoria: la agenda el estudiante (PROGRAMADA), el tutor la
+/// acepta o la rechaza, y queda COMPLETADA cuando AEUVG acepta sus horas beca.
 enum EstadoTutoria {
   PROGRAMADA @map("programada")
+  ACEPTADA   @map("aceptada")
+  RECHAZADA  @map("rechazada")
   COMPLETADA @map("completada")
   CANCELADA  @map("cancelada")
 
   @@map("estado_tutoria")
+}
+
+/// Horas beca de una tutoria, que van por separado del estado de la cita: el
+/// tutor manda sus pruebas y AEUVG las revisa despues.
+enum EstadoHorasTutoria {
+  SIN_ENVIAR @map("sin_enviar")
+  PENDIENTE  @map("pendiente")
+  ACEPTADAS  @map("aceptadas")
+  RECHAZADAS @map("rechazadas")
+
+  @@map("estado_horas_tutoria")
 }
 
 enum ModalidadTutoria {
@@ -182,6 +197,7 @@ model Usuario {
   registrosCreados                 RegistroHoraBeca[]            @relation("RegistroCreadoPor")
   registrosAcreditados             RegistroHoraBeca[]            @relation("RegistroAcreditadoPor")
   postulacionesRevisadas           PostulacionTutor[]            @relation("PostulacionRevisadaPor")
+  tutoriasConHorasRevisadas        Tutoria[]                     @relation("TutoriaHorasRevisadaPor")
   intereses                        InteresUsuario[]
   interacciones                    InteraccionUsuario[]
   notificaciones                   Notificacion[]
@@ -502,6 +518,7 @@ model RegistroHoraBeca {
   creador              Usuario              @relation("RegistroCreadoPor", fields: [creadoPor], references: [idUsuario], onDelete: Restrict, onUpdate: Cascade)
   acreditador          Usuario?             @relation("RegistroAcreditadoPor", fields: [acreditadoPor], references: [idUsuario], onDelete: SetNull, onUpdate: Cascade)
   comprobanteTurno     ComprobanteTurno?
+  tutoria              Tutoria?
 
   @@index([idEstudiante], map: "registro_hora_beca_id_estudiante_idx")
   @@index([estado], map: "registro_hora_beca_estado_idx")
@@ -612,27 +629,50 @@ model DisponibilidadTutor {
 }
 
 model Tutoria {
-  idTutoria          Int              @id @default(autoincrement()) @map("id_tutoria")
-  idTutor            Int              @map("id_tutor")
-  idCurso            Int              @map("id_curso")
-  idEstudiante       Int              @map("id_estudiante")
-  fechaInicio        DateTime         @map("fecha_inicio") @db.Timestamptz(3)
-  fechaFin           DateTime         @map("fecha_fin") @db.Timestamptz(3)
-  modalidad          ModalidadTutoria
-  ubicacionEnlace    String?          @map("ubicacion_enlace") @db.VarChar(500)
-  estado             EstadoTutoria    @default(PROGRAMADA)
-  observaciones      String?          @db.Text
-  fechaCreacion      DateTime         @default(now()) @map("fecha_creacion") @db.Timestamptz(3)
-  fechaActualizacion DateTime         @updatedAt @map("fecha_actualizacion") @db.Timestamptz(3)
-  tutor              Tutor            @relation(fields: [idTutor], references: [idTutor], onDelete: Restrict, onUpdate: Cascade)
-  curso              Curso            @relation(fields: [idCurso], references: [idCurso], onDelete: Restrict, onUpdate: Cascade)
-  estudiante         Estudiante       @relation(fields: [idEstudiante], references: [idEstudiante], onDelete: Restrict, onUpdate: Cascade)
+  idTutoria       Int              @id @default(autoincrement()) @map("id_tutoria")
+  idTutor         Int              @map("id_tutor")
+  idCurso         Int              @map("id_curso")
+  idEstudiante    Int              @map("id_estudiante")
+  fechaInicio     DateTime         @map("fecha_inicio") @db.Timestamptz(3)
+  fechaFin        DateTime         @map("fecha_fin") @db.Timestamptz(3)
+  modalidad       ModalidadTutoria
+  ubicacionEnlace String?          @map("ubicacion_enlace") @db.VarChar(500)
+  estado          EstadoTutoria    @default(PROGRAMADA)
+  observaciones   String?          @db.Text
+
+  // Respuesta del tutor a la solicitud.
+  comentarioTutor     String?   @map("comentario_tutor") @db.Text
+  fechaRespuestaTutor DateTime? @map("fecha_respuesta_tutor") @db.Timestamptz(3)
+
+  // Pruebas de que la tutoria ocurrio: dos del tutor y una del estudiante.
+  pruebaInicioUrl      String?   @map("prueba_inicio_url") @db.VarChar(500)
+  pruebaFinUrl         String?   @map("prueba_fin_url") @db.VarChar(500)
+  fechaMarcaTutor      DateTime? @map("fecha_marca_tutor") @db.Timestamptz(3)
+  pruebaEstudianteUrl  String?   @map("prueba_estudiante_url") @db.VarChar(500)
+  fechaMarcaEstudiante DateTime? @map("fecha_marca_estudiante") @db.Timestamptz(3)
+
+  // Revision de las horas beca por parte de AEUVG.
+  estadoHoras             EstadoHorasTutoria @default(SIN_ENVIAR) @map("estado_horas")
+  horasRevisadasPor       Int?               @map("horas_revisadas_por")
+  fechaRevisionHoras      DateTime?          @map("fecha_revision_horas") @db.Timestamptz(3)
+  comentarioRevisionHoras String?            @map("comentario_revision_horas") @db.Text
+  idRegistroHora          Int?               @unique(map: "tutoria_id_registro_hora_key") @map("id_registro_hora")
+
+  fechaCreacion      DateTime          @default(now()) @map("fecha_creacion") @db.Timestamptz(3)
+  fechaActualizacion DateTime          @updatedAt @map("fecha_actualizacion") @db.Timestamptz(3)
+  tutor              Tutor             @relation(fields: [idTutor], references: [idTutor], onDelete: Restrict, onUpdate: Cascade)
+  curso              Curso             @relation(fields: [idCurso], references: [idCurso], onDelete: Restrict, onUpdate: Cascade)
+  estudiante         Estudiante        @relation(fields: [idEstudiante], references: [idEstudiante], onDelete: Restrict, onUpdate: Cascade)
+  revisorHoras       Usuario?          @relation("TutoriaHorasRevisadaPor", fields: [horasRevisadasPor], references: [idUsuario], onDelete: SetNull, onUpdate: Cascade)
+  registroHora       RegistroHoraBeca? @relation(fields: [idRegistroHora], references: [idRegistroHora], onDelete: SetNull, onUpdate: Cascade)
 
   @@index([idTutor], map: "tutoria_id_tutor_idx")
   @@index([idEstudiante], map: "tutoria_id_estudiante_idx")
   @@index([idCurso], map: "tutoria_id_curso_idx")
   @@index([estado], map: "tutoria_estado_idx")
   @@index([fechaInicio], map: "tutoria_fecha_inicio_idx")
+  @@index([estadoHoras], map: "tutoria_estado_horas_idx")
+  @@index([horasRevisadasPor], map: "tutoria_horas_revisadas_por_idx")
   @@map("tutoria")
 }
 
