@@ -50,7 +50,7 @@ export const POST = protegerRuta([], async (usuario, solicitud: Request) => {
         tipo: TIPOS_NOTIFICACION.tutoria,
         titulo: "Te agendaron una tutoría",
         mensaje: `${aviso.estudiante} agendó una tutoría de ${aviso.curso} contigo.`,
-        urlDestino: "/tutorias/panel",
+        urlDestino: "/tutorias/solicitudes",
       });
     }
 

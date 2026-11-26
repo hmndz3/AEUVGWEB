@@ -34,7 +34,9 @@ export function TutoriasPerfil({
         <div>
           <h2 className="text-texto text-lg font-bold">Mis tutorías</h2>
           <p className="text-texto-suave mt-1 text-sm leading-relaxed">
-            Las que has agendado con otros estudiantes. Puedes cancelar una si te surge algo.
+            Las que has agendado con otros estudiantes. Puedes cancelar una si te surge algo, y
+            cuando recibas una, confírmala con una foto: es lo que respalda las horas beca de tu
+            tutor.
           </p>
         </div>
 
