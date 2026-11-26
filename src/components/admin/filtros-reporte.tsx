@@ -1,10 +1,9 @@
 import Link from "next/link";
 
+import { CampoFecha } from "@/components/ui/campo-fecha";
+
 import { Boton } from "@/components/ui/boton";
 import type { FiltrosReporte } from "@/lib/horas-beca/consultas-reportes";
-
-const claseCampo =
-  "border-borde bg-superficie text-texto focus:border-primario focus:ring-primario/30 h-11 rounded-2xl border px-4 text-sm focus:ring-2 focus:outline-none";
 
 /**
  * Periodo del reporte.
@@ -27,26 +26,14 @@ export function FiltrosReportePanel({ filtros }: { filtros: FiltrosReporte }) {
         <label htmlFor="desde" className="text-texto text-sm font-semibold">
           Desde
         </label>
-        <input
-          id="desde"
-          name="desde"
-          type="date"
-          defaultValue={filtros.desde ?? ""}
-          className={claseCampo}
-        />
+        <CampoFecha id="desde" name="desde" valorInicial={filtros.desde ?? ""} />
       </div>
 
       <div className="flex min-w-44 flex-col gap-1.5">
         <label htmlFor="hasta" className="text-texto text-sm font-semibold">
           Hasta
         </label>
-        <input
-          id="hasta"
-          name="hasta"
-          type="date"
-          defaultValue={filtros.hasta ?? ""}
-          className={claseCampo}
-        />
+        <CampoFecha id="hasta" name="hasta" valorInicial={filtros.hasta ?? ""} />
       </div>
 
       <div className="flex items-center gap-2">

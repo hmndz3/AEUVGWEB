@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Alerta } from "@/components/ui/alerta";
 import { Boton } from "@/components/ui/boton";
 import { EtiquetaCampo } from "@/components/ui/etiqueta-campo";
+import { SelectorHora } from "@/components/ui/selector-hora";
 import type { DisponibilidadTutorVista } from "@/lib/tutorias/consultas-tutorias";
 import {
   DIAS_SEMANA,
@@ -184,26 +185,25 @@ export function EditorDisponibilidad({ franjas }: { franjas: DisponibilidadTutor
             <EtiquetaCampo htmlFor="horaInicio" obligatorio>
               De
             </EtiquetaCampo>
-            <input
+            <SelectorHora
               id="horaInicio"
-              type="time"
-              step={300}
-              value={horaInicio}
-              onChange={(evento) => setHoraInicio(evento.target.value)}
-              className={claseCampo}
+              valor={horaInicio}
+              onCambiar={setHoraInicio}
+              paso={30}
+              placeholder="Desde"
             />
           </div>
           <div className="flex min-w-0 flex-1 flex-col gap-1.5">
             <EtiquetaCampo htmlFor="horaFin" obligatorio>
               A
             </EtiquetaCampo>
-            <input
+            <SelectorHora
               id="horaFin"
-              type="time"
-              step={300}
-              value={horaFin}
-              onChange={(evento) => setHoraFin(evento.target.value)}
-              className={claseCampo}
+              valor={horaFin}
+              onCambiar={setHoraFin}
+              minimo={horaInicio || undefined}
+              paso={30}
+              placeholder="Hasta"
             />
           </div>
         </div>

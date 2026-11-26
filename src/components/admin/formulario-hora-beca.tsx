@@ -6,6 +6,8 @@ import { useState } from "react";
 import { Alerta } from "@/components/ui/alerta";
 import { Boton } from "@/components/ui/boton";
 import { EtiquetaCampo, NotaCamposObligatorios } from "@/components/ui/etiqueta-campo";
+import { SelectorFecha } from "@/components/ui/selector-fecha";
+import { SelectorHora } from "@/components/ui/selector-hora";
 import { BuscadorEstudiante } from "@/components/admin/buscador-estudiante";
 import { SelectorActividad } from "@/components/admin/selector-actividad";
 import { inicialesDe } from "@/lib/auth/usuario-sesion-cliente";
@@ -426,12 +428,14 @@ export function FormularioHoraBeca({
           nombre="fechaActividad"
           error={errores.fechaActividad}
         >
-          <input
+          {/* El apoyo ya se prestó, así que no se ofrecen fechas futuras: el
+              servicio las rechaza y dejarlas elegibles solo lleva al error. */}
+          <SelectorFecha
             id="fechaActividad"
-            type="date"
-            value={valores.fechaActividad}
-            onChange={(evento) => cambiar("fechaActividad", evento.target.value)}
-            className={claseCampo}
+            valor={valores.fechaActividad}
+            onCambiar={(fecha) => cambiar("fechaActividad", fecha)}
+            limites={{ maximo: hoyEnGuatemala() }}
+            invalido={Boolean(errores.fechaActividad)}
           />
         </Campo>
 
@@ -448,25 +452,28 @@ export function FormularioHoraBeca({
           clase="md:col-span-2"
         >
           <div className="flex items-center gap-2">
-            <input
-              id="horarioApoyo"
-              type="time"
-              step={300}
-              aria-label="Hora de inicio del apoyo"
-              value={valores.horaInicio}
-              onChange={(evento) => cambiar("horaInicio", evento.target.value)}
-              className={`${claseCampo} min-w-0 flex-1`}
-            />
+            <div className="min-w-0 flex-1">
+              <SelectorHora
+                id="horarioApoyo"
+                valor={valores.horaInicio}
+                onCambiar={(hora) => cambiar("horaInicio", hora)}
+                paso={30}
+                placeholder="Desde"
+                invalido={Boolean(errores.horarioApoyo)}
+              />
+            </div>
             <span className="text-texto-suave shrink-0 text-sm">a</span>
-            <input
-              id="horaFin"
-              type="time"
-              step={300}
-              aria-label="Hora de fin del apoyo"
-              value={valores.horaFin}
-              onChange={(evento) => cambiar("horaFin", evento.target.value)}
-              className={`${claseCampo} min-w-0 flex-1`}
-            />
+            <div className="min-w-0 flex-1">
+              <SelectorHora
+                id="horaFin"
+                valor={valores.horaFin}
+                onCambiar={(hora) => cambiar("horaFin", hora)}
+                minimo={valores.horaInicio || undefined}
+                paso={30}
+                placeholder="Hasta"
+                invalido={Boolean(errores.horarioApoyo)}
+              />
+            </div>
           </div>
         </Campo>
 

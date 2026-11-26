@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { CampoFecha } from "@/components/ui/campo-fecha";
+
 import { Boton } from "@/components/ui/boton";
 import type { CategoriaResumen, OrganizadoresDisponibles } from "@/lib/eventos/consultas-eventos";
 import {
@@ -88,24 +90,12 @@ export function FiltrosEventosBarra({
         <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           <div className="flex flex-col gap-1.5">
             <Etiqueta htmlFor="desde">Desde</Etiqueta>
-            <input
-              id="desde"
-              name="desde"
-              type="date"
-              defaultValue={filtros.desde ?? ""}
-              className={claseCampo}
-            />
+            <CampoFecha id="desde" name="desde" valorInicial={filtros.desde ?? ""} />
           </div>
 
           <div className="flex flex-col gap-1.5">
             <Etiqueta htmlFor="hasta">Hasta</Etiqueta>
-            <input
-              id="hasta"
-              name="hasta"
-              type="date"
-              defaultValue={filtros.hasta ?? ""}
-              className={claseCampo}
-            />
+            <CampoFecha id="hasta" name="hasta" valorInicial={filtros.hasta ?? ""} />
           </div>
 
           <div className="flex flex-col gap-1.5">

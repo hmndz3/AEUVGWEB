@@ -6,6 +6,7 @@ import { useState } from "react";
 import { CargaImagen } from "@/components/admin/carga-imagen";
 import { Alerta } from "@/components/ui/alerta";
 import { Boton } from "@/components/ui/boton";
+import { SelectorFechaHora } from "@/components/ui/selector-fecha-hora";
 import { EtiquetaCampo, NotaCamposObligatorios } from "@/components/ui/etiqueta-campo";
 import type { CategoriaResumen, OrganizadoresDisponibles } from "@/lib/eventos/consultas-eventos";
 import { desdeCampoFechaHora } from "@/lib/eventos/formato-fechas";
@@ -265,24 +266,20 @@ export function FormularioEvento({
         </Campo>
 
         <Campo etiqueta="Inicio" nombre="fechaInicio" error={errores.fechaInicio} obligatorio>
-          <input
+          <SelectorFechaHora
             id="fechaInicio"
-            required
-            type="datetime-local"
-            value={valores.fechaInicio}
-            onChange={(evento) => cambiar("fechaInicio", evento.target.value)}
-            className={claseCampo}
+            valor={valores.fechaInicio}
+            onCambiar={(valor) => cambiar("fechaInicio", valor)}
+            invalido={Boolean(errores.fechaInicio)}
           />
         </Campo>
 
         <Campo etiqueta="Finalización" nombre="fechaFin" error={errores.fechaFin} obligatorio>
-          <input
+          <SelectorFechaHora
             id="fechaFin"
-            required
-            type="datetime-local"
-            value={valores.fechaFin}
-            onChange={(evento) => cambiar("fechaFin", evento.target.value)}
-            className={claseCampo}
+            valor={valores.fechaFin}
+            onCambiar={(valor) => cambiar("fechaFin", valor)}
+            invalido={Boolean(errores.fechaFin)}
           />
         </Campo>
 
