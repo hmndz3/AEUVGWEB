@@ -47,9 +47,14 @@ export function ListadoOrganizaciones({
           <p className="text-texto-suave mt-2 max-w-2xl text-sm leading-relaxed">{descripcion}</p>
         </div>
 
-        <Link href={`${ruta}/nueva`}>
-          <Boton>{textoCrear}</Boton>
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          <Link href={`${ruta}/importar`}>
+            <Boton variante="contorno">Importar desde Excel</Boton>
+          </Link>
+          <Link href={`${ruta}/nueva`}>
+            <Boton>{textoCrear}</Boton>
+          </Link>
+        </div>
       </div>
 
       <form method="get" action={ruta} className="flex flex-wrap items-end gap-3">
