@@ -2,6 +2,7 @@ import { AgendaCalendario } from "@/components/eventos/agenda-calendario";
 import { CambioDeVista } from "@/components/eventos/cambio-de-vista";
 import { ControlesCalendario } from "@/components/eventos/controles-calendario";
 import { RejillaCalendario } from "@/components/eventos/rejilla-calendario";
+import { RejillaCompactaCalendario } from "@/components/eventos/rejilla-compacta-calendario";
 import { MarcoSitio } from "@/components/layout/marco-sitio";
 import {
   agruparEventosPorDia,
@@ -58,7 +59,10 @@ export default async function PaginaCalendario({
 
       <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6">
         <ControlesCalendario calendario={calendario} claveHoy={claveDiaLocal(hoy)} />
-        <div className="md:hidden">
+        {/* En el teléfono el mes se ve como rejilla compacta y los días con
+            actividades se leen en la agenda, debajo. */}
+        <div className="flex flex-col gap-5 md:hidden">
+          <RejillaCompactaCalendario calendario={calendario} eventosPorDia={eventosPorDia} />
           <AgendaCalendario calendario={calendario} eventosPorDia={eventosPorDia} />
         </div>
 

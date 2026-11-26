@@ -6,7 +6,7 @@ import { FormEvent, useEffect, useMemo, useState } from "react";
 
 import { CampoAcceso } from "@/components/autenticacion/campo-acceso";
 import { IndicadorSeguridadContrasena } from "@/components/autenticacion/indicador-seguridad-contrasena";
-import { Icono } from "@/components/autenticacion/icono";
+import { Icono } from "@/components/ui/icono";
 import { MarcoAcceso } from "@/components/autenticacion/marco-acceso";
 import {
   EtiquetaCampo,

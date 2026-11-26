@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { Icono } from "@/components/autenticacion/icono";
+import { Icono } from "@/components/ui/icono";
 import { cn } from "@/lib/utils";
 
 type PropsMarcoAcceso = {

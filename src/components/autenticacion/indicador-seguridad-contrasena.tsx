@@ -1,4 +1,4 @@
-import { Icono } from "@/components/autenticacion/icono";
+import { Icono } from "@/components/ui/icono";
 import { evaluarSeguridadContrasena } from "@/lib/seguridad-contrasena";
 
 export function IndicadorSeguridadContrasena({ contrasena }: { contrasena: string }) {

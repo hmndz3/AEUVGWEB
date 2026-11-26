@@ -48,6 +48,11 @@
    */
   --color-sobre-turquesa: #00695a;
   --color-sobre-ambar: #8a5600;
+  /* El morado de la marca sobre su propio tinte (bg-primario-suave). No sirve
+     --color-primario: no cambia con el tema y en modo oscuro se perdía contra
+     el lila del fondo. --color-sobre-primario es otra cosa: el texto sobre el
+     morado sólido. */
+  --color-sobre-primario-suave: #5a35e8;
   --color-sobre-magenta: #a3145f;
   --color-sobre-lavanda: #5a35e8;
   --color-sobre-cielo: #0b5f8a;
@@ -122,6 +127,7 @@ body {
 
   --color-sobre-turquesa: #5fe8cd;
   --color-sobre-ambar: #ffc879;
+  --color-sobre-primario-suave: #cbbcff;
   --color-sobre-magenta: #ff93c6;
   --color-sobre-lavanda: #c4abff;
   --color-sobre-cielo: #85d6ff;

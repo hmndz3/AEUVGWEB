@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 
-import { Icono } from "@/components/autenticacion/icono";
+import { Icono } from "@/components/ui/icono";
 
 type Estado = "pendiente" | "verificando" | "correcto" | "invalido" | "error";
 

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { Icono } from "@/components/autenticacion/icono";
+import { Icono } from "@/components/ui/icono";
 import { EtiquetaCampo } from "@/components/ui/etiqueta-campo";
 import { cn } from "@/lib/utils";
 

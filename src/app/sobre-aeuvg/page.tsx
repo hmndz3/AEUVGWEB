@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import { MarcoSitio } from "@/components/layout/marco-sitio";
 import { TarjetaIntegrante } from "@/components/organizaciones/junta-directiva";
 import { RedesSociales } from "@/components/organizaciones/redes-sociales";
@@ -30,16 +32,37 @@ export default async function PaginaSobreAeuvg() {
 
   return (
     <MarcoSitio>
-      <section className="from-primario to-magenta bg-gradient-to-br text-white">
-        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
-          <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">Sobre AEUVG</h1>
-          <p className="mt-4 max-w-3xl text-lg text-white/85">
+      {/* La presentación iba sobre una franja morada a magenta a todo lo
+          ancho. Con el fondo crema del resto del sitio se leía como un parche
+          de otra página, así que ahora es una tarjeta del mismo lenguaje que
+          las demás: color propio, pero en los tonos suaves del tema. */}
+      <section className="mx-auto w-full max-w-7xl px-4 pt-10 sm:px-6 sm:pt-14">
+        <div className="border-borde bg-superficie relative overflow-hidden rounded-[1.5rem] border p-7 sm:p-12">
+          <span
+            aria-hidden
+            className="bg-primario/15 pointer-events-none absolute -top-16 -right-16 size-56 rounded-full blur-3xl"
+          />
+          <span
+            aria-hidden
+            className="bg-turquesa/15 pointer-events-none absolute -right-4 -bottom-24 size-44 rounded-full blur-3xl"
+          />
+
+          {/* El logotipo no tiene fondo transparente, así que su recuadro va
+              en blanco: sobre un tinte de color se vería el cuadro del PNG. */}
+          <span className="bg-superficie ring-borde relative inline-flex items-center justify-center rounded-2xl p-2.5 shadow-sm ring-1">
+            <Image src="/logo-aeuvg.png" alt="" width={40} height={40} className="rounded-lg" />
+          </span>
+
+          <h1 className="text-texto relative mt-5 text-4xl font-extrabold tracking-tight sm:text-5xl">
+            Sobre AEUVG
+          </h1>
+          <p className="text-texto-suave relative mt-3 max-w-3xl text-lg leading-relaxed">
             Asociación General de Estudiantes de la Universidad del Valle de Guatemala.
           </p>
         </div>
       </section>
 
-      <div className="mx-auto flex max-w-7xl flex-col gap-14 px-4 py-16 sm:px-6">
+      <div className="mx-auto flex max-w-7xl flex-col gap-14 px-4 pt-12 pb-16 sm:px-6">
         <section>
           <h2 className="text-texto text-2xl font-extrabold tracking-tight">Quiénes somos</h2>
           <div className="mt-4">
