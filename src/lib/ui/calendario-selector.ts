@@ -191,15 +191,20 @@ export function horasDisponibles(paso = 30, minimo = "00:00", maximo = "23:59"):
   return horas;
 }
 
-/** La hora como se lee: "2:30 p.m." en lugar de "14:30". */
-export function formatearHora12(hora: string): string {
+/**
+ * La hora como se presenta en toda la plataforma: reloj de 24 horas, "14:30".
+ *
+ * Es el mismo reloj que usan los horarios de los tutores, los turnos del salón
+ * y las fichas de los eventos. Antes el selector mostraba "2:30 p.m." mientras
+ * el resto de la pantalla decía "17:30", y había que traducir de cabeza para
+ * saber si una cosa iba antes que la otra.
+ *
+ * Lo que no sea una hora de reloj se devuelve tal cual, para no inventar un
+ * valor donde hay un error.
+ */
+export function formatearHora24(hora: string): string {
   const minutos = minutosDeHora(hora);
   if (minutos === null) return hora;
 
-  const h = Math.floor(minutos / 60);
-  const m = minutos % 60;
-  const meridiano = h < 12 ? "a.m." : "p.m.";
-  const doce = h % 12 === 0 ? 12 : h % 12;
-
-  return `${doce}:${String(m).padStart(2, "0")} ${meridiano}`;
+  return horaDeMinutos(minutos);
 }

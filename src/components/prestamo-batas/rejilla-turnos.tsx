@@ -2,18 +2,32 @@
 
 import { useMemo, useState } from "react";
 
-import { construirRejillaTurnos, type TurnoUbicable } from "@/lib/prestamo-batas/rejilla-turnos";
-import type { BloqueRejilla } from "@/lib/prestamo-batas/rejilla-turnos";
+import {
+  construirRejillaTurnos,
+  type BloqueRejilla,
+  type RejillaTurnos as Rejilla,
+  type TurnoUbicable,
+} from "@/lib/prestamo-batas/rejilla-turnos";
 import type { DiaSemana } from "@prisma/client";
+
+/** Los días que comparten el mismo horario de atención. */
+const ENTRE_SEMANA: DiaSemana[] = ["LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES"];
 
 /**
  * Horario del salón: los bloques de hora en el costado y los días arriba.
  *
  * Antes los turnos se listaban uno debajo de otro y había que leerlos enteros
  * para ubicar una hora. Puesto como cuadrícula se reconoce de un vistazo, que
- * es como la gente lee un horario. En el teléfono no caben seis columnas sin
- * volver ilegible la letra, así que ahí se escoge el día con una pestaña y se
- * ven sus bloques; es el mismo horario, visto un día a la vez.
+ * es como la gente lee un horario.
+ *
+ * El fin de semana va en su propia tabla, a la derecha: el sábado se abre a
+ * otras horas, y meterlo en la misma cuadrícula obligaba a dibujar sus bloques
+ * como filas que quedaban vacías de lunes a viernes, de modo que la mitad del
+ * horario eran casillas sin nada. Separados, cada tabla enseña solo sus horas.
+ *
+ * En el teléfono no caben seis columnas sin volver ilegible la letra, así que
+ * ahí se escoge el día con una pestaña y se ven sus bloques; es el mismo
+ * horario, visto un día a la vez, y la ambigüedad no se da.
  *
  * El contenido de cada casilla lo pone quien usa la cuadrícula: el estudiantado
  * ve quién atiende, el postulante una casilla para marcar y el panel los
@@ -31,10 +45,20 @@ export function RejillaTurnos<T extends TurnoUbicable>({
   casillaVacia?: (dia: DiaSemana, bloque: BloqueRejilla) => React.ReactNode;
   vacio?: React.ReactNode;
 }) {
-  const rejilla = useMemo(() => construirRejillaTurnos(turnos), [turnos]);
+  const { completa, semana, finDeSemana } = useMemo(
+    () => ({
+      completa: construirRejillaTurnos(turnos),
+      semana: construirRejillaTurnos(turnos.filter((turno) => ENTRE_SEMANA.includes(turno.dia))),
+      finDeSemana: construirRejillaTurnos(
+        turnos.filter((turno) => !ENTRE_SEMANA.includes(turno.dia))
+      ),
+    }),
+    [turnos]
+  );
+
   const [diaActivo, setDiaActivo] = useState<DiaSemana | null>(null);
 
-  if (rejilla.columnas.length === 0) {
+  if (completa.columnas.length === 0) {
     return (
       <div className="border-borde bg-superficie-suave text-texto-suave rounded-[1.25rem] border border-dashed px-6 py-10 text-center text-sm">
         {vacio}
@@ -42,9 +66,9 @@ export function RejillaTurnos<T extends TurnoUbicable>({
     );
   }
 
-  const dia = diaActivo ?? rejilla.columnas[0].dia;
-  const delDia = rejilla.bloques
-    .map((bloque) => ({ bloque, turno: rejilla.celda(dia, bloque.clave) }))
+  const dia = diaActivo ?? completa.columnas[0].dia;
+  const delDia = completa.bloques
+    .map((bloque) => ({ bloque, turno: completa.celda(dia, bloque.clave) }))
     .filter((fila) => fila.turno !== null);
 
   return (
@@ -52,7 +76,7 @@ export function RejillaTurnos<T extends TurnoUbicable>({
       {/* Teléfono: un día a la vez. */}
       <div className="flex flex-col gap-4 md:hidden">
         <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
-          {rejilla.columnas.map((columna) => (
+          {completa.columnas.map((columna) => (
             <button
               key={columna.dia}
               type="button"
@@ -83,35 +107,66 @@ export function RejillaTurnos<T extends TurnoUbicable>({
         </div>
       </div>
 
-      {/* Escritorio: la semana completa. */}
-      <div
-        className="border-borde bg-superficie hidden overflow-hidden rounded-[1.25rem] border md:grid"
-        style={{
-          gridTemplateColumns: `5.5rem repeat(${rejilla.columnas.length}, minmax(0, 1fr))`,
-        }}
-      >
-        <span className="border-borde bg-superficie-suave border-r border-b" />
-        {rejilla.columnas.map((columna) => (
-          <span
-            key={columna.dia}
-            className="border-borde bg-superficie-suave text-texto border-b px-2 py-2.5 text-center text-sm font-bold"
-          >
-            {columna.etiqueta}
-          </span>
-        ))}
-
-        {rejilla.bloques.map((bloque, indice) => (
-          <Fila
-            key={bloque.clave}
-            bloque={bloque}
-            ultima={indice === rejilla.bloques.length - 1}
-            columnas={rejilla.columnas.map((columna) => columna.dia)}
-            rejilla={rejilla}
-            casilla={casilla}
-            casillaVacia={casillaVacia}
-          />
-        ))}
+      {/* Escritorio: entre semana a la izquierda y el fin de semana a la derecha.
+          Cada tabla crece según cuántos días tenga, para que las columnas
+          queden del mismo ancho en las dos. */}
+      <div className="hidden items-start gap-4 md:flex">
+        {[semana, finDeSemana]
+          .filter((rejilla) => rejilla.columnas.length > 0)
+          .map((rejilla) => (
+            <Cuadricula
+              key={rejilla.columnas[0].dia}
+              rejilla={rejilla}
+              casilla={casilla}
+              casillaVacia={casillaVacia}
+            />
+          ))}
       </div>
+    </div>
+  );
+}
+
+/** Una de las dos tablas del horario, con sus propios bloques de hora. */
+function Cuadricula<T extends TurnoUbicable>({
+  rejilla,
+  casilla,
+  casillaVacia,
+}: {
+  rejilla: Rejilla<T>;
+  casilla: (turno: T) => React.ReactNode;
+  casillaVacia?: (dia: DiaSemana, bloque: BloqueRejilla) => React.ReactNode;
+}) {
+  return (
+    <div
+      className="border-borde bg-superficie grid overflow-hidden rounded-[1.25rem] border"
+      style={{
+        // La columna de horas no cuenta para el reparto: lo que se iguala entre
+        // las dos tablas es el ancho de los días.
+        flex: `${rejilla.columnas.length} 1 0`,
+        gridTemplateColumns: `4.5rem repeat(${rejilla.columnas.length}, minmax(0, 1fr))`,
+      }}
+    >
+      <span className="border-borde bg-superficie-suave border-r border-b" />
+      {rejilla.columnas.map((columna) => (
+        <span
+          key={columna.dia}
+          className="border-borde bg-superficie-suave text-texto border-b px-2 py-2.5 text-center text-sm font-bold"
+        >
+          {columna.etiqueta}
+        </span>
+      ))}
+
+      {rejilla.bloques.map((bloque, indice) => (
+        <Fila
+          key={bloque.clave}
+          bloque={bloque}
+          ultima={indice === rejilla.bloques.length - 1}
+          columnas={rejilla.columnas.map((columna) => columna.dia)}
+          rejilla={rejilla}
+          casilla={casilla}
+          casillaVacia={casillaVacia}
+        />
+      ))}
     </div>
   );
 }
@@ -133,7 +188,7 @@ function Fila<T extends TurnoUbicable>({
   /** La última fila no lleva línea abajo: ahí ya está el borde de la tarjeta. */
   ultima: boolean;
   columnas: DiaSemana[];
-  rejilla: ReturnType<typeof construirRejillaTurnos<T>>;
+  rejilla: Rejilla<T>;
   casilla: (turno: T) => React.ReactNode;
   casillaVacia?: (dia: DiaSemana, bloque: BloqueRejilla) => React.ReactNode;
 }) {

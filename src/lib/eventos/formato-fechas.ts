@@ -36,9 +36,12 @@ const fechaConAnio = new Intl.DateTimeFormat(LOCALE, {
   timeZone: ZONA_HORARIA,
 });
 
+// hour12: false en todos los formateadores: es-GT escribe la hora en doce
+// horas por omisión, y la plataforma usa el reloj de 24 en todas partes.
 const hora = new Intl.DateTimeFormat(LOCALE, {
   hour: "2-digit",
   minute: "2-digit",
+  hour12: false,
   timeZone: ZONA_HORARIA,
 });
 

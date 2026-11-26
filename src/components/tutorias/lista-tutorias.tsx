@@ -5,7 +5,7 @@ import { Avatar } from "@/components/ui/avatar";
 import { EtiquetaEstado } from "@/components/ui/etiqueta-estado";
 import type { TutoriaVista } from "@/lib/tutorias/consultas-tutorias";
 import { ETIQUETAS_ESTADO_TUTORIA, ETIQUETAS_MODALIDAD } from "@/lib/tutorias/formato-tutorias";
-import { formatearHora12 } from "@/lib/ui/calendario-selector";
+import { formatearHora24 } from "@/lib/ui/calendario-selector";
 
 const TONOS = {
   PROGRAMADA: "pendiente",
@@ -33,7 +33,7 @@ const MESES_CORTOS = [
 const enGuatemala = (fecha: Date, opciones: Intl.DateTimeFormatOptions) =>
   new Intl.DateTimeFormat("es-GT", { ...opciones, timeZone: "America/Guatemala" }).format(fecha);
 
-/** La hora de reloj del país, para poder presentarla en doce horas. */
+/** La hora de reloj del país, en el reloj de 24 horas de la plataforma. */
 function horaDelPais(fecha: Date): string {
   return enGuatemala(fecha, { hour: "2-digit", minute: "2-digit", hour12: false });
 }
@@ -191,8 +191,8 @@ export function ListaTutorias({
 
                 <div className="grid gap-2 sm:grid-cols-2">
                   <Dato trazo={TRAZO_RELOJ}>
-                    {formatearHora12(horaDelPais(tutoria.fechaInicio))} a{" "}
-                    {formatearHora12(horaDelPais(tutoria.fechaFin))}
+                    {formatearHora24(horaDelPais(tutoria.fechaInicio))} a{" "}
+                    {formatearHora24(horaDelPais(tutoria.fechaFin))}
                     <span className="block text-xs">
                       {duracionDe(tutoria.fechaInicio, tutoria.fechaFin)} ·{" "}
                       {ETIQUETAS_MODALIDAD[tutoria.modalidad]}

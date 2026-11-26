@@ -64,7 +64,9 @@ test("la clave del día usa la zona horaria de Guatemala y no la del sistema", (
 });
 
 test("la hora se muestra convertida a la hora local de Guatemala", () => {
-  assert.match(formatearHora(new Date("2027-02-10T21:00:00.000Z")), /\b03\b/);
+  // Las 21:00 UTC son las 15:00 en Guatemala, y la plataforma usa el reloj de
+  // 24 horas en todas partes: ni "3:00" ni "03:00 p.m.".
+  assert.equal(formatearHora(new Date("2027-02-10T21:00:00.000Z")), "15:00");
 });
 
 test("un evento de un solo día muestra una fecha y sus dos horas", () => {

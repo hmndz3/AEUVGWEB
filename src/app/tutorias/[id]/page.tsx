@@ -109,8 +109,9 @@ export default async function PaginaTutor({ params }: { params: Promise<{ id: st
         <section className="border-borde bg-superficie rounded-[1.25rem] border p-6">
           <h2 className="text-texto text-lg font-bold">Solicitar una tutoría</h2>
           <p className="text-texto-suave mt-1 mb-5 text-sm leading-relaxed">
-            Queda agendada de una vez: el tutor ya publicó en qué horarios puede. Si surge algo,
-            cualquiera de los dos puede cancelarla desde su perfil.
+            Elige un horario de los que el tutor publicó. Él recibe la solicitud y la acepta o la
+            rechaza; te avisamos en cuanto responda. Si surge algo, cualquiera de los dos puede
+            cancelarla desde su perfil.
           </p>
 
           <FormularioSolicitud tutor={tutor} conSesion={acceso.tipo === "autorizado"} />
