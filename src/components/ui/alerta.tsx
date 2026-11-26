@@ -3,10 +3,10 @@ import { cn } from "@/lib/utils";
 type TipoAlerta = "exito" | "advertencia" | "error" | "informativo";
 
 const TIPOS: Record<TipoAlerta, string> = {
-  exito: "bg-exito/10 border-exito/30 text-[#0b6f4a]",
-  advertencia: "bg-advertencia/10 border-advertencia/30 text-[#8a5600]",
-  error: "bg-error/10 border-error/30 text-[#a3132a]",
-  informativo: "bg-informativo/10 border-informativo/30 text-[#1a6ab0]",
+  exito: "bg-exito/10 border-exito/30 text-sobre-turquesa",
+  advertencia: "bg-advertencia/10 border-advertencia/30 text-sobre-ambar",
+  error: "bg-error/10 border-error/30 text-sobre-coral",
+  informativo: "bg-informativo/10 border-informativo/30 text-sobre-cielo",
 };
 
 export function Alerta({

@@ -97,7 +97,7 @@ export function FiltrosAplicados({
         <Link
           key={aplicado.clave}
           href={enlaceSin(aplicado.clave)}
-          className="bg-primario-suave text-primario-fuerte hover:bg-primario/20 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold transition-colors"
+          className="bg-primario-suave text-sobre-lavanda hover:bg-primario/20 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold transition-colors"
         >
           {aplicado.texto}
           <span aria-hidden>×</span>

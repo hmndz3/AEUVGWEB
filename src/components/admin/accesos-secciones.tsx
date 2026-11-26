@@ -22,11 +22,11 @@ const APARIENCIA: Record<RutaSeccion, { acento: string; trazo: React.ReactNode }
     ),
   },
   "/admin/eventos": {
-    acento: "bg-turquesa/15 text-[#00876f]",
+    acento: "bg-turquesa/15 text-sobre-turquesa",
     trazo: <path d="M5 20.5V4.5M5 5h11.5l-2 3.75 2 3.75H5M5 20.5h3" />,
   },
   "/admin/calendario": {
-    acento: "bg-cielo/15 text-[#0b7fb8]",
+    acento: "bg-cielo/15 text-sobre-cielo",
     trazo: (
       <>
         <rect x="3.5" y="5.5" width="17" height="15" rx="2" />
@@ -35,7 +35,7 @@ const APARIENCIA: Record<RutaSeccion, { acento: string; trazo: React.ReactNode }
     ),
   },
   "/admin/sobre-aeuvg": {
-    acento: "bg-magenta/12 text-[#c22a77]",
+    acento: "bg-magenta/12 text-sobre-magenta",
     trazo: (
       <>
         <path d="M12 3.5 20 8v1.5H4V8l8-4.5Z" />
@@ -44,7 +44,7 @@ const APARIENCIA: Record<RutaSeccion, { acento: string; trazo: React.ReactNode }
     ),
   },
   "/admin/asociaciones": {
-    acento: "bg-coral/12 text-[#d8403d]",
+    acento: "bg-coral/12 text-sobre-coral",
     trazo: (
       <>
         <circle cx="12" cy="7.5" r="3" />
@@ -55,13 +55,13 @@ const APARIENCIA: Record<RutaSeccion, { acento: string; trazo: React.ReactNode }
     ),
   },
   "/admin/clubes": {
-    acento: "bg-lavanda/15 text-[#7a4fd1]",
+    acento: "bg-lavanda/15 text-sobre-lavanda",
     trazo: (
       <path d="m12 3.75 2.5 5.1 5.6.8-4.05 3.95.95 5.6L12 16.55 6.99 19.2l.96-5.6L3.9 9.65l5.6-.8L12 3.75Z" />
     ),
   },
   "/admin/horas-beca": {
-    acento: "bg-ambar/18 text-[#a86a00]",
+    acento: "bg-ambar/18 text-sobre-ambar",
     trazo: (
       <>
         <circle cx="12" cy="12" r="8.5" />
@@ -70,7 +70,7 @@ const APARIENCIA: Record<RutaSeccion, { acento: string; trazo: React.ReactNode }
     ),
   },
   "/admin/tutorias": {
-    acento: "bg-lima/18 text-[#3f7d1c]",
+    acento: "bg-lima/18 text-sobre-lima",
     trazo: (
       <>
         <path d="m2.5 9 9.5-4.5L21.5 9 12 13.5 2.5 9Z" />

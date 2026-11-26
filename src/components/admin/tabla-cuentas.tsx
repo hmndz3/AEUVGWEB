@@ -105,7 +105,7 @@ export function TablaCuentas({
                 {/* Una cuenta sin verificar no ha confirmado su correo: es el
                     dato que explica por qué alguien no puede entrar. */}
                 {!cuenta.correoVerificado && (
-                  <span className="block text-xs font-semibold text-[#8a5600]">
+                  <span className="text-sobre-ambar block text-xs font-semibold">
                     Correo sin verificar
                   </span>
                 )}

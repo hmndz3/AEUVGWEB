@@ -28,19 +28,19 @@ const ACCESOS: Acceso[] = [
     href: "/calendario",
     titulo: "Calendario",
     descripcion: "Revisa el mes o la semana completa de un vistazo.",
-    clase: "bg-cielo/15 text-[#0b5f8a]",
+    clase: "bg-cielo/15 text-sobre-cielo",
   },
   {
     href: "/asociaciones",
     titulo: "Asociaciones",
     descripcion: "Conoce las asociaciones de facultad y de carrera, y a quienes las integran.",
-    clase: "bg-magenta/12 text-[#a3145f]",
+    clase: "bg-magenta/12 text-sobre-magenta",
   },
   {
     href: "/clubes",
     titulo: "Clubes",
     descripcion: "Encuentra el club que va con lo tuyo y cómo integrarte.",
-    clase: "bg-lavanda/20 text-[#5a35e8]",
+    clase: "bg-lavanda/20 text-sobre-lavanda",
   },
   {
     // Apuntaba a /iniciar-sesion, y con la sesión ya iniciada el middleware
@@ -50,13 +50,13 @@ const ACCESOS: Acceso[] = [
     href: "/perfil#mis-horas-beca",
     titulo: "Horas beca",
     descripcion: "Revisa tus horas realizadas, acreditadas y pendientes.",
-    clase: "bg-turquesa/15 text-[#00695a]",
+    clase: "bg-turquesa/15 text-sobre-turquesa",
   },
   {
     href: "/tutorias",
     titulo: "Tutorías",
     descripcion: "Encuentra tutores por curso y horario, y solicita una tutoría.",
-    clase: "bg-ambar/20 text-[#8a5600]",
+    clase: "bg-ambar/20 text-sobre-ambar",
   },
 ];
 

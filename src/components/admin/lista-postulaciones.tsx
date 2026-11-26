@@ -83,7 +83,7 @@ export function ListaPostulaciones({ postulaciones }: { postulaciones: Postulaci
 
                   <div className="flex items-center gap-3">
                     <span
-                      className={`text-sm font-bold ${suficiente ? "text-[#00695a]" : "text-error"}`}
+                      className={`text-sm font-bold ${suficiente ? "text-sobre-turquesa" : "text-error"}`}
                     >
                       {curso.notaObtenida ?? "—"}
                     </span>

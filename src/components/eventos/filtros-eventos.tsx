@@ -81,7 +81,7 @@ export function FiltrosEventosBarra({
           </span>
           Filtros
           {activos > 0 && (
-            <span className="bg-primario-suave text-primario-fuerte rounded-full px-2 py-0.5 text-xs font-bold">
+            <span className="bg-primario-suave text-sobre-lavanda rounded-full px-2 py-0.5 text-xs font-bold">
               {activos}
             </span>
           )}

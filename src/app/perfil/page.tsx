@@ -7,6 +7,7 @@ import { FotoPerfil } from "@/components/perfil/foto-perfil";
 import { HorasBecaPerfil } from "@/components/perfil/horas-beca";
 import { InteresesPerfil } from "@/components/perfil/intereses";
 import { RecomendacionesPerfil } from "@/components/perfil/recomendaciones";
+import { TemaPerfil } from "@/components/perfil/tema";
 import { TutoriasPerfil } from "@/components/perfil/tutorias";
 import { verificarAcceso } from "@/lib/auth/guardias";
 import { listarCategorias } from "@/lib/eventos/consultas-eventos";
@@ -89,6 +90,8 @@ export default async function PaginaPerfil() {
         <EventosGuardadosPerfil eventos={guardados} ahora={ahora} />
 
         <InteresesPerfil categorias={categorias} elegidas={intereses} />
+
+        <TemaPerfil />
       </div>
     </MarcoSitio>
   );

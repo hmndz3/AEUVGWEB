@@ -94,7 +94,7 @@ export function InteresesPerfil({
               key={categoria.idCategoriaEvento}
               className={`border-borde inline-flex cursor-pointer items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
                 marcada
-                  ? "border-primario bg-primario-suave text-primario-fuerte"
+                  ? "border-primario bg-primario-suave text-sobre-lavanda"
                   : "bg-superficie text-texto-suave"
               } ${alTope ? "cursor-not-allowed opacity-50" : "hover:bg-superficie-suave"}`}
             >

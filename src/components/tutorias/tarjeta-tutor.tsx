@@ -48,7 +48,7 @@ export function TarjetaTutor({ tutor }: { tutor: TutorVista }) {
             <span
               key={curso.idCurso}
               title={curso.nombre}
-              className="bg-primario-suave text-primario-fuerte rounded-full px-3 py-1 text-xs font-semibold"
+              className="bg-primario-suave text-sobre-lavanda rounded-full px-3 py-1 text-xs font-semibold"
             >
               {curso.codigo}
             </span>

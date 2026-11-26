@@ -14,10 +14,10 @@ import {
 
 /** Un color por tipo, para distinguirlos de un vistazo sin leerlos. */
 const TONOS: Record<string, string> = {
-  [TIPOS_NOTIFICACION.postulacion]: "bg-lavanda/20 text-[#5a35e8]",
-  [TIPOS_NOTIFICACION.tutoria]: "bg-cielo/15 text-[#0b5f8a]",
-  [TIPOS_NOTIFICACION.horasBeca]: "bg-turquesa/15 text-[#00695a]",
-  [TIPOS_NOTIFICACION.evento]: "bg-magenta/12 text-[#a3145f]",
+  [TIPOS_NOTIFICACION.postulacion]: "bg-lavanda/20 text-sobre-lavanda",
+  [TIPOS_NOTIFICACION.tutoria]: "bg-cielo/15 text-sobre-cielo",
+  [TIPOS_NOTIFICACION.horasBeca]: "bg-turquesa/15 text-sobre-turquesa",
+  [TIPOS_NOTIFICACION.evento]: "bg-magenta/12 text-sobre-magenta",
 };
 
 /**

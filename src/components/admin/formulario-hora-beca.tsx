@@ -74,7 +74,7 @@ function BurbujaEstudiante({ burbuja, alQuitar }: { burbuja: Burbuja; alQuitar: 
   return (
     <span
       className={`inline-flex max-w-full items-center gap-2 rounded-full py-1 pr-1 pl-1.5 text-sm ${
-        conCuenta ? "bg-turquesa/15 text-[#00695a]" : "bg-ambar/20 text-[#8a5600]"
+        conCuenta ? "bg-turquesa/15 text-sobre-turquesa" : "bg-ambar/20 text-sobre-ambar"
       }`}
     >
       <span
