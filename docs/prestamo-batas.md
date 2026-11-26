@@ -61,20 +61,27 @@ Enums: `TipoArticuloBata` (bata_azul, bata_blanca, lentes), `TallaBata`
 (pendiente, aprobado, rechazado). Las postulaciones reutilizan `EstadoPostulacion`
 y los turnos `DiaSemana`.
 
-| Modelo | Para qué |
-|---|---|
-| `TurnoVoluntariado` | Catálogo de turnos (día + horario), con `cupo`. Gestionado por el admin. |
-| `PostulacionVoluntario` + `TurnoPostulacion` | Postulación del estudiante y los turnos que eligió. |
-| `AsignacionVoluntario` | Voluntario asignado a un turno (baja lógica con `activo`; único por turno+estudiante). |
-| `ArticuloInventario` | Un tipo+talla de artículo con su `cantidadTotal` (único por tipo+talla). |
-| `PrestamoBata` + `ArticuloPrestado` | Un préstamo con sus líneas; cada línea descuenta del inventario mientras el préstamo está `PRESTADO`. |
-| `ListaNegraBata` | Quien no devolvió o devolvió con un problema. Solo nombre y justificación obligatorios. |
-| `ComprobanteTurno` | Entrada/salida de un turno; al aprobarse se liga al `RegistroHoraBeca` creado. |
+| Modelo                                       | Para qué                                                                                              |
+| -------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `TurnoVoluntariado`                          | Catálogo de turnos (día + horario), con `cupo`. Gestionado por el admin.                              |
+| `PostulacionVoluntario` + `TurnoPostulacion` | Postulación del estudiante y los turnos que eligió.                                                   |
+| `AsignacionVoluntario`                       | Voluntario asignado a un turno (baja lógica con `activo`; único por turno+estudiante).                |
+| `ArticuloInventario`                         | Un tipo+talla de artículo con su `cantidadTotal` (único por tipo+talla).                              |
+| `PrestamoBata` + `ArticuloPrestado`          | Un préstamo con sus líneas; cada línea descuenta del inventario mientras el préstamo está `PRESTADO`. |
+| `ListaNegraBata`                             | Quien no devolvió o devolvió con un problema. Solo nombre y justificación obligatorios.               |
+| `ComprobanteTurno`                           | Entrada/salida de un turno; al aprobarse se liga al `RegistroHoraBeca` creado.                        |
 
 Horas y horarios se guardan como `time(0)` (hora del día en UTC, como la
 disponibilidad de los tutores); las fechas de préstamo y comprobante como `date`
 (día de calendario en UTC). Ver `src/lib/prestamo-batas/formato-prestamo-batas.ts`
 para las conversiones y el cálculo de la duración del turno.
+
+Por eso el día de la semana de esas fechas se lee en UTC, con
+`diaSemanaDeFechaDeCalendario`, y no con el `diaSemanaDe` de tutorías, que lee la
+zona de Guatemala. Tutorías compara instantes reales y ahí la zona es lo
+correcto; aquí la fecha es un día de calendario a medianoche UTC, y como
+Guatemala va seis horas detrás, leerla en esa zona la corría al día anterior: el
+jueves se leía miércoles y ningún comprobante pasaba la validación del día.
 
 ## 4. Código
 
@@ -106,7 +113,19 @@ Carga las franjas de lunes a viernes (06:45–09:00, 09:00–12:00, 12:00–15:0
 azules y blancas en las cuatro tallas y un lote de lentes. Volver a ejecutarlo no
 duplica nada ni pisa las cantidades que ya se hayan ajustado desde el panel.
 
-## 6. Despliegue
+## 6. Comprobar la base
+
+Después de migrar y sembrar, se comprueba contra la base que todo quedó bien:
+las tablas y los enums, el rol, los turnos, que las batas tengan talla y los
+lentes no, que ningún turno pase de su cupo, que lo prestado no supere el total
+y que todo comprobante aprobado tenga su registro de horas.
+
+```bash
+npm run db:verificar-batas            # base local
+npm run db:railway:verificar-batas    # Railway, por el túnel
+```
+
+## 7. Despliegue
 
 La migración `20261126173647_add_prestamo_batas_y_voluntariado` solo agrega tablas
 y enums, así que es segura de aplicar antes de publicar (ver
