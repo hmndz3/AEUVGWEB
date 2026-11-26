@@ -2,6 +2,7 @@ import { ExportarHorasBeca } from "@/components/admin/exportar-horas-beca";
 import { FiltrosReportePanel } from "@/components/admin/filtros-reporte";
 import { HorasPorEstudiante } from "@/components/admin/horas-por-estudiante";
 import { HorasPorMes } from "@/components/admin/horas-por-mes";
+import { PestanasReportes } from "@/components/admin/pestanas-reportes";
 import { ResumenPrograma } from "@/components/admin/resumen-programa";
 import {
   MAXIMO_ESTUDIANTES_REPORTE,
@@ -35,6 +36,8 @@ export default async function PaginaAdminReportes({
           vengan del formulario del panel o de una importación.
         </p>
       </div>
+
+      <PestanasReportes activa="horas" />
 
       <FiltrosReportePanel filtros={filtros} />
 
