@@ -1,4 +1,6 @@
-import { normalizarTexto } from "@/lib/busqueda-texto";
+import { aHora24, normalizarEncabezado } from "@/lib/importacion/celdas";
+
+export { aHora24, normalizarEncabezado };
 
 /**
  * Nombres con los que puede venir cada columna del archivo.
@@ -47,40 +49,11 @@ export const ALIAS_HORARIO = ["horario de apoyo", "horario", "horario de la acti
 /** Columnas que la hoja puede traer y el importador no necesita. */
 export const COLUMNAS_IGNORADAS = ["correo", "correo uvg", "correo institucional", "email"];
 
-/** Encabezado en la única forma en la que se compara. */
-export function normalizarEncabezado(titulo: string): string {
-  return normalizarTexto(titulo.replace(/[.:]/g, " "));
-}
-
 /**
  * Separadores con los que se escribe un rango de horas: un guion de cualquier
  * clase, "a" o "hasta".
  */
 const SEPARADOR_HORARIO = /\s*(?:[-–—]|\ba\b|\bhasta\b)\s*/;
-
-/**
- * Hora suelta a formato de 24 horas.
- *
- * Acepta "14:00", "9:00", "2:00 pm" y "2 pm", que son las formas en las que
- * aparece escrita a mano en las hojas. Devuelve null si no se reconoce, para
- * que la fila se reporte en lugar de guardarse con una hora inventada.
- */
-export function aHora24(texto: string): string | null {
-  const limpio = texto.trim().toLocaleLowerCase("es").replace(/\./g, "");
-  const partes = limpio.match(/^(\d{1,2})(?::(\d{2}))?\s*(am|pm)?$/);
-
-  if (!partes) return null;
-
-  let horas = Number(partes[1]);
-  const minutos = partes[2] ?? "00";
-  const meridiano = partes[3];
-
-  if (meridiano === "pm" && horas < 12) horas += 12;
-  if (meridiano === "am" && horas === 12) horas = 0;
-  if (horas > 23 || Number(minutos) > 59) return null;
-
-  return `${String(horas).padStart(2, "0")}:${minutos}`;
-}
 
 /**
  * Parte "14:00-16:00" en sus dos horas.
