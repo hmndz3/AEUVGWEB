@@ -2,9 +2,12 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  franjaDelRango,
   franjaQueCubre,
+  franjasDelDia,
   instanteEnGuatemala,
   modalidadCompatible,
+  numeroDeDiaDeIso,
   seTraslapan,
   type FranjaDisponible,
 } from "../src/lib/tutorias/agenda-tutorias";
@@ -465,4 +468,72 @@ test("quien no es tutor no toca ninguna franja", async () => {
   assert.equal(quitada.tipo, "no_es_tutor");
   assert.equal(repositorio.agregadas.length, 0);
   assert.equal(repositorio.quitadas.length, 0);
+});
+
+/*
+ * Lo que usa el formulario de solicitud para acotar el calendario y el reloj.
+ * Trabaja sobre el día de calendario que eligió el estudiante, sin pasarlo a
+ * instante: es lo que permitió quitar del formulario el selector de franja,
+ * que solo repetía el horario que la ficha del tutor ya muestra.
+ */
+
+test("el día de la semana sale de la fecha y no de la zona del navegador", () => {
+  // JUEVES es "2026-11-19"; 4 es jueves en la convención de JavaScript.
+  assert.equal(numeroDeDiaDeIso(JUEVES), 4);
+  assert.equal(numeroDeDiaDeIso("2026-11-22"), 0);
+});
+
+test("una fecha mal escrita o imposible no devuelve día", () => {
+  for (const iso of ["", "19-11-2026", "2026-11", "2026-02-31", "2026-13-01"]) {
+    assert.equal(numeroDeDiaDeIso(iso), null, `${iso} no debería tener día`);
+  }
+});
+
+test("del día elegido solo se toman las franjas de ese día", () => {
+  const franjas = [
+    franja({ horaInicio: "08:00", horaFin: "10:00" }),
+    franja({ diaSemana: "LUNES" }),
+    franja({ horaInicio: "14:00", horaFin: "18:00" }),
+  ];
+
+  const delJueves = franjasDelDia(franjas, JUEVES);
+
+  assert.equal(delJueves.length, 2);
+  assert.deepEqual(
+    delJueves.map((opcion) => opcion.horaInicio),
+    ["08:00", "14:00"]
+  );
+});
+
+test("el rango pedido se agenda en la franja que lo contiene entero", () => {
+  const franjas = [
+    franja({ horaInicio: "08:00", horaFin: "10:00", modalidad: "VIRTUAL" }),
+    franja({ horaInicio: "14:00", horaFin: "18:00", modalidad: "PRESENCIAL" }),
+  ];
+
+  assert.equal(franjaDelRango(franjas, JUEVES, "15:00", "16:00")?.modalidad, "PRESENCIAL");
+  assert.equal(franjaDelRango(franjas, JUEVES, "08:30", "09:00")?.modalidad, "VIRTUAL");
+});
+
+test("un rango en el hueco entre dos franjas no se agenda", () => {
+  // Es el caso que el formulario marca en rojo: el reloj ofrece de 08:00 a
+  // 18:00 porque son los extremos del día, pero de 10:00 a 14:00 no atiende.
+  const franjas = [
+    franja({ horaInicio: "08:00", horaFin: "10:00" }),
+    franja({ horaInicio: "14:00", horaFin: "18:00" }),
+  ];
+
+  assert.equal(franjaDelRango(franjas, JUEVES, "11:00", "12:00"), null);
+  // Tampoco si se pasa del final de una franja hacia el hueco.
+  assert.equal(franjaDelRango(franjas, JUEVES, "09:00", "15:00"), null);
+});
+
+test("sin horas, con horas al revés o en otro día no hay franja", () => {
+  const franjas = [franja()];
+
+  assert.equal(franjaDelRango(franjas, JUEVES, "", ""), null);
+  assert.equal(franjaDelRango(franjas, JUEVES, "16:00", "15:00"), null);
+  assert.equal(franjaDelRango(franjas, JUEVES, "15:00", "15:00"), null);
+  // 2026-11-20 es viernes y el tutor solo atiende los jueves.
+  assert.equal(franjaDelRango(franjas, "2026-11-20", "15:00", "16:00"), null);
 });
