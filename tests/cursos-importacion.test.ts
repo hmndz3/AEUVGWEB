@@ -172,6 +172,8 @@ test("el mismo código repetido dentro del archivo entra una sola vez", () => {
   assert.equal(validacion.validas.length, 1);
   assert.equal(validacion.repetidas.length, 1);
   assert.equal(validacion.repetidas[0].fila, 3);
+  // El problema está en la hoja, no en el catálogo: se dice así.
+  assert.match(validacion.repetidas[0].mensaje, /fila anterior del archivo/);
 });
 
 // ---------------------------------------------------------------------------

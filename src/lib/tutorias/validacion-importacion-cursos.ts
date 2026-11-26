@@ -64,11 +64,17 @@ export function validarFilasDeCursos(
     const registrado = conocidos.get(codigo);
 
     if (registrado !== undefined) {
+      // Un código que ya estaba en el catálogo y uno que se repite dentro del
+      // archivo se omiten igual, pero no se explican igual: en el segundo caso
+      // el problema está en la hoja y hay que decirlo así.
+      const delArchivo = !registrados.has(codigo);
+
       repetidas.push({
         fila: cruda.fila,
         referencia: codigo,
-        mensaje:
-          registrado === nombre
+        mensaje: delArchivo
+          ? "Ese código ya venía en una fila anterior del archivo, así que el curso se creó una sola vez."
+          : registrado === nombre
             ? "Ya existe un curso con ese código, así que no se creó otro."
             : `Ya existe un curso con ese código, registrado como «${registrado}». Se conservó ese nombre; cámbialo desde el catálogo si hace falta.`,
       });
