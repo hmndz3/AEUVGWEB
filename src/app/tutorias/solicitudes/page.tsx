@@ -32,10 +32,17 @@ export default async function PaginaSolicitudes() {
 
   const tutorias = await listarTutoriasDeTutor(acceso.usuario.idUsuario);
 
-  const programadas = tutorias.filter((tutoria) => tutoria.estado === "PROGRAMADA");
+  // En pie son las dos primeras: la que espera respuesta y la ya aceptada,
+  // que es donde el tutor sube sus pruebas. Si la aceptada cayera en el
+  // historial, el tutor no encontraría dónde dar la tutoría por impartida.
+  const enPie = tutorias.filter(
+    (tutoria) => tutoria.estado === "PROGRAMADA" || tutoria.estado === "ACEPTADA"
+  );
+  const porResponder = tutorias.filter((tutoria) => tutoria.estado === "PROGRAMADA").length;
   const completadas = tutorias.filter((tutoria) => tutoria.estado === "COMPLETADA").length;
-  const canceladas = tutorias.filter((tutoria) => tutoria.estado === "CANCELADA").length;
-  const pasadas = tutorias.filter((tutoria) => tutoria.estado !== "PROGRAMADA");
+  const pasadas = tutorias.filter(
+    (tutoria) => tutoria.estado !== "PROGRAMADA" && tutoria.estado !== "ACEPTADA"
+  );
 
   return (
     <MarcoSitio>
@@ -48,20 +55,21 @@ export default async function PaginaSolicitudes() {
             Tutorías que me solicitaron
           </h1>
           <p className="text-texto-suave mt-2 leading-relaxed">
-            Las que tienes por delante y las que ya pasaron. Cuando una ocurra, márcala como dada:
-            es lo que respalda tu ficha ante quien te elige.
+            Las que tienes por delante y las que ya pasaron. Acepta o rechaza las que te soliciten,
+            y cuando des una, márcala como dada con la prueba del inicio y la del final: es lo que
+            respalda tus horas beca y tu ficha ante quien te elige.
           </p>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-3">
-          <Indicador titulo="Por delante" valor={programadas.length} />
+          <Indicador titulo="Por responder" valor={porResponder} />
+          <Indicador titulo="Por delante" valor={enPie.length} />
           <Indicador titulo="Dadas" valor={completadas} />
-          <Indicador titulo="Canceladas" valor={canceladas} />
         </div>
 
         <section className="flex flex-col gap-4">
           <h2 className="text-texto text-lg font-bold">Próximas</h2>
-          <ListaTutorias tutorias={programadas} comoTutor />
+          <ListaTutorias tutorias={enPie} comoTutor />
         </section>
 
         {/* El historial va aparte y debajo: lo que se viene es lo que se

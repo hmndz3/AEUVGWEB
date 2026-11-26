@@ -60,7 +60,7 @@ export const POST = protegerRuta([], async (usuario, solicitud: Request, context
         mensaje: acepto
           ? `El tutor aceptó la tutoría de ${aviso.curso} del ${aviso.cuando}.`
           : `El tutor no puede dar la tutoría de ${aviso.curso} del ${aviso.cuando}. Puedes agendar otra.`,
-        urlDestino: "/tutorias/solicitudes",
+        urlDestino: "/perfil#mis-tutorias",
       });
     }
 

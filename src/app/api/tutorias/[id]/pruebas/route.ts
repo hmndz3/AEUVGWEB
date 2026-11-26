@@ -56,7 +56,7 @@ export const POST = protegerRuta([], async (usuario, solicitud: Request, context
         tipo: TIPOS_NOTIFICACION.tutoria,
         titulo: "Confirma tu tutoría",
         mensaje: `El tutor marcó como dada la tutoría de ${aviso.curso} del ${aviso.cuando}. Confírmala con una foto.`,
-        urlDestino: "/tutorias/solicitudes",
+        urlDestino: "/perfil#mis-tutorias",
       });
     }
 
