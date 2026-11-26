@@ -25,7 +25,7 @@ function PanelRestablecer() {
       <p className="text-texto-suave mt-3 text-sm leading-relaxed">
         Al guardarla, el enlace queda consumido y las solicitudes anteriores dejan de ser válidas.
       </p>
-      <div className="mt-7 rounded-xl bg-white p-5 shadow-md">
+      <div className="bg-superficie mt-7 rounded-xl p-5 shadow-md">
         <p className="text-turquesa flex items-center gap-2 text-[10px] font-extrabold tracking-wider uppercase">
           <Icono nombre="escudo" className="size-4" /> Una contraseña segura
         </p>

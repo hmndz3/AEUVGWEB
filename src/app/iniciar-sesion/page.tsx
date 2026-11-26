@@ -19,7 +19,7 @@ function PanelInicioSesion() {
           <Icono nombre="personas" className="size-4" />
           Comunidad Universitaria Oficial
         </span>
-        <div className="text-texto mt-6 inline-flex items-center gap-3 rounded-xl bg-white px-4 py-3 shadow-sm">
+        <div className="text-contraste mt-6 inline-flex items-center gap-3 rounded-xl bg-white px-4 py-3 shadow-sm">
           <Image src="/logo-aeuvg.png" alt="AEUVG" width={38} height={38} />
           <span className="text-sm font-extrabold">AEUVG</span>
           <span className="text-turquesa text-xs font-bold">ESTUDIANTES UVG</span>
@@ -178,7 +178,7 @@ function FormularioInicioSesion() {
             <button
               type="submit"
               disabled={enviando}
-              className="bg-primario hover:bg-primario-fuerte disabled:bg-texto-suave mt-1 flex h-12 w-full items-center justify-center gap-2 rounded-xl text-sm font-bold text-white shadow-md transition-colors disabled:cursor-not-allowed"
+              className="bg-primario hover:bg-primario-fuerte mt-1 flex h-12 w-full items-center justify-center gap-2 rounded-xl text-sm font-bold text-white shadow-md transition-colors disabled:cursor-not-allowed disabled:opacity-50"
             >
               {enviando ? "Verificando…" : "Iniciar sesión"}
               <Icono nombre="flecha" className="text-cielo" />

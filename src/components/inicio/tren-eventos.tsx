@@ -85,7 +85,7 @@ function Vagon({ vagon, decorativo }: { vagon: VagonTren; decorativo: boolean })
               {vagon.categoria}
             </span>
             {vagon.destacado && (
-              <span className="bg-ambar text-texto rounded-full px-2.5 py-0.5 text-[0.7rem] font-bold">
+              <span className="bg-ambar text-contraste rounded-full px-2.5 py-0.5 text-[0.7rem] font-bold">
                 ★ Destacado
               </span>
             )}
@@ -96,7 +96,7 @@ function Vagon({ vagon, decorativo }: { vagon: VagonTren; decorativo: boolean })
           <p className="truncate text-xs text-white/80">
             {vagon.hora} · {vagon.ubicacion}
           </p>
-          <span className="text-texto mt-1 self-start rounded-full bg-white px-4 py-1.5 text-xs font-bold transition-transform group-hover/vagon:translate-x-1">
+          <span className="text-contraste mt-1 self-start rounded-full bg-white px-4 py-1.5 text-xs font-bold transition-transform group-hover/vagon:translate-x-1">
             Ver evento →
           </span>
         </div>

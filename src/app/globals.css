@@ -32,6 +32,16 @@
   --color-texto-suave: #6e6580;
 
   /*
+   * Superficie que se queda oscura en los dos temas: el pie de página y la
+   * barra del panel administrativo. Antes usaban --color-texto como fondo, que
+   * en modo oscuro se vuelve casi blanco y dejaba texto blanco sobre claro.
+   * --color-contraste sirve también como color de texto sobre un blanco fijo
+   * (las fichas sobre una foto o sobre el panel violeta), que por la misma
+   * razón no puede ser --color-texto.
+   */
+  --color-contraste: #1c162b;
+
+  /*
    * Color del texto sobre un acento rebajado (bg-turquesa/15 y compañía).
    * Existen como tokens y no escritos a mano en cada ficha porque el modo
    * oscuro los invierte: sobre un fondo oscuro, un verde oscuro no se lee.
@@ -107,6 +117,8 @@ body {
   --color-texto: #f2eefb;
   --color-texto-suave: #a79fc2;
   --color-primario-suave: #2d2456;
+  /* Más oscuro que el fondo para que el pie y la barra sigan despegándose. */
+  --color-contraste: #0d0a1a;
 
   --color-sobre-turquesa: #5fe8cd;
   --color-sobre-ambar: #ffc879;

@@ -11,7 +11,7 @@ export function BarraLateralAdmin() {
   const rutaActual = usePathname();
 
   return (
-    <aside className="bg-texto flex w-full shrink-0 flex-col text-white md:sticky md:top-0 md:h-dvh md:w-64">
+    <aside className="bg-contraste flex w-full shrink-0 flex-col text-white md:sticky md:top-0 md:h-dvh md:w-64">
       <Link
         href="/"
         aria-label="AEUVG, ir a la página principal"

@@ -38,7 +38,7 @@ export async function PieDePagina() {
   const redes = await obtenerRedesAeuvg();
 
   return (
-    <footer className="bg-texto mt-auto text-white">
+    <footer className="bg-contraste mt-auto text-white">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-4">
         <div className="flex flex-col gap-3">
           <Link

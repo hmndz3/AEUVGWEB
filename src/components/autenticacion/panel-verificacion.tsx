@@ -9,7 +9,7 @@ export function PanelVerificacion() {
         <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-[11px] font-bold tracking-wide">
           <Icono nombre="escudo" className="size-4" /> Protección de cuenta
         </span>
-        <div className="text-texto mt-6 inline-flex items-center gap-3 rounded-xl bg-white px-4 py-3 shadow-sm">
+        <div className="text-contraste mt-6 inline-flex items-center gap-3 rounded-xl bg-white px-4 py-3 shadow-sm">
           <Image src="/logo-aeuvg.png" alt="AEUVG" width={38} height={38} />
           <span className="text-sm font-extrabold">AEUVG</span>
         </div>

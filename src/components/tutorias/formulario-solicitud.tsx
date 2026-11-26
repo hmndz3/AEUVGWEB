@@ -1,13 +1,14 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { Alerta } from "@/components/ui/alerta";
 import { Boton } from "@/components/ui/boton";
 import { EtiquetaCampo } from "@/components/ui/etiqueta-campo";
 import { SelectorFecha } from "@/components/ui/selector-fecha";
 import { SelectorHora } from "@/components/ui/selector-hora";
+import { franjaDelRango, franjasDelDia, NUMERO_DE_DIA } from "@/lib/tutorias/agenda-tutorias";
 import type { TutorVista } from "@/lib/tutorias/consultas-tutorias";
 import { hoyEnGuatemala } from "@/lib/ui/calendario-selector";
 import {
@@ -16,27 +17,24 @@ import {
   formatearRangoHoras,
 } from "@/lib/tutorias/formato-tutorias";
 
+/** "lunes", "lunes y jueves", "lunes, martes y jueves". */
+function enumerar(partes: string[]): string {
+  if (partes.length <= 1) return partes.join("");
+
+  return `${partes.slice(0, -1).join(", ")} y ${partes[partes.length - 1]}`;
+}
+
 const claseCampo =
   "border-borde bg-superficie text-texto focus:border-primario focus:ring-primario/30 w-full rounded-2xl border px-4 py-3 text-sm focus:ring-2 focus:outline-none";
-
-/** El día de la semana de cada franja, en la convención de JavaScript. */
-const DIA_A_NUMERO: Record<string, number> = {
-  DOMINGO: 0,
-  LUNES: 1,
-  MARTES: 2,
-  MIERCOLES: 3,
-  JUEVES: 4,
-  VIERNES: 5,
-  SABADO: 6,
-};
 
 /**
  * Solicitud de una tutoría.
  *
- * Se elige primero la franja y después el día, no al revés: la disponibilidad
- * del tutor es por día de la semana, así que la franja es la que acota a qué
- * días se puede y con qué modalidad. Elegir el día primero obligaría a probar
- * fechas hasta dar con una que el tutor tuviera libre.
+ * Se elige el día y la hora, nada más: la disponibilidad que el tutor publicó
+ * ya está a la vista en su ficha, así que el formulario la usa para acotar —el
+ * calendario solo abre los días que atiende y el reloj solo ofrece sus horas—
+ * en lugar de hacer que el estudiante elija primero una franja y después
+ * repita esa misma información abajo.
  */
 export function FormularioSolicitud({
   tutor,
@@ -47,35 +45,59 @@ export function FormularioSolicitud({
 }) {
   const router = useRouter();
   const [idCurso, setIdCurso] = useState(String(tutor.cursos[0]?.idCurso ?? ""));
-  const [indiceFranja, setIndiceFranja] = useState("0");
   const [fecha, setFecha] = useState("");
   const [horaInicio, setHoraInicio] = useState("");
   const [horaFin, setHoraFin] = useState("");
-  const [modalidad, setModalidad] = useState("");
+  const [modalidadElegida, setModalidadElegida] = useState("PRESENCIAL");
   const [observaciones, setObservaciones] = useState("");
   const [general, setGeneral] = useState<string | null>(null);
   const [enviando, setEnviando] = useState(false);
   const [listo, setListo] = useState(false);
 
-  const franja = tutor.disponibilidades[Number(indiceFranja)];
+  // Todos los días de la semana que el tutor atiende: son los únicos que el
+  // calendario deja abrir.
+  const diasPermitidos = useMemo(
+    () => [...new Set(tutor.disponibilidades.map((franja) => NUMERO_DE_DIA[franja.diaSemana]))],
+    [tutor.disponibilidades]
+  );
 
-  // Solo el día de la franja elegida. Si todavía no hay franja, ninguno: sin
-  // horario no hay nada que agendar.
-  const diasPermitidos = franja ? [DIA_A_NUMERO[franja.diaSemana]] : [];
+  // Las franjas que caen en el día elegido. Un tutor puede tener más de una el
+  // mismo día, por ejemplo una por la mañana y otra por la tarde.
+  const franjasDeHoy = useMemo(
+    () => (fecha ? franjasDelDia(tutor.disponibilidades, fecha) : []),
+    [fecha, tutor.disponibilidades]
+  );
 
-  /** Al cambiar de franja se heredan sus horas y su modalidad como punto de partida. */
-  function elegirFranja(indice: string) {
-    setIndiceFranja(indice);
-    const elegida = tutor.disponibilidades[Number(indice)];
-    if (!elegida) return;
+  // El reloj se abre desde la primera hora del día hasta la última. Si hay un
+  // hueco entre dos franjas, lo atrapa la comprobación de abajo.
+  const limiteInicio = franjasDeHoy.reduce<string | undefined>(
+    (menor, franja) => (!menor || franja.horaInicio < menor ? franja.horaInicio : menor),
+    undefined
+  );
+  const limiteFin = franjasDeHoy.reduce<string | undefined>(
+    (mayor, franja) => (!mayor || franja.horaFin > mayor ? franja.horaFin : mayor),
+    undefined
+  );
 
-    setHoraInicio(elegida.horaInicio);
-    setHoraFin(elegida.horaFin);
-    setModalidad(elegida.modalidad === "AMBAS" ? "PRESENCIAL" : elegida.modalidad);
+  /** La franja que contiene entero el rango pedido, que es la que se agenda. */
+  const franja = fecha ? franjaDelRango(tutor.disponibilidades, fecha, horaInicio, horaFin) : null;
 
-    // El día elegido se descarta si ya no cae en el día de la nueva franja:
-    // conservarlo dejaría una fecha que el tutor no atiende.
-    setFecha("");
+  const modalidad = !franja
+    ? ""
+    : franja.modalidad === "AMBAS"
+      ? modalidadElegida
+      : franja.modalidad;
+
+  const horarioFueraDeFranja = Boolean(fecha && horaInicio && horaFin && !franja);
+
+  /** Al elegir el día se parte de su primera franja: casi siempre es la buena. */
+  function elegirFecha(iso: string) {
+    setFecha(iso);
+
+    const [primera] = franjasDelDia(tutor.disponibilidades, iso);
+
+    setHoraInicio(primera?.horaInicio ?? "");
+    setHoraFin(primera?.horaFin ?? "");
   }
 
   async function enviar(evento: React.FormEvent<HTMLFormElement>) {
@@ -147,6 +169,10 @@ export function FormularioSolicitud({
     );
   }
 
+  const diasQueAtiende = [
+    ...new Set(tutor.disponibilidades.map((opcion) => ETIQUETAS_DIA[opcion.diaSemana])),
+  ];
+
   return (
     <form onSubmit={enviar} noValidate className="flex flex-col gap-4">
       {general && <Alerta tipo="error">{general}</Alerta>}
@@ -169,51 +195,30 @@ export function FormularioSolicitud({
         </select>
       </div>
 
-      <div className="flex flex-col gap-1.5">
-        <EtiquetaCampo htmlFor="franja" obligatorio>
-          Horario del tutor
-        </EtiquetaCampo>
-        <select
-          id="franja"
-          value={indiceFranja}
-          onChange={(evento) => elegirFranja(evento.target.value)}
-          className={claseCampo}
-        >
-          {tutor.disponibilidades.map((opcion, indice) => (
-            <option key={opcion.idDisponibilidad} value={indice}>
-              {ETIQUETAS_DIA[opcion.diaSemana]} de{" "}
-              {formatearRangoHoras(opcion.horaInicio, opcion.horaFin)} ·{" "}
-              {ETIQUETAS_MODALIDAD[opcion.modalidad]}
-            </option>
-          ))}
-        </select>
-        {franja && (
-          <p className="text-texto-suave text-xs">
-            Elige un {ETIQUETAS_DIA[franja.diaSemana].toLocaleLowerCase("es")} y una hora dentro de
-            esa franja.
-          </p>
-        )}
-      </div>
-
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5 sm:col-span-2">
           <EtiquetaCampo htmlFor="fecha" obligatorio>
             Día
           </EtiquetaCampo>
           {/* El calendario solo deja elegir los días en los que el tutor
-              atiende esa franja: ofrecer el resto llevaría a pedir una fecha
-              que el servidor va a rechazar. */}
+              atiende: ofrecer el resto llevaría a pedir una fecha que el
+              servidor va a rechazar. */}
           <SelectorFecha
             id="fecha"
             valor={fecha}
-            onCambiar={setFecha}
-            limites={{ minimo: hoyEnGuatemala(), diasPermitidos: diasPermitidos }}
-            placeholder={
-              franja
-                ? `Elige un ${ETIQUETAS_DIA[franja.diaSemana].toLocaleLowerCase("es")}`
-                : "Elige una fecha"
-            }
+            onCambiar={elegirFecha}
+            limites={{ minimo: hoyEnGuatemala(), diasPermitidos }}
+            placeholder="Elige el día"
           />
+          <p className="text-texto-suave text-xs">
+            {franjasDeHoy.length > 0
+              ? `Ese día atiende de ${enumerar(
+                  franjasDeHoy.map((opcion) =>
+                    formatearRangoHoras(opcion.horaInicio, opcion.horaFin)
+                  )
+                )}.`
+              : `Atiende los ${enumerar(diasQueAtiende).toLocaleLowerCase("es")}.`}
+          </p>
         </div>
 
         <div className="flex flex-col gap-1.5">
@@ -224,9 +229,10 @@ export function FormularioSolicitud({
             id="horaInicio"
             valor={horaInicio}
             onCambiar={setHoraInicio}
-            minimo={franja?.horaInicio}
-            maximo={franja?.horaFin}
+            minimo={limiteInicio}
+            maximo={limiteFin}
             paso={30}
+            invalido={horarioFueraDeFranja}
           />
         </div>
 
@@ -238,11 +244,18 @@ export function FormularioSolicitud({
             id="horaFin"
             valor={horaFin}
             onCambiar={setHoraFin}
-            minimo={horaInicio || franja?.horaInicio}
-            maximo={franja?.horaFin}
+            minimo={horaInicio || limiteInicio}
+            maximo={limiteFin}
             paso={30}
+            invalido={horarioFueraDeFranja}
           />
         </div>
+
+        {horarioFueraDeFranja && (
+          <p className="text-error text-xs sm:col-span-2">
+            Ese rango no cabe entero en ninguno de los horarios que el tutor publicó para ese día.
+          </p>
+        )}
       </div>
 
       {franja?.modalidad === "AMBAS" && (
@@ -252,14 +265,21 @@ export function FormularioSolicitud({
           </EtiquetaCampo>
           <select
             id="modalidad"
-            value={modalidad}
-            onChange={(evento) => setModalidad(evento.target.value)}
+            value={modalidadElegida}
+            onChange={(evento) => setModalidadElegida(evento.target.value)}
             className={claseCampo}
           >
             <option value="PRESENCIAL">Presencial</option>
             <option value="VIRTUAL">Virtual</option>
           </select>
         </div>
+      )}
+
+      {franja && franja.modalidad !== "AMBAS" && (
+        <p className="text-texto-suave text-xs">
+          Esa tutoría es {ETIQUETAS_MODALIDAD[franja.modalidad].toLocaleLowerCase("es")}
+          {franja.ubicacionEnlace ? ` · ${franja.ubicacionEnlace}` : ""}.
+        </p>
       )}
 
       <div className="flex flex-col gap-1.5">
@@ -278,11 +298,7 @@ export function FormularioSolicitud({
       </div>
 
       <div>
-        <Boton
-          type="submit"
-          disabled={!fecha || !horaInicio || !horaFin || !idCurso}
-          cargando={enviando}
-        >
+        <Boton type="submit" disabled={!franja || !idCurso} cargando={enviando}>
           Agendar tutoría
         </Boton>
       </div>

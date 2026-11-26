@@ -50,7 +50,7 @@ export function EncabezadoAcceso() {
           <Link href="/" className="text-texto-suave hover:text-texto text-xs font-semibold">
             Volver al inicio
           </Link>
-          <span className="bg-texto flex size-7 items-center justify-center rounded-full text-white">
+          <span className="bg-contraste flex size-7 items-center justify-center rounded-full text-white">
             <Icono nombre="persona" className="size-4" />
           </span>
         </nav>
