@@ -25,8 +25,16 @@ class RepositorioOperacionFalso implements RepositorioOperacion {
   listaNegra: DatosListaNegraPersistido[] = [];
 
   constructor(
-    private readonly opciones: { articulos?: ArticuloParaPrestamo[]; devuelto?: boolean } = {}
+    private readonly opciones: {
+      articulos?: ArticuloParaPrestamo[];
+      devuelto?: boolean;
+      turnoCerrado?: boolean;
+    } = {}
   ) {}
+
+  async turnoCerrado(): Promise<boolean> {
+    return this.opciones.turnoCerrado ?? false;
+  }
 
   async articulosParaPrestamo(ids: readonly number[]): Promise<ArticuloParaPrestamo[]> {
     return (this.opciones.articulos ?? [articuloStock()]).filter((a) => ids.includes(a.idArticulo));
@@ -118,4 +126,53 @@ test("la lista negra guarda solo el nombre y la justificación obligatorios", as
   assert.equal(resultado.tipo, "guardado");
   assert.equal(repositorio.listaNegra[0]?.nombre, "Jokin");
   assert.equal(repositorio.listaNegra[0]?.fecha, null);
+});
+
+// ---------------------------------------------------------------------------
+// El turno cerrado
+// ---------------------------------------------------------------------------
+
+test("con el turno cerrado ya no se registran préstamos", async () => {
+  const repositorio = new RepositorioOperacionFalso({ turnoCerrado: true });
+  const servicio = new ServicioOperacion(repositorio);
+
+  const resultado = await servicio.registrarPrestamo(datosPrestamo(1), 1);
+
+  assert.equal(resultado.tipo, "invalido");
+  assert.match(
+    resultado.tipo === "invalido" ? (resultado.errores.turno ?? "") : "",
+    /cerraste tu turno/
+  );
+  assert.equal(repositorio.prestamos.length, 0);
+});
+
+test("con el turno cerrado tampoco se anota a nadie en la lista negra", async () => {
+  const repositorio = new RepositorioOperacionFalso({ turnoCerrado: true });
+  const servicio = new ServicioOperacion(repositorio);
+
+  const resultado = await servicio.agregarListaNegra(
+    {
+      fecha: null,
+      nombre: "Jokin",
+      apellido: null,
+      correo: null,
+      carnet: null,
+      telefono: null,
+      justificacion: "No devolvió la bata.",
+    },
+    4
+  );
+
+  assert.equal(resultado.tipo, "invalido");
+  assert.equal(repositorio.listaNegra.length, 0);
+});
+
+test("mientras el turno sigue abierto se registra con normalidad", async () => {
+  const repositorio = new RepositorioOperacionFalso();
+  const servicio = new ServicioOperacion(repositorio);
+
+  const resultado = await servicio.registrarPrestamo(datosPrestamo(1), 1);
+
+  assert.equal(resultado.tipo, "guardado");
+  assert.equal(repositorio.prestamos.length, 1);
 });

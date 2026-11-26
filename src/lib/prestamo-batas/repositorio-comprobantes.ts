@@ -20,6 +20,8 @@ export type DatosComprobantePersistido = {
   fecha: Date;
   horaEntrada: Date;
   horaSalida: Date;
+  fotoInicioUrl: string;
+  fotoFinUrl: string;
   comentarioVoluntario: string | null;
 };
 

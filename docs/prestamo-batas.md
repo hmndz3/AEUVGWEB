@@ -108,6 +108,25 @@ de modo que la mitad del horario eran casillas sin nada. Separados, cada tabla
 enseña solo sus horas. En el teléfono no caben seis columnas sin volver ilegible la
 letra: ahí se escoge el día con una pestaña y se ven sus bloques.
 
+## 4.1 El turno se cierra con sus fotos
+
+El voluntario cierra su turno enviando el comprobante con una foto de cuando
+entró y otra de cuando salió. Las dos son obligatorias: son lo que AEUVG revisa
+antes de acreditarle las horas, y sin ellas el comprobante no se envía. Se
+guardan en `comprobante_turno.foto_inicio_url` y `foto_fin_url`, con el mismo
+proveedor de imágenes que el resto del sitio, y se ven en la revisión del panel.
+
+Enviarlo cierra la jornada: el panel le quita las pestañas de préstamos y de
+lista negra, porque ya no está atendiendo y lo que escriba después no sería de
+su turno. La misma regla vive en `ServicioOperacion`, que rechaza un préstamo o
+una anotación cuando ya hay comprobante de ese día, para que el cierre valga
+aunque alguien mande la petición a mano.
+
+Lo que sí queda es «Mi jornada»: lo que prestó, a quién anotó en la lista negra
+y el comprobante con su estado, todo del día en que estuvo a cargo. El día se
+decide en la hora de Guatemala, no en la del servidor, para que un turno de la
+noche pertenezca a ese día y no al siguiente.
+
 ## 5. Seed
 
 Los turnos estándar del salón y un inventario inicial se cargan con un seed

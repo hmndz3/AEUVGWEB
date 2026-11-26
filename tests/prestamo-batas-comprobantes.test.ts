@@ -18,6 +18,10 @@ import type {
   ServicioHorasBeca,
 } from "../src/lib/horas-beca/servicio-horas-beca";
 
+/** Las dos pruebas del turno, ya subidas a la plataforma. */
+const FOTO_ENTRADA = "/api/imagenes/entrada.jpg";
+const FOTO_SALIDA = "/api/imagenes/salida.jpg";
+
 const FECHA = "2026-11-23";
 const AHORA = () => new Date("2026-12-01T12:00:00.000Z");
 // El 23 de noviembre de 2026 cae lunes. Se escribe el día a mano a propósito:
@@ -106,6 +110,8 @@ test("no se envía un comprobante de un turno no asignado", async () => {
     fecha: FECHA,
     horaEntrada: "06:45",
     horaSalida: "09:00",
+    fotoInicioUrl: FOTO_ENTRADA,
+    fotoFinUrl: FOTO_SALIDA,
     comentarioVoluntario: null,
   });
 
@@ -125,6 +131,8 @@ test("la fecha del comprobante debe caer en el día del turno", async () => {
     fecha: "2026-11-24",
     horaEntrada: "06:45",
     horaSalida: "09:00",
+    fotoInicioUrl: FOTO_ENTRADA,
+    fotoFinUrl: FOTO_SALIDA,
     comentarioVoluntario: null,
   });
 
@@ -140,6 +148,8 @@ test("un comprobante del día correcto se envía", async () => {
     fecha: FECHA,
     horaEntrada: "06:45",
     horaSalida: "09:00",
+    fotoInicioUrl: FOTO_ENTRADA,
+    fotoFinUrl: FOTO_SALIDA,
     comentarioVoluntario: null,
   });
 
@@ -220,6 +230,8 @@ test("se acepta el comprobante de un turno del mismo día de calendario", async 
     fecha: "2026-11-26",
     horaEntrada: "06:45",
     horaSalida: "09:00",
+    fotoInicioUrl: FOTO_ENTRADA,
+    fotoFinUrl: FOTO_SALIDA,
     comentarioVoluntario: null,
   });
 

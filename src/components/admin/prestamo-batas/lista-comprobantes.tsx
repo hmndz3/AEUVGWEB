@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -13,6 +14,35 @@ const TONOS = {
   APROBADO: "acreditada",
   RECHAZADO: "error",
 } as const;
+
+/**
+ * Una de las fotos del turno. Se ve en pequeño y se abre en otra pestaña a
+ * tamaño real: la miniatura basta para reconocerla, no para revisarla.
+ */
+function FotoDelTurno({ titulo, url }: { titulo: string; url: string | null }) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <span className="text-texto-suave text-xs font-bold tracking-wide uppercase">{titulo}</span>
+
+      {url ? (
+        <a href={url} target="_blank" rel="noreferrer" className="block">
+          <Image
+            src={url}
+            alt={titulo}
+            width={320}
+            height={200}
+            unoptimized
+            className="border-borde h-32 w-full rounded-2xl border object-cover"
+          />
+        </a>
+      ) : (
+        <div className="border-borde text-texto-suave flex h-32 items-center justify-center rounded-2xl border border-dashed text-xs">
+          Sin foto
+        </div>
+      )}
+    </div>
+  );
+}
 
 function TarjetaComprobante({
   comprobante,
@@ -76,6 +106,13 @@ function TarjetaComprobante({
         {comprobante.fecha} · {comprobante.horaEntrada}–{comprobante.horaSalida} ·{" "}
         <span className="text-texto font-semibold">{comprobante.horasTurno} h a acreditar</span>
       </p>
+
+      {/* Las pruebas del turno: una al entrar y otra al salir. Sin ellas no
+          hay con qué acreditar las horas, así que se ven antes de decidir. */}
+      <div className="grid gap-3 sm:grid-cols-2">
+        <FotoDelTurno titulo="Foto de entrada" url={comprobante.fotoInicioUrl} />
+        <FotoDelTurno titulo="Foto de salida" url={comprobante.fotoFinUrl} />
+      </div>
 
       {comprobante.comentarioVoluntario && (
         <p className="text-texto-suave bg-superficie-suave rounded-2xl px-4 py-3 text-sm">

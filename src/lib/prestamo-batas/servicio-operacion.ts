@@ -9,7 +9,27 @@ export type ResultadoPrestamo =
 export type ResultadoDevolucion =
   { tipo: "devuelto" } | { tipo: "no_encontrado" } | { tipo: "ya_devuelto" };
 
-export type ResultadoListaNegra = { tipo: "guardado"; idListaNegra: number };
+export type ResultadoListaNegra =
+  | { tipo: "guardado"; idListaNegra: number }
+  | { tipo: "invalido"; errores: Record<string, string> };
+
+/**
+ * Lo que se responde cuando el voluntario ya cerró su turno.
+ *
+ * Al enviar el comprobante el salón deja de estar a su nombre por ese día, así
+ * que la pantalla le quita los formularios. Esto es lo mismo del lado del
+ * servidor, para que el cierre valga aunque alguien mande la petición a mano.
+ */
+const MENSAJE_TURNO_CERRADO =
+  "Ya cerraste tu turno de hoy, así que no puedes seguir registrando en él.";
+
+/** Día de calendario de hoy en Guatemala, que es con el que se guardan las fechas. */
+const diaGuatemala = new Intl.DateTimeFormat("en-CA", {
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  timeZone: "America/Guatemala",
+});
 
 /**
  * Operación diaria del salón: préstamos, devoluciones y lista negra.
@@ -26,6 +46,10 @@ export class ServicioOperacion {
   ) {}
 
   async registrarPrestamo(datos: DatosPrestamo, registradoPor: number): Promise<ResultadoPrestamo> {
+    if (await this.turnoCerrado(registradoPor)) {
+      return { tipo: "invalido", errores: { turno: MENSAJE_TURNO_CERRADO } };
+    }
+
     const articulos = new Map(
       (await this.repositorio.articulosParaPrestamo(datos.articulos.map((a) => a.idArticulo))).map(
         (articulo) => [articulo.idArticulo, articulo]
@@ -93,6 +117,10 @@ export class ServicioOperacion {
     datos: DatosListaNegra,
     registradoPor: number
   ): Promise<ResultadoListaNegra> {
+    if (await this.turnoCerrado(registradoPor)) {
+      return { tipo: "invalido", errores: { turno: MENSAJE_TURNO_CERRADO } };
+    }
+
     const idListaNegra = await this.repositorio.crearListaNegra(
       {
         fecha: datos.fecha ? aFechaDeCalendario(datos.fecha) : null,
@@ -107,5 +135,10 @@ export class ServicioOperacion {
     );
 
     return { tipo: "guardado", idListaNegra };
+  }
+
+  /** El voluntario ya envió el comprobante de hoy, así que su turno terminó. */
+  private async turnoCerrado(registradoPor: number): Promise<boolean> {
+    return this.repositorio.turnoCerrado(registradoPor, diaGuatemala.format(this.ahora()));
   }
 }

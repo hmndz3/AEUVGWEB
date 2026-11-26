@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { normalizarCarnet } from "@/lib/horas-beca/busqueda-horas";
+import { esImagenDelSitio } from "@/lib/imagenes/validacion-imagen";
 import { TALLAS, TIPOS_ARTICULO } from "@/lib/prestamo-batas/formato-prestamo-batas";
 import { DIAS_SEMANA, PATRON_HORA } from "@/lib/tutorias/formato-tutorias";
 
@@ -249,12 +250,24 @@ export type DatosRevisionPostulacionVoluntario = z.infer<
  * atendió, en qué fecha, y sus horas de entrada y salida; con él se le acreditan
  * las horas beca tras la revisión del administrador.
  */
+const MENSAJE_FOTO_TURNO = "Sube la imagen de la prueba.";
+
+/** Una prueba del turno: una imagen subida a la plataforma. */
+const fotoDelTurno = z
+  .string(MENSAJE_FOTO_TURNO)
+  .trim()
+  .max(500, MENSAJE_FOTO_TURNO)
+  .refine(esImagenDelSitio, MENSAJE_FOTO_TURNO);
+
 export const esquemaComprobanteTurno = z
   .object({
     idTurno: identificador,
     fecha,
     horaEntrada: hora,
     horaSalida: hora,
+    // Las dos son obligatorias: es lo que respalda el turno ante AEUVG.
+    fotoInicioUrl: fotoDelTurno,
+    fotoFinUrl: fotoDelTurno,
     comentarioVoluntario: comentario(500),
   })
   .superRefine((datos, contexto) => {
@@ -279,6 +292,8 @@ export type DatosRevisionComprobante = z.infer<typeof esquemaRevisionComprobante
 
 /** Etiqueta legible de cada campo, para nombrar el error en el resumen. */
 export const ETIQUETAS_CAMPO_PRESTAMO: Record<string, string> = {
+  fotoInicioUrl: "Foto de entrada",
+  fotoFinUrl: "Foto de salida",
   diaSemana: "Día",
   horaInicio: "Hora de inicio",
   horaFin: "Hora de fin",
