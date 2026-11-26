@@ -7,6 +7,7 @@ import { Alerta } from "@/components/ui/alerta";
 import { Boton } from "@/components/ui/boton";
 import { EtiquetaCampo } from "@/components/ui/etiqueta-campo";
 import { EtiquetaEstado } from "@/components/ui/etiqueta-estado";
+import { RejillaTurnos } from "@/components/prestamo-batas/rejilla-turnos";
 import { SelectorHora } from "@/components/ui/selector-hora";
 import type { TurnoPanel } from "@/lib/prestamo-batas/consultas-prestamo-batas";
 import { DIAS_SEMANA, ETIQUETAS_DIA } from "@/lib/tutorias/formato-tutorias";
@@ -35,6 +36,7 @@ const NUEVO: Edicion = {
 export function EditorTurnos({ turnos }: { turnos: TurnoPanel[] }) {
   const router = useRouter();
   const [edicion, setEdicion] = useState<Edicion | null>(null);
+  const [seleccionado, setSeleccionado] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [guardando, setGuardando] = useState(false);
 
@@ -120,10 +122,7 @@ export function EditorTurnos({ turnos }: { turnos: TurnoPanel[] }) {
     }
   }
 
-  const porDia = DIAS_SEMANA.map((dia) => ({
-    dia,
-    turnos: turnos.filter((turno) => turno.dia === dia),
-  })).filter((grupo) => grupo.turnos.length > 0);
+  const turnoActivo = turnos.find((turno) => turno.idTurno === seleccionado) ?? null;
 
   return (
     <div className="flex flex-col gap-5">
@@ -208,83 +207,131 @@ export function EditorTurnos({ turnos }: { turnos: TurnoPanel[] }) {
         </div>
       )}
 
-      {porDia.length === 0 ? (
-        <div className="border-borde bg-superficie-suave text-texto-suave rounded-[1.25rem] border border-dashed px-6 py-10 text-center text-sm">
-          No hay turnos todavía. Agrega el primero.
-        </div>
-      ) : (
-        <div className="flex flex-col gap-5">
-          {porDia.map((grupo) => (
-            <div key={grupo.dia} className="flex flex-col gap-2">
-              <h3 className="text-texto text-sm font-bold">{ETIQUETAS_DIA[grupo.dia]}</h3>
-              <div className="flex flex-col gap-2">
-                {grupo.turnos.map((turno) => (
-                  <div
-                    key={turno.idTurno}
-                    className="border-borde bg-superficie flex flex-col gap-2 rounded-2xl border p-4"
-                  >
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <div className="flex items-center gap-3">
-                        <span className="text-texto text-sm font-semibold">{turno.rango}</span>
-                        {!turno.activo && <EtiquetaEstado tono="neutro">Inactivo</EtiquetaEstado>}
-                        <span className="text-texto-suave text-xs">
-                          {turno.asignados.length}/{turno.cupo} voluntarios
-                        </span>
-                      </div>
-                      <div className="flex gap-3">
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setEdicion({
-                              idTurno: turno.idTurno,
-                              diaSemana: turno.dia,
-                              horaInicio: turno.horaInicio,
-                              horaFin: turno.horaFin,
-                              activo: turno.activo,
-                            })
-                          }
-                          className="text-primario text-sm font-bold hover:underline"
-                        >
-                          Editar
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => eliminar(turno.idTurno)}
-                          className="text-error text-sm font-bold hover:underline"
-                        >
-                          Eliminar
-                        </button>
-                      </div>
-                    </div>
+      <div className="flex flex-col gap-4">
+        <p className="text-texto-suave text-xs">
+          Ámbar: faltan voluntarios. Turquesa: turno completo. Gris: turno inactivo. Toca una
+          casilla para ver el turno y editarlo, o un «+» para abrir un turno nuevo a esa hora.
+        </p>
 
-                    {turno.asignados.length > 0 && (
-                      <ul className="flex flex-wrap gap-2">
-                        {turno.asignados.map((asignado) => (
-                          <li
-                            key={asignado.idAsignacion}
-                            className="border-borde bg-superficie-suave flex items-center gap-2 rounded-full border px-3 py-1 text-xs"
-                          >
-                            <span className="text-texto font-semibold">{asignado.nombre}</span>
-                            <span className="text-texto-suave">{asignado.carnet}</span>
-                            <button
-                              type="button"
-                              onClick={() => desasignar(asignado.idAsignacion)}
-                              className="text-error font-bold"
-                              aria-label={`Retirar a ${asignado.nombre} del turno`}
-                            >
-                              ×
-                            </button>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
+        <RejillaTurnos
+          turnos={turnos}
+          vacio="No hay turnos todavía. Agrega el primero."
+          casilla={(turno) => {
+            const lleno = turno.asignados.length >= turno.cupo;
+
+            return (
+              <button
+                type="button"
+                onClick={() => setSeleccionado(turno.idTurno)}
+                aria-pressed={turno.idTurno === seleccionado}
+                className={`flex h-full w-full flex-col gap-1 rounded-xl px-2.5 py-2 text-left text-xs transition-colors ${
+                  turno.idTurno === seleccionado ? "ring-primario ring-2" : ""
+                } ${
+                  !turno.activo
+                    ? "bg-superficie-suave text-texto-suave"
+                    : lleno
+                      ? "bg-turquesa/15 text-sobre-turquesa"
+                      : "bg-ambar/20 text-sobre-ambar"
+                }`}
+              >
+                <span className="font-bold">
+                  {turno.asignados.length}/{turno.cupo}
+                  {!turno.activo && " · inactivo"}
+                </span>
+                {turno.asignados.map((asignado) => (
+                  <span key={asignado.idAsignacion} className="leading-snug">
+                    {asignado.nombre}
+                  </span>
                 ))}
+              </button>
+            );
+          }}
+          casillaVacia={(dia, bloque) => (
+            <button
+              type="button"
+              onClick={() =>
+                setEdicion({
+                  idTurno: null,
+                  diaSemana: dia,
+                  horaInicio: bloque.horaInicio,
+                  horaFin: bloque.horaFin,
+                  activo: true,
+                })
+              }
+              aria-label={`Agregar turno de ${bloque.etiqueta}`}
+              className="text-texto-suave hover:bg-superficie-suave flex h-full min-h-10 w-full items-center justify-center rounded-xl text-sm opacity-50 transition-colors hover:opacity-100"
+            >
+              +
+            </button>
+          )}
+        />
+
+        {turnoActivo && (
+          <div className="border-borde bg-superficie flex flex-col gap-3 rounded-[1.25rem] border p-4">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="text-texto text-sm font-bold">
+                  {turnoActivo.etiquetaDia}, {turnoActivo.rango}
+                </span>
+                {!turnoActivo.activo && <EtiquetaEstado tono="neutro">Inactivo</EtiquetaEstado>}
+                <span className="text-texto-suave text-xs">
+                  {turnoActivo.asignados.length}/{turnoActivo.cupo} voluntarios
+                </span>
+              </div>
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setEdicion({
+                      idTurno: turnoActivo.idTurno,
+                      diaSemana: turnoActivo.dia,
+                      horaInicio: turnoActivo.horaInicio,
+                      horaFin: turnoActivo.horaFin,
+                      activo: turnoActivo.activo,
+                    })
+                  }
+                  className="text-primario text-sm font-bold hover:underline"
+                >
+                  Editar
+                </button>
+                <button
+                  type="button"
+                  onClick={() => eliminar(turnoActivo.idTurno)}
+                  className="text-error text-sm font-bold hover:underline"
+                >
+                  Eliminar
+                </button>
               </div>
             </div>
-          ))}
-        </div>
-      )}
+
+            {turnoActivo.asignados.length > 0 ? (
+              <ul className="flex flex-wrap gap-2">
+                {turnoActivo.asignados.map((asignado) => (
+                  <li
+                    key={asignado.idAsignacion}
+                    className="border-borde bg-superficie-suave flex items-center gap-2 rounded-full border px-3 py-1 text-xs"
+                  >
+                    <span className="text-texto font-semibold">{asignado.nombre}</span>
+                    <span className="text-texto-suave">{asignado.carnet}</span>
+                    <button
+                      type="button"
+                      onClick={() => desasignar(asignado.idAsignacion)}
+                      className="text-error font-bold"
+                      aria-label={`Retirar a ${asignado.nombre} del turno`}
+                    >
+                      ×
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-texto-suave text-sm">
+                Nadie atiende este turno todavía. Asigna voluntarios desde las postulaciones.
+              </p>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

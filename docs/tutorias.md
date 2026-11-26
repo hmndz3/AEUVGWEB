@@ -16,6 +16,8 @@ El mínimo es 80 (`NOTA_MINIMA_TUTOR`) y lo comprueba el servicio, no solo el fo
 
 Los cursos que se ofrecen en la postulación los administra AEUVG desde **Panel → Tutorías → Cursos** (`/admin/tutorias/cursos`): se agregan con código y nombre, se editan en la misma fila y se activan o desactivan. El código es único y se guarda en mayúsculas. Un curso solo se elimina si nadie lo usa; si ya tiene postulaciones, tutores o tutorías, se desactiva, para no perder ese historial.
 
+El catálogo completo también se puede cargar de una vez desde un Excel de dos columnas —código y nombre— en **Panel → Tutorías → Cursos → Importar desde Excel** (`/admin/tutorias/cursos/importar`). La plantilla se descarga de la misma pantalla y acepta que la columna del código se llame «Id», que es como la tiene AEUVG hoy. El archivo se revisa antes de guardar nada: los códigos que ya existen se omiten, de modo que el mismo archivo se pueda volver a cargar cuando se le agreguen cursos sin duplicar los de antes. Si un código existe con otro nombre, se conserva el guardado y el reporte lo señala, porque renombrar un curso es una decisión de AEUVG y se hace desde el catálogo.
+
 Si el curso de un estudiante no está en la lista, la postulación ofrece la opción **Otro**: escribe el nombre y, si lo conoce, el código. El servicio busca primero un curso existente con ese código o ese nombre; si no lo hay, crea uno inactivo y marcado como `propuesto` (con un código provisional `OTRO-XXXXXX` si no se indicó). Los propuestos no aparecen en el formulario ni en el directorio. Entran al catálogo al aprobar la postulación que los trae, o cuando AEUVG los admite desde la pestaña de cursos. El curso se resuelve al final de las validaciones, para no dejar propuestos de postulaciones que nunca se guardaron.
 
 ## Postularse y ser aprobado
@@ -38,7 +40,7 @@ Las horas se guardan como `time(0)` y se convierten en UTC (`aHoraDeBase` / `aHo
 
 ## Agendar
 
-La solicitud la hace el estudiante y queda programada de una vez, sin que el tutor confirme. El tutor ya publicó en qué horarios puede, y pedirle además que confirme cada cita convertiría su disponibilidad en una intención y no en un compromiso. Lo que sí puede es cancelarla.
+La solicitud la hace el estudiante y le llega al tutor como notificación. El tutor la acepta o la rechaza desde su panel —con un motivo opcional que el estudiante verá—, y hasta que la acepte la cita no está cerrada. Una tutoría aceptada sigue ocupando su horario igual que una recién agendada.
 
 Las reglas son las que impiden que una cita no se pueda cumplir:
 
@@ -48,7 +50,19 @@ Las reglas son las que impiden que una cita no se pueda cumplir:
 - La fecha no puede haber pasado. El corte se calcula con el instante real, y la fecha y la hora se combinan en la zona de Guatemala (`instanteEnGuatemala`), que no cambia de horario en todo el año.
 - Nadie se agenda una tutoría consigo mismo.
 
-Cancelar lo pueden los dos: al estudiante le surge algo y al tutor también. Darla por completada solo el tutor, porque es quien sabe si la sesión ocurrió, y es el dato que respalda su ficha en el directorio. Una tutoría ajena responde como no encontrada en lugar de como prohibida, para no confirmar que existe.
+Cancelar lo pueden los dos mientras la cita siga en pie —agendada o aceptada—: al estudiante le surge algo y al tutor también. Una tutoría ajena responde como no encontrada en lugar de como prohibida, para no confirmar que existe.
+
+## Doble validación y horas beca
+
+Una tutoría da horas beca al tutor, así que no basta con que él diga que la dio. Después de la hora de inicio:
+
+- El **tutor** sube dos pruebas, una del arranque y otra del final, y con eso la da por impartida. Las dos son obligatorias: es lo que las vuelve prueba. Antes de que la tutoría empiece no se admiten, porque una foto del inicio subida la víspera no prueba nada.
+- El **estudiante** confirma por su lado con una foto de que el tutor se presentó. Puede hacerlo aunque el tutor todavía no haya subido las suyas: el orden en que cada uno entra a la página no es cosa del otro.
+- **AEUVG** revisa las tres pruebas en **Panel → Tutorías → Horas** (`/admin/tutorias/horas`) y acepta o rechaza las horas. Aceptarlas crea el registro de horas beca del tutor por lo que duró la tutoría —una sesión de hora y media son 1.5 horas—, que queda pendiente de acreditar como cualquier otro apoyo y aparece en su módulo de horas beca. La tutoría pasa entonces a completada.
+
+Se puede aceptar aunque falte la confirmación del estudiante, porque no siempre entra a la página; la ficha lo señala para que la decisión se tome viéndolo. Si AEUVG rechaza las horas, el tutor puede volver a subir las pruebas y enviarlas otra vez.
+
+Las dos escrituras de la aceptación van en una transacción: un registro de horas sin tutoría cerrada se volvería a acreditar en la siguiente revisión, y una tutoría cerrada sin registro dejaría al tutor sin sus horas.
 
 ## Pantallas y servicios
 
@@ -60,7 +74,10 @@ Cancelar lo pueden los dos: al estudiante le surge algo y al tutor también. Dar
 | `/tutorias/panel`                        | —      | Tutor         | Horarios, tutorías solicitadas y ficha pública.          |
 | `/api/tutorias/postulaciones`            | POST   | Con sesión    | Envía la postulación del estudiante de la sesión.        |
 | `/api/tutorias`                          | POST   | Con sesión    | Agenda una tutoría con el tutor y el horario elegidos.   |
-| `/api/tutorias/[id]`                     | PATCH  | Con sesión    | Cancela la tutoría o la da por completada.               |
+| `/api/tutorias/[id]`                     | PATCH  | Con sesión    | Cancela la tutoría.                                      |
+| `/api/tutorias/[id]/respuesta`           | POST   | Tutor         | Acepta o rechaza la tutoría que le agendaron.            |
+| `/api/tutorias/[id]/pruebas`             | POST   | Tutor         | Da la tutoría por impartida con sus dos pruebas.         |
+| `/api/tutorias/[id]/confirmacion`        | POST   | Con sesión    | El estudiante confirma la tutoría con una foto.          |
 | `/api/tutorias/ficha`                    | PUT    | Tutor         | Guarda la descripción y el contacto del tutor.           |
 | `/api/tutorias/disponibilidad`           | POST   | Tutor         | Agrega una franja de disponibilidad.                     |
 | `/api/tutorias/disponibilidad/[id]`      | DELETE | Tutor         | Quita una franja.                                        |
@@ -68,6 +85,11 @@ Cancelar lo pueden los dos: al estudiante le surge algo y al tutor también. Dar
 | `/admin/tutorias`                        | —      | Administrador | Tutores, con filtros por nombre, carnet, estado y curso. |
 | `/admin/tutorias/postulaciones`          | —      | Administrador | Postulaciones por estado, con la foto del estudiante.    |
 | `/admin/tutorias/cursos`                 | —      | Administrador | Catálogo de cursos y cursos propuestos.                  |
+| `/admin/tutorias/cursos/importar`        | —      | Administrador | Carga del catálogo desde un Excel.                       |
+| `/admin/tutorias/horas`                  | —      | Administrador | Horas de las tutorías dadas, con sus tres pruebas.       |
+| `/api/admin/tutorias/cursos/plantilla`   | GET    | Administrador | Descarga la plantilla de cursos.                         |
+| `/api/admin/tutorias/cursos/importar`    | POST   | Administrador | Revisa o carga el archivo de cursos.                     |
+| `/api/admin/tutorias/horas/[id]`         | POST   | Administrador | Acepta o rechaza las horas de una tutoría.               |
 | `/api/admin/tutorias/cursos`             | POST   | Administrador | Agrega un curso al catálogo.                             |
 | `/api/admin/tutorias/cursos/[id]`        | PATCH  | Administrador | Edita, activa o desactiva un curso.                      |
 | `/api/admin/tutorias/cursos/[id]`        | DELETE | Administrador | Elimina un curso que nadie usa.                          |
@@ -76,7 +98,7 @@ Cancelar lo pueden los dos: al estudiante le surge algo y al tutor también. Dar
 
 Las rutas de tutor no se protegen por el rol sino resolviendo el tutor de la sesión: el rol se concede al aprobar, pero la ficha y las franjas son de una persona concreta, y recibir el tutor por parámetro permitiría editar la de cualquiera.
 
-La sección del panel abre en los tutores; las postulaciones y los cursos están en pestañas aparte, cada una con el número de pendientes o propuestos, para que la vista de entrada no se llene de datos que solo se necesitan al revisar.
+La sección del panel abre en los tutores; las postulaciones, los cursos y las horas están en pestañas aparte, cada una con el número de pendientes, propuestos o por revisar, para que la vista de entrada no se llene de datos que solo se necesitan al revisar.
 
 ## Qué se ve y qué no
 

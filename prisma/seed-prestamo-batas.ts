@@ -1,5 +1,10 @@
 import "dotenv/config";
-import { PrismaClient, type DiaSemana, type TallaBata, type TipoArticuloBata } from "@prisma/client";
+import {
+  PrismaClient,
+  type DiaSemana,
+  type TallaBata,
+  type TipoArticuloBata,
+} from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 
 /**

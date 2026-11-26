@@ -10,9 +10,7 @@ import type {
 import { ServicioOperacion } from "../src/lib/prestamo-batas/servicio-operacion";
 import { esquemaPrestamo } from "../src/validators/prestamo-batas";
 
-const articuloStock = (
-  sobrescribir: Partial<ArticuloParaPrestamo> = {}
-): ArticuloParaPrestamo => ({
+const articuloStock = (sobrescribir: Partial<ArticuloParaPrestamo> = {}): ArticuloParaPrestamo => ({
   idArticulo: 1,
   tipo: "BATA_AZUL",
   talla: "M",

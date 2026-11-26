@@ -82,7 +82,9 @@ export class RepositorioAgendaPrisma implements RepositorioAgenda {
     const tutorias = await this.prisma.tutoria.findMany({
       where: {
         idTutor,
-        estado: "PROGRAMADA",
+        // Una tutoría aceptada sigue ocupando el horario igual que una recién
+        // agendada: las dos se van a dar.
+        estado: { in: ["PROGRAMADA", "ACEPTADA"] },
         fechaInicio: { lt: hasta },
         fechaFin: { gt: desde },
       },
@@ -117,13 +119,10 @@ export class RepositorioAgendaPrisma implements RepositorioAgenda {
     });
   }
 
-  async cambiarEstadoTutoria(
-    idTutoria: number,
-    estado: "COMPLETADA" | "CANCELADA"
-  ): Promise<boolean> {
+  async cancelarTutoria(idTutoria: number): Promise<boolean> {
     const { count } = await this.prisma.tutoria.updateMany({
-      where: { idTutoria, estado: "PROGRAMADA" },
-      data: { estado },
+      where: { idTutoria, estado: { in: ["PROGRAMADA", "ACEPTADA"] } },
+      data: { estado: "CANCELADA" },
     });
 
     return count > 0;

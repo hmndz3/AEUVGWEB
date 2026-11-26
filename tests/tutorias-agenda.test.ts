@@ -57,6 +57,7 @@ class RepositorioAgendaFalso implements RepositorioAgenda {
       tutor?: TutorParaAgenda | null;
       ocupadas?: TutoriaOcupada[];
       tutoria?: TutoriaParaResolver | null;
+      estadoTutoria?: string;
     } = {}
   ) {}
 
@@ -91,12 +92,17 @@ class RepositorioAgendaFalso implements RepositorioAgenda {
 
   async tutoriaPorId(): Promise<TutoriaParaResolver | null> {
     return this.opciones.tutoria === undefined
-      ? { idTutoria: 21, idTutor: 7, idEstudiante: 5, estado: "PROGRAMADA" }
+      ? {
+          idTutoria: 21,
+          idTutor: 7,
+          idEstudiante: 5,
+          estado: this.opciones.estadoTutoria ?? "PROGRAMADA",
+        }
       : this.opciones.tutoria;
   }
 
-  async cambiarEstadoTutoria(idTutoria: number, estado: string): Promise<boolean> {
-    this.estados.push({ idTutoria, estado });
+  async cancelarTutoria(idTutoria: number): Promise<boolean> {
+    this.estados.push({ idTutoria, estado: "CANCELADA" });
     return true;
   }
 }
@@ -284,34 +290,37 @@ test("una modalidad que el tutor no ofrece en esa franja se rechaza", async () =
   assert.equal(repositorio.creadas.length, 0);
 });
 
-// ---------- Cancelar y completar ----------
+// ---------- Cancelar ----------
 
 test("el estudiante dueño puede cancelar su tutoría", async () => {
   const repositorio = new RepositorioAgendaFalso();
 
-  const resultado = await new ServicioAgenda(repositorio, antes).resolver(1, 21, "cancelar");
+  const resultado = await new ServicioAgenda(repositorio, antes).resolver(1, 21);
 
   assert.deepEqual(resultado, { tipo: "aplicada", estado: "CANCELADA" });
   assert.deepEqual(repositorio.estados, [{ idTutoria: 21, estado: "CANCELADA" }]);
 });
 
-test("solo el tutor puede darla por completada", async () => {
-  const delEstudiante = new RepositorioAgendaFalso();
-  const rechazado = await new ServicioAgenda(delEstudiante, antes).resolver(1, 21, "completar");
-
-  assert.equal(rechazado.tipo, "no_permitida");
-  assert.equal(delEstudiante.estados.length, 0);
-
+test("el tutor también puede cancelarla", async () => {
   const delTutor = new RepositorioAgendaFalso({ idEstudiante: 9, idTutorDeUsuario: 7 });
-  const aceptado = await new ServicioAgenda(delTutor, antes).resolver(1, 21, "completar");
 
-  assert.deepEqual(aceptado, { tipo: "aplicada", estado: "COMPLETADA" });
+  const resultado = await new ServicioAgenda(delTutor, antes).resolver(1, 21);
+
+  assert.deepEqual(resultado, { tipo: "aplicada", estado: "CANCELADA" });
+});
+
+test("una tutoría ya aceptada todavía se puede cancelar", async () => {
+  const repositorio = new RepositorioAgendaFalso({ estadoTutoria: "ACEPTADA" });
+
+  const resultado = await new ServicioAgenda(repositorio, antes).resolver(1, 21);
+
+  assert.deepEqual(resultado, { tipo: "aplicada", estado: "CANCELADA" });
 });
 
 test("una tutoría ajena responde como no encontrada", async () => {
   const repositorio = new RepositorioAgendaFalso({ idEstudiante: 77, idTutorDeUsuario: null });
 
-  const resultado = await new ServicioAgenda(repositorio, antes).resolver(1, 21, "cancelar");
+  const resultado = await new ServicioAgenda(repositorio, antes).resolver(1, 21);
 
   assert.deepEqual(resultado, { tipo: "no_encontrada" });
   assert.equal(repositorio.estados.length, 0);
@@ -323,7 +332,7 @@ test("una tutoría ya resuelta no se vuelve a tocar", async () => {
       tutoria: { idTutoria: 21, idTutor: 7, idEstudiante: 5, estado },
     });
 
-    const resultado = await new ServicioAgenda(repositorio, antes).resolver(1, 21, "cancelar");
+    const resultado = await new ServicioAgenda(repositorio, antes).resolver(1, 21);
 
     assert.equal(resultado.tipo, "no_permitida");
     assert.equal(repositorio.estados.length, 0);

@@ -1,5 +1,8 @@
+import Link from "next/link";
+
 import { FormularioCurso, TablaCursos } from "@/components/admin/catalogo-cursos";
 import { PestanasTutorias } from "@/components/admin/pestanas-tutorias";
+import { Boton } from "@/components/ui/boton";
 import { contarPostulacionesPorEstado, listarCursosPanel } from "@/lib/tutorias/consultas-tutorias";
 
 export const dynamic = "force-dynamic";
@@ -23,7 +26,12 @@ export default async function PaginaAdminCursos() {
       <PestanasTutorias activa="cursos" pendientes={conteo.PENDIENTE} propuestos={propuestos} />
 
       <section className="flex flex-col gap-4">
-        <h2 className="text-texto text-lg font-bold">Agregar un curso</h2>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="text-texto text-lg font-bold">Agregar un curso</h2>
+          <Link href="/admin/tutorias/cursos/importar">
+            <Boton variante="contorno">Importar desde Excel</Boton>
+          </Link>
+        </div>
         <FormularioCurso />
       </section>
 

@@ -11,11 +11,11 @@ type Contexto = { params: Promise<{ id: string }> };
 const sinCache = { "Cache-Control": "no-store" };
 
 /**
- * Cancela una tutoría o la da por completada.
+ * Cancela una tutoría.
  *
- * Quién puede hacer qué lo decide el servicio a partir de la sesión: cancelar
- * lo pueden los dos y completar solo el tutor. Una tutoría ajena responde como
- * no encontrada, para no revelar que existe.
+ * La pueden cancelar los dos mientras siga en pie. Darla por impartida va por
+ * otra ruta, con las pruebas que respaldan las horas beca del tutor. Una
+ * tutoría ajena responde como no encontrada, para no revelar que existe.
  */
 export const PATCH = protegerRuta([], async (usuario, solicitud: Request, contexto: Contexto) => {
   const id = Number((await contexto.params).id);
@@ -35,7 +35,7 @@ export const PATCH = protegerRuta([], async (usuario, solicitud: Request, contex
   }
 
   try {
-    const resultado = await crearServicioAgenda().resolver(usuario.idUsuario, id, accion);
+    const resultado = await crearServicioAgenda().resolver(usuario.idUsuario, id);
 
     if (resultado.tipo === "no_encontrada") {
       return Response.json({ mensaje: "No encontrado." }, { status: 404, headers: sinCache });
@@ -47,7 +47,6 @@ export const PATCH = protegerRuta([], async (usuario, solicitud: Request, contex
     // Se avisa a la otra parte, nunca a quien acaba de hacerlo.
     const aviso = await obtenerTutoriaParaAviso(id);
     if (aviso) {
-      const cancelada = resultado.estado === "CANCELADA";
       const destinatarios = [aviso.idUsuarioTutor, aviso.idUsuarioEstudiante].filter(
         (idDestino): idDestino is number => idDestino !== null && idDestino !== usuario.idUsuario
       );
@@ -56,10 +55,8 @@ export const PATCH = protegerRuta([], async (usuario, solicitud: Request, contex
         await notificar({
           idUsuario: idDestino,
           tipo: TIPOS_NOTIFICACION.tutoria,
-          titulo: cancelada ? "Se canceló una tutoría" : "Una tutoría quedó como dada",
-          mensaje: cancelada
-            ? `La tutoría de ${aviso.curso} del ${aviso.cuando} ya no se realizará.`
-            : `El tutor marcó como dada la tutoría de ${aviso.curso} del ${aviso.cuando}.`,
+          titulo: "Se canceló una tutoría",
+          mensaje: `La tutoría de ${aviso.curso} del ${aviso.cuando} ya no se realizará.`,
           urlDestino: "/perfil#mis-tutorias",
         });
       }
