@@ -181,7 +181,7 @@ test("una ficha que ya existe por nombre o por siglas no se vuelve a crear", () 
   });
 
   assert.equal(porNombre.validas.length, 0);
-  assert.match(porNombre.repetidas[0].mensaje, /ese nombre/);
+  assert.match(porNombre.repetidas[0].mensaje, /Ya existe una asociación con ese nombre/);
   assert.equal(porSiglas.validas.length, 0);
   assert.match(porSiglas.repetidas[0].mensaje, /AEBIO/);
 });
@@ -195,6 +195,8 @@ test("dos filas del mismo grupo en un archivo crean una sola ficha", () => {
   assert.equal(validas.length, 1);
   assert.equal(repetidas.length, 1);
   assert.equal(repetidas[0].fila, 3);
+  // Un club es masculino: el mensaje no puede decir "una club".
+  assert.match(repetidas[0].mensaje, /Ya existe un club con ese nombre, así que no se creó otro\./);
 });
 
 test("sin correo ni teléfono la fila se reporta", () => {

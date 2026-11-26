@@ -20,6 +20,8 @@ import {
  */
 export type CatalogosEventos = {
   categorias: Map<string, number>;
+  /** Nombres de las categorías tal como se escriben, para nombrarlas en los errores. */
+  nombresCategorias: string[];
   /** Nombre y siglas de cada asociación activa apuntan al mismo identificador. */
   asociaciones: Map<string, number>;
   clubes: Map<string, number>;
@@ -129,8 +131,8 @@ export function validarFilasDeEventos(
       problema(
         "Categoría",
         cruda.categoria === ""
-          ? `Indica la categoría. Las disponibles son: ${enumerar(catalogos.categorias.keys())}.`
-          : `La categoría «${cruda.categoria}» no existe en la plataforma. Las disponibles son: ${enumerar(catalogos.categorias.keys())}.`
+          ? `Indica la categoría. Las disponibles son: ${enumerar(catalogos.nombresCategorias)}.`
+          : `La categoría «${cruda.categoria}» no existe en la plataforma. Las disponibles son: ${enumerar(catalogos.nombresCategorias)}.`
       );
       continue;
     }

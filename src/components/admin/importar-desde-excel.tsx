@@ -181,7 +181,14 @@ export function ImportarDesdeExcel({
       )}
 
       {fase.nombre === "revisado" && !error && reporte.fallidas > 0 && (
-        <Alerta tipo="advertencia" titulo={`${reporte.fallidas} filas con problemas`}>
+        <Alerta
+          tipo="advertencia"
+          titulo={
+            reporte.fallidas === 1
+              ? "1 fila con problemas"
+              : `${reporte.fallidas} filas con problemas`
+          }
+        >
           Revisa la lista de abajo, corrige el archivo y vuelve a cargarlo. Si confirmas ahora, solo
           se crean las filas correctas.
         </Alerta>
@@ -189,12 +196,16 @@ export function ImportarDesdeExcel({
 
       {fase.nombre === "importado" && (
         <Alerta tipo="exito" titulo="Carga terminada">
-          Se crearon {reporte.correctas} de {reporte.total} filas
-          {textos.nota ? `; ${textos.nota}` : ""}.
+          {reporte.correctas === 1 ? "Se creó" : "Se crearon"} {reporte.correctas} de{" "}
+          {reporte.total} filas{textos.nota ? `; ${textos.nota}` : ""}.
           {reporte.repetidas.length > 0 &&
-            ` ${reporte.repetidas.length} ya existían y se omitieron.`}
+            (reporte.repetidas.length === 1
+              ? " 1 ya existía y se omitió."
+              : ` ${reporte.repetidas.length} ya existían y se omitieron.`)}
           {reporte.fallidas > 0 &&
-            ` ${reporte.fallidas} quedaron fuera por los problemas de la lista.`}
+            (reporte.fallidas === 1
+              ? " 1 quedó fuera por el problema de la lista."
+              : ` ${reporte.fallidas} quedaron fuera por los problemas de la lista.`)}
         </Alerta>
       )}
 

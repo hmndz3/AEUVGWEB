@@ -39,6 +39,7 @@ function catalogos(): CatalogosEventos {
       ["festival", 3],
       ["conferencia o taller", 7],
     ]),
+    nombresCategorias: ["Festival", "Conferencia o taller"],
     asociaciones: new Map([
       ["aebio", 2],
       ["asociacion de biologia", 2],
@@ -241,7 +242,8 @@ test("una categoría que no existe se reporta con las disponibles", () => {
 
   assert.equal(errores[0].campo, "Categoría");
   assert.match(errores[0].mensaje, /«Fiesta» no existe/);
-  assert.match(errores[0].mensaje, /festival/);
+  // Las categorías se nombran tal como se escriben, no como se comparan.
+  assert.match(errores[0].mensaje, /Festival, Conferencia o taller/);
 });
 
 test("el organizador se reconoce por siglas, por nombre de club o se guarda como unidad", () => {

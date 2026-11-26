@@ -86,7 +86,12 @@ export function validarFilasDeOrganizaciones(
   const nombres = new Set([...registrados.nombres]);
   const siglas = new Set([...registrados.siglas]);
   const etiquetas = etiquetasDeCampo(tipo);
-  const singular = ETIQUETA_TIPO[tipo].singular;
+  // El género del registro cambia el artículo del mensaje: "una asociación"
+  // pero "un club". Armarlo con plantillas evita leer "una club".
+  const { singular } = ETIQUETA_TIPO[tipo];
+  const esFemenino = tipo === "asociaciones";
+  const yaExiste = `Ya existe ${esFemenino ? "una" : "un"} ${singular}`;
+  const noSeCreo = `así que no se creó ${esFemenino ? "otra" : "otro"}.`;
 
   const validas: FilaValidaOrganizacion[] = [];
   const errores: ErrorFilaImportacion[] = [];
@@ -136,7 +141,7 @@ export function validarFilasDeOrganizaciones(
       repetidas.push({
         fila: cruda.fila,
         referencia,
-        mensaje: `Ya existe una ${singular} con ese nombre, así que no se creó otra.`,
+        mensaje: `${yaExiste} con ese nombre, ${noSeCreo}`,
       });
       continue;
     }
@@ -150,7 +155,7 @@ export function validarFilasDeOrganizaciones(
       repetidas.push({
         fila: cruda.fila,
         referencia,
-        mensaje: `Ya existe una ${singular} con las siglas «${cruda.siglas}», así que no se creó otra.`,
+        mensaje: `${yaExiste} con las siglas «${cruda.siglas}», ${noSeCreo}`,
       });
       continue;
     }

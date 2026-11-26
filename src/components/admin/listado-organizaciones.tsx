@@ -38,6 +38,9 @@ export function ListadoOrganizaciones({
 }) {
   const ruta = `/admin/${tipo}`;
   const { organizaciones, total, pagina, paginas } = resultado;
+  // "Activa" para una asociación y "Activo" para un club: el listado es el
+  // mismo, pero el género del registro no.
+  const etiquetaActiva = tipo === "asociaciones" ? "Activa" : "Activo";
 
   return (
     <div className="flex flex-col gap-6">
@@ -130,7 +133,7 @@ export function ListadoOrganizaciones({
                 </TablaCelda>
                 <TablaCelda>
                   <EtiquetaEstado tono={organizacion.activo ? "acreditada" : "neutro"}>
-                    {organizacion.activo ? "Activa" : "De baja"}
+                    {organizacion.activo ? etiquetaActiva : "De baja"}
                   </EtiquetaEstado>
                 </TablaCelda>
                 <TablaCelda>

@@ -74,6 +74,7 @@ export class RepositorioImportacionEventosPrisma implements RepositorioImportaci
           categoria.idCategoriaEvento,
         ])
       ),
+      nombresCategorias: categorias.map((categoria) => categoria.nombre),
       asociaciones: porAsociacion,
       clubes: new Map(clubes.map((club) => [normalizarTexto(club.nombre), club.idClub])),
     };
