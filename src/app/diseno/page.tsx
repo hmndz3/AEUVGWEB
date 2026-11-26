@@ -1,4 +1,5 @@
 import { Alerta } from "@/components/ui/alerta";
+import { MuestraSelectores } from "@/components/diseno/muestra-selectores";
 import { Boton } from "@/components/ui/boton";
 import { Campo } from "@/components/ui/campo";
 import { EtiquetaEstado } from "@/components/ui/etiqueta-estado";
@@ -102,6 +103,10 @@ export default function PaginaDiseno() {
               error="El correo debe pertenecer al dominio de la universidad."
             />
           </div>
+        </Seccion>
+
+        <Seccion titulo="Fecha y hora">
+          <MuestraSelectores />
         </Seccion>
 
         <Seccion titulo="Tarjetas">
