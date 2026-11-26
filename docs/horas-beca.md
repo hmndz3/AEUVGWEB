@@ -72,6 +72,16 @@ El resumen del programa cuenta los carnets como distintos y no como filas: el da
 
 La base suma y cuenta agrupando por día o por carnet, y el pliegue a meses y a estudiantes vive en `calculos-reportes.ts`, separado de las consultas para poder comprobarlo con grupos escritos a mano. El mes se calcula en UTC por el mismo motivo que la fecha de la actividad. El detalle por estudiante se agrupa por carnet y no por nombre: un mismo carnet puede traer el nombre escrito de dos maneras en hojas de distintos años, y agruparlo por nombre lo partiría en dos filas con la mitad de las horas cada una.
 
+## Reporte de eventos
+
+La sección de reportes tiene una segunda pestaña, **Eventos** (`/admin/reportes/eventos`), que responde qué actividades se hicieron y qué alcance tuvieron. Se filtra por periodo, organizador, categoría, tipo y estado, y se descarga en Excel o CSV con todos los datos de cada evento; la descarga arrastra los filtros de la dirección, así que el archivo trae exactamente lo que está en pantalla.
+
+El filtro de organizador trae de primero **Solo AEUVG**, que es el que pidió la asociación: AEUVG está en el catálogo de asociaciones como cualquier otra y el reporte la busca por ese nombre. Mientras no esté cargada, ese filtro no devuelve eventos en lugar de devolverlos todos, que sería lo contrario de lo que se pidió.
+
+La plataforma no lleva lista de asistentes —nadie pasa asistencia en la puerta—, así que el alcance se mide con lo que sí queda registrado: cuántos estudiantes guardaron cada evento y cuántas horas beca generó. Un evento con varios organizadores cuenta para cada uno, de modo que esa tabla puede sumar más que el total de eventos; la pregunta que responde es en cuántas actividades participó cada grupo.
+
+Los eventos del campus son cientos, así que el reporte los trae y hace las cuentas en memoria en lugar de pedirle a la base una consulta por desglose. Los cálculos viven en `metricas-eventos.ts`, aparte de las consultas, para poder comprobarlos con eventos escritos a mano.
+
 ## Información de prueba
 
 El conjunto de datos ficticios incluye nueve registros: pendientes y acreditados, manuales y provenientes de una importación, con cuenta vinculada y sin ella, repartidos entre dos carnets que no tienen ficha de estudiante. Hay dos importaciones de ejemplo, una que entró a medias y otra que entró completa, para que el reporte y la pantalla de importación tengan los dos casos. El verificador comprueba además que ningún registro quede sin vincular si su carnet sí tiene ficha, que es la señal de que alguna de las dos mitades de la asociación dejó de aplicarse.

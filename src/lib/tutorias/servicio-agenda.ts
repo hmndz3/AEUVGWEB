@@ -5,7 +5,7 @@ import {
   seTraslapan,
   type FranjaDisponible,
 } from "@/lib/tutorias/agenda-tutorias";
-import type { AccionTutoria, DatosSolicitudTutoria } from "@/validators/tutoria";
+import type { DatosSolicitudTutoria } from "@/validators/tutoria";
 
 /** Lo que el servicio necesita saber del tutor al que se le solicita. */
 export type TutorParaAgenda = {
@@ -45,7 +45,8 @@ export interface RepositorioAgenda {
   tutoriaPorId(idTutoria: number): Promise<TutoriaParaResolver | null>;
   /** Devuelve el tutor que corresponde a la cuenta, para saber quién resuelve. */
   tutorDeUsuario(idUsuario: number): Promise<number | null>;
-  cambiarEstadoTutoria(idTutoria: number, estado: "COMPLETADA" | "CANCELADA"): Promise<boolean>;
+  /** Cancela la tutoría si todavía estaba en pie. */
+  cancelarTutoria(idTutoria: number): Promise<boolean>;
 }
 
 export type ResultadoSolicitud =
@@ -54,7 +55,7 @@ export type ResultadoSolicitud =
   | { tipo: "invalida"; mensaje: string };
 
 export type ResultadoAccionTutoria =
-  | { tipo: "aplicada"; estado: "COMPLETADA" | "CANCELADA" }
+  | { tipo: "aplicada"; estado: "CANCELADA" }
   | { tipo: "no_encontrada" }
   | { tipo: "no_permitida"; mensaje: string };
 
@@ -147,24 +148,21 @@ export class ServicioAgenda {
   }
 
   /**
-   * Cancela o da por completada una tutoría.
+   * Cancela una tutoría.
    *
-   * Cancelar lo pueden hacer los dos: al estudiante le surge algo y al tutor
-   * también. Darla por completada solo el tutor, porque es quien sabe si la
-   * sesión ocurrió, y es el dato que respalda su ficha en el directorio.
+   * Lo pueden hacer los dos: al estudiante le surge algo y al tutor también.
+   * Solo mientras la cita siga en pie —agendada o aceptada—; una ya dada o ya
+   * cancelada no se toca. Darla por impartida va por otro camino, con las
+   * pruebas que respaldan las horas beca del tutor.
    */
-  async resolver(
-    idUsuario: number,
-    idTutoria: number,
-    accion: AccionTutoria
-  ): Promise<ResultadoAccionTutoria> {
+  async resolver(idUsuario: number, idTutoria: number): Promise<ResultadoAccionTutoria> {
     const tutoria = await this.repositorio.tutoriaPorId(idTutoria);
     if (!tutoria) return { tipo: "no_encontrada" };
 
-    if (tutoria.estado !== "PROGRAMADA") {
+    if (tutoria.estado !== "PROGRAMADA" && tutoria.estado !== "ACEPTADA") {
       return {
         tipo: "no_permitida",
-        mensaje: `Esta tutoría ya está ${tutoria.estado === "COMPLETADA" ? "completada" : "cancelada"}.`,
+        mensaje: `Esta tutoría ya está ${ETIQUETAS_ESTADO[tutoria.estado] ?? "cerrada"}.`,
       };
     }
 
@@ -178,16 +176,15 @@ export class ServicioAgenda {
 
     if (!esTutor && !esDueno) return { tipo: "no_encontrada" };
 
-    if (accion === "completar" && !esTutor) {
-      return {
-        tipo: "no_permitida",
-        mensaje: "Solo el tutor puede dar una tutoría por completada.",
-      };
-    }
+    const aplicado = await this.repositorio.cancelarTutoria(idTutoria);
 
-    const estado = accion === "completar" ? "COMPLETADA" : "CANCELADA";
-    const aplicado = await this.repositorio.cambiarEstadoTutoria(idTutoria, estado);
-
-    return aplicado ? { tipo: "aplicada", estado } : { tipo: "no_encontrada" };
+    return aplicado ? { tipo: "aplicada", estado: "CANCELADA" } : { tipo: "no_encontrada" };
   }
 }
+
+/** Cómo se nombra cada estado al explicar por qué ya no se puede cancelar. */
+const ETIQUETAS_ESTADO: Record<string, string> = {
+  RECHAZADA: "rechazada",
+  COMPLETADA: "completada",
+  CANCELADA: "cancelada",
+};

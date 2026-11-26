@@ -1,11 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 import { Alerta } from "@/components/ui/alerta";
 import { Boton } from "@/components/ui/boton";
 import { EtiquetaCampo, NotaCamposObligatorios } from "@/components/ui/etiqueta-campo";
+import { RejillaTurnos } from "@/components/prestamo-batas/rejilla-turnos";
 import type { TurnoSelector } from "@/lib/prestamo-batas/consultas-prestamo-batas";
 
 const claseCampo =
@@ -25,16 +26,6 @@ export function FormularioPostulacionVoluntario({ turnos }: { turnos: TurnoSelec
   const [error, setError] = useState<string | null>(null);
   const [enviando, setEnviando] = useState(false);
   const [exito, setExito] = useState(false);
-
-  const porDia = useMemo(() => {
-    const grupos = new Map<string, TurnoSelector[]>();
-    for (const turno of turnos) {
-      const lista = grupos.get(turno.etiquetaDia) ?? [];
-      lista.push(turno);
-      grupos.set(turno.etiquetaDia, lista);
-    }
-    return [...grupos.entries()];
-  }, [turnos]);
 
   function alternar(idTurno: number) {
     setSeleccion((previo) => {
@@ -109,33 +100,46 @@ export function FormularioPostulacionVoluntario({ turnos }: { turnos: TurnoSelec
           </span>
         </legend>
 
-        {porDia.map(([dia, delDia]) => (
-          <div key={dia} className="flex flex-col gap-2">
-            <h3 className="text-texto-suave text-xs font-bold tracking-wide uppercase">{dia}</h3>
-            <div className="grid gap-2 sm:grid-cols-2">
-              {delDia.map((turno) => (
-                <label
-                  key={turno.idTurno}
-                  className={`flex items-center gap-3 rounded-2xl border px-4 py-3 text-sm ${
-                    turno.libre
-                      ? "border-borde bg-superficie hover:bg-superficie-suave cursor-pointer"
-                      : "border-borde bg-superficie-suave cursor-not-allowed opacity-60"
-                  }`}
-                >
-                  <input
-                    type="checkbox"
-                    disabled={!turno.libre}
-                    checked={seleccion.has(turno.idTurno)}
-                    onChange={() => alternar(turno.idTurno)}
-                    className="accent-primario size-4"
-                  />
-                  <span className="text-texto font-semibold">{turno.rango}</span>
-                  {!turno.libre && <span className="text-texto-suave ml-auto text-xs">Lleno</span>}
-                </label>
-              ))}
+        <RejillaTurnos
+          turnos={turnos}
+          vacio="Todavía no hay turnos abiertos a postulación."
+          casilla={(turno) => {
+            const marcado = seleccion.has(turno.idTurno);
+
+            return (
+              <label
+                className={`flex h-full items-center gap-2 rounded-xl px-2.5 py-2 text-xs transition-colors ${
+                  turno.libre
+                    ? marcado
+                      ? "bg-primario-suave text-sobre-primario-suave ring-primario cursor-pointer ring-2"
+                      : "bg-superficie-suave text-texto hover:bg-primario-suave/60 cursor-pointer"
+                    : "bg-superficie-suave text-texto-suave cursor-not-allowed opacity-60"
+                }`}
+              >
+                <input
+                  type="checkbox"
+                  disabled={!turno.libre}
+                  checked={marcado}
+                  onChange={() => alternar(turno.idTurno)}
+                  className="accent-primario size-4 shrink-0"
+                />
+                <span className="font-semibold">
+                  {turno.libre ? "Puedo atender" : "Turno lleno"}
+                </span>
+                <span className="sr-only">
+                  {turno.etiquetaDia}, {turno.rango}
+                </span>
+              </label>
+            );
+          }}
+          casillaVacia={() => (
+            <div className="flex h-full min-h-10 items-center justify-center">
+              <span aria-hidden className="text-texto-suave text-xs opacity-40">
+                —
+              </span>
             </div>
-          </div>
-        ))}
+          )}
+        />
       </fieldset>
 
       <div className="flex flex-col gap-1.5">

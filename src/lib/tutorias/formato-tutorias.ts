@@ -110,7 +110,9 @@ export const ETIQUETAS_ESTADO_TUTOR: Record<EstadoTutor, string> = {
 };
 
 export const ETIQUETAS_ESTADO_TUTORIA: Record<EstadoTutoria, string> = {
-  PROGRAMADA: "Programada",
+  PROGRAMADA: "Por responder",
+  ACEPTADA: "Aceptada",
+  RECHAZADA: "Rechazada",
   COMPLETADA: "Completada",
   CANCELADA: "Cancelada",
 };

@@ -18,7 +18,9 @@ import type {
 import { ServicioTurnos } from "../src/lib/prestamo-batas/servicio-turnos";
 import { esquemaArticuloInventario, esquemaTurno } from "../src/validators/prestamo-batas";
 
-const articulo = (sobrescribir: Partial<DatosArticuloPersistido> = {}): DatosArticuloPersistido => ({
+const articulo = (
+  sobrescribir: Partial<DatosArticuloPersistido> = {}
+): DatosArticuloPersistido => ({
   tipo: "BATA_AZUL",
   talla: "M",
   cantidadTotal: 10,
@@ -58,7 +60,11 @@ class RepositorioInventarioFalso implements RepositorioInventario {
 
 test("el inventario rechaza un tipo y talla ya existente", async () => {
   const servicio = new ServicioInventario(new RepositorioInventarioFalso({ existe: true }));
-  const datos = esquemaArticuloInventario.parse({ tipo: "BATA_AZUL", talla: "M", cantidadTotal: 5 });
+  const datos = esquemaArticuloInventario.parse({
+    tipo: "BATA_AZUL",
+    talla: "M",
+    cantidadTotal: 5,
+  });
 
   const resultado = await servicio.crear(datos);
 
@@ -83,7 +89,11 @@ test("los lentes se guardan sin talla aunque llegue una", async () => {
 
 test("no se puede bajar el total por debajo de lo prestado", async () => {
   const servicio = new ServicioInventario(new RepositorioInventarioFalso({ prestada: 7 }));
-  const datos = esquemaArticuloInventario.parse({ tipo: "BATA_AZUL", talla: "L", cantidadTotal: 5 });
+  const datos = esquemaArticuloInventario.parse({
+    tipo: "BATA_AZUL",
+    talla: "L",
+    cantidadTotal: 5,
+  });
 
   const resultado = await servicio.editar(3, datos);
 

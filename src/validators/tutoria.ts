@@ -249,8 +249,13 @@ export const esquemaSolicitudTutoria = z.object({
 
 export type DatosSolicitudTutoria = z.infer<typeof esquemaSolicitudTutoria>;
 
-/** Cambios de estado que admite una tutoría ya programada. */
-export const ACCIONES_TUTORIA = ["completar", "cancelar"] as const;
+/**
+ * Cambios de estado que admite una tutoría ya programada.
+ *
+ * Darla por impartida dejó de ser una acción suelta: ahora el tutor la marca
+ * con sus pruebas (ver esquemaPruebasTutor), así que aquí solo queda cancelar.
+ */
+export const ACCIONES_TUTORIA = ["cancelar"] as const;
 
 export type AccionTutoria = (typeof ACCIONES_TUTORIA)[number];
 
@@ -258,12 +263,67 @@ export function interpretarAccionTutoria(valor: unknown): AccionTutoria | null {
   return ACCIONES_TUTORIA.find((accion) => accion === valor) ?? null;
 }
 
+const MENSAJE_PRUEBA = "Sube la imagen de la prueba.";
+const MENSAJE_COMENTARIO_TUTORIA = "El comentario no puede exceder 1000 caracteres.";
+
+/** Una prueba de la tutoría: una imagen subida a la plataforma. */
+const pruebaDeImagen = z
+  .string(MENSAJE_PRUEBA)
+  .trim()
+  .max(500, MENSAJE_PRUEBA)
+  .refine(esImagenDelSitio, MENSAJE_PRUEBA);
+
+const comentarioTutoria = z
+  .string()
+  .trim()
+  .max(1000, MENSAJE_COMENTARIO_TUTORIA)
+  .transform((valor) => (valor.length > 0 ? valor : null))
+  .nullable()
+  .default(null);
+
+/** El tutor acepta o rechaza la tutoría que le agendaron. */
+export const esquemaRespuestaTutoria = z.object({
+  decision: z.enum(["aceptar", "rechazar"], "Indica si aceptas o rechazas la tutoría."),
+  comentario: comentarioTutoria,
+});
+
+export type DatosRespuestaTutoria = z.infer<typeof esquemaRespuestaTutoria>;
+
+/**
+ * Pruebas con las que el tutor da la tutoría por impartida: una del inicio y
+ * otra del final. Las dos son obligatorias, que es lo que las vuelve prueba.
+ */
+export const esquemaPruebasTutor = z.object({
+  pruebaInicioUrl: pruebaDeImagen,
+  pruebaFinUrl: pruebaDeImagen,
+});
+
+export type DatosPruebasTutor = z.infer<typeof esquemaPruebasTutor>;
+
+/** El estudiante confirma con una imagen que el tutor sí se presentó. */
+export const esquemaPruebaEstudiante = z.object({ pruebaUrl: pruebaDeImagen });
+
+export type DatosPruebaEstudiante = z.infer<typeof esquemaPruebaEstudiante>;
+
+/** Revisión de las horas de una tutoría por parte de AEUVG. */
+export const esquemaRevisionHorasTutoria = z.object({
+  decision: z.enum(["aceptar", "rechazar"], "Indica si aceptas o rechazas las horas."),
+  comentario: comentarioTutoria,
+});
+
+export type DatosRevisionHorasTutoria = z.infer<typeof esquemaRevisionHorasTutoria>;
+
 /** Etiqueta legible de cada campo, para nombrar el error en el resumen. */
 export const ETIQUETAS_CAMPO_TUTORIA: Record<string, string> = {
   cursos: "Cursos",
   comentarioSolicitante: "Comentario",
   notaObtenida: "Nota",
   comprobanteUrl: "Comprobante",
+  decision: "Decisión",
+  comentario: "Comentario",
+  pruebaInicioUrl: "Prueba del inicio",
+  pruebaFinUrl: "Prueba del final",
+  pruebaUrl: "Prueba",
   descripcion: "Descripción",
   informacionContacto: "Información de contacto",
   diaSemana: "Día",

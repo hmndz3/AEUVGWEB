@@ -2,6 +2,7 @@ import type { EstadoPostulacion, EstadoTutor, Prisma } from "@prisma/client";
 
 import { aHoraDeReloj, formatearFechaTutoria } from "@/lib/tutorias/formato-tutorias";
 import { obtenerPrisma } from "@/lib/prisma";
+import { horasDeTutoria } from "@/lib/tutorias/servicio-validacion-tutorias";
 
 /** Postulaciones por página del panel. */
 export const POSTULACIONES_POR_PAGINA = 20;
@@ -402,7 +403,14 @@ export type TutoriaVista = {
   modalidad: import("@prisma/client").ModalidadTutoria;
   ubicacionEnlace: string | null;
   estado: import("@prisma/client").EstadoTutoria;
+  /** Cómo van las horas beca del tutor por esta tutoría. */
+  estadoHoras: import("@prisma/client").EstadoHorasTutoria;
   observaciones: string | null;
+  comentarioTutor: string | null;
+  pruebaInicioUrl: string | null;
+  pruebaFinUrl: string | null;
+  pruebaEstudianteUrl: string | null;
+  comentarioRevisionHoras: string | null;
   curso: { codigo: string; nombre: string };
   /** Nombre de la otra parte: el tutor para el estudiante y al revés. */
   tutor: string;
@@ -424,7 +432,13 @@ const CAMPOS_TUTORIA = {
   modalidad: true,
   ubicacionEnlace: true,
   estado: true,
+  estadoHoras: true,
   observaciones: true,
+  comentarioTutor: true,
+  pruebaInicioUrl: true,
+  pruebaFinUrl: true,
+  pruebaEstudianteUrl: true,
+  comentarioRevisionHoras: true,
   curso: { select: { codigo: true, nombre: true } },
   tutor: {
     select: {
@@ -448,7 +462,13 @@ function aTutoria(fila: FilaTutoria): TutoriaVista {
     modalidad: fila.modalidad,
     ubicacionEnlace: fila.ubicacionEnlace,
     estado: fila.estado,
+    estadoHoras: fila.estadoHoras,
     observaciones: fila.observaciones,
+    comentarioTutor: fila.comentarioTutor,
+    pruebaInicioUrl: fila.pruebaInicioUrl,
+    pruebaFinUrl: fila.pruebaFinUrl,
+    pruebaEstudianteUrl: fila.pruebaEstudianteUrl,
+    comentarioRevisionHoras: fila.comentarioRevisionHoras,
     curso: fila.curso,
     tutor: fila.tutor.estudiante.nombreCompleto,
     estudiante: fila.estudiante.nombreCompleto,
@@ -531,4 +551,97 @@ export async function obtenerTutoriaParaAviso(idTutoria: number): Promise<{
     curso: fila.curso.nombre,
     cuando: formatearFechaTutoria(fila.fechaInicio),
   };
+}
+
+// ---------------------------------------------------------------------------
+// Revisión de las horas de las tutorías
+// ---------------------------------------------------------------------------
+
+export type TutoriaParaRevisar = {
+  idTutoria: number;
+  estado: import("@prisma/client").EstadoTutoria;
+  estadoHoras: import("@prisma/client").EstadoHorasTutoria;
+  fechaInicio: Date;
+  fechaFin: Date;
+  /** Lo que se acreditaría: exactamente lo que duró la tutoría. */
+  horas: number;
+  curso: { codigo: string; nombre: string };
+  tutor: { nombre: string; carnet: string };
+  estudiante: { nombre: string; carnet: string };
+  pruebaInicioUrl: string | null;
+  pruebaFinUrl: string | null;
+  pruebaEstudianteUrl: string | null;
+  comentarioRevisionHoras: string | null;
+  revisor: string | null;
+  fechaRevisionHoras: Date | null;
+};
+
+const CAMPOS_REVISION = {
+  idTutoria: true,
+  estado: true,
+  estadoHoras: true,
+  fechaInicio: true,
+  fechaFin: true,
+  pruebaInicioUrl: true,
+  pruebaFinUrl: true,
+  pruebaEstudianteUrl: true,
+  comentarioRevisionHoras: true,
+  fechaRevisionHoras: true,
+  curso: { select: { codigo: true, nombre: true } },
+  tutor: { select: { estudiante: { select: { nombreCompleto: true, carnet: true } } } },
+  estudiante: { select: { nombreCompleto: true, carnet: true } },
+  revisorHoras: { select: { estudiante: { select: { nombreCompleto: true } } } },
+} as const;
+
+type FilaRevision = Prisma.TutoriaGetPayload<{ select: typeof CAMPOS_REVISION }>;
+
+function aRevision(fila: FilaRevision): TutoriaParaRevisar {
+  return {
+    idTutoria: fila.idTutoria,
+    estado: fila.estado,
+    estadoHoras: fila.estadoHoras,
+    fechaInicio: fila.fechaInicio,
+    fechaFin: fila.fechaFin,
+    horas: horasDeTutoria(fila.fechaInicio, fila.fechaFin),
+    curso: fila.curso,
+    tutor: {
+      nombre: fila.tutor.estudiante.nombreCompleto,
+      carnet: fila.tutor.estudiante.carnet,
+    },
+    estudiante: { nombre: fila.estudiante.nombreCompleto, carnet: fila.estudiante.carnet },
+    pruebaInicioUrl: fila.pruebaInicioUrl,
+    pruebaFinUrl: fila.pruebaFinUrl,
+    pruebaEstudianteUrl: fila.pruebaEstudianteUrl,
+    comentarioRevisionHoras: fila.comentarioRevisionHoras,
+    revisor: fila.revisorHoras?.estudiante.nombreCompleto ?? null,
+    fechaRevisionHoras: fila.fechaRevisionHoras,
+  };
+}
+
+/** Tutorías cuyo tutor ya mandó sus pruebas y esperan la revisión de AEUVG. */
+export async function listarTutoriasPendientesDeHoras(): Promise<TutoriaParaRevisar[]> {
+  const filas = await obtenerPrisma().tutoria.findMany({
+    where: { estadoHoras: "PENDIENTE" },
+    orderBy: { fechaMarcaTutor: "asc" },
+    select: CAMPOS_REVISION,
+  });
+
+  return filas.map(aRevision);
+}
+
+/** Las últimas revisadas, para poder consultar lo que ya se decidió. */
+export async function listarTutoriasRevisadas(limite = 30): Promise<TutoriaParaRevisar[]> {
+  const filas = await obtenerPrisma().tutoria.findMany({
+    where: { estadoHoras: { in: ["ACEPTADAS", "RECHAZADAS"] } },
+    orderBy: { fechaRevisionHoras: "desc" },
+    take: limite,
+    select: CAMPOS_REVISION,
+  });
+
+  return filas.map(aRevision);
+}
+
+/** Cuántas tutorías esperan revisión, para el contador de la pestaña. */
+export async function contarTutoriasPendientesDeHoras(): Promise<number> {
+  return obtenerPrisma().tutoria.count({ where: { estadoHoras: "PENDIENTE" } });
 }
