@@ -78,6 +78,15 @@ const APARIENCIA: Record<RutaSeccion, { acento: string; trazo: React.ReactNode }
       </>
     ),
   },
+  "/admin/prestamo-batas": {
+    acento: "bg-cielo/15 text-sobre-cielo",
+    trazo: (
+      <>
+        <path d="M9 3.5 12 6l3-2.5 3.5 1.8V20.5H5.5V5.3L9 3.5Z" />
+        <path d="M12 6v14M9 3.5 12 6M15 3.5 12 6" />
+      </>
+    ),
+  },
   "/admin/reportes": {
     acento: "bg-primario/12 text-primario",
     trazo: <path d="M4.5 20.5V11M10 20.5V4.5M15.5 20.5v-7M21 20.5V8M3 20.5h19" />,
@@ -101,7 +110,13 @@ const GRUPOS: { titulo: string; rutas: RutaSeccion[] }[] = [
   },
   {
     titulo: "Estudiantes y programas",
-    rutas: ["/admin/estudiantes", "/admin/horas-beca", "/admin/tutorias", "/admin/reportes"],
+    rutas: [
+      "/admin/estudiantes",
+      "/admin/horas-beca",
+      "/admin/tutorias",
+      "/admin/prestamo-batas",
+      "/admin/reportes",
+    ],
   },
 ];
 

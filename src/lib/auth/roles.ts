@@ -2,6 +2,7 @@
 export const ROLES = {
   estudiante: "ESTUDIANTE",
   tutor: "TUTOR",
+  voluntario: "VOLUNTARIO",
   administrador: "ADMINISTRADOR",
 } as const;
 

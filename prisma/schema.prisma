@@ -136,54 +136,62 @@ model Carrera {
 }
 
 model Estudiante {
-  idEstudiante       Int                      @id @default(autoincrement()) @map("id_estudiante")
-  idCarrera          Int                      @map("id_carrera")
-  carnet             String                   @unique(map: "estudiante_carnet_key") @db.VarChar(20)
-  nombreCompleto     String                   @map("nombre_completo") @db.VarChar(200)
-  correoUvg          String                   @unique(map: "estudiante_correo_uvg_key") @map("correo_uvg") @db.VarChar(254)
-  telefono           String?                  @db.VarChar(30)
+  idEstudiante            Int                      @id @default(autoincrement()) @map("id_estudiante")
+  idCarrera               Int                      @map("id_carrera")
+  carnet                  String                   @unique(map: "estudiante_carnet_key") @db.VarChar(20)
+  nombreCompleto          String                   @map("nombre_completo") @db.VarChar(200)
+  correoUvg               String                   @unique(map: "estudiante_correo_uvg_key") @map("correo_uvg") @db.VarChar(254)
+  telefono                String?                  @db.VarChar(30)
   // Fotografía de perfil. Opcional: la plataforma funciona sin ella y en todas
   // partes hay iniciales como respaldo. Ver docs/perfil-y-eventos-guardados.md.
-  fotoUrl            String?                  @map("foto_url") @db.VarChar(500)
-  activo             Boolean                  @default(true)
-  fechaCreacion      DateTime                 @default(now()) @map("fecha_creacion") @db.Timestamptz(3)
-  fechaActualizacion DateTime                 @updatedAt @map("fecha_actualizacion") @db.Timestamptz(3)
-  carrera            Carrera                  @relation(fields: [idCarrera], references: [idCarrera], onDelete: Restrict, onUpdate: Cascade)
-  usuario            Usuario?
-  inscripciones      InscripcionOportunidad[]
-  registrosHoraBeca  RegistroHoraBeca[]
-  postulacionesTutor PostulacionTutor[]
-  tutor              Tutor?
-  tutoriasRecibidas  Tutoria[]
+  fotoUrl                 String?                  @map("foto_url") @db.VarChar(500)
+  activo                  Boolean                  @default(true)
+  fechaCreacion           DateTime                 @default(now()) @map("fecha_creacion") @db.Timestamptz(3)
+  fechaActualizacion      DateTime                 @updatedAt @map("fecha_actualizacion") @db.Timestamptz(3)
+  carrera                 Carrera                  @relation(fields: [idCarrera], references: [idCarrera], onDelete: Restrict, onUpdate: Cascade)
+  usuario                 Usuario?
+  inscripciones           InscripcionOportunidad[]
+  registrosHoraBeca       RegistroHoraBeca[]
+  postulacionesTutor      PostulacionTutor[]
+  tutor                   Tutor?
+  tutoriasRecibidas       Tutoria[]
+  postulacionesVoluntario PostulacionVoluntario[]
+  asignacionesVoluntario  AsignacionVoluntario[]
+  comprobantesTurno       ComprobanteTurno[]
 
   @@index([idCarrera], map: "estudiante_id_carrera_idx")
   @@map("estudiante")
 }
 
 model Usuario {
-  idUsuario              Int                           @id @default(autoincrement()) @map("id_usuario")
-  idEstudiante           Int                           @unique(map: "usuario_id_estudiante_key") @map("id_estudiante")
-  correo                 String                        @unique(map: "usuario_correo_key") @db.VarChar(254)
-  contrasenaHash         String                        @map("contrasena_hash") @db.VarChar(255)
-  estado                 EstadoUsuario                 @default(PENDIENTE)
-  correoVerificado       Boolean                       @default(false) @map("correo_verificado")
-  ultimoAcceso           DateTime?                     @map("ultimo_acceso") @db.Timestamptz(3)
-  fechaCreacion          DateTime                      @default(now()) @map("fecha_creacion") @db.Timestamptz(3)
-  fechaActualizacion     DateTime                      @updatedAt @map("fecha_actualizacion") @db.Timestamptz(3)
-  estudiante             Estudiante                    @relation(fields: [idEstudiante], references: [idEstudiante], onDelete: Restrict, onUpdate: Cascade)
-  roles                  UsuarioRol[]
-  eventosCreados         Evento[]                      @relation("EventoCreadoPor")
-  eventosGuardados       EventoGuardado[]
-  oportunidadesCreadas   OportunidadHoraBeca[]         @relation("OportunidadCreadaPor")
-  importacionesHoras     ImportacionHoras[]            @relation("ImportacionRealizadaPor")
-  registrosCreados       RegistroHoraBeca[]            @relation("RegistroCreadoPor")
-  registrosAcreditados   RegistroHoraBeca[]            @relation("RegistroAcreditadoPor")
-  postulacionesRevisadas PostulacionTutor[]            @relation("PostulacionRevisadaPor")
-  intereses              InteresUsuario[]
-  interacciones          InteraccionUsuario[]
-  notificaciones         Notificacion[]
-  tokensVerificacion     TokenVerificacionCorreo[]
-  tokensRecuperacion     TokenRecuperacionContrasena[]
+  idUsuario                        Int                           @id @default(autoincrement()) @map("id_usuario")
+  idEstudiante                     Int                           @unique(map: "usuario_id_estudiante_key") @map("id_estudiante")
+  correo                           String                        @unique(map: "usuario_correo_key") @db.VarChar(254)
+  contrasenaHash                   String                        @map("contrasena_hash") @db.VarChar(255)
+  estado                           EstadoUsuario                 @default(PENDIENTE)
+  correoVerificado                 Boolean                       @default(false) @map("correo_verificado")
+  ultimoAcceso                     DateTime?                     @map("ultimo_acceso") @db.Timestamptz(3)
+  fechaCreacion                    DateTime                      @default(now()) @map("fecha_creacion") @db.Timestamptz(3)
+  fechaActualizacion               DateTime                      @updatedAt @map("fecha_actualizacion") @db.Timestamptz(3)
+  estudiante                       Estudiante                    @relation(fields: [idEstudiante], references: [idEstudiante], onDelete: Restrict, onUpdate: Cascade)
+  roles                            UsuarioRol[]
+  eventosCreados                   Evento[]                      @relation("EventoCreadoPor")
+  eventosGuardados                 EventoGuardado[]
+  oportunidadesCreadas             OportunidadHoraBeca[]         @relation("OportunidadCreadaPor")
+  importacionesHoras               ImportacionHoras[]            @relation("ImportacionRealizadaPor")
+  registrosCreados                 RegistroHoraBeca[]            @relation("RegistroCreadoPor")
+  registrosAcreditados             RegistroHoraBeca[]            @relation("RegistroAcreditadoPor")
+  postulacionesRevisadas           PostulacionTutor[]            @relation("PostulacionRevisadaPor")
+  intereses                        InteresUsuario[]
+  interacciones                    InteraccionUsuario[]
+  notificaciones                   Notificacion[]
+  tokensVerificacion               TokenVerificacionCorreo[]
+  tokensRecuperacion               TokenRecuperacionContrasena[]
+  postulacionesVoluntarioRevisadas PostulacionVoluntario[]       @relation("PostulacionVoluntarioRevisadaPor")
+  asignacionesVoluntarioRealizadas AsignacionVoluntario[]        @relation("AsignacionVoluntarioAsignadaPor")
+  prestamosRegistrados             PrestamoBata[]                @relation("PrestamoRegistradoPor")
+  listaNegraRegistrada             ListaNegraBata[]              @relation("ListaNegraRegistradaPor")
+  comprobantesTurnoRevisados       ComprobanteTurno[]            @relation("ComprobanteTurnoRevisadoPor")
 
   @@index([estado], map: "usuario_estado_idx")
   @@map("usuario")
@@ -493,6 +501,7 @@ model RegistroHoraBeca {
   importacion          ImportacionHoras?    @relation(fields: [idImportacion], references: [idImportacion], onDelete: Restrict, onUpdate: Cascade)
   creador              Usuario              @relation("RegistroCreadoPor", fields: [creadoPor], references: [idUsuario], onDelete: Restrict, onUpdate: Cascade)
   acreditador          Usuario?             @relation("RegistroAcreditadoPor", fields: [acreditadoPor], references: [idUsuario], onDelete: SetNull, onUpdate: Cascade)
+  comprobanteTurno     ComprobanteTurno?
 
   @@index([idEstudiante], map: "registro_hora_beca_id_estudiante_idx")
   @@index([estado], map: "registro_hora_beca_estado_idx")
@@ -675,4 +684,220 @@ model Notificacion {
   @@index([fechaEnvio], map: "notificacion_fecha_envio_idx")
   @@index([idUsuario, leida, fechaEnvio], map: "notificacion_usuario_leida_fecha_idx")
   @@map("notificacion")
+}
+
+// ===========================================================================
+// Préstamo de batas y voluntariado
+//
+// AEUVG presta batas y lentes de laboratorio en un salón atendido por
+// estudiantes voluntarios organizados en turnos. Estos modelos reemplazan el
+// Excel que llevaban los voluntarios: inventario de artículos, registro de
+// préstamos con su devolución, lista negra de quien no devolvió, catálogo de
+// turnos de atención, postulación y asignación de voluntarios (máximo dos por
+// turno) y el comprobante de entrada/salida con el que el voluntario acredita
+// sus horas beca. Ver docs/prestamo-batas.md.
+// ===========================================================================
+
+enum TipoArticuloBata {
+  BATA_AZUL   @map("bata_azul")
+  BATA_BLANCA @map("bata_blanca")
+  LENTES      @map("lentes")
+
+  @@map("tipo_articulo_bata")
+}
+
+enum TallaBata {
+  S
+  M
+  L
+  XL
+
+  @@map("talla_bata")
+}
+
+enum EstadoPrestamoBata {
+  PRESTADO @map("prestado")
+  DEVUELTO @map("devuelto")
+
+  @@map("estado_prestamo_bata")
+}
+
+enum EstadoComprobanteTurno {
+  PENDIENTE @map("pendiente")
+  APROBADO  @map("aprobado")
+  RECHAZADO @map("rechazado")
+
+  @@map("estado_comprobante_turno")
+}
+
+model TurnoVoluntariado {
+  idTurno       Int                    @id @default(autoincrement()) @map("id_turno")
+  diaSemana     DiaSemana              @map("dia_semana")
+  horaInicio    DateTime               @map("hora_inicio") @db.Time(0)
+  horaFin       DateTime               @map("hora_fin") @db.Time(0)
+  // Cupo de voluntarios del turno. El proceso de AEUVG es de dos; se guarda por
+  // si cambiara, pero la asignación nunca supera este número.
+  cupo          Int                    @default(2)
+  activo        Boolean                @default(true)
+  fechaCreacion DateTime               @default(now()) @map("fecha_creacion") @db.Timestamptz(3)
+  postulaciones TurnoPostulacion[]
+  asignaciones  AsignacionVoluntario[]
+  comprobantes  ComprobanteTurno[]
+
+  @@unique([diaSemana, horaInicio, horaFin], map: "turno_voluntariado_dia_horas_key")
+  @@index([activo, diaSemana, horaInicio], map: "turno_voluntariado_activo_dia_idx")
+  @@map("turno_voluntariado")
+}
+
+model PostulacionVoluntario {
+  idPostulacion         Int                @id @default(autoincrement()) @map("id_postulacion")
+  idEstudiante          Int                @map("id_estudiante")
+  revisadaPor           Int?               @map("revisada_por")
+  estado                EstadoPostulacion  @default(PENDIENTE)
+  comentarioSolicitante String?            @map("comentario_solicitante") @db.Text
+  comentarioRevision    String?            @map("comentario_revision") @db.Text
+  fechaPostulacion      DateTime           @default(now()) @map("fecha_postulacion") @db.Timestamptz(3)
+  fechaRevision         DateTime?          @map("fecha_revision") @db.Timestamptz(3)
+  estudiante            Estudiante         @relation(fields: [idEstudiante], references: [idEstudiante], onDelete: Restrict, onUpdate: Cascade)
+  revisor               Usuario?           @relation("PostulacionVoluntarioRevisadaPor", fields: [revisadaPor], references: [idUsuario], onDelete: SetNull, onUpdate: Cascade)
+  turnos                TurnoPostulacion[]
+
+  @@index([idEstudiante], map: "postulacion_voluntario_id_estudiante_idx")
+  @@index([estado], map: "postulacion_voluntario_estado_idx")
+  @@index([fechaPostulacion], map: "postulacion_voluntario_fecha_idx")
+  @@index([revisadaPor], map: "postulacion_voluntario_revisada_por_idx")
+  @@map("postulacion_voluntario")
+}
+
+model TurnoPostulacion {
+  idTurnoPostulacion Int                   @id @default(autoincrement()) @map("id_turno_postulacion")
+  idPostulacion      Int                   @map("id_postulacion")
+  idTurno            Int                   @map("id_turno")
+  postulacion        PostulacionVoluntario @relation(fields: [idPostulacion], references: [idPostulacion], onDelete: Cascade, onUpdate: Cascade)
+  turno              TurnoVoluntariado     @relation(fields: [idTurno], references: [idTurno], onDelete: Cascade, onUpdate: Cascade)
+
+  @@unique([idPostulacion, idTurno], map: "turno_postulacion_postulacion_turno_key")
+  @@index([idTurno], map: "turno_postulacion_id_turno_idx")
+  @@map("turno_postulacion")
+}
+
+model AsignacionVoluntario {
+  idAsignacion    Int               @id @default(autoincrement()) @map("id_asignacion")
+  idTurno         Int               @map("id_turno")
+  idEstudiante    Int               @map("id_estudiante")
+  asignadaPor     Int?              @map("asignada_por")
+  // Baja lógica: una asignación retirada se desactiva en lugar de borrarse, para
+  // conservar el historial y que el carnet pueda volver a asignarse al turno.
+  activo          Boolean           @default(true)
+  fechaAsignacion DateTime          @default(now()) @map("fecha_asignacion") @db.Timestamptz(3)
+  turno           TurnoVoluntariado @relation(fields: [idTurno], references: [idTurno], onDelete: Cascade, onUpdate: Cascade)
+  estudiante      Estudiante        @relation(fields: [idEstudiante], references: [idEstudiante], onDelete: Cascade, onUpdate: Cascade)
+  asignador       Usuario?          @relation("AsignacionVoluntarioAsignadaPor", fields: [asignadaPor], references: [idUsuario], onDelete: SetNull, onUpdate: Cascade)
+
+  @@unique([idTurno, idEstudiante], map: "asignacion_voluntario_turno_estudiante_key")
+  @@index([idEstudiante], map: "asignacion_voluntario_id_estudiante_idx")
+  @@index([idTurno, activo], map: "asignacion_voluntario_turno_activo_idx")
+  @@map("asignacion_voluntario")
+}
+
+model ArticuloInventario {
+  idArticulo         Int                @id @default(autoincrement()) @map("id_articulo")
+  tipo               TipoArticuloBata
+  // Talla de la bata. Los lentes no tienen talla, así que queda en nulo; el
+  // servicio garantiza una sola fila de lentes.
+  talla              TallaBata?
+  cantidadTotal      Int                @default(0) @map("cantidad_total")
+  activo             Boolean            @default(true)
+  fechaCreacion      DateTime           @default(now()) @map("fecha_creacion") @db.Timestamptz(3)
+  fechaActualizacion DateTime           @updatedAt @map("fecha_actualizacion") @db.Timestamptz(3)
+  prestados          ArticuloPrestado[]
+
+  @@unique([tipo, talla], map: "articulo_inventario_tipo_talla_key")
+  @@map("articulo_inventario")
+}
+
+model PrestamoBata {
+  idPrestamo          Int                @id @default(autoincrement()) @map("id_prestamo")
+  registradoPor       Int                @map("registrado_por")
+  nombre              String             @db.VarChar(120)
+  apellido            String             @db.VarChar(120)
+  carnet              String             @db.VarChar(20)
+  correo              String?            @db.VarChar(254)
+  telefono            String?            @db.VarChar(30)
+  estado              EstadoPrestamoBata @default(PRESTADO)
+  fechaPrestamo       DateTime           @map("fecha_prestamo") @db.Date
+  horaSalida          DateTime           @map("hora_salida") @db.Time(0)
+  horaEntregaEstimada DateTime?          @map("hora_entrega_estimada") @db.Time(0)
+  fechaDevolucion     DateTime?          @map("fecha_devolucion") @db.Timestamptz(3)
+  comentarios         String?            @db.Text
+  fechaCreacion       DateTime           @default(now()) @map("fecha_creacion") @db.Timestamptz(3)
+  fechaActualizacion  DateTime           @updatedAt @map("fecha_actualizacion") @db.Timestamptz(3)
+  registrador         Usuario            @relation("PrestamoRegistradoPor", fields: [registradoPor], references: [idUsuario], onDelete: Restrict, onUpdate: Cascade)
+  articulos           ArticuloPrestado[]
+
+  @@index([estado], map: "prestamo_bata_estado_idx")
+  @@index([carnet], map: "prestamo_bata_carnet_idx")
+  @@index([fechaPrestamo], map: "prestamo_bata_fecha_idx")
+  @@map("prestamo_bata")
+}
+
+model ArticuloPrestado {
+  idArticuloPrestado Int                @id @default(autoincrement()) @map("id_articulo_prestado")
+  idPrestamo         Int                @map("id_prestamo")
+  idArticulo         Int                @map("id_articulo")
+  cantidad           Int                @default(1)
+  prestamo           PrestamoBata       @relation(fields: [idPrestamo], references: [idPrestamo], onDelete: Cascade, onUpdate: Cascade)
+  articulo           ArticuloInventario @relation(fields: [idArticulo], references: [idArticulo], onDelete: Restrict, onUpdate: Cascade)
+
+  @@index([idPrestamo], map: "articulo_prestado_id_prestamo_idx")
+  @@index([idArticulo], map: "articulo_prestado_id_articulo_idx")
+  @@map("articulo_prestado")
+}
+
+model ListaNegraBata {
+  idListaNegra  Int       @id @default(autoincrement()) @map("id_lista_negra")
+  registradoPor Int       @map("registrado_por")
+  // Varios datos pueden ser desconocidos cuando se registra a quien no devolvió
+  // una bata: solo el nombre y la justificación son obligatorios.
+  fecha         DateTime? @db.Date
+  nombre        String    @db.VarChar(120)
+  apellido      String?   @db.VarChar(120)
+  correo        String?   @db.VarChar(254)
+  carnet        String?   @db.VarChar(20)
+  telefono      String?   @db.VarChar(30)
+  justificacion String    @db.Text
+  fechaCreacion DateTime  @default(now()) @map("fecha_creacion") @db.Timestamptz(3)
+  registrador   Usuario   @relation("ListaNegraRegistradaPor", fields: [registradoPor], references: [idUsuario], onDelete: Restrict, onUpdate: Cascade)
+
+  @@index([carnet], map: "lista_negra_bata_carnet_idx")
+  @@index([fechaCreacion], map: "lista_negra_bata_fecha_idx")
+  @@map("lista_negra_bata")
+}
+
+model ComprobanteTurno {
+  idComprobante        Int                    @id @default(autoincrement()) @map("id_comprobante")
+  idTurno              Int                    @map("id_turno")
+  idEstudiante         Int                    @map("id_estudiante")
+  revisadoPor          Int?                   @map("revisado_por")
+  // Registro de horas beca creado al aprobar el comprobante. Queda en nulo
+  // mientras está pendiente o si se rechaza.
+  idRegistroHora       Int?                   @unique(map: "comprobante_turno_registro_hora_key") @map("id_registro_hora")
+  fecha                DateTime               @db.Date
+  horaEntrada          DateTime               @map("hora_entrada") @db.Time(0)
+  horaSalida           DateTime               @map("hora_salida") @db.Time(0)
+  estado               EstadoComprobanteTurno @default(PENDIENTE)
+  comentarioVoluntario String?                @map("comentario_voluntario") @db.Text
+  comentarioRevision   String?                @map("comentario_revision") @db.Text
+  fechaEnvio           DateTime               @default(now()) @map("fecha_envio") @db.Timestamptz(3)
+  fechaRevision        DateTime?              @map("fecha_revision") @db.Timestamptz(3)
+  turno                TurnoVoluntariado      @relation(fields: [idTurno], references: [idTurno], onDelete: Restrict, onUpdate: Cascade)
+  estudiante           Estudiante             @relation(fields: [idEstudiante], references: [idEstudiante], onDelete: Cascade, onUpdate: Cascade)
+  revisor              Usuario?               @relation("ComprobanteTurnoRevisadoPor", fields: [revisadoPor], references: [idUsuario], onDelete: SetNull, onUpdate: Cascade)
+  registroHora         RegistroHoraBeca?      @relation(fields: [idRegistroHora], references: [idRegistroHora], onDelete: SetNull, onUpdate: Cascade)
+
+  @@index([idEstudiante], map: "comprobante_turno_id_estudiante_idx")
+  @@index([estado], map: "comprobante_turno_estado_idx")
+  @@index([idTurno], map: "comprobante_turno_id_turno_idx")
+  @@index([fecha], map: "comprobante_turno_fecha_idx")
+  @@map("comprobante_turno")
 }

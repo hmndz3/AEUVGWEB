@@ -9,8 +9,13 @@ import { InteresesPerfil } from "@/components/perfil/intereses";
 import { RecomendacionesPerfil } from "@/components/perfil/recomendaciones";
 import { TemaPerfil } from "@/components/perfil/tema";
 import { TutoriasPerfil } from "@/components/perfil/tutorias";
+import { VoluntariadoPerfil } from "@/components/perfil/voluntariado";
 import { verificarAcceso } from "@/lib/auth/guardias";
 import { listarCategorias } from "@/lib/eventos/consultas-eventos";
+import {
+  estadoPostulacionDe,
+  esVoluntarioActivo,
+} from "@/lib/prestamo-batas/consultas-prestamo-batas";
 import { obtenerEventosGuardados } from "@/lib/perfil/consultas-eventos-guardados";
 import {
   obtenerInteresesDeCategorias,
@@ -49,6 +54,8 @@ export default async function PaginaPerfil() {
     categorias,
     intereses,
     recomendados,
+    esVoluntario,
+    postulacionVoluntario,
   ] = await Promise.all([
     obtenerPerfil(acceso.usuario.idUsuario),
     listarFacultadesDisponibles(),
@@ -60,6 +67,8 @@ export default async function PaginaPerfil() {
     listarCategorias(),
     obtenerInteresesDeCategorias(acceso.usuario.idUsuario),
     recomendarEventos(acceso.usuario.idUsuario, ahora),
+    esVoluntarioActivo(acceso.usuario.idUsuario),
+    estadoPostulacionDe(acceso.usuario.idUsuario),
   ]);
 
   // La sesión es válida pero la cuenta ya no está: lo más seguro es volver al
@@ -80,6 +89,8 @@ export default async function PaginaPerfil() {
         <HorasBecaPerfil horas={horas} />
 
         <TutoriasPerfil tutorias={tutorias} postulacion={postulacion} tutor={tutor} />
+
+        <VoluntariadoPerfil esVoluntario={esVoluntario} postulacion={postulacionVoluntario} />
 
         <RecomendacionesPerfil
           eventos={recomendados}
