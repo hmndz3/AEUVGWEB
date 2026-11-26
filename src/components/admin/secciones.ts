@@ -32,12 +32,10 @@ export const SECCIONES_ADMIN = [
     descripcion: "Clubes estudiantiles y sus medios de contacto.",
   },
   {
-    // Las convocatorias para realizar horas viven dentro de esta sección: son
-    // el origen de los registros que aquí mismo se acreditan.
     href: "/admin/horas-beca",
     texto: "Horas beca",
     descripcion:
-      "Registro y acreditación de horas, convocatorias para realizarlas, importación y exportación.",
+      "Registro y acreditación de horas por carnet, importación desde Excel y exportación.",
   },
   {
     // Tutores y postulaciones son dos momentos del mismo trámite, así que se

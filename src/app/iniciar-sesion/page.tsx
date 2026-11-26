@@ -34,7 +34,7 @@ function PanelInicioSesion() {
       </div>
       <div className="mt-10 space-y-4">
         <TarjetaPanel icono="verificado" titulo="Tutorías y Horas Beca" etiqueta="ACTIVAS">
-          Visualiza convocatorias y consulta el avance verificado de tus requisitos académicos.
+          Agenda tutorías con otros estudiantes y consulta las horas que AEUVG te tiene registradas.
         </TarjetaPanel>
         <TarjetaPanel icono="calendario" titulo="Calendario de Eventos" etiqueta="2026">
           Entérate de actividades, congresos y festivales organizados para la comunidad.
