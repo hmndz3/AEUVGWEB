@@ -34,7 +34,9 @@
     "db:contenido-demo": "tsx prisma/seed-demo.ts",
     "db:railway:contenido-demo": "node scripts/db/railway.js tsx prisma/seed-demo.ts",
     "db:prestamo-batas": "tsx prisma/seed-prestamo-batas.ts",
-    "db:railway:prestamo-batas": "node scripts/db/railway.js tsx prisma/seed-prestamo-batas.ts"
+    "db:railway:prestamo-batas": "node scripts/db/railway.js tsx prisma/seed-prestamo-batas.ts",
+    "db:verificar-batas": "tsx prisma/verificar-prestamo-batas.ts",
+    "db:railway:verificar-batas": "node scripts/db/railway.js tsx prisma/verificar-prestamo-batas.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.10.0",
