@@ -21,6 +21,8 @@ export interface RepositorioAutenticacion {
   buscarPorCorreo(correo: string): Promise<UsuarioAutenticacion | null>;
   buscarPorId(idUsuario: number): Promise<UsuarioSesion | null>;
   registrarAcceso(idUsuario: number, fecha: Date): Promise<void>;
+  /** Reemplaza el hash de la contraseña, para rehacerlo con el costo de hoy. */
+  actualizarHashContrasena(idUsuario: number, contrasenaHash: string): Promise<void>;
 }
 
 type FilaRol = { rol: { nombre: string } };
@@ -102,5 +104,9 @@ export class RepositorioAutenticacionPrisma implements RepositorioAutenticacion 
 
   async registrarAcceso(idUsuario: number, fecha: Date): Promise<void> {
     await this.prisma.usuario.update({ where: { idUsuario }, data: { ultimoAcceso: fecha } });
+  }
+
+  async actualizarHashContrasena(idUsuario: number, contrasenaHash: string): Promise<void> {
+    await this.prisma.usuario.update({ where: { idUsuario }, data: { contrasenaHash } });
   }
 }

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { crearServicioAutenticacion } from "@/lib/auth/crear-servicio-autenticacion";
 import { origenPermitido, respuestaOrigenInvalido } from "@/lib/seguridad/origen";
+import { HECHOS, recortarCorreo, registrarHecho } from "@/lib/seguridad/registro-seguridad";
 import {
   direccionDelCliente,
   limitadorIniciosSesion,
@@ -19,7 +20,10 @@ export const runtime = "nodejs";
 export async function POST(solicitud: NextRequest) {
   // Un inicio de sesión lanzado desde otra página serviría para dejar a alguien
   // dentro de una cuenta ajena sin que lo note.
-  if (!origenPermitido(solicitud)) return respuestaOrigenInvalido();
+  if (!origenPermitido(solicitud)) {
+    registrarHecho(HECHOS.origenRechazado, { ruta: "/api/auth/iniciar-sesion" });
+    return respuestaOrigenInvalido();
+  }
 
   let cuerpo: unknown;
 
@@ -45,9 +49,18 @@ export async function POST(solicitud: NextRequest) {
     const claveIntentos = `${direccion}:${validacion.data.correo}`;
 
     if (!limitadorIniciosSesion.permitir(claveIntentos)) {
+      registrarHecho(HECHOS.limiteAlcanzado, {
+        direccion,
+        correo: recortarCorreo(validacion.data.correo),
+        motivo: "intentos de una misma cuenta",
+      });
       return respuestaDemasiadosIntentos(limitadorIniciosSesion.segundosDeEspera(claveIntentos));
     }
     if (!limitadorPorDireccion.permitir(direccion)) {
+      registrarHecho(HECHOS.limiteAlcanzado, {
+        direccion,
+        motivo: "intentos desde una misma dirección",
+      });
       return respuestaDemasiadosIntentos(limitadorPorDireccion.segundosDeEspera(direccion));
     }
 
@@ -57,6 +70,10 @@ export async function POST(solicitud: NextRequest) {
     if (resultado.tipo !== "autenticado") {
       limitadorIniciosSesion.registrar(claveIntentos);
       limitadorPorDireccion.registrar(direccion);
+      registrarHecho(HECHOS.accesoFallido, {
+        direccion,
+        correo: recortarCorreo(validacion.data.correo),
+      });
       return NextResponse.json(
         { mensaje: MENSAJE_CREDENCIALES_INVALIDAS },
         { status: 401, headers: { "Cache-Control": "no-store" } }
@@ -64,6 +81,11 @@ export async function POST(solicitud: NextRequest) {
     }
 
     limitadorIniciosSesion.reiniciar(claveIntentos);
+    limitadorPorDireccion.reiniciar(direccion);
+    registrarHecho(HECHOS.accesoCorrecto, {
+      direccion,
+      idUsuario: resultado.usuario.idUsuario,
+    });
     const token = await crearTokenSesion(
       { idUsuario: resultado.usuario.idUsuario },
       configuracionSesion

@@ -2,6 +2,7 @@ import { protegerRuta } from "@/lib/auth/guardias";
 import { ROLES } from "@/lib/auth/roles";
 import { obtenerProveedorImagenes } from "@/lib/imagenes/proveedor-imagenes";
 import { validarContenidoImagen, validarImagen } from "@/lib/imagenes/validacion-imagen";
+import { HECHOS, registrarHecho } from "@/lib/seguridad/registro-seguridad";
 
 export const runtime = "nodejs";
 
@@ -47,6 +48,13 @@ export const POST = protegerRuta([ROLES.administrador], async (_usuario, solicit
   const contenidoValido = validarContenidoImagen(Buffer.from(contenido));
 
   if (!contenidoValido.valida) {
+    // Mandar algo que no es una imagen con el encabezado de una imagen no es
+    // un descuido: queda anotado.
+    registrarHecho(HECHOS.subidaRechazada, {
+      ruta: "/api/admin/eventos/imagen",
+      motivo: "el contenido no es una imagen",
+    });
+
     return Response.json({ mensaje: contenidoValido.mensaje }, { status: 422, headers: sinCache });
   }
 
