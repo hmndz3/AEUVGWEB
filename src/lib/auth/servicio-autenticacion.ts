@@ -1,4 +1,8 @@
-import { verificarContrasena } from "@/lib/auth/contrasenas";
+import {
+  crearHashContrasena,
+  necesitaRehacerse,
+  verificarContrasena,
+} from "@/lib/auth/contrasenas";
 import { puedeAutenticarse } from "@/lib/auth/politica-autenticacion";
 import type {
   RepositorioAutenticacion,
@@ -10,13 +14,15 @@ import type { ConfiguracionSesion } from "@/lib/configuracion-sesion";
 import type { DatosInicioSesion } from "@/validators/inicio-sesion";
 
 /**
- * Evita que la ausencia de una cuenta reduzca el costo del intento. Debe ser un
- * hash con el formato exacto que produce el registro: si no lo fuera, la
- * verificación saldría antes de derivar la clave y un correo inexistente
- * respondería más rápido que uno existente.
+ * Evita que la ausencia de una cuenta reduzca el costo del intento.
+ *
+ * Tiene que llevar los parámetros vigentes: si fueran más flojos, derivarlo
+ * costaría menos que derivar uno real y un correo inexistente respondería
+ * antes que uno existente, que es justamente lo que permite averiguar qué
+ * cuentas existen. La prueba de autenticacion.test.ts lo comprueba.
  */
 export const HASH_COMPARACION_FALSA =
-  "scrypt$16384$8$1$YWV1dmctc2VlZC1sb2NhbA$rX7fh4FCeJzlk55DZnj96avxeBrKPrlrSjNaBDEXQFW1m5gmXtsJBk3LGxFnRZfiuaVyAx6BiA6UE07nkK8V_Q";
+  "scrypt$16384$8$5$2MCOC6JJz_FhxxWxePcfPA$eFi3Wmy5y7h5S2Ze2KIeX3ih2fqTuJv3fLpw7vqJDpKWyTCxNNKRfxTujJz8GenAjVUmR3V1mbFxKsM1jaZ9FQ";
 
 export type ResultadoInicioSesion =
   | { tipo: "autenticado"; usuario: UsuarioAutenticacion }
@@ -44,7 +50,32 @@ export class ServicioAutenticacion {
     if (!puedeAutenticarse(usuario)) return { tipo: "correo_no_verificado" };
 
     await this.repositorio.registrarAcceso(usuario.idUsuario, this.ahora());
+    await this.rehacerHashSiHaceFalta(usuario, datos.contrasena);
+
     return { tipo: "autenticado", usuario };
+  }
+
+  /**
+   * Vuelve a derivar la contraseña con el costo de hoy cuando el hash guardado
+   * usa parámetros más flojos. Es el único momento en que se tiene la
+   * contraseña en claro, así que es el único en que se puede hacer sin pedirle
+   * nada a la persona. Si falla, el acceso sigue adelante: el hash viejo no es
+   * inseguro, solo más barato de atacar.
+   */
+  private async rehacerHashSiHaceFalta(
+    usuario: UsuarioAutenticacion,
+    contrasena: string
+  ): Promise<void> {
+    if (!necesitaRehacerse(usuario.contrasenaHash)) return;
+
+    try {
+      await this.repositorio.actualizarHashContrasena(
+        usuario.idUsuario,
+        await crearHashContrasena(contrasena)
+      );
+    } catch {
+      // Se reintentará en el siguiente acceso.
+    }
   }
 
   async obtenerUsuarioSesion(token: string | undefined): Promise<UsuarioSesion | null> {

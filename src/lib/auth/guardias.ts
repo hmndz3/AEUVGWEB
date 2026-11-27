@@ -4,6 +4,8 @@ import { crearServicioAutenticacion } from "@/lib/auth/crear-servicio-autenticac
 import type { UsuarioSesion } from "@/lib/auth/repositorio-autenticacion";
 import { type Rol, tieneRol } from "@/lib/auth/roles";
 import { NOMBRE_COOKIE_SESION } from "@/lib/auth/sesion";
+import { origenPermitido, respuestaOrigenInvalido } from "@/lib/seguridad/origen";
+import { HECHOS, registrarHecho } from "@/lib/seguridad/registro-seguridad";
 
 export type ResultadoGuardia =
   | { tipo: "autorizado"; usuario: UsuarioSesion }
@@ -58,6 +60,17 @@ export function protegerConAcceso<T extends unknown[]>(
   manejador: (usuario: UsuarioSesion, ...argumentos: T) => Promise<Response>
 ) {
   return async (...argumentos: T): Promise<Response> => {
+    // Antes que el permiso, el origen: una petición que viene de otra página no
+    // se atiende aunque la sesión sea válida, porque la sesión sería de quien
+    // la sufre y no de quien la lanza.
+    const solicitud = argumentos.find(
+      (argumento): argumento is Request & T[number] => argumento instanceof Request
+    );
+    if (solicitud && !origenPermitido(solicitud)) {
+      registrarHecho(HECHOS.origenRechazado, { ruta: new URL(solicitud.url).pathname });
+      return respuestaOrigenInvalido();
+    }
+
     const acceso = await obtenerAcceso(rolesRequeridos);
 
     if (acceso.tipo === "sin_sesion") {
@@ -68,6 +81,13 @@ export function protegerConAcceso<T extends unknown[]>(
     }
 
     if (acceso.tipo === "sin_permiso") {
+      // Un intento de entrar donde no corresponde es justo lo que hay que
+      // poder ver después en los registros.
+      registrarHecho(HECHOS.permisoDenegado, {
+        idUsuario: acceso.usuario.idUsuario,
+        ruta: solicitud ? new URL(solicitud.url).pathname : undefined,
+      });
+
       return Response.json(
         { mensaje: "No encontrado." },
         { status: 404, headers: { "Cache-Control": "no-store" } }

@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { crearServicioAutenticacion } from "@/lib/auth/crear-servicio-autenticacion";
-import { limitadorIniciosSesion } from "@/lib/auth/limitador-inicios-sesion";
+import { origenPermitido, respuestaOrigenInvalido } from "@/lib/seguridad/origen";
+import { HECHOS, recortarCorreo, registrarHecho } from "@/lib/seguridad/registro-seguridad";
+import {
+  direccionDelCliente,
+  limitadorIniciosSesion,
+  limitadorPorDireccion,
+  respuestaDemasiadosIntentos,
+} from "@/lib/seguridad/limitador";
 import { MENSAJE_CREDENCIALES_INVALIDAS } from "@/lib/auth/mensajes-autenticacion";
 import { crearTokenSesion, NOMBRE_COOKIE_SESION, opcionesCookieSesion } from "@/lib/auth/sesion";
 import { obtenerConfiguracionRegistro } from "@/lib/configuracion-registro";
@@ -10,15 +17,14 @@ import { crearEsquemaInicioSesion } from "@/validators/inicio-sesion";
 
 export const runtime = "nodejs";
 
-function obtenerDireccionCliente(solicitud: NextRequest): string {
-  return (
-    solicitud.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-    solicitud.headers.get("x-real-ip") ??
-    "desconocida"
-  );
-}
-
 export async function POST(solicitud: NextRequest) {
+  // Un inicio de sesión lanzado desde otra página serviría para dejar a alguien
+  // dentro de una cuenta ajena sin que lo note.
+  if (!origenPermitido(solicitud)) {
+    registrarHecho(HECHOS.origenRechazado, { ruta: "/api/auth/iniciar-sesion" });
+    return respuestaOrigenInvalido();
+  }
+
   let cuerpo: unknown;
 
   try {
@@ -37,19 +43,37 @@ export async function POST(solicitud: NextRequest) {
       return NextResponse.json({ mensaje: "Revisa los datos ingresados." }, { status: 400 });
     }
 
-    const claveIntentos = `${obtenerDireccionCliente(solicitud)}:${validacion.data.correo}`;
+    // Dos topes: uno protege a la cuenta concreta y el otro corta a quien
+    // prueba muchos correos distintos desde el mismo sitio.
+    const direccion = direccionDelCliente(solicitud);
+    const claveIntentos = `${direccion}:${validacion.data.correo}`;
+
     if (!limitadorIniciosSesion.permitir(claveIntentos)) {
-      return NextResponse.json(
-        { mensaje: "Demasiados intentos. Intenta de nuevo más tarde." },
-        { status: 429, headers: { "Retry-After": "900", "Cache-Control": "no-store" } }
-      );
+      registrarHecho(HECHOS.limiteAlcanzado, {
+        direccion,
+        correo: recortarCorreo(validacion.data.correo),
+        motivo: "intentos de una misma cuenta",
+      });
+      return respuestaDemasiadosIntentos(limitadorIniciosSesion.segundosDeEspera(claveIntentos));
+    }
+    if (!limitadorPorDireccion.permitir(direccion)) {
+      registrarHecho(HECHOS.limiteAlcanzado, {
+        direccion,
+        motivo: "intentos desde una misma dirección",
+      });
+      return respuestaDemasiadosIntentos(limitadorPorDireccion.segundosDeEspera(direccion));
     }
 
     const configuracionSesion = obtenerConfiguracionSesion();
     const resultado = await crearServicioAutenticacion().iniciarSesion(validacion.data);
 
     if (resultado.tipo !== "autenticado") {
-      limitadorIniciosSesion.registrarFallo(claveIntentos);
+      limitadorIniciosSesion.registrar(claveIntentos);
+      limitadorPorDireccion.registrar(direccion);
+      registrarHecho(HECHOS.accesoFallido, {
+        direccion,
+        correo: recortarCorreo(validacion.data.correo),
+      });
       return NextResponse.json(
         { mensaje: MENSAJE_CREDENCIALES_INVALIDAS },
         { status: 401, headers: { "Cache-Control": "no-store" } }
@@ -57,6 +81,11 @@ export async function POST(solicitud: NextRequest) {
     }
 
     limitadorIniciosSesion.reiniciar(claveIntentos);
+    limitadorPorDireccion.reiniciar(direccion);
+    registrarHecho(HECHOS.accesoCorrecto, {
+      direccion,
+      idUsuario: resultado.usuario.idUsuario,
+    });
     const token = await crearTokenSesion(
       { idUsuario: resultado.usuario.idUsuario },
       configuracionSesion

@@ -1,8 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { crearHashContrasena } from "../src/lib/auth/contrasenas";
-import { LimitadorIniciosSesion } from "../src/lib/auth/limitador-inicios-sesion";
+import {
+  crearHashContrasena,
+  necesitaRehacerse,
+  verificarContrasena,
+} from "../src/lib/auth/contrasenas";
 import { MENSAJE_CREDENCIALES_INVALIDAS } from "../src/lib/auth/mensajes-autenticacion";
 import type {
   RepositorioAutenticacion,
@@ -20,8 +23,36 @@ const configuracion: ConfiguracionSesion = {
 };
 const fechaBase = new Date("2026-09-09T15:00:00.000Z");
 
+const CONTRASENA = "PruebaSegura1!";
+
+/**
+ * Deriva con parámetros a elección, para poder fabricar un hash como los que
+ * quedaron guardados antes de subir el costo.
+ */
+async function crearHashConParametros(
+  contrasena: string,
+  parametros: { N: number; r: number; p: number }
+): Promise<string> {
+  const { randomBytes, scryptSync } = await import("node:crypto");
+  const sal = randomBytes(16);
+  const derivada = scryptSync(contrasena, sal, 64, {
+    ...parametros,
+    maxmem: 160 * 1024 * 1024,
+  });
+
+  return [
+    "scrypt",
+    parametros.N,
+    parametros.r,
+    parametros.p,
+    sal.toString("base64url"),
+    derivada.toString("base64url"),
+  ].join("$");
+}
+
 class RepositorioMemoria implements RepositorioAutenticacion {
   ultimoAcceso: Date | null = null;
+  hashesRehechos: string[] = [];
 
   constructor(readonly usuario: UsuarioAutenticacion | null) {}
 
@@ -38,6 +69,10 @@ class RepositorioMemoria implements RepositorioAutenticacion {
   async registrarAcceso(_idUsuario: number, fecha: Date): Promise<void> {
     this.ultimoAcceso = fecha;
   }
+
+  async actualizarHashContrasena(_idUsuario: number, contrasenaHash: string): Promise<void> {
+    this.hashesRehechos.push(contrasenaHash);
+  }
 }
 
 async function crearUsuario(
@@ -46,7 +81,7 @@ async function crearUsuario(
   return {
     idUsuario: 1,
     correo: "estudiante.prueba@uvg.edu.gt",
-    contrasenaHash: await crearHashContrasena("PruebaSegura1!"),
+    contrasenaHash: await crearHashContrasena(CONTRASENA),
     estado: "ACTIVO",
     correoVerificado: true,
     nombreCompleto: "Estudiante Prueba",
@@ -138,12 +173,66 @@ test("la ruta protegida puede obtener un usuario solo con una sesión válida y 
   assert.equal(await servicio.obtenerUsuarioSesion(token), null);
 });
 
-test("limita intentos repetidos y libera el límite después de la ventana configurada", () => {
-  const limitador = new LimitadorIniciosSesion(2, 1_000);
-  const clave = "127.0.0.1:estudiante.prueba@uvg.edu.gt";
+// ---------------------------------------------------------------------------
+// Costo de la derivación
+// ---------------------------------------------------------------------------
 
-  limitador.registrarFallo(clave, fechaBase);
-  limitador.registrarFallo(clave, fechaBase);
-  assert.equal(limitador.permitir(clave, fechaBase), false);
-  assert.equal(limitador.permitir(clave, new Date(fechaBase.getTime() + 1_001)), true);
+test("un hash guardado con parámetros más flojos sigue sirviendo para entrar", async () => {
+  // Formato anterior: el mismo scrypt con p=1, que es lo que había guardado.
+  const viejo = await crearHashConParametros("Contrasena-1", { N: 16_384, r: 8, p: 1 });
+
+  assert.equal(await verificarContrasena("Contrasena-1", viejo), true);
+  assert.equal(await verificarContrasena("otra-cosa", viejo), false);
+});
+
+test("un hash con los parámetros flojos se marca para rehacerse", async () => {
+  const viejo = await crearHashConParametros("Contrasena-1", { N: 16_384, r: 8, p: 1 });
+  const actual = await crearHashContrasena("Contrasena-1");
+
+  assert.equal(necesitaRehacerse(viejo), true);
+  assert.equal(necesitaRehacerse(actual), false);
+});
+
+test("un hash con parámetros disparatados se rechaza en vez de intentarlo", async () => {
+  // Sin tope, una sola verificación con N enorme agotaría la memoria.
+  const absurdo = await crearHashConParametros("Contrasena-1", { N: 16_384, r: 8, p: 1 });
+  const manipulado = absurdo.replace("$16384$", "$1048576$");
+
+  assert.equal(await verificarContrasena("Contrasena-1", manipulado), false);
+});
+
+test("un hash con una N que no es potencia de dos se rechaza", async () => {
+  const base = await crearHashConParametros("Contrasena-1", { N: 16_384, r: 8, p: 1 });
+
+  assert.equal(
+    await verificarContrasena("Contrasena-1", base.replace("$16384$", "$16383$")),
+    false
+  );
+});
+
+test("al entrar con un hash viejo se guarda uno nuevo con el costo de hoy", async () => {
+  const usuario = await crearUsuario();
+  usuario.contrasenaHash = await crearHashConParametros(CONTRASENA, { N: 16_384, r: 8, p: 1 });
+  const repositorio = new RepositorioMemoria(usuario);
+
+  const resultado = await new ServicioAutenticacion(
+    repositorio,
+    configuracion,
+    () => fechaBase
+  ).iniciarSesion({ correo: usuario.correo, contrasena: CONTRASENA });
+
+  assert.equal(resultado.tipo, "autenticado");
+  assert.equal(repositorio.hashesRehechos.length, 1);
+  assert.equal(necesitaRehacerse(repositorio.hashesRehechos[0]), false);
+});
+
+test("al entrar con un hash al día no se reescribe nada", async () => {
+  const repositorio = new RepositorioMemoria(await crearUsuario());
+
+  await new ServicioAutenticacion(repositorio, configuracion, () => fechaBase).iniciarSesion({
+    correo: repositorio.usuario!.correo,
+    contrasena: CONTRASENA,
+  });
+
+  assert.equal(repositorio.hashesRehechos.length, 0);
 });

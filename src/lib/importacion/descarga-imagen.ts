@@ -2,7 +2,15 @@ import { lookup } from "node:dns/promises";
 
 import { enlaceDirectoDeImagen } from "@/lib/importacion/enlace-imagen";
 import type { ImagenSubida } from "@/lib/imagenes/proveedor-imagenes";
-import { tamanoMaximoBytes, validarImagen } from "@/lib/imagenes/validacion-imagen";
+import {
+  tamanoMaximoBytes,
+  tipoPorContenido,
+  validarImagen,
+} from "@/lib/imagenes/validacion-imagen";
+
+// Se reexporta porque el detector vivía aquí: quien ya lo importaba de este
+// módulo lo sigue encontrando.
+export { tipoPorContenido };
 
 /**
  * Descarga de la imagen que viene como enlace en una hoja de Excel.
@@ -24,35 +32,6 @@ export type OpcionesDescarga = {
   maximoBytes?: number;
   milisegundosEspera?: number;
 };
-
-/** Firmas de archivo de los formatos que acepta la plataforma. */
-const FIRMAS: { tipo: string; prueba: (datos: Buffer) => boolean }[] = [
-  { tipo: "image/jpeg", prueba: (d) => d[0] === 0xff && d[1] === 0xd8 && d[2] === 0xff },
-  {
-    tipo: "image/png",
-    prueba: (d) => d.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10])),
-  },
-  {
-    tipo: "image/webp",
-    prueba: (d) =>
-      d.subarray(0, 4).toString("latin1") === "RIFF" &&
-      d.subarray(8, 12).toString("latin1") === "WEBP",
-  },
-];
-
-/**
- * Formato real del archivo descargado.
- *
- * No se confía en el encabezado del servidor: Drive y OneDrive entregan sus
- * archivos como "application/octet-stream", de modo que mirar solo el
- * encabezado rechazaría imágenes perfectamente válidas. Los primeros bytes sí
- * dicen qué es.
- */
-export function tipoPorContenido(datos: Buffer): string | null {
-  if (datos.length < 12) return null;
-
-  return FIRMAS.find((firma) => firma.prueba(datos))?.tipo ?? null;
-}
 
 /** Rangos reservados de IPv4, en notación decimal por octetos. */
 function ipv4Privada(direccion: string): boolean {

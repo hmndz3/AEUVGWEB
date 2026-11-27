@@ -54,6 +54,38 @@ export function tamanoMaximoBytes(): number {
   return megas * 1024 * 1024;
 }
 
+/**
+ * Firmas de archivo de los formatos que acepta la plataforma.
+ *
+ * Los primeros bytes de un archivo dicen qué es de verdad. El encabezado que
+ * manda quien sube, en cambio, es solo una afirmación suya.
+ */
+const FIRMAS: { tipo: string; prueba: (datos: Buffer) => boolean }[] = [
+  { tipo: "image/jpeg", prueba: (d) => d[0] === 0xff && d[1] === 0xd8 && d[2] === 0xff },
+  {
+    tipo: "image/png",
+    prueba: (d) => d.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10])),
+  },
+  {
+    tipo: "image/webp",
+    prueba: (d) =>
+      d.subarray(0, 4).toString("latin1") === "RIFF" &&
+      d.subarray(8, 12).toString("latin1") === "WEBP",
+  },
+];
+
+/**
+ * Formato real de un archivo, leído de su contenido.
+ *
+ * Devuelve null cuando no es ninguno de los formatos admitidos, incluido el
+ * caso de un archivo demasiado corto para tener firma.
+ */
+export function tipoPorContenido(datos: Buffer): string | null {
+  if (datos.length < 12) return null;
+
+  return FIRMAS.find((firma) => firma.prueba(datos))?.tipo ?? null;
+}
+
 export type ResultadoValidacion = { valida: true } | { valida: false; mensaje: string };
 
 export function validarImagen(
@@ -74,4 +106,30 @@ export function validarImagen(
   }
 
   return { valida: true };
+}
+
+/**
+ * Comprueba el contenido de una imagen que alguien subió.
+ *
+ * El tipo declarado no basta: nada impide mandar un archivo cualquiera con el
+ * encabezado de una imagen, y ese archivo acabaría guardado y servido por el
+ * propio dominio. Esto es A08 del OWASP Top 10 —confiar en datos que vienen de
+ * fuera sin comprobarlos— y se resuelve mirando los primeros bytes.
+ *
+ * Devuelve el tipo real para que el almacenamiento guarde la extensión que de
+ * verdad corresponde, en lugar de la que venía escrita.
+ */
+export function validarContenidoImagen(
+  contenido: Buffer
+): { valida: true; tipo: string } | { valida: false; mensaje: string } {
+  const tipo = tipoPorContenido(contenido);
+
+  if (!tipo || !TIPOS_PERMITIDOS.includes(tipo as (typeof TIPOS_PERMITIDOS)[number])) {
+    return {
+      valida: false,
+      mensaje: "El archivo no es una imagen JPEG, PNG o WebP.",
+    };
+  }
+
+  return { valida: true, tipo };
 }

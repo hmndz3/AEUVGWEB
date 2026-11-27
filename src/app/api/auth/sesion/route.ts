@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { crearServicioAutenticacion } from "@/lib/auth/crear-servicio-autenticacion";
 import { NOMBRE_COOKIE_SESION, opcionesCookieSesion } from "@/lib/auth/sesion";
+import { origenPermitido, respuestaOrigenInvalido } from "@/lib/seguridad/origen";
 import { obtenerConfiguracionSesion } from "@/lib/configuracion-sesion";
 
 export const runtime = "nodejs";
@@ -40,7 +41,11 @@ export async function GET(solicitud: NextRequest) {
 }
 
 /** Cierra la sesión borrando la cookie. Es idempotente: sin sesión también responde 204. */
-export async function DELETE() {
+export async function DELETE(solicitud: Request) {
+  // Cerrarle la sesión a alguien desde otra página es una molestia, no un robo,
+  // pero se cierra igual: la regla es la misma para todo lo que cambia estado.
+  if (!origenPermitido(solicitud)) return respuestaOrigenInvalido();
+
   const respuesta = new NextResponse(null, {
     status: 204,
     headers: { "Cache-Control": "no-store" },
