@@ -1,4 +1,5 @@
 import { crearServicioRegistro } from "@/lib/auth/crear-servicio-registro";
+import { origenPermitido, respuestaOrigenInvalido } from "@/lib/seguridad/origen";
 import {
   direccionDelCliente,
   limitadorTokens,
@@ -7,6 +8,8 @@ import {
 import { esquemaVerificacionCorreo } from "@/validators/registro";
 
 export async function POST(solicitud: Request) {
+  if (!origenPermitido(solicitud)) return respuestaOrigenInvalido();
+
   // Mismo motivo que al restablecer: el token no se prueba a ciegas.
   const direccion = direccionDelCliente(solicitud);
   if (!limitadorTokens.permitir(direccion)) {

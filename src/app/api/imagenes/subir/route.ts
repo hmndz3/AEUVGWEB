@@ -1,6 +1,6 @@
 import { protegerRuta } from "@/lib/auth/guardias";
 import { obtenerProveedorImagenes } from "@/lib/imagenes/proveedor-imagenes";
-import { validarImagen } from "@/lib/imagenes/validacion-imagen";
+import { validarContenidoImagen, validarImagen } from "@/lib/imagenes/validacion-imagen";
 
 export const runtime = "nodejs";
 
@@ -40,11 +40,21 @@ export const POST = protegerRuta([], async (_usuario, solicitud: Request) => {
     return Response.json({ mensaje: validacion.mensaje }, { status: 422, headers: sinCache });
   }
 
+  // El tipo que declara quien sube es solo una afirmación suya: lo que decide
+  // es el contenido. Sin esto, un archivo cualquiera con el encabezado de una
+  // imagen acabaría guardado y servido por el propio dominio.
+  const contenido = await archivo.arrayBuffer();
+  const contenidoValido = validarContenidoImagen(Buffer.from(contenido));
+
+  if (!contenidoValido.valida) {
+    return Response.json({ mensaje: contenidoValido.mensaje }, { status: 422, headers: sinCache });
+  }
+
   try {
     const url = await proveedor.subir({
       nombre: archivo.name,
-      tipo: archivo.type,
-      contenido: await archivo.arrayBuffer(),
+      tipo: contenidoValido.tipo,
+      contenido,
     });
 
     return Response.json({ url }, { headers: sinCache });

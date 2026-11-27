@@ -1,4 +1,5 @@
 import { crearServicioRegistro } from "@/lib/auth/crear-servicio-registro";
+import { origenPermitido, respuestaOrigenInvalido } from "@/lib/seguridad/origen";
 import {
   direccionDelCliente,
   limitadorCorreos,
@@ -13,6 +14,8 @@ const respuestaUniforme = {
 };
 
 export async function POST(solicitud: Request) {
+  if (!origenPermitido(solicitud)) return respuestaOrigenInvalido();
+
   // Mismo motivo que en la recuperación: este formulario manda correos a
   // petición de quien no ha iniciado sesión.
   const direccion = direccionDelCliente(solicitud);

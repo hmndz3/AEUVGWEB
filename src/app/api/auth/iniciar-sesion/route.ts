@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { crearServicioAutenticacion } from "@/lib/auth/crear-servicio-autenticacion";
+import { origenPermitido, respuestaOrigenInvalido } from "@/lib/seguridad/origen";
 import {
   direccionDelCliente,
   limitadorIniciosSesion,
@@ -16,6 +17,10 @@ import { crearEsquemaInicioSesion } from "@/validators/inicio-sesion";
 export const runtime = "nodejs";
 
 export async function POST(solicitud: NextRequest) {
+  // Un inicio de sesión lanzado desde otra página serviría para dejar a alguien
+  // dentro de una cuenta ajena sin que lo note.
+  if (!origenPermitido(solicitud)) return respuestaOrigenInvalido();
+
   let cuerpo: unknown;
 
   try {

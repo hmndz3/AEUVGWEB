@@ -1,4 +1,5 @@
 import { crearServicioRecuperacion } from "@/lib/auth/crear-servicio-recuperacion";
+import { origenPermitido, respuestaOrigenInvalido } from "@/lib/seguridad/origen";
 import {
   direccionDelCliente,
   limitadorCorreos,
@@ -15,6 +16,8 @@ const respuestaUniforme = {
 };
 
 export async function POST(solicitud: Request) {
+  if (!origenPermitido(solicitud)) return respuestaOrigenInvalido();
+
   // El tope va por dirección y no por correo: así la respuesta sigue sin
   // revelar qué cuentas existen, y nadie puede usar este formulario para
   // llenarle el buzón a otra persona.

@@ -4,6 +4,7 @@ import { crearServicioAutenticacion } from "@/lib/auth/crear-servicio-autenticac
 import type { UsuarioSesion } from "@/lib/auth/repositorio-autenticacion";
 import { type Rol, tieneRol } from "@/lib/auth/roles";
 import { NOMBRE_COOKIE_SESION } from "@/lib/auth/sesion";
+import { origenPermitido, respuestaOrigenInvalido } from "@/lib/seguridad/origen";
 
 export type ResultadoGuardia =
   | { tipo: "autorizado"; usuario: UsuarioSesion }
@@ -58,6 +59,14 @@ export function protegerConAcceso<T extends unknown[]>(
   manejador: (usuario: UsuarioSesion, ...argumentos: T) => Promise<Response>
 ) {
   return async (...argumentos: T): Promise<Response> => {
+    // Antes que el permiso, el origen: una petición que viene de otra página no
+    // se atiende aunque la sesión sea válida, porque la sesión sería de quien
+    // la sufre y no de quien la lanza.
+    const solicitud = argumentos.find(
+      (argumento): argumento is Request & T[number] => argumento instanceof Request
+    );
+    if (solicitud && !origenPermitido(solicitud)) return respuestaOrigenInvalido();
+
     const acceso = await obtenerAcceso(rolesRequeridos);
 
     if (acceso.tipo === "sin_sesion") {

@@ -1,4 +1,5 @@
 import { crearServicioRegistro } from "@/lib/auth/crear-servicio-registro";
+import { origenPermitido, respuestaOrigenInvalido } from "@/lib/seguridad/origen";
 import {
   direccionDelCliente,
   limitadorRegistro,
@@ -8,6 +9,8 @@ import { obtenerConfiguracionRegistro } from "@/lib/configuracion-registro";
 import { crearEsquemaRegistro } from "@/validators/registro";
 
 export async function POST(solicitud: Request) {
+  if (!origenPermitido(solicitud)) return respuestaOrigenInvalido();
+
   // Sin tope, una sola máquina puede llenar la base de cuentas a medio
   // verificar y disparar un correo por cada una.
   const direccion = direccionDelCliente(solicitud);
