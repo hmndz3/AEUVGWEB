@@ -1,4 +1,9 @@
 import { crearServicioRecuperacion } from "@/lib/auth/crear-servicio-recuperacion";
+import {
+  direccionDelCliente,
+  limitadorCorreos,
+  respuestaDemasiadosIntentos,
+} from "@/lib/seguridad/limitador";
 import { obtenerConfiguracionRegistro } from "@/lib/configuracion-registro";
 import { crearEsquemaSolicitudRecuperacion } from "@/validators/recuperacion";
 
@@ -10,6 +15,15 @@ const respuestaUniforme = {
 };
 
 export async function POST(solicitud: Request) {
+  // El tope va por dirección y no por correo: así la respuesta sigue sin
+  // revelar qué cuentas existen, y nadie puede usar este formulario para
+  // llenarle el buzón a otra persona.
+  const direccion = direccionDelCliente(solicitud);
+  if (!limitadorCorreos.permitir(direccion)) {
+    return respuestaDemasiadosIntentos(limitadorCorreos.segundosDeEspera(direccion));
+  }
+  limitadorCorreos.registrar(direccion);
+
   try {
     const cuerpo: unknown = await solicitud.json();
     const configuracion = obtenerConfiguracionRegistro();

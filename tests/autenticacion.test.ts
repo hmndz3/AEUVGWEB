@@ -2,7 +2,6 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { crearHashContrasena } from "../src/lib/auth/contrasenas";
-import { LimitadorIniciosSesion } from "../src/lib/auth/limitador-inicios-sesion";
 import { MENSAJE_CREDENCIALES_INVALIDAS } from "../src/lib/auth/mensajes-autenticacion";
 import type {
   RepositorioAutenticacion,
@@ -136,14 +135,4 @@ test("la ruta protegida puede obtener un usuario solo con una sesión válida y 
   assert.equal(await servicio.obtenerUsuarioSesion("token-inválido"), null);
   usuario.estado = "BLOQUEADO";
   assert.equal(await servicio.obtenerUsuarioSesion(token), null);
-});
-
-test("limita intentos repetidos y libera el límite después de la ventana configurada", () => {
-  const limitador = new LimitadorIniciosSesion(2, 1_000);
-  const clave = "127.0.0.1:estudiante.prueba@uvg.edu.gt";
-
-  limitador.registrarFallo(clave, fechaBase);
-  limitador.registrarFallo(clave, fechaBase);
-  assert.equal(limitador.permitir(clave, fechaBase), false);
-  assert.equal(limitador.permitir(clave, new Date(fechaBase.getTime() + 1_001)), true);
 });

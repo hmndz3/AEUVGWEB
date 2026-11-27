@@ -1,7 +1,19 @@
 import { crearServicioRegistro } from "@/lib/auth/crear-servicio-registro";
+import {
+  direccionDelCliente,
+  limitadorTokens,
+  respuestaDemasiadosIntentos,
+} from "@/lib/seguridad/limitador";
 import { esquemaVerificacionCorreo } from "@/validators/registro";
 
 export async function POST(solicitud: Request) {
+  // Mismo motivo que al restablecer: el token no se prueba a ciegas.
+  const direccion = direccionDelCliente(solicitud);
+  if (!limitadorTokens.permitir(direccion)) {
+    return respuestaDemasiadosIntentos(limitadorTokens.segundosDeEspera(direccion));
+  }
+  limitadorTokens.registrar(direccion);
+
   try {
     const cuerpo: unknown = await solicitud.json();
     const validacion = esquemaVerificacionCorreo.safeParse(cuerpo);

@@ -1,4 +1,9 @@
 import { crearServicioRecuperacion } from "@/lib/auth/crear-servicio-recuperacion";
+import {
+  direccionDelCliente,
+  limitadorTokens,
+  respuestaDemasiadosIntentos,
+} from "@/lib/seguridad/limitador";
 import { esquemaRestablecerContrasena } from "@/validators/recuperacion";
 
 export const runtime = "nodejs";
@@ -7,6 +12,14 @@ const mensajeEnlaceInvalido =
   "El enlace no es válido o ya venció. Solicita uno nuevo para continuar.";
 
 export async function POST(solicitud: Request) {
+  // El token son 32 bytes al azar, pero un tope lo vuelve imposible de probar
+  // a ciegas aunque alguien lo intentara.
+  const direccion = direccionDelCliente(solicitud);
+  if (!limitadorTokens.permitir(direccion)) {
+    return respuestaDemasiadosIntentos(limitadorTokens.segundosDeEspera(direccion));
+  }
+  limitadorTokens.registrar(direccion);
+
   let cuerpo: unknown;
 
   try {
