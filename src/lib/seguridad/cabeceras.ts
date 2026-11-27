@@ -12,8 +12,17 @@
  * número de un solo uso que autoriza los guiones que la propia página escribe.
  */
 
-/** Dominios de los que se admiten imágenes además del propio sitio. */
-const IMAGENES_EXTERNAS = ["https://res.cloudinary.com"];
+/**
+ * De dónde pueden venir las imágenes.
+ *
+ * `https:` entero y no una lista de dominios porque la plataforma admite a
+ * propósito que el panel pegue el enlace de una imagen alojada fuera —así está
+ * validado en los formularios de eventos y de organizaciones—, y una lista
+ * cerrada rompería esa función sin aportar gran cosa: una imagen no ejecuta
+ * nada. Lo que sí queda cerrado con llave es de dónde salen los guiones, que
+ * es donde está el riesgo de verdad.
+ */
+const ORIGENES_IMAGENES = "'self' data: blob: https:";
 
 export type CabeceraSegura = { key: string; value: string };
 
@@ -83,7 +92,7 @@ export function politicaDeContenidos(nonce: string, produccion: boolean): string
     "default-src 'self'",
     `script-src ${guiones.join(" ")}`,
     "style-src 'self' 'unsafe-inline'",
-    `img-src 'self' data: blob: ${IMAGENES_EXTERNAS.join(" ")}`,
+    `img-src ${ORIGENES_IMAGENES}`,
     "font-src 'self' data:",
     "connect-src 'self'",
     "media-src 'self'",

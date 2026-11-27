@@ -73,11 +73,13 @@ test("nada puede incrustar el sitio ni cargar objetos", () => {
   assert.equal(partes.get("default-src"), "'self'");
 });
 
-test("las imágenes solo salen del sitio y del almacenamiento configurado", () => {
+test("las imágenes admiten enlaces externos por https, que el panel sí usa", () => {
   const imagenes = directivas(politicaDeContenidos("abc123", true)).get("img-src") ?? "";
 
   assert.match(imagenes, /'self'/);
-  assert.match(imagenes, /https:\/\/res\.cloudinary\.com/);
+  assert.match(imagenes, /https:/);
+  // Lo que no se admite es cargarlas sin cifrar ni desde cualquier esquema.
+  assert.doesNotMatch(imagenes, /http:/);
   assert.doesNotMatch(imagenes, /\*/);
 });
 
