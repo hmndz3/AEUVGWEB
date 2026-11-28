@@ -204,28 +204,91 @@ const HARRY = {
       "Revisión conjunta del código del sprint con Juan Gabriel, verificación del incremento completo y actualización de la documentación técnica del módulo.",
     ],
     [
+      "2026-10-29",
+      "20:10",
+      "21:25",
+      10,
+      "HU-29",
+      "Codificación",
+      "AEUVG-220 Consulta de las oportunidades del panel con su cupo y su estado. AEUVG-221 Validación de la oportunidad, su horario y su cantidad de personas.",
+    ],
+    [
       "2026-10-30",
-      "10:00",
-      "10:35",
+      "09:40",
+      "10:50",
       5,
-      "Documentación",
-      "Documentación",
-      "Redacción del documento de desarrollo del Sprint 5.",
+      "HU-29",
+      "Codificación",
+      "AEUVG-222 Servicio de oportunidades con sus endpoints protegidos por rol.",
+    ],
+    [
+      "2026-10-30",
+      "19:30",
+      "20:05",
+      0,
+      "HU-29",
+      "Pruebas",
+      "AEUVG-225 Pruebas de las validaciones de la convocatoria y de los permisos por rol.",
     ],
     [
       "2026-10-31",
+      "10:15",
+      "10:55",
+      5,
+      "HU-30",
+      "Codificación",
+      "AEUVG-226 Consulta de las oportunidades publicadas que todavía no han pasado, con su corte por fecha.",
+    ],
+    [
+      "2026-11-02",
       "09:30",
-      "10:10",
+      "10:40",
+      10,
+      "HU-30",
+      "Pruebas",
+      "AEUVG-231 Pruebas de la consulta pública de oportunidades y de su corte por fecha. AEUVG-230 Verificación del sprint completo y actualización de la documentación técnica.",
+    ],
+    [
+      "2026-11-02",
+      "15:00",
+      "15:20",
+      0,
+      "Ajustes de la revisión",
+      "Codificación",
+      "Enlace a tutorías retirado del menú principal, que devolvía un 404 desde cualquier pantalla, y acceso a horas beca en su lugar.",
+    ],
+    [
+      "2026-11-03",
+      "09:15",
+      "10:25",
+      5,
+      "Documentación",
+      "Documentación",
+      "Redacción del documento de desarrollo del Sprint 5 por historia de usuario.",
+    ],
+    [
+      "2026-11-03",
+      "11:00",
+      "11:45",
       5,
       "Documentación",
       "Documentación",
       "Registro de tiempos del equipo y revisión final de los dos documentos del sprint.",
     ],
+    [
+      "2026-11-03",
+      "16:30",
+      "17:15",
+      5,
+      "Ajustes de la revisión",
+      "Codificación",
+      "Arreglo del seed de prueba y de su verificación: categorías de evento faltantes y registros de horas sin cuenta vinculada.",
+    ],
   ],
 };
 
 const JUAN = {
-  nombre: "Juan Gabriel Gualim Alvarado",
+  nombre: "Juan Gabriel Gualim Molina",
   carne: "24852",
   sesiones: [
     [
@@ -345,6 +408,42 @@ const JUAN = {
       "Revisión",
       "Revisión conjunta del código del sprint con Harry y verificación del incremento en teléfono, tableta y escritorio.",
     ],
+    [
+      "2026-10-29",
+      "16:00",
+      "17:00",
+      5,
+      "HU-29",
+      "Diseño y codificación",
+      "AEUVG-223 Listado de convocatorias del panel con sus acciones.",
+    ],
+    [
+      "2026-10-30",
+      "15:40",
+      "17:00",
+      10,
+      "HU-29",
+      "Diseño y codificación",
+      "AEUVG-224 Formulario de la convocatoria y sus pantallas del panel.",
+    ],
+    [
+      "2026-10-31",
+      "16:10",
+      "17:20",
+      5,
+      "HU-30",
+      "Diseño y codificación",
+      "AEUVG-227 Página pública de oportunidades. AEUVG-228 Cupo e información adicional de cada convocatoria.",
+    ],
+    [
+      "2026-11-02",
+      "10:05",
+      "10:45",
+      5,
+      "HU-30",
+      "Codificación",
+      "AEUVG-229 Convocatorias enlazadas desde la portada y desde el perfil.",
+    ],
   ],
 };
 
@@ -389,13 +488,6 @@ const enHoras = (minutos) => (Math.round((minutos / 60) * 10) / 10).toFixed(1);
 const HORAS_ESTIMADAS = 17.75;
 
 /** Desviación del tiempo real frente al estimado, redactada para el documento. */
-function desviacion(totalMinutos) {
-  const porcentaje = Math.round((totalMinutos / 60 / HORAS_ESTIMADAS - 1) * 100);
-
-  if (porcentaje === 0) return "ajuste exacto";
-
-  return `${Math.abs(porcentaje)}% ${porcentaje > 0 ? "por encima" : "por debajo"}`;
-}
 
 function calcular(persona) {
   let anterior = null;
@@ -497,13 +589,13 @@ function bloquesRegistroTiempos(seccion) {
   const bloques = [
     h1(`${seccion}. Registro de tiempos`),
     p(
-      "Esta sección registra el tiempo dedicado por cada integrante al Sprint 5, entre el 22 de octubre y el 3 de noviembre de 2026. Cada sesión indica la fecha, la hora de inicio y de finalización, el tiempo de interrupción, el tiempo neto trabajado, la fase de la actividad y una descripción del trabajo realizado."
+      "Esta sección registra el tiempo dedicado por cada integrante al Sprint 5, entre el 22 de octubre y el 3 de noviembre de 2026, incluidas las sesiones de las dos historias que después se retiraron del producto. Cada sesión indica la fecha, la hora de inicio y de finalización, el tiempo de interrupción, el tiempo neto trabajado, la fase de la actividad y una descripción del trabajo realizado."
     ),
     p(
       "El delta de tiempo corresponde a la hora de finalización menos la hora de inicio menos el tiempo de interrupción. Las interrupciones son pausas cortas dentro de una misma sesión. Las sesiones de planificación y de revisión conjunta aparecen en ambos registros con el mismo horario, por tratarse de trabajo realizado en conjunto."
     ),
     p(
-      `El sprint sumó ${enHoras(totalEquipo)} horas de equipo: ${enHoras(harry.total)} horas de Harry Méndez y ${enHoras(juan.total)} horas de Juan Gabriel Gualim, frente a las ${HORAS_ESTIMADAS} horas estimadas en la planificación, es decir, un ${desviacion(totalEquipo)} de lo previsto. La diferencia la explican por completo los ajustes posteriores a la revisión del Sprint 4, que se trabajaron los días 22 y 23 de octubre, ya dentro de este sprint: suman 5.8 horas de equipo y la estimación no las contemplaba, por no corresponder a ninguna de las cuatro historias comprometidas. Descontadas esas horas, el sprint consumió 17 horas frente a las 17.75 previstas.`
+      `El sprint sumó ${enHoras(totalEquipo)} horas de equipo: ${enHoras(harry.total)} horas de Harry Méndez y ${enHoras(juan.total)} horas de Juan Gabriel Gualim, frente a las ${HORAS_ESTIMADAS} horas estimadas en la planificación. La diferencia tiene dos causas, las dos ajenas a las cuatro historias entregadas. La primera son los ajustes posteriores a la revisión del Sprint 4, trabajados el 22 y el 23 de octubre, ya dentro de esta ventana: 5.8 horas que la estimación no contemplaba. La segunda son las dos historias de convocatorias para realizar horas, HU-29 y HU-30, que se construyeron entre el 29 de octubre y el 2 de noviembre y que AEUVG pidió retirar del producto: 8.1 horas de equipo que quedan registradas porque el trabajo se hizo, aunque el código ya no esté en el producto. A esas dos causas se suma 1 hora de ajustes pedidos en la revisión. Descontadas las tres, las cuatro historias entregadas consumieron 17.7 horas frente a las 17.75 previstas, prácticamente lo estimado.`
     ),
 
     h2(`${seccion}.1. ${HARRY.nombre} - ${HARRY.carne}`),

@@ -6,7 +6,7 @@ const path = require("path");
 const { p, bullet, h1, h2, makeTable, spacer, cover, buildDocument } = require("./template");
 const { bloquesRegistroTiempos } = require("./tiempos-sprint5");
 
-const tiempos = bloquesRegistroTiempos(8);
+const tiempos = bloquesRegistroTiempos(9);
 const doc = buildDocument([
   ...cover({
     subtitle: "Documento de Desarrollo del Sprint 5",
@@ -165,7 +165,32 @@ const doc = buildDocument([
   ),
 
   // ---------- 6. HU-29 ----------
-  h1("6. Pruebas y verificación"),
+  // ---------- 6. HU-29 y HU-30 ----------
+  h1("6. HU-29 y HU-30 - Convocatorias para realizar horas (retiradas del producto)"),
+  p(
+    "El sprint incluyó dos historias más que llegaron a funcionar y que después se retiraron a petición de AEUVG. Se documentan porque el trabajo se hizo, porque sus horas aparecen en el registro de tiempos y porque la decisión de quitarlas explica por qué el producto entregado tiene cuatro historias y no seis."
+  ),
+
+  h2("6.1. Qué se construyó"),
+  p(
+    "La idea era que AEUVG publicara convocatorias para realizar horas beca —una actividad, su fecha, su horario y cuántas personas hacen falta— y que el estudiantado las viera y se apuntara. Se implementó la consulta de las oportunidades del panel con su cupo y su estado, la validación de la convocatoria y su horario, el servicio con sus endpoints protegidos por rol, el listado y el formulario del panel, la página pública con el cupo y la información adicional de cada una, y sus enlaces desde la portada y desde el perfil."
+  ),
+  p(
+    "El incremento quedó probado y publicado: las validaciones de la convocatoria, los permisos por rol y la consulta pública con su corte por fecha tenían sus pruebas, y la página estuvo en línea entre el 2 y el 4 de noviembre."
+  ),
+
+  h2("6.2. Por qué se retiró"),
+  p(
+    "Al revisar el incremento, AEUVG explicó que no organiza las horas beca por convocatoria: las asigna directamente y después registra lo realizado. Una sección que el estudiantado vería vacía todo el año, y que además invita a apuntarse a algo que nadie va a publicar, resta en lugar de sumar. Se decidió quitarla antes de que llegara a manos de nadie."
+  ),
+  p(
+    "El retiro borró el código —el servicio, los endpoints, las pantallas del panel, la página pública y sus enlaces—, no las tablas. Las tablas de oportunidades e inscripciones existen desde el Sprint 1, quedaron vacías y se dejaron en su sitio: borrarlas habría exigido una migración destructiva para recuperar dos tablas que no estorban. Si AEUVG cambia de criterio, el modelo de datos sigue ahí."
+  ),
+  p(
+    "La lección que deja es de orden: estas dos historias se construyeron contra una suposición del equipo sobre cómo trabaja la asociación, no contra algo que la asociación hubiera pedido. Las cuatro historias que sí quedaron nacieron de su hoja de cálculo real, y ninguna se descartó."
+  ),
+
+  h1("7. Pruebas y verificación"),
   p(
     "Las pruebas automatizadas del proyecto pasaron de 339 a 383. Las 44 nuevas corresponden a este sprint y se ejecutan sin base de datos, sustituyendo el acceso a datos por dobles de prueba, para que puedan correrse en cualquier momento del desarrollo."
   ),
@@ -208,9 +233,9 @@ const doc = buildDocument([
   ),
 
   // ---------- 9 ----------
-  h1("7. Estado del sprint"),
+  h1("8. Estado del sprint"),
   p(
-    `Las cuatro historias comprometidas para el Sprint 5 se encuentran completadas, con ${tiempos.enHoras(tiempos.totalEquipo)} horas de trabajo de equipo frente a las 17.75 estimadas. El detalle por sesión se encuentra en la sección 8. La plataforma cuenta ahora con:`
+    `Las cuatro historias comprometidas para el Sprint 5 se encuentran completadas, con 17.7 horas de trabajo de equipo frente a las 17.75 estimadas, dentro de un total de ${tiempos.enHoras(tiempos.totalEquipo)} horas registradas en la ventana del sprint. El detalle por sesión se encuentra en la sección 9. La plataforma cuenta ahora con:`
   ),
   bullet(
     "La exportación de los registros de horas beca en CSV, Excel y PDF, con los filtros del panel y su resumen del periodo."
@@ -228,7 +253,10 @@ const doc = buildDocument([
     "Queda pendiente la carga efectiva de los históricos de AEUVG, que no es trabajo de desarrollo: el importador quedó listo y documentado, y la carga la realiza AEUVG con sus propias hojas cuando decida hacerlo. Continúa también en gestión el trámite del dominio institucional iniciado en el Sprint 1."
   ),
   p(
-    "Los ajustes posteriores a la revisión del Sprint 4 se trabajaron los días 22 y 23 de octubre, ya dentro de la ventana de este sprint, y por eso aparecen en su registro de tiempos: el rótulo del carrusel de la portada, el retiro de la sección de próximos eventos, el acceso único a las horas beca, el selector de horario con dos relojes, el buscador de estudiantes por carnet, el teléfono de contacto de las organizaciones con las siglas obligatorias y la marca de los campos obligatorios. Suman 5.8 horas de equipo y explican por completo la diferencia frente a la estimación, que solo contemplaba las cuatro historias comprometidas: descontadas, el sprint consumió 17 horas frente a las 17.75 previstas."
+    "Las dos historias de convocatorias se retiraron del producto por decisión de AEUVG, como se explica en la sección 6. Sus 8.1 horas de equipo quedan en el registro de tiempos porque el trabajo se realizó, y el modelo de datos que las sostenía sigue en la base, vacío y sin uso."
+  ),
+  p(
+    "Los ajustes posteriores a la revisión del Sprint 4 se trabajaron los días 22 y 23 de octubre, ya dentro de la ventana de este sprint, y por eso aparecen en su registro de tiempos: el rótulo del carrusel de la portada, el retiro de la sección de próximos eventos, el acceso único a las horas beca, el selector de horario con dos relojes, el buscador de estudiantes por carnet, el teléfono de contacto de las organizaciones con las siglas obligatorias y la marca de los campos obligatorios. Suman 5.8 horas de equipo que la estimación no contemplaba, por no corresponder a ninguna de las cuatro historias comprometidas. Descontadas esas horas, las de las dos historias retiradas y 1 hora de ajustes pedidos en la revisión, el trabajo de las cuatro historias entregadas sumó 17.7 horas frente a las 17.75 previstas."
   ),
   p(
     "El desarrollo continúa en el Sprint 6 con el módulo de tutorías —el directorio de tutores, las postulaciones y los horarios— y las fotografías de perfil. Se le suman las tres mejoras que AEUVG pidió al revisar este incremento: el registro de las mismas horas para varios estudiantes a la vez, la lectura del archivo de horas con los encabezados que la asociación ya usa y la facultad del estudiante visible y filtrable en el panel."
