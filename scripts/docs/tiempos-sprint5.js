@@ -488,13 +488,6 @@ const enHoras = (minutos) => (Math.round((minutos / 60) * 10) / 10).toFixed(1);
 const HORAS_ESTIMADAS = 17.75;
 
 /** Desviación del tiempo real frente al estimado, redactada para el documento. */
-function desviacion(totalMinutos) {
-  const porcentaje = Math.round((totalMinutos / 60 / HORAS_ESTIMADAS - 1) * 100);
-
-  if (porcentaje === 0) return "ajuste exacto";
-
-  return `${Math.abs(porcentaje)}% ${porcentaje > 0 ? "por encima" : "por debajo"}`;
-}
 
 function calcular(persona) {
   let anterior = null;
