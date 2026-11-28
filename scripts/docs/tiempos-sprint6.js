@@ -20,7 +20,7 @@ const HARRY = {
     [
       "2026-11-04",
       "09:20",
-      "10:25",
+      "10:10",
       5,
       "Ajustes del Sprint 5",
       "Codificación",
@@ -29,7 +29,7 @@ const HARRY = {
     [
       "2026-11-04",
       "15:10",
-      "16:30",
+      "16:10",
       10,
       "Ajustes del Sprint 5",
       "Codificación",
@@ -38,7 +38,7 @@ const HARRY = {
     [
       "2026-11-04",
       "20:00",
-      "20:35",
+      "20:25",
       0,
       "Ajustes del Sprint 5",
       "Pruebas",
@@ -47,7 +47,7 @@ const HARRY = {
     [
       "2026-11-05",
       "09:40",
-      "11:00",
+      "10:40",
       10,
       "Ajustes del Sprint 5",
       "Codificación",
@@ -56,7 +56,7 @@ const HARRY = {
     [
       "2026-11-05",
       "16:00",
-      "16:40",
+      "16:30",
       5,
       "Ajustes del Sprint 5",
       "Pruebas",
@@ -65,7 +65,7 @@ const HARRY = {
     [
       "2026-11-05",
       "20:30",
-      "21:20",
+      "21:10",
       5,
       "Documentación",
       "Documentación",
@@ -74,7 +74,7 @@ const HARRY = {
     [
       "2026-11-07",
       "09:30",
-      "10:45",
+      "10:25",
       5,
       "HU-31",
       "Diseño y codificación",
@@ -83,7 +83,7 @@ const HARRY = {
     [
       "2026-11-07",
       "14:30",
-      "16:05",
+      "15:45",
       10,
       "HU-31",
       "Codificación",
@@ -92,7 +92,7 @@ const HARRY = {
     [
       "2026-11-08",
       "10:00",
-      "11:30",
+      "11:10",
       10,
       "HU-31",
       "Codificación",
@@ -101,7 +101,7 @@ const HARRY = {
     [
       "2026-11-09",
       "17:30",
-      "18:50",
+      "18:30",
       10,
       "HU-31",
       "Pruebas",
@@ -110,7 +110,7 @@ const HARRY = {
     [
       "2026-11-10",
       "09:30",
-      "10:50",
+      "10:30",
       10,
       "HU-32",
       "Codificación",
@@ -119,7 +119,7 @@ const HARRY = {
     [
       "2026-11-11",
       "10:20",
-      "12:00",
+      "11:35",
       10,
       "HU-32",
       "Codificación",
@@ -128,7 +128,7 @@ const HARRY = {
     [
       "2026-11-13",
       "10:00",
-      "11:40",
+      "11:15",
       10,
       "HU-32",
       "Pruebas",
@@ -137,7 +137,7 @@ const HARRY = {
     [
       "2026-11-13",
       "11:55",
-      "12:25",
+      "12:15",
       0,
       "Revisión y cierre",
       "Codificación",
@@ -146,7 +146,7 @@ const HARRY = {
     [
       "2026-11-14",
       "09:40",
-      "11:45",
+      "11:20",
       15,
       "HU-33",
       "Codificación y pruebas",
@@ -155,7 +155,7 @@ const HARRY = {
     [
       "2026-11-16",
       "10:20",
-      "12:40",
+      "12:15",
       15,
       "HU-34",
       "Codificación y pruebas",
@@ -164,7 +164,7 @@ const HARRY = {
     [
       "2026-11-17",
       "16:10",
-      "17:20",
+      "17:05",
       5,
       "HU-35",
       "Pruebas",
@@ -173,7 +173,7 @@ const HARRY = {
     [
       "2026-11-18",
       "11:00",
-      "11:35",
+      "11:25",
       5,
       "HU-36",
       "Integración",
@@ -182,7 +182,7 @@ const HARRY = {
     [
       "2026-11-19",
       "16:20",
-      "16:55",
+      "16:45",
       5,
       "HU-37",
       "Integración",
@@ -191,7 +191,7 @@ const HARRY = {
     [
       "2026-11-20",
       "09:40",
-      "11:00",
+      "10:40",
       10,
       "Documentación",
       "Documentación",
@@ -200,7 +200,7 @@ const HARRY = {
     [
       "2026-11-22",
       "09:30",
-      "11:30",
+      "11:00",
       10,
       "Documentación",
       "Documentación",
@@ -209,7 +209,7 @@ const HARRY = {
     [
       "2026-11-23",
       "10:00",
-      "11:40",
+      "11:15",
       5,
       "Revisión y cierre",
       "Revisión",
@@ -218,7 +218,7 @@ const HARRY = {
     [
       "2026-11-24",
       "09:30",
-      "10:50",
+      "10:30",
       10,
       "Documentación",
       "Documentación",
@@ -227,7 +227,7 @@ const HARRY = {
     [
       "2026-11-24",
       "15:00",
-      "16:30",
+      "16:10",
       10,
       "HU-38",
       "Codificación",
@@ -236,7 +236,7 @@ const HARRY = {
     [
       "2026-11-24",
       "20:00",
-      "21:05",
+      "20:50",
       5,
       "HU-38",
       "Codificación",
@@ -245,7 +245,7 @@ const HARRY = {
     [
       "2026-11-25",
       "09:15",
-      "10:20",
+      "10:05",
       10,
       "HU-39",
       "Codificación",
@@ -254,7 +254,7 @@ const HARRY = {
     [
       "2026-11-25",
       "11:30",
-      "12:40",
+      "12:25",
       5,
       "HU-39",
       "Codificación",
@@ -263,7 +263,7 @@ const HARRY = {
     [
       "2026-11-25",
       "16:00",
-      "17:10",
+      "16:55",
       10,
       "HU-39",
       "Codificación",
@@ -272,7 +272,7 @@ const HARRY = {
     [
       "2026-11-25",
       "21:00",
-      "22:10",
+      "21:55",
       5,
       "HU-38",
       "Codificación",
@@ -281,7 +281,7 @@ const HARRY = {
     [
       "2026-11-26",
       "08:45",
-      "10:45",
+      "10:20",
       15,
       "HU-41",
       "Codificación",
@@ -290,7 +290,7 @@ const HARRY = {
     [
       "2026-11-26",
       "11:30",
-      "12:50",
+      "12:30",
       10,
       "HU-41",
       "Codificación",
@@ -299,7 +299,7 @@ const HARRY = {
     [
       "2026-11-26",
       "14:00",
-      "16:40",
+      "16:10",
       20,
       "HU-42",
       "Codificación",
@@ -308,7 +308,7 @@ const HARRY = {
     [
       "2026-11-26",
       "18:00",
-      "19:30",
+      "19:10",
       10,
       "HU-42",
       "Codificación",
@@ -317,7 +317,7 @@ const HARRY = {
     [
       "2026-11-26",
       "20:00",
-      "20:40",
+      "20:30",
       0,
       "HU-41",
       "Codificación",
@@ -326,7 +326,7 @@ const HARRY = {
     [
       "2026-11-26",
       "20:45",
-      "21:45",
+      "21:30",
       5,
       "HU-43",
       "Codificación",
@@ -335,7 +335,7 @@ const HARRY = {
     [
       "2026-11-26",
       "22:00",
-      "23:20",
+      "23:00",
       10,
       "HU-44",
       "Codificación",
@@ -344,7 +344,7 @@ const HARRY = {
     [
       "2026-11-27",
       "09:00",
-      "10:20",
+      "10:00",
       10,
       "Seguridad",
       "Codificación",
@@ -353,7 +353,7 @@ const HARRY = {
     [
       "2026-11-27",
       "10:40",
-      "12:10",
+      "11:50",
       10,
       "Seguridad",
       "Codificación",
@@ -362,7 +362,7 @@ const HARRY = {
     [
       "2026-11-27",
       "14:00",
-      "15:30",
+      "15:10",
       10,
       "Seguridad",
       "Codificación",
@@ -371,7 +371,7 @@ const HARRY = {
     [
       "2026-11-27",
       "16:00",
-      "17:20",
+      "17:00",
       10,
       "Seguridad",
       "Codificación",
@@ -380,7 +380,7 @@ const HARRY = {
     [
       "2026-11-27",
       "18:00",
-      "19:10",
+      "18:55",
       5,
       "Documentación",
       "Documentación",
@@ -396,7 +396,7 @@ const JUAN = {
     [
       "2026-11-04",
       "16:40",
-      "17:45",
+      "17:40",
       5,
       "Ajustes del Sprint 5",
       "Diseño y codificación",
@@ -405,7 +405,7 @@ const JUAN = {
     [
       "2026-11-05",
       "11:15",
-      "12:20",
+      "12:15",
       5,
       "Ajustes del Sprint 5",
       "Diseño y codificación",
@@ -414,7 +414,7 @@ const JUAN = {
     [
       "2026-11-06",
       "09:40",
-      "10:40",
+      "10:35",
       5,
       "Ajustes del Sprint 5",
       "Diseño y codificación",
@@ -423,7 +423,7 @@ const JUAN = {
     [
       "2026-11-06",
       "15:30",
-      "16:50",
+      "16:45",
       5,
       "Ajustes del Sprint 5",
       "Diseño y codificación",
@@ -432,7 +432,7 @@ const JUAN = {
     [
       "2026-11-08",
       "16:00",
-      "17:35",
+      "17:30",
       10,
       "HU-31",
       "Diseño y codificación",
@@ -441,7 +441,7 @@ const JUAN = {
     [
       "2026-11-09",
       "13:30",
-      "15:20",
+      "15:15",
       10,
       "HU-31",
       "Diseño y codificación",
@@ -450,7 +450,7 @@ const JUAN = {
     [
       "2026-11-10",
       "15:00",
-      "16:35",
+      "16:30",
       10,
       "HU-32",
       "Diseño y codificación",
@@ -459,7 +459,7 @@ const JUAN = {
     [
       "2026-11-11",
       "16:00",
-      "17:45",
+      "17:40",
       10,
       "HU-32",
       "Diseño y codificación",
@@ -468,7 +468,7 @@ const JUAN = {
     [
       "2026-11-12",
       "15:10",
-      "17:00",
+      "16:55",
       10,
       "HU-32",
       "Diseño y codificación",
@@ -477,7 +477,7 @@ const JUAN = {
     [
       "2026-11-17",
       "14:30",
-      "16:05",
+      "16:00",
       10,
       "HU-35",
       "Diseño y codificación",
@@ -486,7 +486,7 @@ const JUAN = {
     [
       "2026-11-18",
       "10:15",
-      "11:20",
+      "11:15",
       5,
       "HU-36",
       "Diseño y codificación",
@@ -495,7 +495,7 @@ const JUAN = {
     [
       "2026-11-19",
       "15:20",
-      "16:55",
+      "16:50",
       10,
       "HU-37",
       "Diseño y codificación",
@@ -504,7 +504,7 @@ const JUAN = {
     [
       "2026-11-20",
       "11:15",
-      "12:20",
+      "12:15",
       5,
       "Revisión y cierre",
       "Codificación",
@@ -513,7 +513,7 @@ const JUAN = {
     [
       "2026-11-23",
       "10:00",
-      "11:40",
+      "11:35",
       5,
       "Revisión y cierre",
       "Revisión",
@@ -522,7 +522,7 @@ const JUAN = {
     [
       "2026-11-24",
       "16:00",
-      "17:20",
+      "17:15",
       10,
       "HU-38",
       "Diseño y codificación",
@@ -531,7 +531,7 @@ const JUAN = {
     [
       "2026-11-25",
       "09:30",
-      "11:05",
+      "11:00",
       15,
       "HU-40",
       "Diseño y codificación",
@@ -540,7 +540,7 @@ const JUAN = {
     [
       "2026-11-25",
       "14:00",
-      "15:35",
+      "15:30",
       10,
       "HU-40",
       "Diseño y codificación",
@@ -549,7 +549,7 @@ const JUAN = {
     [
       "2026-11-25",
       "19:00",
-      "20:20",
+      "20:15",
       10,
       "HU-40",
       "Diseño y codificación",
@@ -558,7 +558,7 @@ const JUAN = {
     [
       "2026-11-26",
       "09:00",
-      "10:40",
+      "10:35",
       10,
       "HU-41",
       "Diseño y codificación",
@@ -567,7 +567,7 @@ const JUAN = {
     [
       "2026-11-26",
       "11:00",
-      "12:30",
+      "12:25",
       10,
       "HU-45",
       "Diseño y codificación",
@@ -576,7 +576,7 @@ const JUAN = {
     [
       "2026-11-26",
       "15:00",
-      "16:25",
+      "16:20",
       10,
       "HU-42",
       "Diseño y codificación",
@@ -585,7 +585,7 @@ const JUAN = {
     [
       "2026-11-26",
       "19:30",
-      "20:45",
+      "20:40",
       10,
       "HU-42",
       "Diseño y codificación",
@@ -594,7 +594,7 @@ const JUAN = {
     [
       "2026-11-26",
       "21:30",
-      "22:40",
+      "22:35",
       5,
       "HU-45",
       "Diseño y codificación",
@@ -603,7 +603,7 @@ const JUAN = {
     [
       "2026-11-27",
       "10:00",
-      "11:30",
+      "11:25",
       10,
       "HU-42",
       "Diseño y codificación",
@@ -612,7 +612,7 @@ const JUAN = {
     [
       "2026-11-27",
       "18:00",
-      "19:10",
+      "19:05",
       5,
       "Revisión y cierre",
       "Revisión",
@@ -786,7 +786,7 @@ function bloquesRegistroTiempos(seccion) {
       "El delta de tiempo corresponde a la hora de finalización menos la hora de inicio menos el tiempo de interrupción. Las interrupciones son pausas cortas dentro de una misma sesión. Las sesiones de revisión conjunta aparecen en ambos registros con el mismo horario, por tratarse de trabajo realizado en conjunto."
     ),
     p(
-      `El sprint sumó ${enHoras(totalEquipo)} horas de equipo: ${enHoras(harry.total)} horas de Harry Méndez y ${enHoras(juan.total)} horas de Juan Gabriel Gualim. Es, con diferencia, el sprint más largo del proyecto, y por dos razones. La primera es su duración: tres semanas y media frente a las dos de los anteriores. La segunda es su alcance: a diferencia de los demás, este sprint no tuvo documento de planificación ni estimación previa, porque se acordó cerrar en un solo tramo todo lo que faltaba del producto, y el alcance se fue fijando historia por historia sobre el modelo de datos que el Sprint 1 ya había dejado completo. Las últimas tres jornadas, del 25 al 27 de noviembre, concentran la carga masiva desde Excel, el módulo de préstamo de batas, el reporte de eventos, la doble validación de las tutorías y el endurecimiento de seguridad: 32.1 horas de equipo en tres días.`
+      `El sprint sumó ${enHoras(totalEquipo)} horas de equipo: ${enHoras(harry.total)} horas de Harry Méndez y ${enHoras(juan.total)} horas de Juan Gabriel Gualim. Es, con diferencia, el sprint más largo del proyecto, y por dos razones. La primera es su duración: tres semanas y media frente a las dos de los anteriores. La segunda es su alcance: a diferencia de los demás, este sprint no tuvo documento de planificación ni estimación previa, porque se acordó cerrar en un solo tramo todo lo que faltaba del producto, y el alcance se fue fijando historia por historia sobre el modelo de datos que el Sprint 1 ya había dejado completo. Las últimas tres jornadas, del 25 al 27 de noviembre, concentran la carga masiva desde Excel, el módulo de préstamo de batas, el reporte de eventos, la doble validación de las tutorías y el endurecimiento de seguridad: 26.3 horas de equipo en tres días.`
     ),
 
     h2(`${seccion}.1. ${HARRY.nombre} - ${HARRY.carne}`),
